@@ -1,0 +1,126 @@
+{% load staticfiles %}
+<head>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+</head>
+<body>
+   <div class="container-fluid">
+     <nav class="navbar navbar-default" role="navigation">
+       <ul class="nav navbar-nav navbar-left">
+         <li><a href="#">Пункт 1</a></li>
+         <li><a href="#">Пункт 2</a></li>
+         <li><a href="#">Пункт 3</a></li>
+         <li><a href="#">Пункт 4</a></li>
+       </ul>
+     </nav>
+    <div class="row">
+      <div class="col-xs-3">
+        <ul class="nav nav-pills nav-stacked">
+          <li><a href="/tables/materials/">Химическое сырьё</a></li>
+          <li><a href="#">Фасовка</a></li>
+          <li class="active"><a href="/tables/products/">Продукция</a></li>
+          <li><a href="#">Составы</a></li>
+          <li><a href="#">Производство</a></li>
+        </ul>
+      </div>
+      <div class="col-xs-9">
+        <ol class="breadcrumb">
+          <li><a href="#">Главная</a></li>
+          <li><a href="/tables/products">Продукция</a></li>
+          <li class="active">{{ product.name }}</li>
+        </ol>
+        <div class="panel panel-default" style ="margin: auto">
+          <div class="panel-heading"><h4 class="panel-title"> {{ product.name }} </h4></div>
+          {% if error_message %}
+          <p><strong>{{ error_message }}</strong></p>
+          {% endif %}
+          <div class="panel-body">
+            <div class="input-group" style ="margin: auto">
+              <form action="save_product/" method="post">
+                {% csrf_token %}
+                <div id="two-column">
+                  <div id="left">
+                    <h5><b>Полный код:</b><h5>
+                    <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}"></p>
+                    <br><br><br>
+                    <h5><b>Краткое наименование:</b></h5>
+                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{product.name}}"></p>
+                    <br><br><br>
+                    <h5><b>Группа:</b><br></h5>
+                    <p><select class="form-control">
+                      {% for g in groups %}
+                      {% if product.group == g %}
+                      <option selected value="{{g.id}}">{{g.name}}</option>
+                      {% else %}
+                      <option value="{{g.id}}">{{g.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Форма:</b><br></h5>
+                    <p><select class="form-control">
+                      {% for f in forms %}
+                      {% if product.form == f %}
+                      <option selected value="{{f.id}}">{{f.name}}</option>
+                      {% else %}
+                      <option value="{{f.id}}">{{f.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                  </div>
+                  <div id="right">
+                    <h5><b>Назначение:</b><br></h5>
+                    <p><select class="form-control">
+                      {% for u in uses %}
+                      {% if product.use == u %}
+                      <option selected value="{{u.id}}">{{u.name}}</option>
+                      {% else %}
+                      <option value="{{u.id}}">{{u.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Варианты:</b><br></h5>
+                    <p><select class="form-control">
+                      {% for o in options %}
+                      {% if product.option == o %}
+                      <option selected value="{{o.id}}">{{o.name}}</option>
+                      {% else %}
+                      <option value="{{o.id}}">{{o.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Уточнение:</b><br></h5>
+                    <p><select class="form-control">
+                      {% for d in details %}
+                      {% if product.detail == d %}
+                      <option selected value="{{d.id}}">{{d.name}}</option>
+                      {% else %}
+                      <option value="{{d.id}}">{{d.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Марка:</b><br></h5>
+                    <p><select class="form-control">
+                      {% for m in marks %}
+                      {% if product.mark == m %}
+                      <option selected value="{{m.id}}">{{m.name}}</option>
+                      {% else %}
+                      <option value="{{m.id}}">{{m.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br><br>
+                    <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>

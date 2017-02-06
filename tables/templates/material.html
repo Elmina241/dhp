@@ -1,0 +1,101 @@
+{% load staticfiles %}
+<head>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+</head>
+<body>
+   <div class="container-fluid">
+     <nav class="navbar navbar-default" role="navigation">
+       <ul class="nav navbar-nav navbar-left">
+         <li><a href="#">Пункт 1</a></li>
+         <li><a href="#">Пункт 2</a></li>
+         <li><a href="#">Пункт 3</a></li>
+         <li><a href="#">Пункт 4</a></li>
+       </ul>
+     </nav>
+    <div class="row">
+      <div class="col-xs-3">
+        <ul class="nav nav-pills nav-stacked">
+          <li class="active"><a href="#">Химическое сырьё</a></li>
+          <li><a href="#">Фасовка</a></li>
+          <li><a href="#">Продукция</a></li>
+          <li><a href="#">Составы</a></li>
+          <li><a href="#">Производство</a></li>
+        </ul>
+      </div>
+      <div class="col-xs-9">
+        <ol class="breadcrumb">
+          <li><a href="#">Главная</a></li>
+          <li><a href="/tables/materials">Химическое сырьё</a></li>
+          <li class="active">{{ material.name }}</li>
+        </ol>
+        <div class="panel panel-default" style ="margin: auto">
+          <div class="panel-heading"><h4 class="panel-title"> {{ material.name }} </h4></div>
+          {% if error_message %}
+          <p><strong>{{ error_message }}</strong></p>
+          {% endif %}
+          <div class="panel-body">
+            <div class="input-group" style ="margin: auto">
+              <form action="save_material/" method="post">
+                {% csrf_token %}
+                <div id="two-column">
+                  <div id="left">
+                    <h5><b>Артикул:</b><h5>
+                    <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{material.code}}"></p>
+                    <br><br><br>
+                    <h5><b>Химическое наименование:</b></h5>
+                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{material.name}}"></p>
+                    <br><br><br>
+                    <h5><b>Группа:</b><br></h5>
+                    <p><select class="form-control" name="group">
+                      {% for g in groups %}
+                      {% if material.group == g %}
+                      <option selected value="{{g.id}}">{{g.name}}</option>
+                      {% else %}
+                      <option value="{{g.id}}">{{g.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Префикс:</b><br></h5>
+                    <p><select class="form-control" name="prefix">
+                      {% for p in prefixes %}
+                      {% if material.prefix == p %}
+                      <option selected value="{{p.id}}">{{p.name}}</option>
+                      {% else %}
+                      <option value="{{p.id}}">{{p.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                  </div>
+                  <div id="right">
+                    <h5><b>Марка:</b><br></h5>
+                    <input type="text" class="form-control" placeholder="Марка" size = "50" name="mark" value="{{material.mark}}"></p>
+                    <br><br><br>
+                    <h5><b>Ед. изм.:</b><br></h5>
+                    <p><select class="form-control" name="unit">
+                      {% for u in units %}
+                      {% if material.unit == u %}
+                      <option selected value="{{u.id}}">{{u.name}}</option>
+                      {% else %}
+                      <option value="{{u.id}}">{{u.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Концентрация:</b><br></h5>
+                    <div class="input-group">
+                      <input type="number" class="form-control bfh-number" max="100" min="0"  name="concentration" value="{{ material.concentration }}"> <span class="input-group-addon">%</span></p>
+                    </div>
+                    <br><br><br><br><br><br><br>
+                    <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>

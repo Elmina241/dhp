@@ -1,0 +1,74 @@
+{% load staticfiles %}
+<head>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+</head>
+<body>
+    <div class="container-fluid">
+      <nav class="navbar navbar-default" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+         <li><a href="#">Пункт 1</a></li>
+         <li><a href="#">Пункт 2</a></li>
+         <li><a href="#">Пункт 3</a></li>
+         <li><a href="#">Пункт 4</a></li>
+        </ul>
+      </nav>
+      <div class="row">
+        <div class="col-xs-3">
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/tables/materials/">Химическое сырьё</a></li>
+            <li><a href="#">Фасовка</a></li>
+            <li class="active"><a href="/tables/products/">Продукция</a></li>
+            <li><a href="#">Составы</a></li>
+            <li><a href="#">Производство</a></li>
+          </ul>
+        </div>
+        <div class="col-xs-9">
+          <ol class="breadcrumb">
+            <li><a href="#">Главная</a></li>
+            <li class="active">Продукция</li>
+          </ol>
+          <h1 class="page-header">Продукция</h1>
+          <a href="new_product/"><button type="button" class="btn btn-default">Добавить запись</button></a>
+          <br><br>
+          {% if products %}
+          {% for g in groups %}
+          <div class="panel panel-default">
+            <div class="panel-heading"><h4 class="panel-title"> {{ g.name }} </h4></div>
+            <div class="panel-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <td>Код</td><td>Краткое наименование</td><td>Полное наименование</td><td>Код полный</td><td>Форма</td><td>Назначение</td><td>Варианты</td><td>Уточнение</td><td>Марка</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for p in products %}
+                  {% if p.group == g %}
+                  <a href="/tables/products/{{ p.id }}/"><tr onClick="window.location.href='/tables/products/{{ p.id }}/'">
+                    <td>{{ p.get_short_code }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p }}</td>
+                    <td>{{ p.code }}</td>
+                    <td>{{ p.form.name }}</td>
+                    <td>{{ p.use.name }}</td>
+                    <td>{{ p.option.name }}</td>
+                    <td>{{ p.detail.name }}</td>
+                    <td>{{ p.mark.name }}</td>
+                  </tr></a>
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+          {% endfor %}
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+        </div>
+      </div>
+    </div>
+</body>
