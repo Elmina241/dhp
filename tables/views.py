@@ -1,12 +1,12 @@
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product
+from .forms import Delete_form
 
 
 def index(request):
-    return render(request, "index.html",
-        {"materials": Material.objects.all})
+    return render(request, "index.html", {"materials": Material.objects.all})
 
 def products(request):
     return render(request, "products.html",
@@ -36,6 +36,13 @@ def new_material(request):
     "units": Unit.objects.all,
     "prefixes": Prefix.objects.all})
 
+def del_material(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Material, pk=d)
+        del_obj.delete()
+    return redirect('index')
+
 def new_product(request):
     return render(request, "new_product.html",
     {"groups": Product_group.objects.all,
@@ -54,19 +61,21 @@ def add_material(request):
         mark = request.POST['mark']
         unit = get_object_or_404(Unit, pk=request.POST['unit'])
         concentration = request.POST['concentration']
+        ammount = request.POST['ammount']
         material = Material(code = code,
         name = name,
         group = group,
         prefix = prefix,
         mark = mark,
         unit = unit,
-        concentration = concentration)
+        concentration = concentration,
+        ammount = ammount)
 
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         material.save()
-        return render(request, "index.html", {"materials": Material.objects.all, "message": "Изменения сохранены"})
+        return redirect('index')
 
 
 def save_material(request, material_id):
@@ -79,6 +88,7 @@ def save_material(request, material_id):
         mark = request.POST['mark']
         unit = get_object_or_404(Unit, pk=request.POST['unit'])
         concentration = request.POST['concentration']
+        ammount = request.POST['ammount']
         material.code = code
         material.name = name
         material.group = group
@@ -86,11 +96,12 @@ def save_material(request, material_id):
         material.mark = mark
         material.unit = unit
         material.concentration = concentration
+        material.ammount = ammount
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         material.save()
-        return render(request, "index.html", {"materials": Material.objects.all, "message": "Изменения сохранены"})
+        return redirect('index')
 
 def save_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)

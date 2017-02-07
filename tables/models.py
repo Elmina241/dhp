@@ -1,4 +1,6 @@
 from django.db import models
+
+
 # Модели для химвеществ
 class Material_group(models.Model):
     name = models.CharField(max_length=200)
@@ -21,6 +23,7 @@ class Material(models.Model):
     group = models.ForeignKey('Material_group')
     prefix = models.ForeignKey('Prefix')
     mark = models.CharField(max_length=80)
+    ammount = models.FloatField()
     unit = models.ForeignKey('Unit')
     concentration = models.FloatField()
     def __str__(self):
