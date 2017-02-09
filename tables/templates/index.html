@@ -1,45 +1,15 @@
-{% load staticfiles %}
-<head>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
-</head>
-<body>
-    <div class="container-fluid">
-      <nav class="navbar navbar-default" role="navigation">
-        <ul class="nav navbar-nav navbar-left">
-         <li><a href="#">Пункт 1</a></li>
-         <li><a href="#">Пункт 2</a></li>
-         <li><a href="#">Пункт 3</a></li>
-         <li><a href="#">Пункт 4</a></li>
-        </ul>
-      </nav>
-      <div class="row">
-        <div class="col-xs-3">
-          <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="/tables/materials/">Реактивы</a></li>
-            <li><a href="#">Фасовка</a></li>
-            <li><a href="/tables/products/">Продукция</a></li>
-            <li><a href="#">Составы</a></li>
-            <li><a href="#">Производство</a></li>
-          </ul>
-        </div>
-        <div class="col-xs-9">
-          <ol class="breadcrumb">
-            <li><a href="#">Главная</a></li>
-            <li class="active">Реактивы</li>
-          </ol>
-          <h1 class="page-header">Реактивы</h1>
+{% extends 'tables/base.html' %}
+{% block content %}
           <form action="del_material/" method="post">
-            {% csrf_token %}
+          {% csrf_token %}
           <a href="new_material/"><button type="button" class="btn btn-default">Добавить запись</button></a>
           <input type="submit" class="btn btn-default" value="Удалить">
           <br><br>
           {% if materials %}
-          <table class="table table-hover">
+          <table class="table table-hover table-sm">
             <thead>
               <tr>
-                <td></td><td>Артикул</td><td>Группа</td><td>Наименование</td><td>Префикс</td><td>Марка</td><td>Количество</td><td>Ед. изм.</td><td>Концентрация</td>
+                <th></th><th>Артикул</th><th>Группа</th><th>Наименование</th><th>Префикс</th><th>Марка</th><th>Количество</th><th>Ед. изм.</th><th>Концентрация</th>
               </tr>
             </thead>
             <tbody>
@@ -63,6 +33,4 @@
           {% endif %}
         </div>
         </form>
-      </div>
-    </div>
-</body>
+  {% endblock content %}

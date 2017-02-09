@@ -6,12 +6,15 @@ from .forms import Delete_form
 
 
 def index(request):
-    return render(request, "index.html", {"materials": Material.objects.all})
+    return render(request, "index.html", {"materials": Material.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
 
 def products(request):
     return render(request, "products.html",
         {"products": Product.objects.all,
-        "groups": Product_group.objects.all})
+        "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
+
+def compositions(request):
+    return render(request, "compositions.html", {"header": "Составы", "location": "/tables/compositions/"})
 
 def detail(request, material_id):
     return render(request, "material.html",
@@ -42,6 +45,13 @@ def del_material(request):
         del_obj = get_object_or_404(Material, pk=d)
         del_obj.delete()
     return redirect('index')
+
+def del_product(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Product, pk=d)
+        del_obj.delete()
+    return redirect('products')
 
 def new_product(request):
     return render(request, "new_product.html",
@@ -103,6 +113,17 @@ def save_material(request, material_id):
         material.save()
         return redirect('index')
 
+def pr_group(request):
+    if 'group1' in request.POST:
+        pk = request.POST['group1']
+    else:
+        pk=0
+    group = get_object_or_404(Product_group, pk=pk)
+    product_group = Product.objects.filter(group=group)
+    return render(request, "products.html",
+            {"products": product_group,
+            "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
+
 def save_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     try:
@@ -153,7 +174,7 @@ def add_product(request):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         product.save()
-        return render(request, "products.html", {"products": Product.objects.all, "message": "Изменения сохранены"})
+        return redirect('products')
 
 
 # Create your views here.

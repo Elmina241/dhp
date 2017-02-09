@@ -50,3 +50,9 @@ h2 {
     padding: 5px; /* Отступы вокруг текста */
     clear: left; /* Отменяем действие float */
 }
+
+#line {
+  color: #fff; /* Цвет текста */
+  display: : inline-block;
+  float: left;
+}

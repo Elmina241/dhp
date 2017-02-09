@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<head>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('#gmenu > ul > li >a').each(function () {
+      if($(this).attr('href') == "{{ location }}" ) {
+        $(this).parent().addClass('active');
+      }
+    });
+  });</script>
+</head>
+<body>
+    <div class="container-fluid">
+      <nav class="navbar navbar-default" role="navigation">
+        <ul class="nav navbar-nav navbar-left">
+         <li><a href="#">Процессы</a></li>
+         <li class="active"><a href="#">Справочники</a></li>
+         <li><a href="#">Журналы</a></li>
+         <li><a href="#">Пункт 4</a></li>
+        </ul>
+      </nav>
+      <div class="row">
+        <div class="col-xs-2" id="gmenu">
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/tables/materials/">Реактивы</a></li>
+            <li><a href="/tables/packing/">Фасовка</a></li>
+            <li><a href="/tables/products/">Продукция</a></li>
+            <li><a href="/tables/compositions/">Составы</a></li>
+            <li><a href="/tables/production/">Производство</a></li>
+          </ul>
+        </div>
+        <div class="col-xs-10">
+          <ol class="breadcrumb">
+            <li><a href="#">Справочники</a></li>
+            <li class="active">{{ header }}<!--Реактивы--></li>
+          </ol>
+          <!--<h3 class="page-header">{{ header }}</h3>-->
+          {% block content %}
+          {% endblock %}
+      </div>
+    </div>
+</body>
