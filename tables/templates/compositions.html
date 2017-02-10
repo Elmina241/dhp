@@ -1,4 +1,39 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-      <p>Hello</p>
-{% endblock content %}
+<form action="get_group_comp/" method="POST" class="form-inline">
+  {% csrf_token %}
+ Фильтр по группе:
+ <select class="form-control" name="group1">
+   {% for g in groups %}
+   <option value="{{ g.id }}">{{ g.name }}</option>
+   {% endfor %}</select>
+   <input type="submit" class="btn btn-default" value="Применить" class="form-control"><a href="/tables/compositions/"> <button type="button" class="btn btn-default">Сбросить</button></a>
+</form>
+  <form action="del_composition/" method="post">
+    {% csrf_token %}
+          <a href="new_composition/"><button type="button" class="btn btn-default">Добавить запись</button></a>
+          <input type="submit" class="btn btn-default" value="Удалить">
+          <br><br>
+          {% if compositions %}
+              <table class="table table-sm" style="font-size: 110%;">
+                <thead>
+                  <tr>
+                    <th></th><th>Код</th><th>Наименование</th><th>Группа</th><th>СГР</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in compositions %}
+                  <tr>
+                    <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
+                    <td>{{ c.code }}</td>
+                    <td onClick="window.location.href='/tables/composition/{{ c.id }}/'">{{ c.name }}</td>
+                    <td>{{ c.group.name }}</td>
+                    <td>{{ c.sgr }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+  {% endblock content %}

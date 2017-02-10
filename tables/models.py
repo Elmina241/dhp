@@ -26,6 +26,7 @@ class Material(models.Model):
     ammount = models.FloatField()
     unit = models.ForeignKey('Unit')
     concentration = models.FloatField()
+    price = models.FloatField()
     def __str__(self):
         full_name = ('' if self.prefix.name == 'отсутствует' else (self.prefix.name + ' ')) + self.name + ('' if self.mark == '-' else (' ' + self.mark))
         return full_name
@@ -75,3 +76,24 @@ class Product(models.Model):
         return full_name
     def get_short_code(self):
         return self.code[9:]
+
+#Модели для составов
+
+class Composition_group(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Composition(models.Model):
+    code = models.IntegerField(blank=True)
+    name = models.CharField(max_length=80)
+    sgr = models.CharField(max_length=80)
+    group = models.ForeignKey('Composition_group')
+    def __str__(self):
+        return self.name
+
+class Components(models.Model):
+    comp = models.ForeignKey('Composition')
+    mat = models.ForeignKey('Material')
+    min = models.FloatField()
+    max = models.FloatField()

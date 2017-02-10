@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Components, Composition_group
 
 admin.site.register(Material_group)
 admin.site.register(Prefix)
@@ -12,5 +12,8 @@ admin.site.register(Product_option)
 admin.site.register(Product_detail)
 admin.site.register(Product_mark)
 admin.site.register(Product)
+admin.site.register(Composition)
+admin.site.register(Components)
+admin.site.register(Composition_group)
 
 # Register your models here.

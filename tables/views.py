@@ -1,12 +1,12 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group
 from .forms import Delete_form
 
 
 def index(request):
-    return render(request, "index.html", {"materials": Material.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
+    return render(request, "materials.html", {"materials": Material.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
 
 def products(request):
     return render(request, "products.html",
@@ -14,7 +14,7 @@ def products(request):
         "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
 
 def compositions(request):
-    return render(request, "compositions.html", {"header": "Составы", "location": "/tables/compositions/"})
+    return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Составы", "location": "/tables/compositions/"})
 
 def detail(request, material_id):
     return render(request, "material.html",
@@ -38,6 +38,10 @@ def new_material(request):
     {"groups": Material_group.objects.all,
     "units": Unit.objects.all,
     "prefixes": Prefix.objects.all})
+
+def new_composition(request):
+    return render(request, "new_composition.html",
+    {"materials": Material.objects.all, "header": "Добавление состава", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
 
 def del_material(request):
     del_var = request.POST.getlist('del_list')
@@ -145,10 +149,10 @@ def save_product(request, product_id):
         product.detail = detail
         product.mark = mark
     except (KeyError, Material_group.DoesNotExist):
-        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+        return render(request, 'products.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         product.save()
-        return render(request, "products.html", {"products": Product.objects.all, "message": "Изменения сохранены"})
+        return redirect("products")
 
 def add_product(request):
     try:

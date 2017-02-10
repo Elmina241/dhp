@@ -1,0 +1,66 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading"><h4 class="panel-title"></h4></div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="add_composition/" method="post">
+      {% csrf_token %}
+      <div id="two-column">
+        <div id="left">
+          <h5><b>Код:</b><h5>
+          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code"></p>
+          <br><br><br>
+          <h5><b>Наименование:</b></h5>
+          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name"></p>
+          <br><br><br>
+        </div>
+        <div id="right">
+          <h5><b>Группа:</b><br></h5>
+          <p><select class="form-control" name="group">
+            {% for g in groups %}
+            <option value="{{g.id}}">{{g.name}}</option>
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>СГР:</b><br></h5>
+          <input type="text" class="form-control" placeholder="СГР" size = "50" name = "sgr"></p>
+          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+        </div>
+      </div>
+      <h5><b>Компоненты:</b><h5>
+      <div class="form-inline">
+        Реактив:
+        <select class="form-control" name="material">
+          {% for m in materials %}
+          <option value="{{ m.id }}">{{ m.name }}</option>
+          {% endfor %}</select>
+          <label for=Минимум:
+          <div class="input-group">
+            <input type="number" class="form-control bfh-number" max="100" min="0"  value="100" name="min"> <span class="input-group-addon">%</span></p>
+          </div>
+          Максимум:
+          <div class="input-group">
+            <input type="number" class="form-control bfh-number" max="100" min="0"  value="100" name="max"> <span class="input-group-addon">%</span></p>
+          </div>
+          <button type="button" class="btn btn-default">Добавить</button>
+      </div>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th></th><th>Код</th><th>Наименование</th><th>Минимум чистого реактива</th><th>Максимум чистого реактива</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </form>
+  </div>
+</div>
+</div>
+
+{% endblock content %}

@@ -7,7 +7,7 @@
    {% for g in groups %}
    <option value="{{ g.id }}">{{ g.name }}</option>
    {% endfor %}</select>
-   <input type="submit" class="btn btn-default" value="Применить" class="form-control">
+   <input type="submit" class="btn btn-default" value="Применить" class="form-control"><a href="/tables/products/"> <button type="button" class="btn btn-default">Сбросить</button></a>
 </form>
   <form action="del_product/" method="post">
     {% csrf_token %}
@@ -18,17 +18,16 @@
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>Код</th><th>Наименование</th><th>Группа</th><th>Код полный</th><th>Форма</th><th>Назначение</th><th>Варианты</th><th>Уточнение</th><th>Марка</th>
+                    <th></th><th>Код</th><th>Наименование</th><th>Группа</th><th>Форма</th><th>Назначение</th><th>Варианты</th><th>Уточнение</th><th>Марка</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for p in products %}
                   <tr>
                     <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
-                    <td>{{ p.get_short_code }}</td>
+                    <td>{{ p.code }}</td>
                     <td onClick="window.location.href='/tables/products/{{ p.id }}/'">{{ p.name }}</td>
                     <td>{{ p.group.name }}</td>
-                    <td>{{ p.code }}</td>
                     <td>{{ p.form.name }}</td>
                     <td>{{ p.use.name }}</td>
                     <td>{{ p.option.name }}</td>

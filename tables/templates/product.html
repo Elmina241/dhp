@@ -41,14 +41,14 @@
                 {% csrf_token %}
                 <div id="two-column">
                   <div id="left">
-                    <h5><b>Полный код:</b><h5>
+                    <h5><b>Код:</b><h5>
                     <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}"></p>
                     <br><br><br>
-                    <h5><b>Краткое наименование:</b></h5>
+                    <h5><b>Наименование:</b></h5>
                     <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{product.name}}"></p>
                     <br><br><br>
                     <h5><b>Группа:</b><br></h5>
-                    <p><select class="form-control">
+                    <p><select class="form-control" name="group">
                       {% for g in groups %}
                       {% if product.group == g %}
                       <option selected value="{{g.id}}">{{g.name}}</option>
@@ -59,7 +59,7 @@
                     </select></p></p>
                     <br><br><br>
                     <h5><b>Форма:</b><br></h5>
-                    <p><select class="form-control">
+                    <p><select class="form-control" name="form">
                       {% for f in forms %}
                       {% if product.form == f %}
                       <option selected value="{{f.id}}">{{f.name}}</option>
@@ -71,7 +71,7 @@
                   </div>
                   <div id="right">
                     <h5><b>Назначение:</b><br></h5>
-                    <p><select class="form-control">
+                    <p><select class="form-control" name="use">
                       {% for u in uses %}
                       {% if product.use == u %}
                       <option selected value="{{u.id}}">{{u.name}}</option>
@@ -82,7 +82,7 @@
                     </select></p></p>
                     <br><br><br>
                     <h5><b>Варианты:</b><br></h5>
-                    <p><select class="form-control">
+                    <p><select class="form-control" name="option">
                       {% for o in options %}
                       {% if product.option == o %}
                       <option selected value="{{o.id}}">{{o.name}}</option>
@@ -93,7 +93,7 @@
                     </select></p></p>
                     <br><br><br>
                     <h5><b>Уточнение:</b><br></h5>
-                    <p><select class="form-control">
+                    <p><select class="form-control" name="detail">
                       {% for d in details %}
                       {% if product.detail == d %}
                       <option selected value="{{d.id}}">{{d.name}}</option>
@@ -104,7 +104,7 @@
                     </select></p></p>
                     <br><br><br>
                     <h5><b>Марка:</b><br></h5>
-                    <p><select class="form-control">
+                    <p><select class="form-control" name="mark">
                       {% for m in marks %}
                       {% if product.mark == m %}
                       <option selected value="{{m.id}}">{{m.name}}</option>
