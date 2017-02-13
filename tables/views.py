@@ -1,8 +1,9 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components
 from .forms import Delete_form
+import json
 
 
 def index(request):
@@ -32,6 +33,15 @@ def pr_detail(request, product_id):
         "marks": Product_mark.objects.all,
         "details": Product_detail.objects.all,
         "options": Product_option.objects.all,})
+
+def comp_detail(request, composition_id):
+    return render(request, "composition.html",
+        {"comp": get_object_or_404(Composition, pk=composition_id),
+        "groups": Composition_group.objects.all,
+        "location": "/tables/compositions/",
+        "comps": Components.objects.filter(comp=get_object_or_404(Composition, pk=composition_id)),
+        "materials": Material.objects.all
+        })
 
 def new_material(request):
     return render(request, "new_material.html",
@@ -179,6 +189,31 @@ def add_product(request):
     else:
         product.save()
         return redirect('products')
+
+def add_composition(request):
+    try:
+        code = request.POST['code']
+        name = request.POST['name']
+        group = get_object_or_404(Composition_group, pk=request.POST['group'])
+        sgr = request.POST['sgr']
+        comp = Composition(
+            code = code,
+            name = name,
+            group = group,
+            sgr = sgr)
+    except (KeyError, Composition_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        comp.save()
+        if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            for d in data:
+                mat = Material.objects.filter(code=d['Код'])[0]
+                cmps = Components(comp=comp, mat=mat, min=d["Минимум чистого реактива"], max=d["Максимум чистого реактива"])
+                cmps.save()
+
+        return redirect('compositions')
 
 
 # Create your views here.

@@ -55,22 +55,26 @@ function addRow(id){
       <div id="two-column">
         <div id="left">
           <h5><b>Код:</b><h5>
-          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code"></p>
+          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{ comp.code }}"></p>
           <br><br><br>
           <h5><b>Наименование:</b></h5>
-          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name"></p>
+          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{ comp.name }}"></p>
           <br><br><br>
         </div>
         <div id="right">
           <h5><b>Группа:</b><br></h5>
           <p><select class="form-control" name="group">
             {% for g in groups %}
+            {% if comp.group == g %}
+            <option selected value="{{g.id}}">{{g.name}}</option>
+            {% else %}
             <option value="{{g.id}}">{{g.name}}</option>
+            {% endif %}
             {% endfor %}
           </select></p></p>
           <br><br><br>
           <h5><b>СГР:</b><br></h5>
-          <input type="text" class="form-control" placeholder="СГР" size = "50" name = "sgr"></p>
+          <input type="text" class="form-control" placeholder="СГР" size = "50" name = "sgr" value="{{ comp.sgr }}"></p>
           <br><br><br><br>
           <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
         </div>
@@ -105,7 +109,15 @@ function addRow(id){
           </tr>
         </thead>
         <tbody>
-
+          {% for c in comps %}
+          <tr>
+            <td>{{ c.mat.code }}</td>
+            <td>{{ c.mat.name }}</td>
+            <td>{{ c.min }}</td>
+            <td>{{ c.max }}</td>
+            <td><button onclick='deleteRow(this)'>Удалить</button></td>
+          </tr>
+          {% endfor %}
         </tbody>
       </table>
       <input type="hidden" id="json" name="json" value="">

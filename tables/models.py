@@ -30,6 +30,10 @@ class Material(models.Model):
     def __str__(self):
         full_name = ('' if self.prefix.name == 'отсутствует' else (self.prefix.name + ' ')) + self.name + ('' if self.mark == '-' else (' ' + self.mark))
         return full_name
+    def get_name(self):
+        full_name = self.code + " " + self.name
+        return full_name
+
 
 # Модели для продукции
 class Product_group(models.Model):
