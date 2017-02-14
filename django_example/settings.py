@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'django_example.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE' : 'firebird',
-        'NAME' : 'C:\PROGRAM FILES (X86)\FIREBIRD\FIREBIRD_2_5\BIN\TEST2', #os.path.join(BASE_DIR, 'TEST2.fdb'), # Path to database or db alias
+        'NAME' : 'C:\PROGRAM FILES (X86)\FIREBIRD\FIREBIRD_2_5\BIN\TEST5.FDB', #os.path.join(BASE_DIR, 'TEST2.fdb'), # Path to database or db alias
         'USER' : 'SYSDBA',           # Your db user
         'PASSWORD' : 'masterkey',    # db user password
         'HOST' : '127.0.0.1',        # Your host machine

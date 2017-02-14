@@ -89,7 +89,7 @@ class Composition_group(models.Model):
         return self.name
 
 class Composition(models.Model):
-    code = models.IntegerField(blank=True)
+    code = models.CharField(max_length=4)
     name = models.CharField(max_length=80)
     sgr = models.CharField(max_length=80)
     group = models.ForeignKey('Composition_group')
@@ -101,3 +101,79 @@ class Components(models.Model):
     mat = models.ForeignKey('Material')
     min = models.FloatField()
     max = models.FloatField()
+
+#Модели для тары
+
+class Container_group(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Container_form(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Colour(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Container_mat(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Container(models.Model):
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
+    group = models.ForeignKey('Container_group')
+    form = models.ForeignKey('Container_form')
+    colour = models.ForeignKey('Colour')
+    mat = models.ForeignKey('Container_mat')
+    def __str__(self):
+        return self.name
+
+#Модели для укупорки
+
+class Cap_group(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Cap_form(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Cap(models.Model):
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
+    group = models.ForeignKey('Cap_group')
+    form = models.ForeignKey('Cap_form')
+    colour = models.ForeignKey('Colour')
+    mat = models.ForeignKey('Container_mat')
+    def __str__(self):
+        return self.name
+
+#Модели для упаковки
+
+class Boxing(models.Model):
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+#Модели для этикетки
+
+class Sticker_part(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Sticker(models.Model):
+    code = models.CharField(max_length=80)
+    product = models.ForeignKey('Product')
+    part = models.ForeignKey('Sticker_part')
+    def __str__(self):
+        return "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name

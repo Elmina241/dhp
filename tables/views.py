@@ -14,6 +14,11 @@ def products(request):
         {"products": Product.objects.all,
         "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
 
+def packing(request):
+    return render(request, "packing.html",
+        {"header": "Фасовка", "location": "/tables/packing/"})
+
+
 def compositions(request):
     return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Составы", "location": "/tables/compositions/"})
 
@@ -138,6 +143,17 @@ def pr_group(request):
             {"products": product_group,
             "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
 
+def comp_group(request):
+    if 'group1' in request.POST:
+        pk = request.POST['group1']
+    else:
+        pk=0
+    group = get_object_or_404(Composition_group, pk=pk)
+    comp_group = Composition.objects.filter(group=group)
+    return render(request, "compositions.html",
+            {"compositions": comp_group,
+            "groups": Composition_group.objects.all, "header": "Составы", "location": "/tables/compositions/"})
+
 def save_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     try:
@@ -205,6 +221,32 @@ def add_composition(request):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         comp.save()
+        if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            for d in data:
+                mat = Material.objects.filter(code=d['Код'])[0]
+                cmps = Components(comp=comp, mat=mat, min=d["Минимум чистого реактива"], max=d["Максимум чистого реактива"])
+                cmps.save()
+
+        return redirect('compositions')
+
+def save_composition(request, composition_id):
+    comp = get_object_or_404(Composition, pk=composition_id)
+    try:
+        code = request.POST['code']
+        name = request.POST['name']
+        group = get_object_or_404(Composition_group, pk=request.POST['group'])
+        sgr = request.POST['sgr']
+        comp.code = code
+        comp.name = name
+        comp.group = group
+        comp.sgr = sgr
+    except (KeyError, Composition_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        comp.save()
+        Components.objects.filter(comp=comp).delete()
         if 'json' in request.POST:
             table = request.POST['json']
             data = json.loads(table)
