@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container
 from .forms import Delete_form
 import json
 
@@ -16,7 +16,7 @@ def products(request):
 
 def packing(request):
     return render(request, "packing.html",
-        {"header": "Фасовка", "location": "/tables/packing/"})
+        {"containers": Container.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
 
 
 def compositions(request):

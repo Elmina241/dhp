@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tables', '0010_auto_20170214_1239'),
+        ('tables', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='composition',
             name='code',
-            field=models.IntegerField(),
+            field=models.CharField(max_length=80),
         ),
     ]

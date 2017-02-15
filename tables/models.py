@@ -89,7 +89,7 @@ class Composition_group(models.Model):
         return self.name
 
 class Composition(models.Model):
-    code = models.CharField(max_length=4)
+    code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     sgr = models.CharField(max_length=80)
     group = models.ForeignKey('Composition_group')
@@ -132,7 +132,7 @@ class Container(models.Model):
     colour = models.ForeignKey('Colour')
     mat = models.ForeignKey('Container_mat')
     def __str__(self):
-        return self.name
+        return self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
 
 #Модели для укупорки
 
