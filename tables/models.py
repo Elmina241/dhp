@@ -126,7 +126,6 @@ class Container_mat(models.Model):
 
 class Container(models.Model):
     code = models.CharField(max_length=80)
-    name = models.CharField(max_length=80)
     group = models.ForeignKey('Container_group')
     form = models.ForeignKey('Container_form')
     colour = models.ForeignKey('Colour')
@@ -148,13 +147,12 @@ class Cap_form(models.Model):
 
 class Cap(models.Model):
     code = models.CharField(max_length=80)
-    name = models.CharField(max_length=80)
     group = models.ForeignKey('Cap_group')
     form = models.ForeignKey('Cap_form')
     colour = models.ForeignKey('Colour')
     mat = models.ForeignKey('Container_mat')
     def __str__(self):
-        return self.name
+        return self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
 
 #Модели для упаковки
 
@@ -177,3 +175,31 @@ class Sticker(models.Model):
     part = models.ForeignKey('Sticker_part')
     def __str__(self):
         return "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name
+
+class Production(models.Model):
+    product = models.ForeignKey('Product')
+    composition = models.ForeignKey('Composition')
+    container = models.ForeignKey('Container')
+    cap = models.ForeignKey('Cap')
+    sticker = models.ForeignKey('Sticker')
+    boxing = models.ForeignKey('Boxing')
+    def __str__(self):
+        return self.product.name
+
+class Reactor(models.Model):
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
+    capacity = models.FloatField()
+    min = models.FloatField()
+    max = models.FloatField()
+    ready = models.BooleanField()
+    def __str__(self):
+        return self.name
+
+class Tank(models.Model):
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
+    capacity = models.FloatField()
+    ready = models.BooleanField()
+    def __str__(self):
+        return self.name

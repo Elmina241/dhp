@@ -1,0 +1,35 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+          <form action="del_commodity/" method="post">
+          {% csrf_token %}
+          <a href="new_commodity/"><button type="button" class="btn btn-default">Добавить запись</button></a>
+          <input type="submit" class="btn btn-default" value="Удалить">
+          <br><br>
+          {% if production %}
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th></th><th>Артикул</th><th>Продукция</th><th>Состав</th><th>Тара</th><th>Укупорка</th><th>Этикетка</th><th>Упаковка</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in production %}
+              <tr>
+                <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
+                <td>{{ p.product.code }}</td>
+                <td>{{ p.product.name }}</td>
+                <td onClick="window.location.href='/tables/production/{{ p.id }}/'">{{ p.composition.name }}</td>
+                <td>{{ p.container.name }}</td>
+                <td>{{ p.cap.name }}</td>
+                <td>{{ p.sticker.name }}</td>
+                <td>{{ p.boxing.name }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No materials are available right now.</p>
+          {% endif %}
+        </div>
+        </form>
+  {% endblock content %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_use, Product_form, Product_option, Product_detail, Product_mark, Product, Composition_group, Container_group, Container_form, Colour, Container_mat, Container, Cap_group, Cap_form, Cap, Boxing, Sticker_part, Sticker, Composition, Components
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_use, Product_form, Product_option, Product_detail, Product_mark, Product, Composition_group, Container_group, Container_form, Colour, Container_mat, Container, Cap_group, Cap_form, Cap, Boxing, Sticker_part, Sticker, Composition, Components, Production, Reactor, Tank
 
 admin.site.register(Material_group)
 admin.site.register(Prefix)
@@ -26,6 +26,9 @@ admin.site.register(Cap)
 admin.site.register(Boxing)
 admin.site.register(Sticker_part)
 admin.site.register(Sticker)
+admin.site.register(Production)
+admin.site.register(Reactor)
+admin.site.register(Tank)
 
 
 # Register your models here.

@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker
 from .forms import Delete_form
 import json
 
@@ -18,6 +18,17 @@ def packing(request):
     return render(request, "packing.html",
         {"containers": Container.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
 
+def caps(request):
+    return render(request, "caps.html",
+        {"caps": Cap.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+
+def boxing(request):
+    return render(request, "boxing.html",
+        {"boxes": Boxing.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+
+def stickers(request):
+    return render(request, "stickers.html",
+        {"stickers": Sticker.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
 
 def compositions(request):
     return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Составы", "location": "/tables/compositions/"})
