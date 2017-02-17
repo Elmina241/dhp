@@ -176,6 +176,8 @@ class Sticker(models.Model):
     def __str__(self):
         return "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name
 
+#Модели для производства
+
 class Production(models.Model):
     product = models.ForeignKey('Product')
     composition = models.ForeignKey('Composition')
@@ -186,6 +188,8 @@ class Production(models.Model):
     def __str__(self):
         return self.product.name
 
+#Модели для хранилищ
+
 class Reactor(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
@@ -195,6 +199,8 @@ class Reactor(models.Model):
     ready = models.BooleanField()
     def __str__(self):
         return self.name
+    def get_check(self):
+        return 'checked' if self.ready else ''
 
 class Tank(models.Model):
     code = models.CharField(max_length=80)
@@ -203,3 +209,5 @@ class Tank(models.Model):
     ready = models.BooleanField()
     def __str__(self):
         return self.name
+    def get_check(self):
+        return 'checked' if self.ready else ''

@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part
 from .forms import Delete_form
 import json
 
@@ -21,6 +21,14 @@ def packing(request):
 def caps(request):
     return render(request, "caps.html",
         {"caps": Cap.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+
+def production(request):
+    return render(request, "production.html",
+        {"production": Production.objects.all, "header": "Производство", "location": "/tables/production/"})
+
+def storage(request):
+    return render(request, "storage.html",
+        {"reactors": Reactor.objects.all, "tanks": Tank.objects.all, "header": "Хранилища", "location": "/tables/storage/"})
 
 def boxing(request):
     return render(request, "boxing.html",
@@ -58,6 +66,74 @@ def comp_detail(request, composition_id):
         "comps": Components.objects.filter(comp=get_object_or_404(Composition, pk=composition_id)),
         "materials": Material.objects.all
         })
+
+def container_detail(request, container_id):
+    if (container_id == '0'):
+        return render(request, "container.html",
+            {"container": None,
+            "groups": Container_group.objects.all,
+            "colours": Colour.objects.all,
+            "materials": Container_mat.objects.all,
+            "location": "/tables/packing/",
+            "forms": Container_form.objects.all
+            })
+    else:
+        return render(request, "container.html",
+            {"container": get_object_or_404(Container, pk=container_id),
+            "groups": Container_group.objects.all,
+            "colours": Colour.objects.all,
+            "materials": Container_mat.objects.all,
+            "location": "/tables/packing/",
+            "forms": Container_form.objects.all
+            })
+
+def cap_detail(request, cap_id):
+    if (cap_id == '0'):
+        return render(request, "cap.html",
+            {"cap": None,
+            "groups": Cap_group.objects.all,
+            "colours": Colour.objects.all,
+            "materials": Container_mat.objects.all,
+            "location": "/tables/packing/",
+            "forms": Cap_form.objects.all
+            })
+    else:
+        return render(request, "cap.html",
+            {"cap": get_object_or_404(Cap, pk=cap_id),
+            "groups": Cap_group.objects.all,
+            "colours": Colour.objects.all,
+            "materials": Container_mat.objects.all,
+            "location": "/tables/packing/",
+            "forms": Cap_form.objects.all
+            })
+
+def box_detail(request, box_id):
+    if (box_id == '0'):
+        return render(request, "box.html",
+            {"box": None,
+            "location": "/tables/packing/",
+            })
+    else:
+        return render(request, "box.html",
+            {"box": get_object_or_404(Boxing, pk=box_id),
+            "location": "/tables/packing/"
+            })
+
+def sticker_detail(request, sticker_id):
+    if (sticker_id == '0'):
+        return render(request, "sticker.html",
+            {"sticker": None,
+            "products": Product.objects.all,
+            "parts": Sticker_part.objects.all,
+            "location": "/tables/packing/",
+            })
+    else:
+        return render(request, "sticker.html",
+            {"sticker": get_object_or_404(Sticker, pk=sticker_id),
+            "products": Product.objects.all,
+            "parts": Sticker_part.objects.all,
+            "location": "/tables/packing/"
+            })
 
 def new_material(request):
     return render(request, "new_material.html",
@@ -267,6 +343,84 @@ def save_composition(request, composition_id):
                 cmps.save()
 
         return redirect('compositions')
+
+def save_container(request, container_id):
+    if (container_id == '0'):
+        container = Container()
+    else:
+        container = get_object_or_404(Container, pk=container_id)
+    try:
+        code = request.POST['code']
+        group = get_object_or_404(Container_group, pk=request.POST['group'])
+        form = get_object_or_404(Container_form, pk=request.POST['form'])
+        colour = get_object_or_404(Colour, pk=request.POST['colour'])
+        mat = get_object_or_404(Container_mat, pk=request.POST['container_mat'])
+        container.code = code
+        container.group = group
+        container.form = form
+        container.colour = colour
+        container.mat = mat
+    except (KeyError, Container_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        container.save()
+        return redirect('packing')
+
+def save_cap(request, cap_id):
+    if (cap_id == '0'):
+        cap = Cap()
+    else:
+        cap = get_object_or_404(Cap, pk=cap_id)
+    try:
+        code = request.POST['code']
+        group = get_object_or_404(Cap_group, pk=request.POST['group'])
+        form = get_object_or_404(Cap_form, pk=request.POST['form'])
+        colour = get_object_or_404(Colour, pk=request.POST['colour'])
+        mat = get_object_or_404(Container_mat, pk=request.POST['container_mat'])
+        cap.code = code
+        cap.group = group
+        cap.form = form
+        cap.colour = colour
+        cap.mat = mat
+    except (KeyError, Cap_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        cap.save()
+        return redirect('caps')
+
+def save_box(request, box_id):
+    if (box_id == '0'):
+        box = Boxing()
+    else:
+        box = get_object_or_404(Boxing, pk=box_id)
+    if ('name' in request.POST) & ('code' in request.POST):
+        code = request.POST['code']
+        name = request.POST['name']
+        box.code = code
+        box.name = name
+        box.save()
+        return redirect('boxing')
+    else:
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+
+
+def save_sticker(request, sticker_id):
+    if (sticker_id == '0'):
+        sticker = Sticker()
+    else:
+        sticker = get_object_or_404(Sticker, pk=sticker_id)
+    try:
+        code = request.POST['code']
+        product = get_object_or_404(Product, pk=request.POST['product'])
+        part = get_object_or_404(Sticker_part, pk=request.POST['part'])
+        sticker.code = code
+        sticker.product = product
+        sticker.part = part
+    except (KeyError, Cap_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        sticker.save()
+        return redirect('stickers')
 
 
 # Create your views here.

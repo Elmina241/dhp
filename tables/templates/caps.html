@@ -9,7 +9,7 @@
 
 <form action="del_cap/" method="post" style="margin-top: 40px">
 {% csrf_token %}
-<a href="new_cap/"><button type="button" class="btn btn-default">Добавить запись</button></a>
+<button type="button" class="btn btn-default" onClick="window.location.href='/tables/caps/0/'">Добавить запись</button>
 <input type="submit" class="btn btn-default" value="Удалить">
 <br><br>
 {% if caps %}
@@ -24,7 +24,7 @@
     <tr>
       <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
       <td>{{ c.code }}</td>
-      <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ c }}</td>
+      <td onClick="window.location.href='/tables/caps/{{ c.id }}/'">{{ c }}</td>
       <td>{{ c.group.name }}</td>
       <td>{{ c.form.name }}</td>
       <td>{{ c.colour.name }}</td>

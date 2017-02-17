@@ -19,9 +19,9 @@
                 <td>{{ p.product.code }}</td>
                 <td>{{ p.product.name }}</td>
                 <td onClick="window.location.href='/tables/production/{{ p.id }}/'">{{ p.composition.name }}</td>
-                <td>{{ p.container.name }}</td>
-                <td>{{ p.cap.name }}</td>
-                <td>{{ p.sticker.name }}</td>
+                <td>{{ p.container }}</td>
+                <td>{{ p.cap }}</td>
+                <td>{{ p.sticker }}</td>
                 <td>{{ p.boxing.name }}</td>
               </tr>
               {% endfor %}
