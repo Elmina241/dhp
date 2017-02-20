@@ -1,0 +1,96 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+    {% if commodity == None %}
+      <h4 class="panel-title">Добавление записи</h4>
+      {% else %}
+      <h4 class="panel-title">Редактирование записи: {{ commodity }}</h4>
+      {% endif %}
+  </div>
+
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="save_commodity/" method="post">
+      {% csrf_token %}
+      <div id="two-column">
+        <div id="left">
+          <h5><b>Продукт:</b><br></h5>
+          <p><select class="form-control" name="product">
+            {% for p in products %}
+            {% if commodity.product == p %}
+            <option selected value="{{p.id}}">{{p.name}}</option>
+            {% else %}
+            <option value="{{p.id}}">{{p.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>Состав:</b><br></h5>
+          <p><select class="form-control" name="composition">
+            {% for c in compositions %}
+            {% if commodity.composition == c %}
+            <option selected value="{{c.id}}">{{c.name}}</option>
+            {% else %}
+            <option value="{{c.id}}">{{c.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>Тара:</b><br></h5>
+          <p><select class="form-control" name="container">
+            {% for c in containers %}
+            {% if commodity.container == c %}
+            <option selected value="{{c.id}}">{{c}}</option>
+            {% else %}
+            <option value="{{c.id}}">{{c}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+        </div>
+        <div id="right">
+          <h5><b>Укупорка:</b><br></h5>
+          <p><select class="form-control" name="cap">
+            {% for c in caps %}
+            {% if commodity.cap == c %}
+            <option selected value="{{c.id}}">{{c}}</option>
+            {% else %}
+            <option value="{{c.id}}">{{c}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>Этикетка:</b><br></h5>
+          <p><select class="form-control" name="sticker">
+            {% for s in stickers %}
+            {% if commodity.sticker == s %}
+            <option selected value="{{s.id}}">{{s}}</option>
+            {% else %}
+            <option value="{{s.id}}">{{s}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>Упаковка:</b><br></h5>
+          <p><select class="form-control" name="boxing">
+            {% for b in boxing %}
+            {% if commodity.boxing == b %}
+            <option selected value="{{b.id}}">{{b.name}}</option>
+            {% else %}
+            <option value="{{b.id}}">{{b.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+    </div>
+    </div>
+  </div>
+</div>
+  </form>
+  </div>
+{% endblock content %}

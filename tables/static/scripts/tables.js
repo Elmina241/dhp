@@ -37,3 +37,5 @@ function addRow(id){
     var field = document.getElementById('json');
     field.value = JSON.stringify(table);
   }
+
+  

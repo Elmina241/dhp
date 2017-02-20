@@ -58,6 +58,37 @@ def pr_detail(request, product_id):
         "details": Product_detail.objects.all,
         "options": Product_option.objects.all,})
 
+def comm_detail(request, commodity_id):
+        if (commodity_id == '0'):
+            return render(request, "commodity.html",
+                {"container": None,
+                "products": Product.objects.all,
+                "compositions": Composition.objects.all,
+                "containers": Container.objects.all,
+                "caps": Cap.objects.all,
+                "location": "/tables/production/",
+                "stickers": Sticker.objects.all,
+                "boxing": Boxing.objects.all
+                })
+        else:
+            return render(request, "commodity.html",
+                {"commodity": get_object_or_404(Production, pk=commodity_id),
+                "products": Product.objects.all,
+                "compositions": Composition.objects.all,
+                "containers": Container.objects.all,
+                "caps": Cap.objects.all,
+                "location": "/tables/production/",
+                "stickers": Sticker.objects.all,
+                "boxing": Boxing.objects.all
+                })
+
+def storage_detail(request):
+        return render(request, "edit_storage.html",
+                {"storage": None,
+                "location": "/tables/storage/"
+                })
+
+
 def comp_detail(request, composition_id):
     return render(request, "composition.html",
         {"comp": get_object_or_404(Composition, pk=composition_id),
@@ -134,6 +165,20 @@ def sticker_detail(request, sticker_id):
             "parts": Sticker_part.objects.all,
             "location": "/tables/packing/"
             })
+
+def reactor_detail(request, storage_id):
+    return render(request, "edit_storage.html",
+        {"storage": get_object_or_404(Reactor, pk=storage_id),
+        "is_tank": "",
+        "location": "/tables/storage/"
+        })
+
+def tank_detail(request, storage_id):
+    return render(request, "edit_storage.html",
+        {"storage": get_object_or_404(Tank, pk=storage_id),
+        "is_tank": "checked",
+        "location": "/tables/storage/"
+        })
 
 def new_material(request):
     return render(request, "new_material.html",
@@ -422,5 +467,61 @@ def save_sticker(request, sticker_id):
         sticker.save()
         return redirect('stickers')
 
+def save_commodity(request, commodity_id):
+    if (commodity_id == '0'):
+        commodity = Production()
+    else:
+        commodity = get_object_or_404(Production, pk=commodity_id)
+    try:
+        product = get_object_or_404(Product, pk=request.POST['product'])
+        composition = get_object_or_404(Composition, pk=request.POST['composition'])
+        container = get_object_or_404(Container, pk=request.POST['container'])
+        cap = get_object_or_404(Cap, pk=request.POST['cap'])
+        sticker = get_object_or_404(Sticker, pk=request.POST['sticker'])
+        boxing = get_object_or_404(Boxing, pk=request.POST['boxing'])
+        commodity.product = product
+        commodity.composition = composition
+        commodity.container = container
+        commodity.cap = cap
+        commodity.sticker = sticker
+        commodity.boxing = boxing
+    except (KeyError, Product.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        commodity.save()
+        return redirect('production')
 
-# Create your views here.
+def save_storage(request, storage_id):
+    if ('store_type' in request.POST):
+        s_type = request.POST['store_type']
+    if (storage_id == '0'):
+        if (s_type == 'reactor'):
+            storage = Reactor()
+        else:
+            storage = Tank()
+    else:
+        if (s_type == 'reactor'):
+            storage = get_object_or_404(Reactor, pk=storage_id)
+        else:
+            storage = get_object_or_404(Tank, pk=storage_id)
+    if  ('name' in request.POST) & ('code' in request.POST):
+        code = request.POST['code']
+        name = request.POST['name']
+        capacity = request.POST['capacity']
+        if 'ready' in request.POST:
+            ready = request.POST['ready']
+        else:
+            ready = False
+        storage.ready = ready
+        if (s_type == 'reactor'):
+            min = request.POST['min']
+            max = request.POST['max']
+            storage.min = min
+            storage.max = max
+        storage.code = code
+        storage.name = name
+        storage.capacity = capacity
+        storage.save()
+        return redirect('storage')
+    else:
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})

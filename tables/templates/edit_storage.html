@@ -1,0 +1,76 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+function showOrHide(cb) {
+  min = document.getElementById("min");
+  max = document.getElementById("max");
+  if (cb.value == "reactor") {
+    min.disabled = false;
+    max.disabled = false;
+  }
+  else {
+    min.disabled = true;
+    max.disabled = true;
+  }
+};
+$(document).ready(function (){
+    if (document.getElementById("cb2").checked) showOrHide(document.getElementById("cb2"));
+});
+</script>
+
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+    {% if storage == None %}
+      <h4 class="panel-title">Добавление записи</h4>
+      {% else %}
+      <h4 class="panel-title">Редактирование записи: {{ storage }}</h4>
+      {% endif %}
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="save_storage/" method="post">
+      {% csrf_token %}
+      <label class="radio-inline"><input name="store_type" type="radio" id = 'cb1' onclick = 'showOrHide(this);' value="reactor" checked><b>Реактор</b></label>
+      <label class="radio-inline"><input name="store_type" type="radio" id ='cb2' value="tank" onclick = 'showOrHide(this);' {{ is_tank }}><b>Танк</b></label>
+      <br><br>
+      <div id="two-column">
+        <div id="left">
+          <h5><b>Артикул:</b></h5>
+          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{storage.code}}"></p>
+          <br><br><br>
+          <h5><b>Наименование:</b></h5>
+          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{storage.name}}"></p>
+          <br><br><br>
+          <h5><b>Объём:</b><br></h5>
+          <div class="input-group">
+            <input type="number" class="form-control bfh-number" min="0"  name="capacity" value="{{ storage.capacity }}"> <span class="input-group-addon">л</span></p>
+          </div>
+        </div>
+        <div id="right">
+          <h5><b>Минимальный объём загрузки:</b><br></h5>
+          <div class="input-group">
+            <input type="number" class="form-control bfh-number" min="0"  name="min" value="{{ storage.min }}" id="min"> <span class="input-group-addon">л</span></p>
+          </div>
+          <br>
+          <h5><b>Максимальный объём загрузки:</b><br></h5>
+          <div class="input-group">
+            <input type="number" class="form-control bfh-number" min="0"  name="max" value="{{ storage.max }}" id="max"> <span class="input-group-addon">л</span></p>
+          </div>
+          <br>
+          <h5><b>Готов:</b><br></h5>
+          <div class="input-group">
+            <input type="checkbox" name="ready" {{ storage.get_check }}>
+          </div>
+          <br><br><br>
+          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+    </div>
+    </div>
+  </div>
+</div>
+  </form>
+  </div>
+{% endblock content %}

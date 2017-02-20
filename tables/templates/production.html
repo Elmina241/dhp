@@ -2,7 +2,7 @@
 {% block content %}
           <form action="del_commodity/" method="post">
           {% csrf_token %}
-          <a href="new_commodity/"><button type="button" class="btn btn-default">Добавить запись</button></a>
+          <button type="button" class="btn btn-default" onClick="window.location.href='/tables/production/0/'">Добавить запись</button>
           <input type="submit" class="btn btn-default" value="Удалить">
           <br><br>
           {% if production %}
