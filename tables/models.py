@@ -95,6 +95,8 @@ class Composition(models.Model):
     group = models.ForeignKey('Composition_group')
     def __str__(self):
         return self.name
+    def get_name(self):
+        return self.code + " " + self.name
 
 class Components(models.Model):
     comp = models.ForeignKey('Composition')

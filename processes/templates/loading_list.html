@@ -1,0 +1,88 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+function getComponents() {
+  var sel = document.getElementById("composition");
+  var sel_id = document.sel.value;
+  var components = JSON.parse({{components}});
+  var materials = JSON.parse({{materials}});
+  var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
+  for (for i = 0; i < components.length; i++){
+    if (components[i].fields.comp == sel_id){
+      var row = document.createElement("TR");
+      var td1 = document.createElement("TD");
+      var td2 = document.createElement("TD");
+      var td3 = document.createElement("TD");
+      var td4 = document.createElement("TD");
+      td1.appendChild(document.createTextNode(components[i].fields.mat));
+      td2.appendChild(document.createTextNode(" "));
+      td3.appendChild(document.createTextNode(components[i].fields.min));
+      td4.appendChild(document.createTextNode(components[i].fields.max));
+      row.appendChild(td1);
+      row.appendChild(td2);
+      row.appendChild(td3);
+      row.appendChild(td4);
+      tbody.appendChild(row);
+    }
+  }
+};
+$(document).ready(function (){
+    var MyDate = document.getElementById("MyDate");
+    var dt=new Date();
+    var month = dt.getMonth()+1;
+    if (month<10) month='0'+month;
+    var day = dt.getDate();
+    if (day<10) day='0'+day;
+    var year = dt.getFullYear();
+    MyDate.value=day+'.'+month+'.'+year;
+});
+</script>
+
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+    {% if list == None %}
+      <h4 class="panel-title">Добавление записи</h4>
+      {% else %}
+      <h4 class="panel-title">Редактирование записи: {{ list }}</h4>
+      {% endif %}
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="save_storage/" method="post">
+      {% csrf_token %}
+      {{ components }}
+      {{ materials }}
+      <p><label for="MyDate">Дата: </label><input id=MyDate type=text readonly><Br>
+      <div class="form-inline" style="margin: auto">
+        <label for="material">Состав: </label>
+        <select class="form-control" id="composition" style="width:30%">
+          {% for c in compositions %}
+          <option value="{{ c.code }}">{{ c.get_name }}</option>
+          {% endfor %}</select>
+          <button type="button" class="btn btn-default" onclick="getComponents();return false;">Выбрать</button>
+      </div>
+      <br><br>
+      <table class="table table-sm" id="materials" style="width:80%; margin: auto">
+        <thead>
+          <tr>
+            <th>Код</th><th>Наименование</th><th>Минимум</th><th>Максимум</th><th>Количество</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ВД01</td>
+            <td>Вода</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  </form>
+</div>
+{% endblock content %}

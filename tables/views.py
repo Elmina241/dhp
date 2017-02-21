@@ -204,6 +204,60 @@ def del_product(request):
         del_obj.delete()
     return redirect('products')
 
+def del_box(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Boxing, pk=d)
+        del_obj.delete()
+    return redirect('boxing')
+
+def del_cap(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Cap, pk=d)
+        del_obj.delete()
+    return redirect('caps')
+
+def del_composition(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Composition, pk=d)
+        Components.objects.filter(comp=del_obj).delete()
+        del_obj.delete()
+    return redirect('compositions')
+
+def del_packing(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Container, pk=d)
+        del_obj.delete()
+    return redirect('packing')
+
+def del_commodity(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Production, pk=d)
+        del_obj.delete()
+    return redirect('production')
+
+def del_sticker(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Sticker, pk=d)
+        del_obj.delete()
+    return redirect('stickers')
+
+def del_storage(request):
+    del_var1 = request.POST.getlist('del_list1')
+    del_var2 = request.POST.getlist('del_list2')
+    for d in del_var1:
+        del_obj = get_object_or_404(Reactor, pk=d)
+        del_obj.delete()
+    for d in del_var2:
+        del_obj = get_object_or_404(Tank, pk=d)
+        del_obj.delete()
+    return redirect('storage')
+
 def new_product(request):
     return render(request, "new_product.html",
     {"groups": Product_group.objects.all,

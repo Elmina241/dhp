@@ -22,7 +22,7 @@
   <tbody>
     {% for b in boxes %}
     <tr>
-      <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
+      <td><input type="checkbox" value="{{ b.id }}" name="del_list"></td>
       <td>{{ b.code }}</td>
       <td onClick="window.location.href='/tables/boxing/{{ b.id }}/'">{{ b }}</td>
     </tr>
