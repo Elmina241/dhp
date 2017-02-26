@@ -2,31 +2,6 @@
 {% block content %}
 
 <script type="text/javascript">
-function getComponents() {
-  var sel = document.getElementById("composition");
-  var sel_id = document.sel.value;
-  var components = JSON.parse({{components}});
-  var materials = JSON.parse({{materials}});
-  var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
-  for (for i = 0; i < components.length; i++){
-    if (components[i].fields.comp == sel_id){
-      var row = document.createElement("TR");
-      var td1 = document.createElement("TD");
-      var td2 = document.createElement("TD");
-      var td3 = document.createElement("TD");
-      var td4 = document.createElement("TD");
-      td1.appendChild(document.createTextNode(components[i].fields.mat));
-      td2.appendChild(document.createTextNode(" "));
-      td3.appendChild(document.createTextNode(components[i].fields.min));
-      td4.appendChild(document.createTextNode(components[i].fields.max));
-      row.appendChild(td1);
-      row.appendChild(td2);
-      row.appendChild(td3);
-      row.appendChild(td4);
-      tbody.appendChild(row);
-    }
-  }
-};
 $(document).ready(function (){
     var MyDate = document.getElementById("MyDate");
     var dt=new Date();
@@ -52,21 +27,25 @@ $(document).ready(function (){
   {% endif %}
 <div class="panel-body">
   <div class="input-group" style ="margin: auto">
-    <form action="save_storage/" method="post">
+    <form action="save_storage/" method="post" class="form-horizontal">
       {% csrf_token %}
-      {{ components }}
-      {{ materials }}
-      <p><label for="MyDate">Дата: </label><input id=MyDate type=text readonly><Br>
-      <div class="form-inline" style="margin: auto">
-        <label for="material">Состав: </label>
-        <select class="form-control" id="composition" style="width:30%">
+      <div class="form-group"><label for="MyDate" class="col-sm-2 control-label" style="font-size: medium">Дата: </label><div class="col-sm-10"><input id="MyDate" type="text" class="form-control" readonly></div>
+  </div>
+  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><input id="ammount" type="number" class="form-control" onchange="changeWater();return false;"></div>
+</div>
+      <div class="form-group">
+        <label for="material" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
+        <div class="col-sm-10">
+        <select class="form-control" id="composition" style="width:78.5%">
           {% for c in compositions %}
-          <option value="{{ c.code }}">{{ c.get_name }}</option>
+          <option value="{{ c.id }}">{{ c.get_name }}</option>
           {% endfor %}</select>
-          <button type="button" class="btn btn-default" onclick="getComponents();return false;">Выбрать</button>
+          <button type="button" class="btn btn-default" onclick="getComponents({{components}}, {{materials}});return false;" style="margin-left:2%">Выбрать</button>
+        </div>
+
       </div>
       <br><br>
-      <table class="table table-sm" id="materials" style="width:80%; margin: auto">
+      <table class="table table-sm" id="materials" style="width:100%; margin: auto">
         <thead>
           <tr>
             <th>Код</th><th>Наименование</th><th>Минимум</th><th>Максимум</th><th>Количество</th>
@@ -76,9 +55,9 @@ $(document).ready(function (){
           <tr>
             <td>ВД01</td>
             <td>Вода</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>-</td>
+            <td>-</td>
+            <td id="water"></td>
           </tr>
         </tbody>
       </table>

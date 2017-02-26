@@ -16,7 +16,8 @@ def list_detail(request, list_id):
             "components": json.dumps(components),
             "compositions": Composition.objects.all,
             "materials": json.dumps(materials),
-            "location": "/processes/loading_lists/"
+            "location": "/processes/loading_lists/",
+            "header": "Загрузочные листы"
             })
     else:
         return render(request, "loading_list.html",
@@ -24,5 +25,6 @@ def list_detail(request, list_id):
             "components": json.dumps(components),
             "materials": json.dumps(materials),
             "compositions": Composition.objects.all,
-            "location": "/processes/loading_lists/"
+            "location": "/processes/loading_lists/",
+            "header": "Загрузочные листы"
             })
