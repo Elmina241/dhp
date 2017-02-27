@@ -17,6 +17,7 @@ function getComponents(c, m) {
       var td5 = document.createElement("TD");
       var input = document.createElement("input");
       input.type = "number";
+      input.name = getCode(components[i].fields.mat, materials)
       input.setAttribute('onchange', "changeWater();return false;")
       td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
       td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
@@ -54,6 +55,9 @@ function changeWater() {
     mat_ammount = mat_ammount + m;
   }
   water.textContent = ammount - mat_ammount;
+  var table = $('#materials').tableToJSON(); // Convert the table into a javascript object
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
 };
 
 function getName(m_id, m) {

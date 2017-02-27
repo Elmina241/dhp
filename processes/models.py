@@ -2,7 +2,7 @@ from django.db import models
 from tables.models import Composition, Material
 
 class Loading_list(models.Model):
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
     composition = models.ForeignKey('tables.Composition')
     ammount = models.FloatField()
     def __str__(self):

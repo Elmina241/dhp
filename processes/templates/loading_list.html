@@ -27,16 +27,16 @@ $(document).ready(function (){
   {% endif %}
 <div class="panel-body">
   <div class="input-group" style ="margin: auto">
-    <form action="save_storage/" method="post" class="form-horizontal">
+    <form action="save_list/" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="form-group"><label for="MyDate" class="col-sm-2 control-label" style="font-size: medium">Дата: </label><div class="col-sm-10"><input id="MyDate" type="text" class="form-control" readonly></div>
   </div>
-  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><input id="ammount" type="number" class="form-control" onchange="changeWater();return false;"></div>
+  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><input id="ammount" name="ammount" type="number" class="form-control" onchange="changeWater();return false;" value="{{list.ammount}}"></div>
 </div>
       <div class="form-group">
         <label for="material" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
         <div class="col-sm-10">
-        <select class="form-control" id="composition" style="width:78.5%">
+        <select class="form-control" id="composition" name="composition" style="width:78.5%">
           {% for c in compositions %}
           <option value="{{ c.id }}">{{ c.get_name }}</option>
           {% endfor %}</select>
@@ -61,6 +61,9 @@ $(document).ready(function (){
           </tr>
         </tbody>
       </table>
+      <br>
+      <input type="hidden" id="json" name="json" value="">
+      <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
   </div>
   </form>
 </div>
