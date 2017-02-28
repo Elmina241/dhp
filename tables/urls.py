@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^caps/$', views.caps, name = 'caps'),
     url(r'^boxing/$', views.boxing, name = 'boxing'),
     url(r'^stickers/$', views.stickers, name = 'stickers'),
+    url(r'^formulas/$', views.formulas, name = 'formulas'),
     # добавление записей
     url(r'^products/new_product/$', views.new_product, name = 'new_product'),
     url(r'^compositions/new_composition/$', views.new_composition, name = 'new_composition'),
@@ -43,6 +44,7 @@ urlpatterns = [
     url(r'^production/(?P<commodity_id>[0-9]+)/$', views.comm_detail, name='comm_detail'),
     url(r'^materials/(?P<material_id>[0-9]+)/$', views.detail, name='detail'),
     url(r'^compositions/(?P<composition_id>[0-9]+)/$', views.comp_detail, name='comp_detail'),
+    url(r'^formulas/(?P<formula_id>[0-9]+)/$', views.formula_detail, name='formula_detail'),
     # фильтры
     url(r'^products/get_group/$', views.pr_group, name='pr_group'),
     url(r'^compositions/get_group_comp/$', views.comp_group, name='comp_group'),

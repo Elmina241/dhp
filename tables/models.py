@@ -81,7 +81,7 @@ class Product(models.Model):
     def get_short_code(self):
         return self.code[9:]
 
-#Модели для составов
+#Модели для рецептов
 
 class Composition_group(models.Model):
     name = models.CharField(max_length=80)
@@ -213,3 +213,18 @@ class Tank(models.Model):
         return self.name
     def get_check(self):
         return 'checked' if self.ready else ''
+
+#Модели для составов
+
+class Formula(models.Model):
+    code = models.CharField(max_length=80)
+    composition = models.ForeignKey('Composition')
+    def __str__(self):
+        return self.code + ' ' + self.composition.name
+
+class Formula_component(models.Model):
+    formula = models.ForeignKey('Formula')
+    mat = models.ForeignKey('Material')
+    ammount = models.FloatField()
+    def __str__(self):
+        return self.mat.name

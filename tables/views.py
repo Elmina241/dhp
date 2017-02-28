@@ -1,9 +1,10 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part
+from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
 from .forms import Delete_form
 import json
+from django.core import serializers
 
 
 def index(request):
@@ -17,6 +18,10 @@ def products(request):
 def packing(request):
     return render(request, "packing.html",
         {"containers": Container.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+
+def formulas(request):
+    return render(request, "formulas.html",
+        {"formulas": Formula.objects.all, "header": "Составы", "location": "/tables/formulas/"})
 
 def caps(request):
     return render(request, "caps.html",
@@ -39,7 +44,7 @@ def stickers(request):
         {"stickers": Sticker.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
 
 def compositions(request):
-    return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Составы", "location": "/tables/compositions/"})
+    return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Рецепты", "location": "/tables/compositions/"})
 
 def detail(request, material_id):
     return render(request, "material.html",
@@ -80,6 +85,26 @@ def comm_detail(request, commodity_id):
                 "location": "/tables/production/",
                 "stickers": Sticker.objects.all,
                 "boxing": Boxing.objects.all
+                })
+
+def formula_detail(request, formula_id):
+        components = serializers.serialize("json", Components.objects.all())
+        materials = serializers.serialize("json", Material.objects.all())
+        if (formula_id == '0'):
+            return render(request, "formula.html",
+                {"formula": None,
+                "components": json.dumps(components),
+                "compositions": Composition.objects.all,
+                "materials": json.dumps(materials),
+                "location": "/tables/formulas/"
+                })
+        else:
+            return render(request, "formula.html",
+                {"formula": get_object_or_404(Formula, pk=formula_id),
+                "components": json.dumps(components),
+                "compositions": Composition.objects.all,
+                "materials": json.dumps(materials),
+                "location": "/tables/formulas/"
                 })
 
 def storage_detail(request):
@@ -188,7 +213,7 @@ def new_material(request):
 
 def new_composition(request):
     return render(request, "new_composition.html",
-    {"materials": Material.objects.all, "header": "Добавление состава", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
+    {"materials": Material.objects.all, "header": "Добавление рецепта", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
 
 def del_material(request):
     del_var = request.POST.getlist('del_list')
