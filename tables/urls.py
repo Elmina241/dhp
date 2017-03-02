@@ -57,5 +57,6 @@ urlpatterns = [
     url(r'^production/(?P<commodity_id>[0-9]+)/save_commodity/$', views.save_commodity, name='save_commodity'),
     url(r'^packing/(?P<container_id>[0-9]+)/save_container/$', views.save_container, name='save_container'),
     url(r'^storage/(reactor/|tank/|)(?P<storage_id>[0-9]+)/save_storage/$', views.save_storage, name='save_storage'),
-    url(r'^compositions/(?P<composition_id>[0-9]+)/save_composition/$', views.save_composition, name='save_composition')
+    url(r'^compositions/(?P<composition_id>[0-9]+)/save_composition/$', views.save_composition, name='save_composition'),
+    url(r'^formulas/(?P<formula_id>[0-9]+)/save_formula/$', views.save_formula, name='save_formula')
 ]

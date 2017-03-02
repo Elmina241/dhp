@@ -16,7 +16,7 @@
                   {% for f in formulas %}
                   <tr>
                     <td><input type="checkbox" value="{{ f.id }}" name="del_list"></td>
-                    <td>{{ f.composition.code }}</td>
+                    <td>{{ f.code }}</td>
                     <td onClick="window.location.href='/tables/formulas/{{ f.id }}/'">{{ f }}</td>
                     <td>{{ f.composition.group.name }}</td>
                   </tr>

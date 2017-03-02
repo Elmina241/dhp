@@ -1,4 +1,4 @@
-function getComponents(c, m) {
+function getComponents(c, m, f='') {
   var table = document.getElementById("materials");
   var length = table.rows.length;
   for (i = 2; i < length; i++) table.deleteRow(2);
@@ -6,6 +6,7 @@ function getComponents(c, m) {
   var sel_id = sel.value;
   var components = JSON.parse(c);
   var materials = JSON.parse(m);
+  var f_comp = JSON.parse(f);
   var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
   for (i = 0; i < components.length; i++){
     if (components[i].fields.comp == sel_id){
@@ -18,6 +19,7 @@ function getComponents(c, m) {
       var input = document.createElement("input");
       input.type = "number";
       input.name = getCode(components[i].fields.mat, materials)
+      input.value = getAmmount(components[i].fields.mat, f_comp)
       input.setAttribute('onchange', "saveTable();return false;")
       td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
       td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
@@ -68,4 +70,14 @@ function getName(m_id, m) {
     i++;
   }
   return name;
+};
+
+function getAmmount(m_id, f) {
+  var i = 0;
+  var amm = "0";
+  while (i < f.length && amm == "0"){
+    if (f[i].fields.mat == m_id) amm = f[i].fields.ammount;
+    i++;
+  }
+  return amm;
 };

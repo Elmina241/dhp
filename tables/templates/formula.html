@@ -1,6 +1,11 @@
 {% extends 'tables/base.html' %}
 {% block content %}
 
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#b1").click();
+});
+</script>
 
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -18,13 +23,21 @@
     <form action="save_formula/" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="form-group">
+        <div class="form-group"><label for="code" class="col-sm-2 control-label" style="font-size: medium">Код: </label><div class="col-sm-8"><input id="code" name="code" type="text" class="form-control"  value="{{formula.code}}"></div>
+        <br><br><br>
         <label for="material" class="col-sm-2 control-label" style="font-size: medium">Рецепт: </label>
         <div class="col-sm-10">
         <select class="form-control" id="composition" name="composition" style="width:78.5%">
           {% for c in compositions %}
-          <option value="{{ c.id }}">{{ c.get_name }}</option>
+          {% if formula.composition == c %}
+            <option selected value="{{ c.id }}">{{ c.get_name }}</option>
+            {% else %}
+            <option value="{{ c.id }}">{{ c.get_name }}</option>
+            {% endif %}
           {% endfor %}</select>
-          <button type="button" class="btn btn-default" onclick="getComponents({{components}}, {{materials}});return false;" style="margin-left:2%">Выбрать</button>
+          <button type="button" id="b1" class="btn btn-default" onclick="getComponents({{components}}, {{materials}}, {{f_components}});saveTable();return false;" style="margin-left:2%">
+            Выбрать
+          </button>
         </div>
       </div>
       <br><br>
@@ -40,7 +53,7 @@
             <td>Вода</td>
             <td>-</td>
             <td>-</td>
-            <td><input type="number" name="ВД01" onchange="saveTable();return false;" disabled></td>
+            <td><input type="number" name="ВД01" id="ВД01" onchange="saveTable();return false;" disabled></td>
           </tr>
         </tbody>
       </table>

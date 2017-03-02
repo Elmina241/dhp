@@ -90,6 +90,7 @@ def comm_detail(request, commodity_id):
 def formula_detail(request, formula_id):
         components = serializers.serialize("json", Components.objects.all())
         materials = serializers.serialize("json", Material.objects.all())
+
         if (formula_id == '0'):
             return render(request, "formula.html",
                 {"formula": None,
@@ -99,10 +100,12 @@ def formula_detail(request, formula_id):
                 "location": "/tables/formulas/"
                 })
         else:
+            f_components = serializers.serialize("json", Formula_component.objects.filter(formula=get_object_or_404(Formula, pk=formula_id)))
             return render(request, "formula.html",
                 {"formula": get_object_or_404(Formula, pk=formula_id),
                 "components": json.dumps(components),
                 "compositions": Composition.objects.all,
+                "f_components": json.dumps(f_components),
                 "materials": json.dumps(materials),
                 "location": "/tables/formulas/"
                 })
@@ -604,3 +607,29 @@ def save_storage(request, storage_id):
         return redirect('storage')
     else:
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+
+def save_formula(request, formula_id):
+    if (formula_id == '0'):
+        formula = Formula()
+    else:
+        formula = get_object_or_404(Formula, pk=formula_id)
+    try:
+        if 'code' in request.POST:
+            formula.code = request.POST['code']
+            composition = get_object_or_404(Composition, pk=request.POST['composition'])
+            formula.composition = composition
+    except (KeyError, Formula.DoesNotExist):
+        return render(request, 'index.html', {'error_message': 'Option does not exist'})
+    else:
+        formula.save()
+        Formula_component.objects.filter(formula=formula).delete()
+        if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            for d in data:
+                mat = Material.objects.filter(code=d['Код'])[0]
+                if d['Код'] in request.POST:
+                    ammount=request.POST[d['Код']]
+                    cmps = Formula_component(formula=formula, mat=mat, ammount=request.POST[d['Код']])
+                    cmps.save()
+        return redirect('formulas')
