@@ -6,7 +6,9 @@ function getComponents(c, m, f='') {
   var sel_id = sel.value;
   var components = JSON.parse(c);
   var materials = JSON.parse(m);
-  var f_comp = JSON.parse(f);
+  if (f!="0"){
+    var f_comp = JSON.parse(f);
+  }
   var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
   for (i = 0; i < components.length; i++){
     if (components[i].fields.comp == sel_id){
@@ -18,9 +20,9 @@ function getComponents(c, m, f='') {
       var td5 = document.createElement("TD");
       var input = document.createElement("input");
       input.type = "number";
-      input.name = getCode(components[i].fields.mat, materials)
-      input.value = getAmmount(components[i].fields.mat, f_comp)
-      input.setAttribute('onchange', "saveTable();return false;")
+      input.name = getCode(components[i].fields.mat, materials);
+      if (f!="0") input.value = getAmmount(components[i].fields.mat, f_comp);
+      input.setAttribute('onchange', "saveTable();return false;");
       td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
       td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
       td3.appendChild(document.createTextNode(components[i].fields.min));

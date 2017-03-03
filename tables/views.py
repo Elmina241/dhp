@@ -49,6 +49,7 @@ def compositions(request):
 def detail(request, material_id):
     return render(request, "material.html",
         {"material": get_object_or_404(Material, pk=material_id),
+        "location": "/tables/materials/",
         "groups": Material_group.objects.all,
         "units": Unit.objects.all,
         "prefixes": Prefix.objects.all})
@@ -56,6 +57,7 @@ def detail(request, material_id):
 def pr_detail(request, product_id):
     return render(request, "product.html",
         {"product": get_object_or_404(Product, pk=product_id),
+        "location": "/tables/products/",
         "groups": Product_group.objects.all,
         "forms": Product_form.objects.all,
         "uses": Product_use.objects.all,
@@ -96,6 +98,7 @@ def formula_detail(request, formula_id):
                 {"formula": None,
                 "components": json.dumps(components),
                 "compositions": Composition.objects.all,
+                "f_components": "0",
                 "materials": json.dumps(materials),
                 "location": "/tables/formulas/"
                 })
@@ -211,6 +214,7 @@ def tank_detail(request, storage_id):
 def new_material(request):
     return render(request, "new_material.html",
     {"groups": Material_group.objects.all,
+    "location": "/tables/materials/",
     "units": Unit.objects.all,
     "prefixes": Prefix.objects.all})
 
@@ -254,6 +258,14 @@ def del_composition(request):
         del_obj.delete()
     return redirect('compositions')
 
+def del_formula(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Formula, pk=d)
+        Formula_component.objects.filter(formula=del_obj).delete()
+        del_obj.delete()
+    return redirect('formulas')
+
 def del_packing(request):
     del_var = request.POST.getlist('del_list')
     for d in del_var:
@@ -289,6 +301,7 @@ def del_storage(request):
 def new_product(request):
     return render(request, "new_product.html",
     {"groups": Product_group.objects.all,
+    "location": "/tables/products/",
     "forms": Product_form.objects.all,
     "uses": Product_use.objects.all,
     "marks": Product_mark.objects.all,
@@ -312,7 +325,7 @@ def add_material(request):
         mark = mark,
         unit = unit,
         concentration = concentration,
-        ammount = ammount)
+        ammount = ammount, price=0)
 
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
@@ -340,6 +353,7 @@ def save_material(request, material_id):
         material.unit = unit
         material.concentration = concentration
         material.ammount = ammount
+        material.price=0
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:

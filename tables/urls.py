@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^production/del_commodity/$', views.del_commodity, name = 'del_commodity'),
     url(r'^stickers/del_sticker/$', views.del_sticker, name = 'del_sticker'),
     url(r'^storage/del_storage/$', views.del_storage, name = 'del_storage'),
+    url(r'^formulas/del_formula/$', views.del_formula, name = 'del_formula'),
     # редактирование записей
     url(r'^packing/(?P<container_id>[0-9]+)/$', views.container_detail, name='container_detail'),
     url(r'^caps/(?P<cap_id>[0-9]+)/$', views.cap_detail, name='cap_detail'),
