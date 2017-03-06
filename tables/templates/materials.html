@@ -1,5 +1,15 @@
 {% extends 'tables/base.html' %}
 {% block content %}
+<form action="get_group/" method="POST" class="form-inline">
+  {% csrf_token %}
+ Фильтр по группе:
+ <select class="form-control" name="group1">
+   <option value="-1" selected>Все</option>
+   {% for g in groups %}
+   <option value="{{ g.id }}">{{ g.name }}</option>
+   {% endfor %}</select>
+   <input type="submit" class="btn btn-default" value="Применить" class="form-control"><a href="/tables/materials/"> <button type="button" class="btn btn-default">Сбросить</button></a>
+</form>
           <form action="del_material/" method="post">
           {% csrf_token %}
           <a href="new_material/"><button type="button" class="btn btn-default">Добавить запись</button></a>
@@ -9,7 +19,7 @@
           <table class="table table-hover table-sm">
             <thead>
               <tr>
-                <th></th><th>Артикул</th><th>Группа</th><th>Наименование</th><th>Префикс</th><th>Марка</th><th>Количество</th><th>Ед. изм.</th><th>Концентрация</th>
+                <th></th><th>Артикул</th><th>Группа</th><th>Наименование</th><th>Ед. изм.</th><th>Количество</th><th>Концентрация</th>
               </tr>
             </thead>
             <tbody>
@@ -18,11 +28,11 @@
                 <td><input type="checkbox" value="{{ m.id }}" name="del_list"></td>
                 <td>{{ m.code }}</td>
                 <td>{{ m.group.name }}</td>
-                <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m.name }}</td>
-                <td>{{ m.prefix.name }}</td>
-                <td>{{ m.mark }}</td>
-                <td>{{ m.ammount }}</td>
+                <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
+                <!--<td>{{ m.prefix.name }}</td>-->
+                <!--<td>{{ m.mark }}</td>-->
                 <td>{{ m.unit.name }}</td>
+                <td>{{ m.ammount }}</td>
                 <td>{{ m.concentration }}</td>
               </tr>
               {% endfor %}

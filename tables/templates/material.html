@@ -27,17 +27,7 @@
                       {% endif %}
                       {% endfor %}
                     </select></p></p>
-                    <br><br><br>
-                    <h5><b>Префикс:</b><br></h5>
-                    <p><select class="form-control" name="prefix">
-                      {% for p in prefixes %}
-                      {% if material.prefix == p %}
-                      <option selected value="{{p.id}}">{{p.name}}</option>
-                      {% else %}
-                      <option value="{{p.id}}">{{p.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
+                    
                   </div>
                   <div id="right">
                     <h5><b>Марка:</b><br></h5>

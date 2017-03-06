@@ -28,7 +28,7 @@ class Material(models.Model):
     concentration = models.FloatField()
     price = models.FloatField()
     def __str__(self):
-        full_name = ('' if self.prefix.name == 'отсутствует' else (self.prefix.name + ' ')) + self.name + ('' if self.mark == '-' else (' ' + self.mark))
+        full_name = self.name + ('' if self.mark == '-' else (' ' + self.mark))
         return full_name
     def get_name(self):
         full_name = self.code + " " + self.name

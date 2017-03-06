@@ -9,7 +9,7 @@
           <table class="table table-hover table-sm">
             <thead>
               <tr>
-                <th></th><th>Артикул</th><th>Продукция</th><th>Состав</th><th>Тара</th><th>Укупорка</th><th>Этикетка</th><th>Упаковка</th>
+                <th></th><th>Артикул</th><th>Продукция</th><!--<th>Состав</th><th>Тара</th><th>Укупорка</th><th>Этикетка</th><th>Упаковка</th>-->
               </tr>
             </thead>
             <tbody>
@@ -17,12 +17,12 @@
               <tr>
                 <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
                 <td>{{ p.product.code }}</td>
-                <td>{{ p.product.name }}</td>
-                <td onClick="window.location.href='/tables/production/{{ p.id }}/'">{{ p.composition.name }}</td>
+                <td onClick="window.location.href='/tables/production/{{ p.id }}/'">{{ p.product.name }}</td>
+                <!--<td>{{ p.composition.name }}</td>
                 <td>{{ p.container }}</td>
                 <td>{{ p.cap }}</td>
                 <td>{{ p.sticker }}</td>
-                <td>{{ p.boxing.name }}</td>
+                <td>{{ p.boxing.name }}</td>-->
               </tr>
               {% endfor %}
             </tbody>

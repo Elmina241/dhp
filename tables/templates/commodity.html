@@ -17,26 +17,28 @@
   <div class="input-group" style ="margin: auto">
     <form action="save_commodity/" method="post">
       {% csrf_token %}
-      <div id="two-column">
-        <div id="left">
-          <h5><b>Продукт:</b><br></h5>
+          <h5><b>Продукт:</b></h5>
+          {% if commodity == None %}
           <p><select class="form-control" name="product">
             {% for p in products %}
             {% if commodity.product == p %}
-            <option selected value="{{p.id}}">{{p.name}}</option>
+            <option selected value="{{p.id}}">{{p.code}} {{p}}</option>
             {% else %}
-            <option value="{{p.id}}">{{p.name}}</option>
+            <option value="{{p.id}}">{{p.code}} {{p}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
           <br><br><br>
+          {% else %}
+          <input type="hidden" value="{{commodity.product.id}}" name="product"><h4>{{commodity.product.code}} {{commodity.product}}</h4>
+          {% endif %}
           <h5><b>Состав:</b><br></h5>
           <p><select class="form-control" name="composition">
             {% for c in compositions %}
             {% if commodity.composition == c %}
-            <option selected value="{{c.id}}">{{c.name}}</option>
+            <option selected value="{{c.id}}">{{c.code}} {{c.name}}</option>
             {% else %}
-            <option value="{{c.id}}">{{c.name}}</option>
+            <option value="{{c.id}}">{{c.code}} {{c.name}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
@@ -45,21 +47,20 @@
           <p><select class="form-control" name="container">
             {% for c in containers %}
             {% if commodity.container == c %}
-            <option selected value="{{c.id}}">{{c}}</option>
+            <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
             {% else %}
-            <option value="{{c.id}}">{{c}}</option>
+            <option value="{{c.id}}">{{c.code}} {{c}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
-        </div>
-        <div id="right">
+          <br><br><br>
           <h5><b>Укупорка:</b><br></h5>
           <p><select class="form-control" name="cap">
             {% for c in caps %}
             {% if commodity.cap == c %}
-            <option selected value="{{c.id}}">{{c}}</option>
+            <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
             {% else %}
-            <option value="{{c.id}}">{{c}}</option>
+            <option value="{{c.id}}">{{c.code}} {{c}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
@@ -68,9 +69,9 @@
           <p><select class="form-control" name="sticker">
             {% for s in stickers %}
             {% if commodity.sticker == s %}
-            <option selected value="{{s.id}}">{{s}}</option>
+            <option selected value="{{s.id}}">{{s.code}} {{s}}</option>
             {% else %}
-            <option value="{{s.id}}">{{s}}</option>
+            <option value="{{s.id}}">{{s.code}} {{s}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
@@ -79,15 +80,14 @@
           <p><select class="form-control" name="boxing">
             {% for b in boxing %}
             {% if commodity.boxing == b %}
-            <option selected value="{{b.id}}">{{b.name}}</option>
+            <option selected value="{{b.id}}">{{b.code}} {{b.name}}</option>
             {% else %}
-            <option value="{{b.id}}">{{b.name}}</option>
+            <option value="{{b.id}}">{{b.code}} {{b.name}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
           <br><br><br>
           <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
-    </div>
     </div>
   </div>
 </div>

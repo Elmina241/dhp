@@ -15,8 +15,11 @@ function addRow(id){
     td4.appendChild (document.createTextNode(max));
     var td5 = document.createElement("TD");
     var t6 = document.createElement("button");
-    t6.setAttribute('onclick', 'deleteRow(this)')
-    t6.appendChild(document.createTextNode("Удалить"))
+    t6.setAttribute('onclick', 'deleteRow(this)');
+    t6.setAttribute('class', "btn btn-default");
+    var d = document.createElement("i");
+    d.setAttribute('class', "glyphicon glyphicon-trash");
+    t6.appendChild(d);
     td5.appendChild (t6);
     row.appendChild(td1);
     row.appendChild(td2);
@@ -24,18 +27,18 @@ function addRow(id){
     row.appendChild(td4);
     row.appendChild(td5);
     tbody.appendChild(row);
-    var table = $('#components').tableToJSON({ignoreColumns: [4]}); // Convert the table into a javascript object
-    var field = document.getElementById('json');
-    field.value = JSON.stringify(table);
+    saveTable2();
   }
 
   function deleteRow(r)
   {
     var i=r.parentNode.parentNode.rowIndex;
     document.getElementById('components').deleteRow(i);
-    var table = $('#components').tableToJSON({ignoreColumns: [4]}); // Convert the table into a javascript object
-    var field = document.getElementById('json');
-    field.value = JSON.stringify(table);
+    saveTable2();
   }
 
-  
+function saveTable2(){
+  var table = $('#components').tableToJSON({ignoreColumns: [4]}); // Convert the table into a javascript object
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
+}

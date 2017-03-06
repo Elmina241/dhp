@@ -4,6 +4,7 @@
   {% csrf_token %}
  Фильтр по группе:
  <select class="form-control" name="group1">
+   <option value="-1" selected>Все</option>
    {% for g in groups %}
    <option value="{{ g.id }}">{{ g.name }}</option>
    {% endfor %}</select>
@@ -18,7 +19,7 @@
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>Код</th><th>Наименование</th><th>Группа</th><th>Форма</th><th>Назначение</th><th>Варианты</th><th>Уточнение</th><th>Марка</th>
+                    <th></th><th>Код</th><th>Наименование</th><!--<th>Группа</th><th>Форма</th><th>Назначение</th><th>Варианты</th><th>Уточнение</th><th>Марка</th>-->
                   </tr>
                 </thead>
                 <tbody>
@@ -26,13 +27,13 @@
                   <tr>
                     <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
                     <td>{{ p.code }}</td>
-                    <td onClick="window.location.href='/tables/products/{{ p.id }}/'">{{ p.name }}</td>
-                    <td>{{ p.group.name }}</td>
+                    <td onClick="window.location.href='/tables/products/{{ p.id }}/'">{{ p }}</td>
+                    <!--<td>{{ p.group.name }}</td>
                     <td>{{ p.form.name }}</td>
                     <td>{{ p.use.name }}</td>
                     <td>{{ p.option.name }}</td>
                     <td>{{ p.detail.name }}</td>
-                    <td>{{ p.mark.name }}</td>
+                    <td>{{ p.mark.name }}</td>-->
                   </tr>
                   {% endfor %}
                 </tbody>

@@ -4,6 +4,7 @@
   {% csrf_token %}
  Фильтр по группе:
  <select class="form-control" name="group1">
+   <option value="-1" selected>Все</option>
    {% for g in groups %}
    <option value="{{ g.id }}">{{ g.name }}</option>
    {% endfor %}</select>
@@ -18,7 +19,7 @@
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>Код</th><th>Наименование</th><th>Группа</th><th>СГР</th>
+                    <th></th><th>Код</th><th>Наименование</th><!--<th>Группа</th><th>СГР</th>-->
                   </tr>
                 </thead>
                 <tbody>
@@ -27,8 +28,8 @@
                     <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
                     <td>{{ c.code }}</td>
                     <td onClick="window.location.href='/tables/compositions/{{ c.id }}/'">{{ c.name }}</td>
-                    <td>{{ c.group.name }}</td>
-                    <td>{{ c.sgr }}</td>
+                    <!--<td>{{ c.group.name }}</td>
+                    <td>{{ c.sgr }}</td>-->
                   </tr>
                   {% endfor %}
                 </tbody>

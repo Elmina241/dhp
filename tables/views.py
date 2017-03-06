@@ -8,7 +8,7 @@ from django.core import serializers
 
 
 def index(request):
-    return render(request, "materials.html", {"materials": Material.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
+    return render(request, "materials.html", {"materials": Material.objects.all, "groups": Material_group.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
 
 def products(request):
     return render(request, "products.html",
@@ -51,8 +51,7 @@ def detail(request, material_id):
         {"material": get_object_or_404(Material, pk=material_id),
         "location": "/tables/materials/",
         "groups": Material_group.objects.all,
-        "units": Unit.objects.all,
-        "prefixes": Prefix.objects.all})
+        "units": Unit.objects.all})
 
 def pr_detail(request, product_id):
     return render(request, "product.html",
@@ -215,8 +214,7 @@ def new_material(request):
     return render(request, "new_material.html",
     {"groups": Material_group.objects.all,
     "location": "/tables/materials/",
-    "units": Unit.objects.all,
-    "prefixes": Prefix.objects.all})
+    "units": Unit.objects.all})
 
 def new_composition(request):
     return render(request, "new_composition.html",
@@ -313,7 +311,7 @@ def add_material(request):
         code = request.POST['code']
         name = request.POST['name']
         group = get_object_or_404(Material_group, pk=request.POST['group'])
-        prefix = get_object_or_404(Prefix, pk=request.POST['prefix'])
+        prefix = get_object_or_404(Prefix, pk=1)
         mark = request.POST['mark']
         unit = get_object_or_404(Unit, pk=request.POST['unit'])
         concentration = request.POST['concentration']
@@ -340,7 +338,7 @@ def save_material(request, material_id):
         code = request.POST['code']
         name = request.POST['name']
         group = get_object_or_404(Material_group, pk=request.POST['group'])
-        prefix = get_object_or_404(Prefix, pk=request.POST['prefix'])
+        prefix = get_object_or_404(Prefix, pk=1)
         mark = request.POST['mark']
         unit = get_object_or_404(Unit, pk=request.POST['unit'])
         concentration = request.POST['concentration']
@@ -360,11 +358,26 @@ def save_material(request, material_id):
         material.save()
         return redirect('index')
 
+def mat_group(request):
+    if 'group1' in request.POST:
+        pk = request.POST['group1']
+    else:
+        pk=0
+    if pk == '-1':
+        return redirect('index')
+    group = get_object_or_404(Material_group, pk=pk)
+    material_group = Material.objects.filter(group=group)
+    return render(request, "materials.html",
+            {"materials": material_group,
+            "groups": Material_group.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
+
 def pr_group(request):
     if 'group1' in request.POST:
         pk = request.POST['group1']
     else:
         pk=0
+    if pk == '-1':
+        return redirect('products')
     group = get_object_or_404(Product_group, pk=pk)
     product_group = Product.objects.filter(group=group)
     return render(request, "products.html",
@@ -376,6 +389,8 @@ def comp_group(request):
         pk = request.POST['group1']
     else:
         pk=0
+    if pk == '-1':
+        return redirect('compositions')
     group = get_object_or_404(Composition_group, pk=pk)
     comp_group = Composition.objects.filter(group=group)
     return render(request, "compositions.html",
