@@ -1,6 +1,9 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-
+<script type="text/javascript">
+$(document).ready(function(){
+  addValidation();
+});</script>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
     {% if container == None %}
@@ -20,7 +23,7 @@
       <div id="two-column">
         <div id="left">
           <h5><b>Артикул:</b><h5>
-          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{ container.code }}"></p>
+          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{ container.code }}" required></p>
           <br><br><br>
           <h5><b>Вид:</b><br></h5>
           <p><select class="form-control" name="group">
@@ -69,7 +72,7 @@
           </select></p></p>
           <br><br><br>
           <br><br><br><br><br><br>
-          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
         </div>
       </div>
     </div>

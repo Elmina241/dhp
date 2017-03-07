@@ -1,21 +1,30 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-
+<script type="text/javascript">
+$(document).ready(function(){
+  addValidation();
+});</script>
 <script type="text/javascript">
 function showOrHide(cb) {
   min = document.getElementById("min");
   max = document.getElementById("max");
+  var v = $("#capacity")[0];
   if (cb.value == "reactor") {
     min.disabled = false;
     max.disabled = false;
+    v.disabled = true;
   }
   else {
     min.disabled = true;
     max.disabled = true;
+    v.disabled = false;
   }
 };
 $(document).ready(function (){
-    if (document.getElementById("cb2").checked) showOrHide(document.getElementById("cb2"));
+    if (document.getElementById("cb2").checked) {
+      showOrHide(document.getElementById("cb2"));
+    }
+    else showOrHide(document.getElementById("cb1"));
 });
 </script>
 
@@ -40,14 +49,14 @@ $(document).ready(function (){
       <div id="two-column">
         <div id="left">
           <h5><b>Артикул:</b></h5>
-          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{storage.code}}"></p>
+          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{storage.code}}" required></p>
           <br><br><br>
           <h5><b>Наименование:</b></h5>
-          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{storage.name}}"></p>
+          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{storage.name}}" required></p>
           <br><br><br>
           <h5><b>Объём:</b><br></h5>
           <div class="input-group">
-            <input type="number" class="form-control bfh-number" min="0"  name="capacity" value="{{ storage.capacity }}"> <span class="input-group-addon">л</span></p>
+            <input type="number" class="form-control bfh-number" min="0" id="capacity" name="capacity" value="{{ storage.capacity }}"> <span class="input-group-addon">л</span></p>
           </div>
         </div>
         <div id="right">
@@ -66,7 +75,7 @@ $(document).ready(function (){
             <input type="checkbox" name="ready" {{ storage.get_check }}>
           </div>
           <br><br><br>
-          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
     </div>
     </div>
   </div>

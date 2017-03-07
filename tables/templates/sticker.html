@@ -1,6 +1,10 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-
+<script type="text/javascript">
+$(document).ready(function(){
+  addValidation();
+});
+</script>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
     {% if sticker == None %}
@@ -18,7 +22,7 @@
     <form action="save_sticker/" method="post">
       {% csrf_token %}
           <h5><b>Артикул:</b><h5>
-          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{ sticker.code }}"></p>
+          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{ sticker.code }}" required></p>
           <br><br><br>
           <h5><b>Продукт:</b><br></h5>
           <p><select class="form-control" name="product">
@@ -42,7 +46,7 @@
             {% endfor %}
           </select></p></p>
           <br><br><br>
-          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
     </div>
     </div>
   </form>

@@ -1,5 +1,10 @@
 {% extends 'tables/base.html' %}
 {% block content %}
+<script type="text/javascript">
+$(document).ready(function(){
+  addValidation();
+});
+</script>
         <div class="panel panel-default" style ="margin: auto">
           <div class="panel-heading"><h4 class="panel-title"> {{ product.name }} </h4></div>
           {% if error_message %}
@@ -12,10 +17,10 @@
                 <div id="two-column">
                   <div id="left">
                     <h5><b>Код:</b><h5>
-                    <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}"></p>
+                    <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}" required></p>
                     <br><br><br>
                     <h5><b>Наименование:</b></h5>
-                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{product.name}}"></p>
+                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{product.name}}" required></p>
                     <br><br><br>
                     <h5><b>Группа:</b><br></h5>
                     <p><select class="form-control" name="group">
@@ -84,7 +89,7 @@
                       {% endfor %}
                     </select></p></p>
                     <br><br><br><br>
-                    <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+                    <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
                   </div>
                 </div>
               </form>

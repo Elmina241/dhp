@@ -32,6 +32,10 @@ CustomValidation.prototype = {
   // Получаем общий текст сообщений об ошибках
   getInvalidities: function() {
     return this.invalidities.join('. \n');
+  },
+
+  clearInvalidities: function() {
+    return this.invalidities = [];
   }
 };
 
@@ -47,6 +51,7 @@ function addValidation(){
       // Проверим валидность поля, используя встроенную в JavaScript функцию checkValidity()
       if (input.checkValidity() == false) {
         var inputCustomValidation = new CustomValidation(); // Создадим объект CustomValidation
+        inputCustomValidation.clearInvalidities();
         inputCustomValidation.checkValidity(input); // Выявим ошибки
         var customValidityMessage = inputCustomValidation.getInvalidities(); // Получим все сообщения об ошибках
         input.setCustomValidity(customValidityMessage); // Установим специальное сообщение об ошибке

@@ -6,7 +6,11 @@
  <select class="form-control" name="group1">
    <option value="-1" selected>Все</option>
    {% for g in groups %}
-   <option value="{{ g.id }}">{{ g.name }}</option>
+   {% if g == group %}
+    <option value="{{ g.id }}" selected="">{{ g.name }}</option>
+   {% else %}
+    <option value="{{ g.id }}">{{ g.name }}</option>
+   {% endif %}
    {% endfor %}</select>
    <input type="submit" class="btn btn-default" value="Применить" class="form-control"><a href="/tables/materials/"> <button type="button" class="btn btn-default">Сбросить</button></a>
 </form>

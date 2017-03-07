@@ -195,7 +195,7 @@ class Production(models.Model):
 class Reactor(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
-    capacity = models.FloatField()
+    #capacity = models.FloatField()
     min = models.FloatField()
     max = models.FloatField()
     ready = models.BooleanField()

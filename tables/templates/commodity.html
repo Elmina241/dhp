@@ -1,6 +1,9 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-
+<script type="text/javascript">
+$(document).ready(function(){
+  addValidation();
+});</script>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
     {% if commodity == None %}
@@ -87,7 +90,7 @@
             {% endfor %}
           </select></p></p>
           <br><br><br>
-          <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
     </div>
   </div>
 </div>

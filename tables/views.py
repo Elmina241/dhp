@@ -368,7 +368,7 @@ def mat_group(request):
     group = get_object_or_404(Material_group, pk=pk)
     material_group = Material.objects.filter(group=group)
     return render(request, "materials.html",
-            {"materials": material_group,
+            {"materials": material_group, "group": group,
             "groups": Material_group.objects.all, "header": "Реактивы", "location": "/tables/materials/"})
 
 def pr_group(request):
@@ -381,7 +381,7 @@ def pr_group(request):
     group = get_object_or_404(Product_group, pk=pk)
     product_group = Product.objects.filter(group=group)
     return render(request, "products.html",
-            {"products": product_group,
+            {"products": product_group, "group": group,
             "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
 
 def comp_group(request):
@@ -394,7 +394,7 @@ def comp_group(request):
     group = get_object_or_404(Composition_group, pk=pk)
     comp_group = Composition.objects.filter(group=group)
     return render(request, "compositions.html",
-            {"compositions": comp_group,
+            {"compositions": comp_group, "group": group,
             "groups": Composition_group.objects.all, "header": "Составы", "location": "/tables/compositions/"})
 
 def save_product(request, product_id):
@@ -618,7 +618,7 @@ def save_storage(request, storage_id):
     if  ('name' in request.POST) & ('code' in request.POST):
         code = request.POST['code']
         name = request.POST['name']
-        capacity = request.POST['capacity']
+        #capacity = request.POST['capacity']
         if 'ready' in request.POST:
             ready = request.POST['ready']
         else:
@@ -631,7 +631,7 @@ def save_storage(request, storage_id):
             storage.max = max
         storage.code = code
         storage.name = name
-        storage.capacity = capacity
+        #storage.capacity = capacity
         storage.save()
         return redirect('storage')
     else:

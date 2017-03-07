@@ -1,5 +1,9 @@
 {% extends 'tables/base.html' %}
 {% block content %}
+<script type="text/javascript">
+$(document).ready(function(){
+  addValidation();
+});</script>
         <div class="panel panel-default" style ="margin: auto">
           <div class="panel-heading"><h4 class="panel-title"> {{ material.name }} </h4></div>
           {% if error_message %}
@@ -12,10 +16,10 @@
                 <div id="two-column">
                   <div id="left">
                     <h5><b>Артикул:</b><h5>
-                    <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{material.code}}"></p>
+                    <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{material.code}}" required></p>
                     <br><br><br>
                     <h5><b>Химическое наименование:</b></h5>
-                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{material.name}}"></p>
+                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{material.name}}" required></p>
                     <br><br><br>
                     <h5><b>Группа:</b><br></h5>
                     <p><select class="form-control" name="group">
@@ -27,11 +31,11 @@
                       {% endif %}
                       {% endfor %}
                     </select></p></p>
-                    
+
                   </div>
                   <div id="right">
                     <h5><b>Марка:</b><br></h5>
-                    <input type="text" class="form-control" placeholder="Марка" size = "50" name="mark" value="{{material.mark}}"></p>
+                    <input type="text" class="form-control" placeholder="Марка" size = "50" name="mark" value="{{material.mark}}" required></p>
                     <br><br><br>
                     <h5><b>Ед. изм.:</b><br></h5>
                     <p><select class="form-control" name="unit">
@@ -54,7 +58,7 @@
                       <input type="number" class="form-control bfh-number" min="0"  name="ammount" value="{{ material.ammount }}"> <span class="input-group-addon">{{ material.unit.name }}</span></p>
                     </div>
                     <br><br><br>
-                    <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+                    <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
                   </div>
                 </div>
               </form>
