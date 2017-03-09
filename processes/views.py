@@ -30,6 +30,17 @@ def list_detail(request, list_id):
             "header": "Загрузочные листы"
             })
 
+def planning(request):
+    components = serializers.serialize("json", Components.objects.all())
+    materials = serializers.serialize("json", Material.objects.all())
+    return render(request, "planning.html",
+        {"components": json.dumps(components),
+        "materials": json.dumps(materials),
+        "compositions": Composition.objects.all,
+        "location": "/processes/planning/",
+        "header": "Планирование"
+        })
+
 def save_list(request, list_id):
     if (list_id == '0'):
         list = Loading_list()

@@ -42,3 +42,23 @@ function saveTable2(){
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 }
+
+function checkBounds(){
+  var min = document.getElementById("min");
+  var max = document.getElementById("max");
+  return min.valueAsNumber <= max.valueAsNumber;
+}
+
+function saveRow(){
+  var err = document.getElementById("error-message");
+  if (err) err.remove();
+  if (checkBounds()) {
+    addRow('components');
+    $("#newComp").modal("hide");
+  }
+  else{
+    var max = document.getElementById('max').parentElement;
+    max.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Минимальное значение должно быть не больше максимального." + '</p>');
+  }
+
+}
