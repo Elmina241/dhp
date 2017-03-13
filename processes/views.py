@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Material, Components
+from tables.models import Composition, Material, Components, Formula, Formula_component
 from .models import Loading_list, List_component
 import json
 from django.core import serializers
@@ -32,11 +32,15 @@ def list_detail(request, list_id):
 
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())
+    f_comp = serializers.serialize("json", Formula_component.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
+    formula = serializers.serialize("json", Formula.objects.all())
     return render(request, "planning.html",
         {"components": json.dumps(components),
         "materials": json.dumps(materials),
-        "compositions": Composition.objects.all,
+        "f_c": json.dumps(f_comp),
+        "f": json.dumps(formula),
+        "formulas": Formula.objects.all,
         "location": "/processes/planning/",
         "header": "Планирование"
         })
