@@ -23,6 +23,7 @@ function getComponents(c, m, f='') {
       input.name = getCode(components[i].fields.mat, materials);
       if (f!="0") input.value = getAmmount(components[i].fields.mat, f_comp);
       input.setAttribute('onchange', "saveTable();return false;");
+      input.setAttribute('step', "0.01");
       td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
       td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
       td3.appendChild(document.createTextNode(components[i].fields.min));
