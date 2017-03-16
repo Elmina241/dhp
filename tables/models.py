@@ -221,6 +221,9 @@ class Formula(models.Model):
     composition = models.ForeignKey('Composition')
     def __str__(self):
         return self.code + ' ' + self.composition.name
+    def get_name(self):
+        return self.code + ' ' + self.composition.name
+
 
 class Formula_component(models.Model):
     formula = models.ForeignKey('Formula')

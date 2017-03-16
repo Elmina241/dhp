@@ -23,6 +23,7 @@ function getComponents(c, m, f_c, f) {
       input.type = "number";
       input.name = getCode(f_comp[i].fields.mat, materials);
       input.setAttribute('onchange', "changeWater();return false;");
+      input.setAttribute('step', "0.01");
       input.value = (f_comp[i].fields.ammount/1020*amm).toFixed(2);
       var bounds = getMinMax(components, getComp(formulas, f_comp[i].fields.formula), f_comp[i].fields.mat);
       td1.appendChild(document.createTextNode(getCode(f_comp[i].fields.mat, materials)));
@@ -70,7 +71,7 @@ function changeWater() {
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
   }
-  water.textContent = ammount - mat_ammount;
+  water.textContent = (ammount - mat_ammount).toFixed(2);
   var table = $('#materials').tableToJSON(); // Convert the table into a javascript object
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);

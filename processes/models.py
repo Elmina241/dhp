@@ -1,12 +1,11 @@
 from django.db import models
-from tables.models import Composition, Material
+from tables.models import Composition, Material, Formula
 
 class Loading_list(models.Model):
-    #date = models.DateField(auto_now_add=True)
-    composition = models.ForeignKey('tables.Composition')
+    formula = models.ForeignKey('tables.Formula')
     ammount = models.FloatField()
     def __str__(self):
-        return self.composition.name
+        return self.formula.get_name()
 
 class List_component(models.Model):
     list = models.ForeignKey('Loading_list')
@@ -16,7 +15,6 @@ class List_component(models.Model):
         return self.mat.name
 
 class Kneading(models.Model):
-    formula = models.ForeignKey('tables.Formula')
     list = models.ForeignKey('Loading_list')
     start_date = models.DateField()
     finish_date = models.DateField()
@@ -78,3 +76,5 @@ class State_log(models.Model):
     state = models.ForeignKey('State')
     def __str__(self):
         return self.id
+    def get_state(self):
+        return self.state.name

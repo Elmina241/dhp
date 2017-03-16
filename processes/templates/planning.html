@@ -9,7 +9,7 @@ $(document).ready(function(){
     startDate: "today",
     todayHighlight: true
   });
-
+  $('#formula').trigger("change");
 });</script>
 
 <div class="panel panel-default" style ="margin: auto">
@@ -21,7 +21,7 @@ $(document).ready(function(){
   {% endif %}
 <div class="panel-body">
   <div class="input-group" style ="margin: auto">
-    <form action="save_list/" method="post" class="form-horizontal">
+    <form action="save_process/" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="form-group">
         <label for="process" class="col-sm-2 control-label" style="font-size: medium">Процесс: </label>
@@ -44,7 +44,7 @@ $(document).ready(function(){
       <div class="form-group">
         <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
         <div class="col-sm-10">
-        <select class="form-control" id="formula" name="formula" onchange="getComponents({{components}}, {{materials}}, {{f_c}}, {{f}});return false;">
+        <select class="form-control" id="formula" name="formula" onchange="getComponents({{components}}, {{materials}}, {{f_c}}, {{f}});changeWater();return false;">
           {% for f in formulas %}
           <option value="{{ f.id }}">{{ f }}</option>
           {% endfor %}</select>
