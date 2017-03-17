@@ -23,7 +23,6 @@ function getComponents(c, m, f_c, f) {
       input.type = "number";
       input.name = getCode(f_comp[i].fields.mat, materials);
       input.setAttribute('onchange', "changeWater();return false;");
-      input.setAttribute('step', "0.01");
       input.value = (f_comp[i].fields.ammount/1020*amm).toFixed(2);
       var bounds = getMinMax(components, getComp(formulas, f_comp[i].fields.formula), f_comp[i].fields.mat);
       td1.appendChild(document.createTextNode(getCode(f_comp[i].fields.mat, materials)));
@@ -41,7 +40,6 @@ function getComponents(c, m, f_c, f) {
   }
 };
 
-//получить номер состава
 function getComp(f, f_id){
   var i = 0;
   var id = "0";
@@ -72,7 +70,7 @@ function changeWater() {
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
   }
-  water.textContent = (ammount - mat_ammount).toFixed(2);
+  water.textContent = ammount - mat_ammount;
   var table = $('#materials').tableToJSON(); // Convert the table into a javascript object
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
@@ -120,21 +118,3 @@ function changeMinMax(c, f){
     $("#materials tr").eq(i).find('td').eq(3).text(((bounds.max/100)*amm).toFixed(2));
   }
 }
-
-//функция для получения загрузочного листа
-function getComponents2(c, m, l_c, l_id, c_id) {
-  var tbody = $("#materials tbody")[0];
-  var materials = JSON.parse(m);
-  var components = JSON.parse(c);
-  var l_comp = JSON.parse(l_c);
-  var amm = $("#ammount").val();
-  for (i = 0; i < l_comp.length; i++){
-      var mat_code = getCode(l_comp[i].fields.mat, materials);
-      var mat_amm = l_comp[i].fields.ammount;
-      var bounds = getMinMax(components, l_id, l_comp[i].fields.mat);
-      var mat_name = getName(l_comp[i].fields.mat, materials);
-      var min = ((bounds.min/100)*amm).toFixed(2);
-      var max = ((bounds.max/100)*amm).toFixed(2);
-      $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' step='0.01' value=" + mat_amm + '>').appendTo(tbody);
-  }
-};

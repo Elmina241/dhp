@@ -19,7 +19,7 @@ class Kneading(models.Model):
     start_date = models.DateField()
     finish_date = models.DateField()
     def __str__(self):
-        return self.formula
+        return self.list.formula.get_name()
 
 class Characteristic_type(models.Model):
     name = models.CharField(max_length=80)
@@ -75,6 +75,6 @@ class State_log(models.Model):
     date = models.DateField(auto_now_add=True)
     state = models.ForeignKey('State')
     def __str__(self):
-        return self.id
+        return str(self.id) + ' ' + self.state.name + ' ' + str(self.date)
     def get_state(self):
         return self.state.name

@@ -51,36 +51,29 @@ def planning(request):
         "header": "Планирование"
         })
 
-def save_list(request, list_id):
-    if (list_id == '0'):
-        list = Loading_list()
-    else:
-        list = get_object_or_404(Loading_list, pk=list_id)
-    try:
-        if 'ammount' in request.POST:
-            ammount = request.POST['ammount']
-            composition = get_object_or_404(Composition, pk=request.POST['composition'])
-            list.ammount = ammount
-            list.composition = composition
-    except (KeyError, Loading_list.DoesNotExist):
-        return render(request, 'loading_lists.html', {'error_message': 'Option does not exist'})
-    else:
-        list.save()
-        List_component.objects.filter(list=list).delete()
-        if 'json' in request.POST:
-            table = request.POST['json']
-            data = json.loads(table)
-            for d in data:
-                if d['Код']!='ВД01':
-                    mat = Material.objects.filter(code=d['Код'])[0]
+def save_list(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    list = kneading.list
+    if 'ammount' in request.POST:
+        ammount = request.POST['ammount']
+        list.ammount = ammount
+    list.save()
+    List_component.objects.filter(list=list).delete()
+    if 'json' in request.POST:
+        table = request.POST['json']
+        data = json.loads(table)
+        for d in data:
+            if d['Код']!='ВД01':
+                mat = Material.objects.filter(code=d['Код'])[0]
+                if d['Код'] in request.POST:
                     ammount=request.POST[d['Код']]
-                    if d['Код'] in request.POST:
-                        cmps = List_component(list=list, mat=mat, ammount=request.POST[d['Код']])
-                        cmps.save()
+                    cmps = List_component(list=list, mat=mat, ammount=request.POST[d['Код']])
+                    cmps.save()
         return redirect('loading_lists')
 
 def save_process(request):
     list = Loading_list()
+    #сохранение загрузочного листа
     if 'ammount' in request.POST:
         ammount = request.POST['ammount']
         formula = get_object_or_404(Formula, pk=request.POST['formula'])
@@ -97,6 +90,7 @@ def save_process(request):
                     if d['Код'] in request.POST:
                         cmps = List_component(list=list, mat=mat, ammount=request.POST[d['Код']])
                         cmps.save()
+        #сохранение процесса
         if 'start' in request.POST:
             kneading = Kneading()
             st_date = request.POST['start']
@@ -112,7 +106,29 @@ def save_process(request):
 def get_state(request):
     if request.method == 'POST':
         if 'id' in request.POST:
-            log = get_object_or_404(State, pk=1)
-            #log = State_log.objects.filter(kneading = get_object_or_404(Kneading, pk=request.POST['id'])).first()
-            name = log.name
+            log = State_log.objects.filter(kneading = get_object_or_404(Kneading, pk=request.POST['id'])).last()
+            name = log.get_state()
             return HttpResponse(name)
+
+def kneading_detail(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    state_id = State_log.objects.filter(kneading = kneading).last().state.pk
+    if state_id == 1:
+        components = serializers.serialize("json", Components.objects.all())
+        l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
+        materials = serializers.serialize("json", Material.objects.all())
+        formula = serializers.serialize("json", Formula.objects.all())
+        return render(request, 'waiting.html', {"components": json.dumps(components),
+                                                "materials": json.dumps(materials),
+                                                "l_c": json.dumps(l_comp),
+                                                "c_id": kneading.list.formula.composition.id,
+                                                "location": "/processes/mixing/",
+                                                "p": kneading})
+    if state_id == 2:
+        return null
+    if state_id == 3:
+        return null
+    if state_id == 4:
+        return null
+    if state_id == 5:
+        return null

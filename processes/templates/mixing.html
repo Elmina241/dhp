@@ -40,13 +40,12 @@ function getState(id){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
-        success: onAjaxSuccess
+        success: function onAjaxSuccess(data)
+        {
+          $("#"+id).text(data);
+        }
       });
-}
 
-function onAjaxSuccess(data)
-{
-  return data;
 }
 
 $(document).ready(function(){
@@ -69,10 +68,10 @@ $(document).ready(function(){
                   <tr>
                     <td><input type="checkbox" value="{{ k.id }}" name="del_list"></td>
                     <td>{{ k.id }}</td>
-                    <td  onClick="window.location.href='/processes/loading_lists/{{ l.id }}/'">{{ k.list.formula }}</td>
+                    <td  onClick="window.location.href='/processes/mixing/{{ k.id }}/'">{{ k.list.formula }}</td>
                     <td>{{ k.start_date }}</td>
                     <td>{{ k.finish_date }}</td>
-                    <td><script>getState({{k.id}})</script></td>
+                    <td id="{{k.id}}"><script>getState({{k.id}})</script></td>
                   </tr>
                   {% endfor %}
                 </tbody>
