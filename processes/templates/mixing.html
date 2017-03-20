@@ -60,7 +60,7 @@ $(document).ready(function(){
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>Код</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th><th>Статус</th>
+                    <th></th><th>№</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th><th>Статус</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -69,8 +69,8 @@ $(document).ready(function(){
                     <td><input type="checkbox" value="{{ k.id }}" name="del_list"></td>
                     <td>{{ k.id }}</td>
                     <td  onClick="window.location.href='/processes/mixing/{{ k.id }}/'">{{ k.list.formula }}</td>
-                    <td>{{ k.start_date }}</td>
-                    <td>{{ k.finish_date }}</td>
+                    <td>{{ k.start_date|date:"d.m.Y" }}</td>
+                    <td>{{ k.finish_date|date:"d.m.Y" }}</td>
                     <td id="{{k.id}}"><script>getState({{k.id}})</script></td>
                   </tr>
                   {% endfor %}

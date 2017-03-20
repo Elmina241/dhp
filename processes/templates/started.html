@@ -8,14 +8,14 @@ $(document).ready(function(){
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
-  <li class="current"><a href="#" title=""><em>Ожидание</em></a></li>
-  <li><a href="#" title=""><em>Запущен</em></a></li>
+  <li><a href="#" title=""><em>Ожидание</em></a></li>
+  <li class="current"><a href="#" title=""><em>Запущен</em></a></li>
   <li><a href="#" title=""><em>Смешение</em></a></li>
   <li><a href="#" title=""><em>Тестирование</em></a></li>
   <li><a href="#" title=""><em>Завершён</em></a></li>
 </ul>
 
-<a href="start_process/"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Запустить процесс</button></a>
+<button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button>
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
 <button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
@@ -27,6 +27,7 @@ $(document).ready(function(){
   {% endif %}
 
 <div class="panel-body">
+
   <div class="input-group" style ="margin: left; margin-left:10pt">
     <form action="save_process/" method="post" class="form-horizontal">
       {% csrf_token %}

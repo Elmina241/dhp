@@ -121,9 +121,24 @@ function changeMinMax(c, f){
   }
 }
 
+function changeMinMax2(c, c_id){
+  var components = JSON.parse(c);
+  //var form = JSON.parse(f);
+  var amm = $("#ammount").val();
+  //var comp = getComp(form, $("#formula").val());
+  var size = $("#materials tr").size();
+  for (var i = 2; i < size; i++){
+    var row = $("#materials tr").eq(i);
+    var code = row.attr("id");
+    var bounds = getMinMax(components, c_id, code);
+    $("#materials tr").eq(i).find('td').eq(2).text(((bounds.min/100)*amm).toFixed(2));
+    $("#materials tr").eq(i).find('td').eq(3).text(((bounds.max/100)*amm).toFixed(2));
+  }
+}
+
 //функция для получения загрузочного листа
-function getComponents2(c, m, l_c, l_id, c_id) {
-  var tbody = $("#materials tbody")[0];
+function getComponents2(c, m, l_c, l_id, t_name) {
+  var tbody = $("#"+t_name+" tbody")[0];
   var materials = JSON.parse(m);
   var components = JSON.parse(c);
   var l_comp = JSON.parse(l_c);
@@ -135,6 +150,11 @@ function getComponents2(c, m, l_c, l_id, c_id) {
       var mat_name = getName(l_comp[i].fields.mat, materials);
       var min = ((bounds.min/100)*amm).toFixed(2);
       var max = ((bounds.max/100)*amm).toFixed(2);
-      $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' step='0.01' value=" + mat_amm + '>').appendTo(tbody);
+      if (t_name=='materials'){
+        $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' step='0.01' value=" + mat_amm + '>').appendTo(tbody);
+      }
+      else{
+        $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + mat_amm + '</td>').appendTo(tbody);
+      }
   }
 };

@@ -58,7 +58,7 @@ def save_list(request, kneading_id):
         ammount = request.POST['ammount']
         list.ammount = ammount
     list.save()
-    List_component.objects.filter(list=list).delete()
+    #List_component.objects.filter(list=list).delete()
     if 'json' in request.POST:
         table = request.POST['json']
         data = json.loads(table)
@@ -67,7 +67,8 @@ def save_list(request, kneading_id):
                 mat = Material.objects.filter(code=d['Код'])[0]
                 if d['Код'] in request.POST:
                     ammount=request.POST[d['Код']]
-                    cmps = List_component(list=list, mat=mat, ammount=request.POST[d['Код']])
+                    cmps = List_component.objects.filter(list=list, mat=mat)[0]
+                    cmps.ammount=request.POST[d['Код']]
                     cmps.save()
         return redirect('loading_lists')
 
@@ -110,14 +111,29 @@ def get_state(request):
             name = log.get_state()
             return HttpResponse(name)
 
+def start_kneading(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=2))
+    st.save()
+    components = serializers.serialize("json", Components.objects.all())
+    l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
+    materials = serializers.serialize("json", Material.objects.all())
+    formula = serializers.serialize("json", Formula.objects.all())
+    return render(request, 'started.html', {"components": json.dumps(components),
+                                            "materials": json.dumps(materials),
+                                            "l_c": json.dumps(l_comp),
+                                            "c_id": kneading.list.formula.composition.id,
+                                            "location": "/processes/mixing/",
+                                            "p": kneading})
+
 def kneading_detail(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     state_id = State_log.objects.filter(kneading = kneading).last().state.pk
+    components = serializers.serialize("json", Components.objects.all())
+    l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
+    materials = serializers.serialize("json", Material.objects.all())
+    formula = serializers.serialize("json", Formula.objects.all())
     if state_id == 1:
-        components = serializers.serialize("json", Components.objects.all())
-        l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
-        materials = serializers.serialize("json", Material.objects.all())
-        formula = serializers.serialize("json", Formula.objects.all())
         return render(request, 'waiting.html', {"components": json.dumps(components),
                                                 "materials": json.dumps(materials),
                                                 "l_c": json.dumps(l_comp),
@@ -125,7 +141,12 @@ def kneading_detail(request, kneading_id):
                                                 "location": "/processes/mixing/",
                                                 "p": kneading})
     if state_id == 2:
-        return null
+        return render(request, 'started.html', {"components": json.dumps(components),
+                                                "materials": json.dumps(materials),
+                                                "l_c": json.dumps(l_comp),
+                                                "c_id": kneading.list.formula.composition.id,
+                                                "location": "/processes/mixing/",
+                                                "p": kneading})
     if state_id == 3:
         return null
     if state_id == 4:
