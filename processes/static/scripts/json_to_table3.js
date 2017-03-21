@@ -64,7 +64,8 @@ function getCode(m_id, m) {
 
 function changeWater() {
   var ammount = document.getElementById("ammount").value;
-  var water = document.getElementById("water");
+  var water1 = document.getElementById("water");
+  var water2 = document.getElementById("water2");
   var tbody = document.getElementById("materials");
   var mat_ammount = 0;
   for (i=2; i<tbody.rows.length; i++){
@@ -72,8 +73,9 @@ function changeWater() {
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
   }
-  water.textContent = (ammount - mat_ammount).toFixed(2);
-  var table = $('#materials').tableToJSON(); // Convert the table into a javascript object
+  water1.textContent = (ammount - mat_ammount).toFixed(2);
+  if (water2 != null) water2.textContent = (ammount - mat_ammount).toFixed(2);
+  var table = $('#materials2').tableToJSON(); // Convert the table into a javascript object
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 };
@@ -158,3 +160,18 @@ function getComponents2(c, m, l_c, l_id, t_name) {
       }
   }
 };
+
+//Функция для передачи изменений в таблицу
+function saveChanges(){
+  $("#textAmm").text($("#ammount").val());
+  var table = $("#materials");
+  var size = $("#materials tr").size();
+  for (var i = 2; i < size; i++){
+    $("#materials2 tr").eq(i).find('td').eq(4).text($("#materials tr").eq(i).find('input').val());
+  }
+  var table = $('#materials2').tableToJSON(); // Convert the table into a javascript object
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
+  var form = document.getElementById("form");
+  form.submit();
+}

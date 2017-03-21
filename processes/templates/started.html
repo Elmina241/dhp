@@ -15,7 +15,7 @@ $(document).ready(function(){
   <li><a href="#" title=""><em>Завершён</em></a></li>
 </ul>
 
-<button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button>
+<a href="mixing/"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button></a>
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
 <button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
@@ -29,7 +29,7 @@ $(document).ready(function(){
 <div class="panel-body">
 
   <div class="input-group" style ="margin: left; margin-left:10pt">
-    <form action="save_process/" method="post" class="form-horizontal">
+    <form action="save_process/" id="form" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="col-sm-3">
         <h5><p><b>Дата начала: </b></p></div></h5>
@@ -87,7 +87,7 @@ $(document).ready(function(){
       <br>
       <input type="hidden" id="json" name="json" value="">
       <div class="modal-footer">
-      <input type="submit" value="Сохранить" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+      <input type="submit" value="Сохранить" onclick="saveChanges();return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
     </div>
     </div>
     </div>
@@ -103,7 +103,7 @@ $(document).ready(function(){
         </tr>
       </thead>
       <tbody>
-        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water"></td></tr>
+        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water2"></td></tr>
       </tbody>
     </table>
   </div>

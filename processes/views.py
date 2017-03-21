@@ -12,7 +12,7 @@ def loading_lists(request):
     return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Loading_list.objects.all})
 
 def mixing(request):
-    return render(request, "mixing.html", {"header": "Процессы смешения", "location": "/processes/mixing/", "kneading": Kneading.objects.all})
+    return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all})
 
 def list_detail(request, list_id):
     components = serializers.serialize("json", Components.objects.all())
@@ -58,18 +58,16 @@ def save_list(request, kneading_id):
         ammount = request.POST['ammount']
         list.ammount = ammount
     list.save()
-    #List_component.objects.filter(list=list).delete()
     if 'json' in request.POST:
         table = request.POST['json']
         data = json.loads(table)
         for d in data:
             if d['Код']!='ВД01':
                 mat = Material.objects.filter(code=d['Код'])[0]
-                if d['Код'] in request.POST:
-                    ammount=request.POST[d['Код']]
-                    cmps = List_component.objects.filter(list=list, mat=mat)[0]
-                    cmps.ammount=request.POST[d['Код']]
-                    cmps.save()
+                ammount=d["Количество, кг"]
+                cmps = List_component.objects.filter(list=list, mat=mat)[0]
+                cmps.ammount=ammount
+                cmps.save()
         return redirect('loading_lists')
 
 def save_process(request):
@@ -123,7 +121,22 @@ def start_kneading(request, kneading_id):
                                             "materials": json.dumps(materials),
                                             "l_c": json.dumps(l_comp),
                                             "c_id": kneading.list.formula.composition.id,
-                                            "location": "/processes/mixing/",
+                                            "location": "/processes/process/",
+                                            "p": kneading})
+
+def start_mixing(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=3))
+    st.save()
+    components = serializers.serialize("json", Components.objects.all())
+    l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
+    materials = serializers.serialize("json", Material.objects.all())
+    formula = serializers.serialize("json", Formula.objects.all())
+    return render(request, 'mixing.html', {"components": json.dumps(components),
+                                            "materials": json.dumps(materials),
+                                            "l_c": json.dumps(l_comp),
+                                            "c_id": kneading.list.formula.composition.id,
+                                            "location": "/processes/process/",
                                             "p": kneading})
 
 def kneading_detail(request, kneading_id):
@@ -138,17 +151,22 @@ def kneading_detail(request, kneading_id):
                                                 "materials": json.dumps(materials),
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
-                                                "location": "/processes/mixing/",
+                                                "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 2:
         return render(request, 'started.html', {"components": json.dumps(components),
                                                 "materials": json.dumps(materials),
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
-                                                "location": "/processes/mixing/",
+                                                "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 3:
-        return null
+        return render(request, 'mixing.html', {"components": json.dumps(components),
+                                                "materials": json.dumps(materials),
+                                                "l_c": json.dumps(l_comp),
+                                                "c_id": kneading.list.formula.composition.id,
+                                                "location": "/processes/process/",
+                                                "p": kneading})
     if state_id == 4:
         return null
     if state_id == 5:

@@ -28,7 +28,7 @@ $(document).ready(function(){
 
 <div class="panel-body">
   <div class="input-group" style ="margin: left; margin-left:10pt">
-    <form action="save_process/" method="post" class="form-horizontal">
+    <form action="save_process/" id="form" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="col-sm-3">
         <h5><p><b>Дата начала: </b></p></div></h5>
@@ -47,7 +47,7 @@ $(document).ready(function(){
           <div class="col-sm-3">
           <h5><p><b>Объём: </b></p></h5></div>
           <div class="col-sm-7">
-          <h5><p>{{p.list.ammount}} кг</p></h5>
+          <h5><p id="textAmm">{{p.list.ammount}} кг</p></h5>
           </div>
       </div>
 
@@ -86,7 +86,7 @@ $(document).ready(function(){
       <br>
       <input type="hidden" id="json" name="json" value="">
       <div class="modal-footer">
-      <input type="submit" value="Сохранить" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+      <input type="submit" onclick="saveChanges();return false;" value="Сохранить" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
     </div>
     </div>
     </div>
@@ -102,7 +102,7 @@ $(document).ready(function(){
         </tr>
       </thead>
       <tbody>
-        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water"></td></tr>
+        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water2"></td></tr>
       </tbody>
     </table>
   </div>
