@@ -75,7 +75,8 @@ function changeWater() {
   }
   water1.textContent = (ammount - mat_ammount).toFixed(2);
   if (water2 != null) water2.textContent = (ammount - mat_ammount).toFixed(2);
-  var table = $('#materials2').tableToJSON(); // Convert the table into a javascript object
+  if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
+  else var table = $('#materials2').tableToJSON();
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 };

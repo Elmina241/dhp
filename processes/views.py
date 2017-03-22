@@ -163,6 +163,7 @@ def kneading_detail(request, kneading_id):
     if state_id == 3:
         return render(request, 'mixing.html', {"components": json.dumps(components),
                                                 "materials": json.dumps(materials),
+                                                "comp": List_component.objects.filter(list=kneading.list),
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
                                                 "location": "/processes/process/",

@@ -11,6 +11,7 @@ class List_component(models.Model):
     list = models.ForeignKey('Loading_list')
     mat = models.ForeignKey('tables.Material')
     ammount = models.FloatField()
+    loaded = models.BooleanField(default = False)
     def __str__(self):
         return self.mat.name
 
