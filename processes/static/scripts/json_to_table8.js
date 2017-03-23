@@ -66,6 +66,7 @@ function changeWater() {
   var ammount = document.getElementById("ammount").value;
   var water1 = document.getElementById("water");
   var water2 = document.getElementById("water2");
+  var w_a = document.getElementById("water_amm");
   var tbody = document.getElementById("materials");
   var mat_ammount = 0;
   for (i=2; i<tbody.rows.length; i++){
@@ -74,11 +75,31 @@ function changeWater() {
     mat_ammount = mat_ammount + m;
   }
   water1.textContent = (ammount - mat_ammount).toFixed(2);
+  if (w_a != null) w_a.value = (ammount - mat_ammount).toFixed(2);
   if (water2 != null) water2.textContent = (ammount - mat_ammount).toFixed(2);
   if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
   else var table = $('#materials2').tableToJSON();
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
+};
+
+function getWater() {
+  var ammount = document.getElementById("ammount").value;
+  //var water1 = document.getElementById("water");
+  var water2 = document.getElementById("water2");
+  var tbody = document.getElementById("materials2");
+  var mat_ammount = 0;
+  for (i=2; i<tbody.rows.length; i++){
+    var m = parseFloat(tbody.rows[i].children[3].textContent);
+    if (isNaN(m)) m = 0;
+    mat_ammount = mat_ammount + m;
+  }
+  //water1.textContent = (ammount - mat_ammount).toFixed(2);
+  if (water2 != null) water2.textContent = (ammount - mat_ammount).toFixed(2);
+  /*if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
+  else var table = $('#materials2').tableToJSON();
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);*/
 };
 
 function getName(m_id, m) {

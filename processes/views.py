@@ -109,6 +109,15 @@ def get_state(request):
             name = log.get_state()
             return HttpResponse(name)
 
+def add_comp(request, kneading_id):
+    if request.method == 'POST':
+        if 'mat_id' in request.POST:
+            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
+            comp.ammount = request.POST['amm']
+            comp.loaded = True
+            comp.save()
+            return HttpResponse("ok")
+
 def start_kneading(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=2))
@@ -126,6 +135,9 @@ def start_kneading(request, kneading_id):
 
 def start_mixing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
+    if 'water_amm' in request.POST:
+         cmps = List_component(list=kneading.list, mat=get_object_or_404(Material, code='ВД01'), ammount=request.POST['water_amm'])
+         cmps.save()
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=3))
     st.save()
     components = serializers.serialize("json", Components.objects.all())
@@ -134,6 +146,7 @@ def start_mixing(request, kneading_id):
     formula = serializers.serialize("json", Formula.objects.all())
     return render(request, 'mixing.html', {"components": json.dumps(components),
                                             "materials": json.dumps(materials),
+                                            "comp": List_component.objects.filter(list=kneading.list),
                                             "l_c": json.dumps(l_comp),
                                             "c_id": kneading.list.formula.composition.id,
                                             "location": "/processes/process/",

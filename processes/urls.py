@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^process/(?P<kneading_id>[0-9]+)/$', views.kneading_detail, name='kneading_detail'),
     url(r'^process/(?P<kneading_id>[0-9]+)/start_process/$', views.start_kneading, name='start_kneading'),
     url(r'^process/(?P<kneading_id>[0-9]+)/mixing/$', views.start_mixing, name='start_mixing'),
+    url(r'^process/(?P<kneading_id>[0-9]+)/add_comp/$', views.add_comp, name='add_comp'),
     url(r'^process/(?P<kneading_id>[0-9]+)/save_process/$', views.save_list, name='save_list'),
     url(r'^planning/save_process/$', views.save_process, name = 'save_process'),
     url(r'^loading_lists/(?P<list_id>[0-9]+)/$', views.list_detail, name='list_detail'),

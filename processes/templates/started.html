@@ -15,7 +15,8 @@ $(document).ready(function(){
   <li><a href="#" title=""><em>Завершён</em></a></li>
 </ul>
 
-<a href="mixing/"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button></a>
+<form action="mixing/" id="f" method="POST">{% csrf_token %}<input type="hidden" id="water_amm" name="water_amm" value=""></form>
+<!--<a href="mixing/">--><button type="button" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button><!--</a>-->
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
 <button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
@@ -86,6 +87,7 @@ $(document).ready(function(){
       </table>
       <br>
       <input type="hidden" id="json" name="json" value="">
+
       <div class="modal-footer">
       <input type="submit" value="Сохранить" onclick="saveChanges();return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
     </div>
