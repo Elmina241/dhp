@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Material, Components, Formula, Formula_component
+from tables.models import Composition, Material, Components, Formula, Formula_component, Reactor
 from .models import Loading_list, List_component, Kneading, State, State_log
 import json
 from django.core import serializers
@@ -46,6 +46,7 @@ def planning(request):
         "materials": json.dumps(materials),
         "f_c": json.dumps(f_comp),
         "f": json.dumps(formula),
+        "reactors": Reactor.objects.all,
         "formulas": Formula.objects.all,
         "location": "/processes/planning/",
         "header": "Планирование"
@@ -94,9 +95,11 @@ def save_process(request):
             kneading = Kneading()
             st_date = request.POST['start']
             end_date = request.POST['end']
+            reactor = get_object_or_404(Reactor, pk=request.POST['reactor'])
             kneading.start_date = datetime.datetime.strptime(st_date, "%d/%m/%Y").date()
             kneading.finish_date = datetime.datetime.strptime(end_date, "%d/%m/%Y").date()
             kneading.list = list
+            kneading.reactor = reactor
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))
             st.save()

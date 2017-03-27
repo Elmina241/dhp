@@ -1,5 +1,5 @@
 from django.db import models
-from tables.models import Composition, Material, Formula
+from tables.models import Composition, Material, Formula, Reactor
 
 class Loading_list(models.Model):
     formula = models.ForeignKey('tables.Formula')
@@ -19,6 +19,7 @@ class Kneading(models.Model):
     list = models.ForeignKey('Loading_list')
     start_date = models.DateField()
     finish_date = models.DateField()
+    reactor = models.ForeignKey('tables.Reactor')
     def __str__(self):
         return self.list.formula.get_name()
 

@@ -200,7 +200,7 @@ class Reactor(models.Model):
     max = models.FloatField()
     ready = models.BooleanField()
     def __str__(self):
-        return self.name
+        return self.code + ' ' + self.name
     def get_check(self):
         return 'checked' if self.ready else ''
 

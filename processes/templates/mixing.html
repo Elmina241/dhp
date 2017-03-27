@@ -48,7 +48,7 @@ function addComp(mat_id, amm, mat_code){
           $("#"+mat_id).parent().find("td").eq(0).html("<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>")
           $("#"+mat_id).parent().find("td").eq(5).html("<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>");
           getAmmount();
-          $("#type").val()="";
+          $("#type").attr("value", "");
         }
       });
 }
@@ -108,6 +108,11 @@ $(document).ready(function(){
           <h5><p><b>Дата конца: </b></p></div>
           <div class="col-sm-7">
           <h5><p>{{p.finish_date|date:"d.m.Y"}}</p>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Реактор: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.reactor}}</p></h5>
           </div>
           <div class="col-sm-3">
           <h5><p><b>Состав: </b></p></h5></div>
