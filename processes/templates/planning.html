@@ -10,6 +10,7 @@ $(document).ready(function(){
     todayHighlight: true
   });
   $('#formula').trigger("change");
+  addValidation();
 });</script>
 
 <div class="panel panel-default" style ="margin: auto">
@@ -78,7 +79,7 @@ $(document).ready(function(){
       </table>
       <br>
       <input type="hidden" id="json" name="json" value="">
-      <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
   </div>
   </form>
 </div>

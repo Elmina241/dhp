@@ -30,6 +30,8 @@ function getComponents(c, m, f_c, f) {
       td2.appendChild(document.createTextNode(getName(f_comp[i].fields.mat, materials)));
       td3.appendChild(document.createTextNode(((bounds.min/100)*amm).toFixed(2)));
       td4.appendChild(document.createTextNode(((bounds.max/100)*amm).toFixed(2)));
+      input.setAttribute('min', ((bounds.min/100)*amm).toFixed(2));
+      input.setAttribute('max', ((bounds.max/100)*amm).toFixed(2));
       td5.appendChild(input);
       row.appendChild(td1);
       row.appendChild(td2);
@@ -135,6 +137,8 @@ function changeMinMax(c, f){
     var bounds = getMinMax(components, comp, code);
     $("#materials tr").eq(i).find('td').eq(2).text(((bounds.min/100)*amm).toFixed(2));
     $("#materials tr").eq(i).find('td').eq(3).text(((bounds.max/100)*amm).toFixed(2));
+    $("#materials tr").eq(i).find('input').attr('min', ((bounds.min/100)*amm).toFixed(2));
+    $("#materials tr").eq(i).find('input').attr('max', ((bounds.max/100)*amm).toFixed(2));
   }
 }
 
@@ -168,7 +172,7 @@ function getComponents2(c, m, l_c, l_id, t_name) {
       var min = ((bounds.min/100)*amm).toFixed(2);
       var max = ((bounds.max/100)*amm).toFixed(2);
       if (t_name=='materials'){
-        $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' step='0.01' value=" + mat_amm + '>').appendTo(tbody);
+        $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' min=" + min + " max=" + max + " step='0.01' value=" + mat_amm + '>').appendTo(tbody);
       }
       else{
         $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + mat_amm + '</td>').appendTo(tbody);
