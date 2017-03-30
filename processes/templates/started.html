@@ -5,7 +5,7 @@
 $(document).ready(function(){
   $('#formula').trigger("change");
   $('#formula2').trigger("change");
-  addValidation();
+  validate();
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -95,7 +95,7 @@ $(document).ready(function(){
       <input type="hidden" id="json" name="json" value="">
 
       <div class="modal-footer">
-      <input type="submit" value="Сохранить" onclick="saveChanges();return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+      <input type="submit" id="send" value="Сохранить" onclick="event.preventDefault();return false;" class="btn btn-primary" style="float: right"/> </div>
     </div>
     </div>
     </div>

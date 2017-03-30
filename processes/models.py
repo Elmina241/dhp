@@ -1,5 +1,5 @@
 from django.db import models
-from tables.models import Composition, Material, Formula, Reactor
+from tables.models import Composition, Material, Formula, Reactor, Characteristic
 
 class Loading_list(models.Model):
     formula = models.ForeignKey('tables.Formula')
@@ -23,38 +23,6 @@ class Kneading(models.Model):
     def __str__(self):
         return self.list.formula.get_name()
 
-class Characteristic_type(models.Model):
-    name = models.CharField(max_length=80)
-    def __str__(self):
-        return self.name
-
-class Characteristic(models.Model):
-    name = models.CharField(max_length=80)
-    type = models.ForeignKey('Characteristic_type')
-    def __str__(self):
-        return self.name
-
-class Characteristic_set(Characteristic):
-    var_name = models.CharField(max_length=80)
-    def __str__(self):
-        return self.var_name
-
-class Characteristic_range(Characteristic):
-    inf = models.FloatField()
-    sup = models.FloatField()
-    def __str__(self):
-        return self.name
-
-class Characteristic_number(Characteristic):
-    number = models.FloatField()
-    def __str__(self):
-        return self.name
-
-class Formula_characteristic(models.Model):
-    formula = models.ForeignKey('tables.Formula')
-    characteristic = models.ForeignKey('Characteristic')
-    def __str__(self):
-        return self.characteristic
 
 class Batch(models.Model):
     kneading = models.OneToOneField('Kneading')
@@ -63,7 +31,7 @@ class Batch(models.Model):
 
 class Batch_characteristic(models.Model):
     batch = models.ForeignKey('Batch')
-    characteristic = models.ForeignKey('Characteristic')
+    characteristic = models.ForeignKey('tables.Characteristic')
     def __str__(self):
         return self.characteristic
 

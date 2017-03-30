@@ -231,3 +231,47 @@ class Formula_component(models.Model):
     ammount = models.FloatField()
     def __str__(self):
         return self.mat.name
+
+class Characteristic_type(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Characteristic(models.Model):
+    name = models.CharField(max_length=80)
+    type = models.ForeignKey('Characteristic_type')
+    def __str__(self):
+        return self.name
+
+class Characteristic_set(Characteristic):
+    set_name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.var_name
+
+class Set_var(models.Model):
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+class Characteristic_set_var(models.Model):
+    char_set = models.ForeignKey('Characteristic_set')
+    char_var = models.ForeignKey('Set_var')
+    def __str__(self):
+        return self.char_var.name
+
+class Characteristic_range(Characteristic):
+    inf = models.FloatField()
+    sup = models.FloatField()
+    def __str__(self):
+        return self.name
+
+class Characteristic_number(Characteristic):
+    number = models.FloatField()
+    def __str__(self):
+        return self.name
+
+class Formula_characteristic(models.Model):
+    formula = models.ForeignKey('Formula')
+    characteristic = models.ForeignKey('Characteristic')
+    def __str__(self):
+        return self.characteristic

@@ -179,18 +179,3 @@ function getComponents2(c, m, l_c, l_id, t_name) {
       }
   }
 };
-
-//Функция для передачи изменений в таблицу
-function saveChanges(){
-  $("#textAmm").text($("#ammount").val());
-  var table = $("#materials");
-  var size = $("#materials tr").size();
-  for (var i = 2; i < size; i++){
-    $("#materials2 tr").eq(i).find('td').eq(4).text($("#materials tr").eq(i).find('input').val());
-  }
-  var table = $('#materials2').tableToJSON(); // Convert the table into a javascript object
-  var field = document.getElementById('json');
-  field.value = JSON.stringify(table);
-  var form = document.getElementById("form");
-  form.submit();
-}

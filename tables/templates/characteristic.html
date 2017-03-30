@@ -1,0 +1,56 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+});
+</script>
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+    {% if characteristic == None %}
+      <h4 class="panel-title">Добавление записи</h4>
+      {% else %}
+      <h4 class="panel-title">Редактирование записи: {{ characteristic }}</h4>
+      {% endif %}
+  </div>
+
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="save_characteristic/" method="post">
+      {% csrf_token %}
+          <h5><b>Артикул:</b><h5>
+          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{ sticker.code }}" required></p>
+          <br><br><br>
+          <h5><b>Продукт:</b><br></h5>
+          <p><select class="form-control" name="product">
+            {% for p in products %}
+            {% if sticker.product == p %}
+            <option selected value="{{p.id}}">{{p.name}}</option>
+            {% else %}
+            <option value="{{p.id}}">{{p.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>Часть:</b><br></h5>
+          <p><select class="form-control" name="part">
+            {% for p in parts %}
+            {% if sticker.part == p %}
+            <option selected value="{{p.id}}">{{p.name}}</option>
+            {% else %}
+            <option value="{{p.id}}">{{p.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
+    </div>
+    </div>
+  </form>
+  </div>
+
+{% endblock content %}
