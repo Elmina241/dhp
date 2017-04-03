@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
@@ -35,10 +35,9 @@ class Migration(migrations.Migration):
             model_name='formula_characteristic',
             name='formula',
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
             model_name='batch_characteristic',
             name='characteristic',
-            field=models.ForeignKey(to='tables.Characteristic'),
         ),
         migrations.AlterField(
             model_name='kneading',

@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
+from .models import Characteristic, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
 from .forms import Delete_form
 import json
 from django.core import serializers
@@ -14,6 +14,16 @@ def products(request):
     return render(request, "products.html",
         {"products": Product.objects.all,
         "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
+
+def characteristics(request):
+    return render(request, "characteristics.html",
+        {"characteristics": Characteristic.objects.all,
+        "header": "Характеристики", "location": "/tables/characteristics/"})
+
+def new_characteristic(request):
+    return render(request, "characteristic.html",
+        {"types": Characteristic_type.objects.all,
+        "header": "Добавление характеристики", "location": "/tables/characteristics/"})
 
 def packing(request):
     return render(request, "packing.html",

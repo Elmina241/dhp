@@ -7,7 +7,7 @@
 
 <form action="del_characteristic/" method="post" style="margin-top: 40px">
 {% csrf_token %}
-<button type="button" class="btn btn-default" onClick="window.location.href='/tables/characteristics/0/'">Добавить запись</button></a>
+<button type="button" class="btn btn-default" onClick="window.location.href='/tables/characteristics/new_characteristic/'">Добавить запись</button></a>
 <input type="submit" class="btn btn-default" value="Удалить">
 <br><br>
 {% if characteristics %}

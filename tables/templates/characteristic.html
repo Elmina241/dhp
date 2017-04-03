@@ -2,9 +2,9 @@
 {% block content %}
 
 <script type="text/javascript">
-$(document).ready(function(){
-
-});
+  $(document).ready(function(){
+    //getCharVal();
+  });
 </script>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -22,31 +22,46 @@ $(document).ready(function(){
   <div class="input-group" style ="margin: auto">
     <form action="save_characteristic/" method="post">
       {% csrf_token %}
-          <h5><b>Артикул:</b><h5>
-          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{ sticker.code }}" required></p>
-          <br><br><br>
-          <h5><b>Продукт:</b><br></h5>
-          <p><select class="form-control" name="product">
-            {% for p in products %}
-            {% if sticker.product == p %}
-            <option selected value="{{p.id}}">{{p.name}}</option>
+          <h5><b>Тип характеристики:</b><h5>
+          <p><select class="form-control" name="type" id="type" onchange="getCharVal();">
+            {% for t in types %}
+            {% if characteristic.type == t %}
+            <option selected value="{{t.id}}">{{t.name}}</option>
             {% else %}
-            <option value="{{p.id}}">{{p.name}}</option>
+            <option value="{{t.id}}">{{t.name}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
           <br><br><br>
-          <h5><b>Часть:</b><br></h5>
-          <p><select class="form-control" name="part">
-            {% for p in parts %}
-            {% if sticker.part == p %}
-            <option selected value="{{p.id}}">{{p.name}}</option>
-            {% else %}
-            <option value="{{p.id}}">{{p.name}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
+          <h5><b>Наименование:</b><h5>
+          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{ caracteristic.name }}" required></p>
           <br><br><br>
+
+          <div id="charVal">
+            <div class="modal fade" id="newComp">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4>Добавление элемента</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group" style='margin-bottom: 20pt'><input id='elem' name='elem' class='form-control' type='text'></div>
+                  </div>
+                  <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addElem()" data-dismiss="modal">Добавить</button></div>
+                </div>
+              </div>
+            </div>
+            <div class='panel panel-default'>
+              <div class='panel-heading'>
+                <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить элемент множества</button>
+              </div>
+            <div class='panel-body'>
+            <table class='table table-sm' id='elems'>
+              <thead><tr><th>Значение</th></tr></thead><tbody></tbody></table>
+            </div></div></div>
+          </div>
+
           <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
     </div>
     </div>

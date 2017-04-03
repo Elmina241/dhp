@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^boxing/$', views.boxing, name = 'boxing'),
     url(r'^stickers/$', views.stickers, name = 'stickers'),
     url(r'^formulas/$', views.formulas, name = 'formulas'),
+    url(r'^characteristics/$', views.characteristics, name = 'characteristics'),
     # добавление записей
     url(r'^products/new_product/$', views.new_product, name = 'new_product'),
     url(r'^compositions/new_composition/$', views.new_composition, name = 'new_composition'),
@@ -22,6 +23,7 @@ urlpatterns = [
     url(r'^compositions/new_composition/add_composition/$', views.add_composition, name = 'add_composition'),
     url(r'^materials/new_material/$', views.new_material, name = 'new_material'),
     url(r'^materials/new_material/add_material/$', views.add_material, name = 'add_material'),
+    url(r'^characteristics/new_characteristic/$', views.new_characteristic, name = 'new_characteristic'),
     url(r'^storage/0/$', views.storage_detail, name='storage_detail'),
     # удаление записей
     url(r'^products/del_product/$', views.del_product, name = 'del_product'),

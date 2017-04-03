@@ -240,6 +240,12 @@ class Characteristic_type(models.Model):
 class Characteristic(models.Model):
     name = models.CharField(max_length=80)
     type = models.ForeignKey('Characteristic_type')
+    group = models.ForeignKey('Char_group')
+    def __str__(self):
+        return self.name
+
+class Char_group(models.Model):
+    name = models.CharField(max_length=200)
     def __str__(self):
         return self.name
 

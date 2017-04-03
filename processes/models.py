@@ -31,9 +31,9 @@ class Batch(models.Model):
 
 class Batch_characteristic(models.Model):
     batch = models.ForeignKey('Batch')
-    characteristic = models.ForeignKey('tables.Characteristic')
+    #characteristic = models.ForeignKey('tables.Characteristic')
     def __str__(self):
-        return self.characteristic
+        return self.batch
 
 class State(models.Model):
     name = models.CharField(max_length=80)
