@@ -272,7 +272,8 @@ class Characteristic_range(Characteristic):
         return self.name
 
 class Characteristic_number(Characteristic):
-    number = models.FloatField()
+    inf = models.FloatField()
+    sup = models.FloatField()
     def __str__(self):
         return self.name
 

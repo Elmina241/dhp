@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Characteristic, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
+from .models import Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
 from .forms import Delete_form
 import json
 from django.core import serializers
@@ -23,6 +23,7 @@ def characteristics(request):
 def new_characteristic(request):
     return render(request, "characteristic.html",
         {"types": Characteristic_type.objects.all,
+        "groups": Char_group.objects.all,
         "header": "Добавление характеристики", "location": "/tables/characteristics/"})
 
 def packing(request):
@@ -481,6 +482,30 @@ def add_composition(request):
                 mat = Material.objects.filter(code=d['Код'])[0]
                 cmps = Components(comp=comp, mat=mat, min=d["Минимум чистого реактива"], max=d["Максимум чистого реактива"])
                 cmps.save()
+
+        return redirect('compositions')
+
+def add_characteristic(request):
+    try:
+        name = request.POST['name']
+        group = get_object_or_404(Char_group, pk=request.POST['group'])
+        type = get_object_or_404(Characteristic_type, pk=request.POST['type'])
+        char = Characteristic(name = name, group = group, type = type)
+    except (KeyError, Char_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        char.save()
+        if char.type.id == 1:
+            char.characteristic_range.from= 
+        if char.type.id == 2:
+        if char.type.id == 3:
+            if 'json' in request.POST:
+                table = request.POST['json']
+                data = json.loads(table)
+                for d in data:
+                    mat = Material.objects.filter(code=d['Код'])[0]
+                    cmps = Components(comp=comp, mat=mat, min=d["Минимум чистого реактива"], max=d["Максимум чистого реактива"])
+                    cmps.save()
 
         return redirect('compositions')
 

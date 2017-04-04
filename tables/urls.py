@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^materials/new_material/$', views.new_material, name = 'new_material'),
     url(r'^materials/new_material/add_material/$', views.add_material, name = 'add_material'),
     url(r'^characteristics/new_characteristic/$', views.new_characteristic, name = 'new_characteristic'),
+    url(r'^characteristics/new_characteristic/add_characteristic/$', views.add_characteristic, name = 'add_characteristic'),
     url(r'^storage/0/$', views.storage_detail, name='storage_detail'),
     # удаление записей
     url(r'^products/del_product/$', views.del_product, name = 'del_product'),
