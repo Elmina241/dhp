@@ -42,7 +42,8 @@ function getCharVal(groups){
     "<div class='panel-body'>" +
     "<table class='table table-sm' id='elems'>" +
       "<thead><tr><th>Значение</th></tr></thead><tbody></tbody></table>" +
-    "</div></div>");
+    "</div></div>"+
+    "<input type='hidden' id='json' name='json' value=''>");
       break;
     default:
       return false;
@@ -52,4 +53,7 @@ function getCharVal(groups){
 function addElem(){
   var name = $('#elem').val();
   $("<tr><td>" + name + "</td></tr>").appendTo("#elems tbody");
+  var table = $('#elem').tableToJSON(); // Convert the table into a javascript object
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
 }

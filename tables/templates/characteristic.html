@@ -4,6 +4,12 @@
 <script type="text/javascript">
   $(document).ready(function(){
     getCharVal();
+    $("#form").keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;
+      }
+   });
   });
 </script>
 <div class="panel panel-default" style ="margin: auto">
@@ -20,7 +26,7 @@
   {% endif %}
 <div class="panel-body">
   <div class="input-group" style ="margin: auto">
-    <form action="save_characteristic/" method="post">
+    <form action="add_characteristic/" method="post" id="form">
       {% csrf_token %}
           <h5><b>Тип характеристики:</b><h5>
           <p><select class="form-control" name="type" id="type" onchange="getCharVal();">
@@ -49,11 +55,11 @@
           <br><br><br>
           <div id="charVal">
           </div>
-          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+          <input type="button" value="Отправить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+          </form>
         </div>
     </div>
     </div>
-  </form>
 
 
 {% endblock content %}
