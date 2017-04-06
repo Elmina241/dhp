@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
+from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
 from .models import Characteristic_range, Characteristic_number
 from .forms import Delete_form
 import json
@@ -22,7 +22,7 @@ def characteristics(request):
         "header": "Характеристики", "location": "/tables/characteristics/"})
 
 def new_characteristic(request):
-    return render(request, "characteristic.html",
+    return render(request, "new_characteristic.html",
         {"types": Characteristic_type.objects.all,
         "groups": Char_group.objects.all,
         "header": "Добавление характеристики", "location": "/tables/characteristics/"})
@@ -103,7 +103,6 @@ def comm_detail(request, commodity_id):
 def formula_detail(request, formula_id):
         components = serializers.serialize("json", Components.objects.all())
         materials = serializers.serialize("json", Material.objects.all())
-
         if (formula_id == '0'):
             return render(request, "formula.html",
                 {"formula": None,
@@ -123,6 +122,22 @@ def formula_detail(request, formula_id):
                 "materials": json.dumps(materials),
                 "location": "/tables/formulas/"
                 })
+
+def characteristic_detail(request, characteristic_id):
+    char = get_object_or_404(Characteristic, pk=characteristic_id)
+    if (char.char_type.id != 3):
+        return render(request, "characteristic.html",
+            {"characteristic": char,
+            "groups": Char_group.objects.all,
+            "location": "/tables/characteristics/"
+            })
+    else:
+        return render(request, "characteristic.html",
+            {"characteristic": char,
+            "groups": Char_group.objects.all,
+            "set_values": Characteristic_set_var.objects.filter(char_set = char),
+            "location": "/tables/characteristics/"
+            })
 
 def storage_detail(request):
         return render(request, "edit_storage.html",
@@ -495,22 +510,22 @@ def add_characteristic(request):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         if type.id == 1:
-            char = Characteristic_range(name = name, group = group, type = type, inf = request.POST['from'], sup=request.POST['to'])
+            char = Characteristic_range(name = name, group = group, char_type = type, inf = request.POST['from'], sup=request.POST['to'])
             char.save()
         if type.id == 2:
-            char = Characteristic_number(name = name, group = group, type = type, inf= request.POST['from'], sup=request.POST['to'])
+            char = Characteristic_number(name = name, group = group, char_type = type, inf= request.POST['from'], sup=request.POST['to'])
             char.save()
         if type.id == 3:
-            char = Characteristic(name = name, group = group, type = type)
+            char = Characteristic(name = name, group = group, char_type = type)
             char.save()
-            if 'json' in request.POST:
-                table = request.POST['json']
-                data = json.loads(table)
-                for d in data:
-                    set_var = Set_var(name=d['Значение'])
-                    set_var.save()
-                    characteristic_set_var = Characteristic_set_var(char_set = char, char_var = set_var)
-                    characteristic_set_var.save()
+            #if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            for d in data:
+                set_var = Set_var(name=d['Значение'])
+                set_var.save()
+                characteristic_set_var = Characteristic_set_var(char_set = char, char_var = set_var)
+                characteristic_set_var.save()
         return redirect('characteristics')
 
 def save_composition(request, composition_id):

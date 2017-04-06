@@ -53,7 +53,7 @@ function getCharVal(groups){
 function addElem(){
   var name = $('#elem').val();
   $("<tr><td>" + name + "</td></tr>").appendTo("#elems tbody");
-  var table = $('#elem').tableToJSON(); // Convert the table into a javascript object
+  var table = $('#elems').tableToJSON(); // Convert the table into a javascript object
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 }

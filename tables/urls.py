@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^materials/(?P<material_id>[0-9]+)/$', views.detail, name='detail'),
     url(r'^compositions/(?P<composition_id>[0-9]+)/$', views.comp_detail, name='comp_detail'),
     url(r'^formulas/(?P<formula_id>[0-9]+)/$', views.formula_detail, name='formula_detail'),
+    url(r'^characteristics/(?P<characteristic_id>[0-9]+)/$', views.characteristic_detail, name='characteristic_detail'),
     # фильтры
     url(r'^products/get_group/$', views.pr_group, name='pr_group'),
     url(r'^materials/get_group/$', views.mat_group, name='mat_group'),

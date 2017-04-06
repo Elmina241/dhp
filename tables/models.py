@@ -239,10 +239,10 @@ class Characteristic_type(models.Model):
 
 class Characteristic(models.Model):
     name = models.CharField(max_length=80)
-    type = models.ForeignKey('Characteristic_type')
+    char_type = models.ForeignKey('Characteristic_type', default=1)
     group = models.ForeignKey('Char_group')
     def __str__(self):
-        return self.name
+        return ('' if self.group.name == 'отсутствует' else self.group.name + ': ') + self.name
 
 class Char_group(models.Model):
     name = models.CharField(max_length=200)

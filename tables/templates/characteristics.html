@@ -2,7 +2,7 @@
 {% block content %}
 <ul class="nav nav-tabs nav-justified">
   <li class="active"><a href="/tables/characteristics/">Все характеристики</a></li>
-  <li><a href="/tables/formulas_char/">Характеристики составов</a></li>
+  <li><a href="/tables/formulas_char/">Характеристики рецептов</a></li>
 </ul>
 
 <form action="del_characteristic/" method="post" style="margin-top: 40px">
@@ -22,8 +22,8 @@
     <tr>
       <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
       <td>{{ c.id }}</td>
-      <td onClick="window.location.href='/tables/characteristics/{{ c.id }}/'">{{ c.name }}</td>
-      <td>{{ c.type.name }}</td>
+      <td onClick="window.location.href='/tables/characteristics/{{ c.id }}/'">{{ c }}</td>
+      <td>{{ c.char_type.name }}</td>
     </tr>
     {% endfor %}
   </tbody>
