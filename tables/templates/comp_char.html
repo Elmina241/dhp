@@ -1,0 +1,40 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    getCharVal();
+    $('form').on('submit',function(e){
+       e.preventDefault();
+  });
+  });
+</script>
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title">Характеристики рецепта: {{ composition }}</h4>
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="add_characteristic/" method="post" id="form">
+      {% csrf_token %}
+
+          <button>Добавить характеристику</button>
+          <ul class="list-group">
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+            <li class="list-group-item">Morbi leo risus</li>
+            <li class="list-group-item">Porta ac consectetur ac</li>
+            <li class="list-group-item">Vestibulum at eros</li>
+          </ul>
+
+          <input type="button" value="Отправить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+          </form>
+        </div>
+    </div>
+    </div>
+
+
+{% endblock content %}

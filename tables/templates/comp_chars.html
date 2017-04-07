@@ -1,0 +1,41 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+<ul class="nav nav-tabs nav-justified">
+  <li><a href="/tables/characteristics/">Все характеристики</a></li>
+  <li class="active"><a href="/tables/comp_chars/">Характеристики рецептов</a></li>
+</ul>
+<form action="get_group_comp/" method="POST" class="form-inline" style="margin-top: 20pt">
+  {% csrf_token %}
+ Фильтр по группе:
+ <select class="form-control" name="group1">
+   <option value="-1" selected>Все</option>
+   {% for g in groups %}
+   {% if g == group %}
+    <option value="{{ g.id }}" selected="">{{ g.name }}</option>
+   {% else %}
+   <option value="{{ g.id }}">{{ g.name }}</option>
+   {% endif %}
+   {% endfor %}</select>
+   <input type="submit" class="btn btn-default" value="Применить" class="form-control"><a href="/tables/compositions/"> <button type="button" class="btn btn-default">Сбросить</button></a>
+</form>
+          <br><br>
+          {% if compositions %}
+              <table class="table table-sm" style="font-size: 110%;">
+                <thead>
+                  <tr>
+                    <th>Код</th><th>Наименование</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in compositions %}
+                  <tr>
+                    <td>{{ c.code }}</td>
+                    <td onClick="window.location.href='/tables/comp_chars/{{ c.id }}/'">{{ c.name }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+  {% endblock content %}

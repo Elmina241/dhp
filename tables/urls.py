@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^stickers/$', views.stickers, name = 'stickers'),
     url(r'^formulas/$', views.formulas, name = 'formulas'),
     url(r'^characteristics/$', views.characteristics, name = 'characteristics'),
+    url(r'^comp_chars/$', views.comp_chars, name = 'comp_chars'),
     # добавление записей
     url(r'^products/new_product/$', views.new_product, name = 'new_product'),
     url(r'^compositions/new_composition/$', views.new_composition, name = 'new_composition'),
@@ -50,6 +51,7 @@ urlpatterns = [
     url(r'^compositions/(?P<composition_id>[0-9]+)/$', views.comp_detail, name='comp_detail'),
     url(r'^formulas/(?P<formula_id>[0-9]+)/$', views.formula_detail, name='formula_detail'),
     url(r'^characteristics/(?P<characteristic_id>[0-9]+)/$', views.characteristic_detail, name='characteristic_detail'),
+    url(r'^comp_chars/(?P<composition_id>[0-9]+)/$', views.comp_char_detail, name='comp_char_detail'),
     # фильтры
     url(r'^products/get_group/$', views.pr_group, name='pr_group'),
     url(r'^materials/get_group/$', views.mat_group, name='mat_group'),

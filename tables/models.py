@@ -272,8 +272,31 @@ class Characteristic_number(Characteristic):
     def __str__(self):
         return self.name
 
-class Formula_characteristic(models.Model):
-    formula = models.ForeignKey('Formula')
+#class Formula_characteristic(models.Model):
+    #formula = models.ForeignKey('Formula')
+    #characteristic = models.ForeignKey('Characteristic')
+    #def __str__(self):
+        #return self.characteristic
+
+class Composition_char(models.Model):
+    comp = models.ForeignKey('Composition')
     characteristic = models.ForeignKey('Characteristic')
     def __str__(self):
         return self.characteristic
+
+class Comp_char_range(Composition_char):
+    inf = models.FloatField()
+    sup = models.FloatField()
+    def __str__(self):
+        return self.name
+
+class Comp_char_number(Composition_char):
+    number = models.FloatField()
+    def __str__(self):
+        return self.name
+
+class Comp_char_var(models.Model):
+    comp_char = models.ForeignKey('Composition_char')
+    char_var = models.ForeignKey('Set_var')
+    def __str__(self):
+        return self.comp_char

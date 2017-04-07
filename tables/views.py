@@ -58,6 +58,9 @@ def stickers(request):
 def compositions(request):
     return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Рецепты", "location": "/tables/compositions/"})
 
+def comp_chars(request):
+    return render(request, "comp_chars.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Рецепты", "location": "/tables/characteristics/"})
+
 def detail(request, material_id):
     return render(request, "material.html",
         {"material": get_object_or_404(Material, pk=material_id),
