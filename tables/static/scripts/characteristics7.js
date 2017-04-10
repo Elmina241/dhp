@@ -57,3 +57,8 @@ function addElem(){
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 }
+
+function addChar(){
+  var char = $('#char').val();
+  $("#chars").append("<li class='list-group-item'></li>");
+}

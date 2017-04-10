@@ -9,6 +9,26 @@
   });
   });
 </script>
+<button class='btn btn-success' data-toggle='modal' data-target='#newComp' style="margin-bottom: 10pt"><i class='glyphicon glyphicon-plus'></i> Добавить характеристику</button>
+<div class="modal fade" id="newComp">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">x</button>
+        <h4>Добавление характеристики</h4>
+      </div>
+      <div class="modal-body">
+<div style="margin: auto">
+  <select class="form-control" id="char">
+    {% for c in characteristics %}
+    <option value="{{ c.code }}">{{ c }}</option>
+    {% endfor %}</select>
+</div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addChar()" data-dismiss="modal">Добавить</button></div>
+</div>
+</div>
+</div>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
       <h4 class="panel-title">Характеристики рецепта: {{ composition }}</h4>
@@ -16,21 +36,41 @@
   {% if error_message %}
   <p><strong>{{ error_message }}</strong></p>
   {% endif %}
+
 <div class="panel-body">
   <div class="input-group" style ="margin: auto">
     <form action="add_characteristic/" method="post" id="form">
       {% csrf_token %}
+          <ul class="list-group" id="chars">
+            <li class="list-group-item">
+              <button class="close" onclick="$(this).parent().remove();return false;">x</button>
+              <h4 style="text-decoration: underline; color: mediumseagreen">Цвет</h4>
+              <div class="checkbox">
+                <label><input type="checkbox" value="">Красный</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" value="">Белый</label>
+              </div>
+              <div class="checkbox disabled">
+                <label><input type="checkbox" value="" disabled>Жёлтый</label>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <button class="close" onclick="$(this).parent().remove();return false;">x</button>
+              <h4 style="text-decoration: underline; color: mediumseagreen">Масса</h4>
 
-          <button>Добавить характеристику</button>
-          <ul class="list-group">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+              <div class='form-group' style="margin-bottom: 40pt"><input id='number' type='number' class='form-control' required></div>
+            </li>
+            <li class="list-group-item">
+              <button class="close" onclick="$(this).parent().remove();return false;">x</button>
+              <h4 style="text-decoration: underline; color: mediumseagreen">Числовой диапазон: </h4>
+            <div class='form-group' style="margin-bottom: 40pt"><label for='from' class='col-sm-2 control-label' style='font-size: small'>От: </label>
+            <div class='col-sm-4'><input id='from' name='from' type='number' class='form-control' required></div>
+              <label for='to' class='col-sm-2 control-label' style='font-size: small'>До: </label>
+              <div class='col-sm-4'><input id='to' name='to' type='number' class='form-control' required></div></div></li>
           </ul>
 
-          <input type="button" value="Отправить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+          <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
           </form>
         </div>
     </div>

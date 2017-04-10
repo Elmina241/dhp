@@ -148,6 +148,13 @@ def storage_detail(request):
                 "location": "/tables/storage/"
                 })
 
+def comp_char_detail(request, composition_id):
+        return render(request, "comp_char.html",
+                {"composition": get_object_or_404(Composition, pk=composition_id),
+                "characteristics": Characteristic.objects.all(),
+                "location": "/tables/characteristics/"
+                })
+
 
 def comp_detail(request, composition_id):
     return render(request, "composition.html",
