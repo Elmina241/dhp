@@ -272,11 +272,6 @@ class Characteristic_number(Characteristic):
     def __str__(self):
         return self.name
 
-#class Formula_characteristic(models.Model):
-    #formula = models.ForeignKey('Formula')
-    #characteristic = models.ForeignKey('Characteristic')
-    #def __str__(self):
-        #return self.characteristic
 
 class Composition_char(models.Model):
     comp = models.ForeignKey('Composition')

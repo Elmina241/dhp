@@ -21,11 +21,11 @@
 <div style="margin: auto">
   <select class="form-control" id="char">
     {% for c in characteristics %}
-    <option value="{{ c.code }}">{{ c }}</option>
+    <option value="{{ c.id }}">{{ c }}</option>
     {% endfor %}</select>
 </div>
 </div>
-<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addChar()" data-dismiss="modal">Добавить</button></div>
+<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="getChar($('#char').val())" data-dismiss="modal">Добавить</button></div>
 </div>
 </div>
 </div>

@@ -726,3 +726,24 @@ def save_formula(request, formula_id):
                     cmps = Formula_component(formula=formula, mat=mat, ammount=request.POST[d['Код']])
                     cmps.save()
         return redirect('formulas')
+
+def get_char(request, composition_id):
+    if request.method == 'POST':
+        if 'char_id' in request.POST:
+            char = Characteristic.objects.filter(pk=request.POST['char_id'])
+            data = {}
+            data['char'] = serializers.serialize("json", char)
+            data['char_val'] = {}
+            if (char[0].char_type == 1):
+                data['char_val']['vals'] = serializers.serialize("json", char.сharacteristic_number)
+            if (char[0].char_type == 2):
+                data['char_val']['vals'] = serializers.serialize("json", char.сharacteristic_range)
+            if (char[0].char_type == 3):
+                char_val = {}
+                vals =  Characteristic_set_var.objects.filter(char_set = char)
+                length = Characteristic_set_var.objects.filter(char_set = char).count()
+                for i in range(0, length -1):
+                    char_val[str(vals[i].char_val.id)] = vals[i].char_val.name
+                data['char_val']['vals'] = char_val
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)
