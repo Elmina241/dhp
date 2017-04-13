@@ -733,17 +733,17 @@ def get_char(request, composition_id):
             char = Characteristic.objects.filter(pk=request.POST['char_id'])
             data = {}
             data['char'] = serializers.serialize("json", char)
-            data['char_val'] = {}
-            if (char[0].char_type == 1):
-                data['char_val']['vals'] = serializers.serialize("json", char.сharacteristic_number)
-            if (char[0].char_type == 2):
-                data['char_val']['vals'] = serializers.serialize("json", char.сharacteristic_range)
-            if (char[0].char_type == 3):
+            #data['char_val'] = {}
+            if (char[0].char_type.id == 1):
+                data['char_val'] = serializers.serialize("json", [char[0].characteristic_range])
+            if (char[0].char_type.id == 2):
+                data['char_val'] = serializers.serialize("json", [char[0].characteristic_number])
+            if (char[0].char_type.id == 3):
                 char_val = {}
                 vals =  Characteristic_set_var.objects.filter(char_set = char)
                 length = Characteristic_set_var.objects.filter(char_set = char).count()
-                for i in range(0, length -1):
-                    char_val[str(vals[i].char_val.id)] = vals[i].char_val.name
-                data['char_val']['vals'] = char_val
+                for i in range(0, length):
+                    char_val[str(vals[i].char_var.id)] = vals[i].char_var.name
+                data['char_val'] = char_val
             json_data = json.dumps(data)
             return HttpResponse(json_data)

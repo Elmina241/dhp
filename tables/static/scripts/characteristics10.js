@@ -58,9 +58,48 @@ function addElem(){
   field.value = JSON.stringify(table);
 }
 
-function addChar(charId, charType, charVal){
-  var char = $('#char').val();
-  $("#chars").append("<li class='list-group-item'></li>");
+function addChar(charId, charType, name, charVal){
+  //var char = $('#char').val();
+  var char = "";
+  //var vals = JSON.parse(charVal);
+  switch (charType) {
+    case 1:
+      char = "<li class='list-group-item' id=" + charId + ">" +
+      "<button class='close' onclick='$(this).parent().remove();return false;'>x</button>" +
+      "<h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4>" +
+      "<div class='form-group' style='margin-bottom: 40pt'><label for='from' class='col-sm-2 control-label' style='font-size: small'>От: </label>" +
+      "<div class='col-sm-4'><input id='from' name='from' type='number' class='form-control' required></div> " +
+        "<label for='to' class='col-sm-2 control-label' style='font-size: small'>До: </label>" +
+        "<div class='col-sm-4'><input id='to' name='to' type='number' class='form-control' required></div></div>" +
+      "</li>";
+    break;
+    case 2:
+      var vals = JSON.parse(charVal);
+      char = "<li class='list-group-item' id=" + charId + ">" +
+      "<button class='close' onclick='$(this).parent().remove();return false;'>x</button>" +
+      "<h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4>" +
+      "<div class='form-group' style='margin-bottom: 40pt'><input id='number' type='number' name=" + name + " class='form-control' min=" + vals[0].fields.min + " max=" + vals[0].fields.max + " required></div>" +
+      "</li>";
+      break;
+    case 3:
+    var elems = "";
+    for(id in charVal) {
+      elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='checked_list'>" + charVal[id] + "</label></div>";
+    }
+    char = "<li class='list-group-item' id=" + charId + ">" +
+    "<button class='close' onclick='$(this).parent().remove();return false;'>x</button>" +
+    "<h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4>" +
+    elems + "</li>";
+      break;
+    default:
+      char = "<li class='list-group-item'>Неизвестная группа характеристики</li>"
+  }
+  var chars = [];
+  $("ul li").each(function(indx, element){
+    chars.push($(element).attr("id"));
+  });
+  $("#json").append(JSON.stringify(chars));
+  $("#chars").append(char);
 }
 
 function getCookie(name) {
@@ -104,7 +143,9 @@ function getChar(char_id){
         },
         success: function onAjaxSuccess(data)
         {
-          var char = JSON.parse(data);
+          var char = JSON.parse((JSON.parse(data))['char']);
+          var vals = JSON.parse(data).char_val
+          addChar(char_id, char[0].fields.char_type, char[0].fields.name, vals)
         }
       });
 }

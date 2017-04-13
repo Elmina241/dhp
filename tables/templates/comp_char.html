@@ -58,7 +58,6 @@
             <li class="list-group-item">
               <button class="close" onclick="$(this).parent().remove();return false;">x</button>
               <h4 style="text-decoration: underline; color: mediumseagreen">Масса</h4>
-
               <div class='form-group' style="margin-bottom: 40pt"><input id='number' type='number' class='form-control' required></div>
             </li>
             <li class="list-group-item">
@@ -69,7 +68,7 @@
               <label for='to' class='col-sm-2 control-label' style='font-size: small'>До: </label>
               <div class='col-sm-4'><input id='to' name='to' type='number' class='form-control' required></div></div></li>
           </ul>
-
+          <input type="hidden" id="json" name="json" value="">
           <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
           </form>
         </div>
