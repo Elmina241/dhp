@@ -277,7 +277,9 @@ class Composition_char(models.Model):
     comp = models.ForeignKey('Composition')
     characteristic = models.ForeignKey('Characteristic')
     def __str__(self):
-        return self.characteristic
+        return self.characteristic.name
+    def get_name(self):
+        return self.comp.name + ' ' + self.characteristic.name
 
 class Comp_char_range(Composition_char):
     inf = models.FloatField()
@@ -294,4 +296,4 @@ class Comp_char_var(models.Model):
     comp_char = models.ForeignKey('Composition_char')
     char_var = models.ForeignKey('Set_var')
     def __str__(self):
-        return self.comp_char
+        return self.comp_char.get_name() + ' ' + self.char_var.name

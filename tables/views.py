@@ -2,7 +2,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Characteristic_number
+from .models import Characteristic_range, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 import json
 from django.core import serializers
@@ -152,6 +152,7 @@ def comp_char_detail(request, composition_id):
         return render(request, "comp_char.html",
                 {"composition": get_object_or_404(Composition, pk=composition_id),
                 "characteristics": Characteristic.objects.all(),
+                "chars": Composition_char.objects.filter(comp = get_object_or_404(Composition, pk=composition_id)),
                 "location": "/tables/characteristics/"
                 })
 
@@ -747,3 +748,51 @@ def get_char(request, composition_id):
                 data['char_val'] = char_val
             json_data = json.dumps(data)
             return HttpResponse(json_data)
+
+
+def get_elems(request, composition_id):
+    if request.method == 'POST':
+        if 'char_id' in request.POST:
+            char = get_object_or_404(Composition_char, pk=request.POST['char_id'])
+            data = {}
+            vars = {}
+            checked = {}
+            all_var = Characteristic_set_var.objects.filter(char_set = char.characteristic)
+            length = Characteristic_set_var.objects.filter(char_set = char.characteristic).count()
+            for i in range(0, length):
+                vars[str(all_var[i].char_var.id)] = all_var[i].char_var.name
+            checked_var = Comp_char_var.objects.filter(comp_char = char)
+            length = Comp_char_var.objects.filter(comp_char = char).count()
+            for i in range(0, length):
+                checked[str(checked_var[i].char_var.id)] = checked_var[i].char_var.name
+            data['vars'] = serializers.serialize("json", vars)
+            data['checked'] = serializers.serialize("json", checked)
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)
+
+
+def save_comp_char(request, composition_id):
+    comp = get_object_or_404(Composition, pk=composition_id)
+    if 'json' in request.POST:
+        chars = request.POST['json']
+        data = json.loads(chars)
+        for d in data:
+            char = get_object_or_404(Characteristic, pk=d)
+            if (char.char_type.id == 1):
+                if (str(char.id) + "'from'") in request.POST:
+                    comp_char = Comp_char_range(comp = comp, characteristic = char, inf = request.POST[str(char.id) + "'from'"], sup = request.POST[str(char.id) + "'to'"])
+                    comp_char.save()
+            if (char.char_type.id == 2):
+                if str(char.id) in request.POST:
+                    comp_char = Comp_char_number(comp = comp, characteristic = char, number = request.POST[str(char.id)])
+                    comp_char.save()
+            if (char.char_type.id == 3):
+                if (str(char.id) + "'checked_list'") in request.POST:
+                    char_var = request.POST.getlist(str(char.id) + "'checked_list'")
+                    char = Composition_char(comp = comp, characteristic = char)
+                    char.save()
+                    for c in char_var:
+                        set_var = get_object_or_404(Set_var, pk=c)
+                        сomp_char_var = Comp_char_var(comp_char = char, char_var = set_var)
+                        сomp_char_var.save()
+        return redirect('characteristics')

@@ -65,41 +65,42 @@ function addChar(charId, charType, name, charVal){
   switch (charType) {
     case 1:
       char = "<li class='list-group-item' id=" + charId + ">" +
-      "<button class='close' onclick='$(this).parent().remove();return false;'>x</button>" +
+      "<button class='close' onclick='delChar(this)'>x</button>" +
       "<h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4>" +
       "<div class='form-group' style='margin-bottom: 40pt'><label for='from' class='col-sm-2 control-label' style='font-size: small'>От: </label>" +
-      "<div class='col-sm-4'><input id='from' name='from' type='number' class='form-control' required></div> " +
+      "<div class='col-sm-4'><input id='from' name=" + charId + "'from' type='number' class='form-control' required></div> " +
         "<label for='to' class='col-sm-2 control-label' style='font-size: small'>До: </label>" +
-        "<div class='col-sm-4'><input id='to' name='to' type='number' class='form-control' required></div></div>" +
+        "<div class='col-sm-4'><input id='to' name=" + charId + "'to' type='number' class='form-control' required></div></div>" +
       "</li>";
     break;
     case 2:
       var vals = JSON.parse(charVal);
       char = "<li class='list-group-item' id=" + charId + ">" +
-      "<button class='close' onclick='$(this).parent().remove();return false;'>x</button>" +
+      "<button class='close' onclick='delChar(this)'>x</button>" +
       "<h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4>" +
-      "<div class='form-group' style='margin-bottom: 40pt'><input id='number' type='number' name=" + name + " class='form-control' min=" + vals[0].fields.min + " max=" + vals[0].fields.max + " required></div>" +
+      "<div class='form-group' style='margin-bottom: 40pt'><input id='number' type='number' name=" + charId + " class='form-control' min=" + vals[0].fields.min + " max=" + vals[0].fields.max + " required></div>" +
       "</li>";
       break;
     case 3:
     var elems = "";
     for(id in charVal) {
-      elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='checked_list'>" + charVal[id] + "</label></div>";
+      elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name=" + charId + "'checked_list'>" + charVal[id] + "</label></div>";
     }
     char = "<li class='list-group-item' id=" + charId + ">" +
-    "<button class='close' onclick='$(this).parent().remove();return false;'>x</button>" +
+    "<button class='close' onclick='delChar(this)'>x</button>" +
     "<h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4>" +
     elems + "</li>";
       break;
     default:
       char = "<li class='list-group-item'>Неизвестная группа характеристики</li>"
   }
+  $("#chars").append(char);
   var chars = [];
-  $("ul li").each(function(indx, element){
+  $("#chars li").each(function(indx, element){
     chars.push($(element).attr("id"));
   });
-  $("#json").append(JSON.stringify(chars));
-  $("#chars").append(char);
+  var json = JSON.stringify(chars);
+  $("#json").attr('value', JSON.stringify(chars));
 }
 
 function getCookie(name) {
@@ -148,4 +149,40 @@ function getChar(char_id){
           addChar(char_id, char[0].fields.char_type, char[0].fields.name, vals)
         }
       });
+}
+//Функция получения элементов множества
+function getElems(char_id){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_elems/',
+        data: {
+          'char_id': char_id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          var vars = JSON.parse((JSON.parse(data))['vars']);
+          var checked = JSON.parse((JSON.parse(data))['checked']);
+          elems = ""
+          for (id in vars){
+            elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + ((checked.indexOf(vars[id]) == -1) ? "" : "checked") + " name=" + char_id + "'checked_list'>" + vars[id] + "</label></div>";
+          }
+          $("#" + char_id).append(elems);
+        }
+      });
+}
+
+function delChar(elem){
+  $(elem).parent().remove();
+  var chars = [];
+  $("#chars li").each(function(indx, element){
+    chars.push($(element).attr("id"));
+  });
+  $("#json").attr('value', JSON.stringify(chars));
+  return false;
 }
