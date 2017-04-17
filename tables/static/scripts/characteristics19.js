@@ -151,7 +151,7 @@ function getChar(char_id){
       });
 }
 //Функция получения элементов множества
-function getElems(char_id){
+function getElems(char_id, li_id){
   var csrftoken = getCookie('csrftoken');
   $.ajax({
         type: "POST",
@@ -166,15 +166,28 @@ function getElems(char_id){
         },
         success: function onAjaxSuccess(data)
         {
-          var vars = JSON.parse((JSON.parse(data))['vars']);
-          var checked = JSON.parse((JSON.parse(data))['checked']);
+          var d = JSON.parse(data)
+          var vars = d.vars;
+          var checked = d.checked;
           elems = ""
           for (id in vars){
-            elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + ((checked.indexOf(vars[id]) == -1) ? "" : "checked") + " name=" + char_id + "'checked_list'>" + vars[id] + "</label></div>";
-          }
-          $("#" + char_id).append(elems);
+            if (arrayObjectIndexOf(checked, vars[id]) == -1){
+              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name=" + li_id + "'checked_list'>" + vars[id] + "</label></div>";
+            }
+            else {
+              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " checked" + " name=" + li_id + "'checked_list'>" + vars[id] + "</label></div>";
+            }
+            }
+          $("#" + li_id).append(elems);
         }
       });
+}
+
+function arrayObjectIndexOf(myArray, searchTerm) {
+    for(i in myArray) {
+        if (myArray[i] == searchTerm) return i;
+    }
+    return -1;
 }
 
 function delChar(elem){

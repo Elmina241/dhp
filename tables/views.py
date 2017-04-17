@@ -765,14 +765,15 @@ def get_elems(request, composition_id):
             length = Comp_char_var.objects.filter(comp_char = char).count()
             for i in range(0, length):
                 checked[str(checked_var[i].char_var.id)] = checked_var[i].char_var.name
-            data['vars'] = serializers.serialize("json", vars)
-            data['checked'] = serializers.serialize("json", checked)
+            data['vars'] =  vars
+            data['checked'] = checked
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 
 
 def save_comp_char(request, composition_id):
     comp = get_object_or_404(Composition, pk=composition_id)
+    Composition_char.objects.filter(comp = comp).delete()
     if 'json' in request.POST:
         chars = request.POST['json']
         data = json.loads(chars)

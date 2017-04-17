@@ -5,6 +5,7 @@ app_name = 'tables'
 
 urlpatterns = [
     # таблицы
+    url(r'^comp_chars/(?P<composition_id>[0-9]+)/save_comp_char/$', views.save_comp_char, name='save_comp_char'),
     url(r'^materials/$', views.index, name = 'index'),
     url(r'^products/$', views.products, name = 'products'),
     url(r'^compositions/$', views.compositions, name = 'compositions'),
@@ -57,7 +58,7 @@ urlpatterns = [
     url(r'^materials/get_group/$', views.mat_group, name='mat_group'),
     url(r'^compositions/get_group_comp/$', views.comp_group, name='comp_group'),
     # сохранение изменений
-    url(r'^comp_chars/(?P<composition_id>[0-9]+)/save_comp_char/$', views.save_comp_char, name='save_comp_char'),
+
     url(r'^materials/(?P<material_id>[0-9]+)/save_material/$', views.save_material, name='save_material'),
     url(r'^products/(?P<product_id>[0-9]+)/save_product/$', views.save_product, name='save_product'),
     url(r'^caps/(?P<cap_id>[0-9]+)/save_cap/$', views.save_cap, name='save_cap'),

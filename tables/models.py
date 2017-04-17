@@ -285,12 +285,12 @@ class Comp_char_range(Composition_char):
     inf = models.FloatField()
     sup = models.FloatField()
     def __str__(self):
-        return self.name
+        return self.get_name()
 
 class Comp_char_number(Composition_char):
     number = models.FloatField()
     def __str__(self):
-        return self.name
+        return self.get_name()
 
 class Comp_char_var(models.Model):
     comp_char = models.ForeignKey('Composition_char')
