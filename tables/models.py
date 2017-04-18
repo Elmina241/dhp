@@ -297,3 +297,5 @@ class Comp_char_var(models.Model):
     char_var = models.ForeignKey('Set_var')
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
+
+#Модели для составного компонента

@@ -54,16 +54,16 @@
                   <button class='close' onclick='delChar(this)'>x</button>
                   <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                   <div class='form-group' style='margin-bottom: 40pt'><label for='from' class='col-sm-2 control-label' style='font-size: small'>От: </label>
-                    <div class='col-sm-4'><input id='from' name="{{c.characteristic.id}}'from'" type='number' class='form-control' value='{{c.comp_char_range.inf}}' required></div>
+                    <div class='col-sm-4'><input id='from' name="{{c.characteristic.id}}'from'" type='number' min='{{c.characteristic.characteristic_range.inf}}' max='{{c.characteristic.characteristic_range.sup}}' class='form-control' value='{{c.comp_char_range.inf}}' required></div>
                     <label for='to' class='col-sm-2 control-label' style='font-size: small'>До: </label>
-                  <div class='col-sm-4'><input id='to' name="{{c.characteristic.id}}'to'" type='number' class='form-control' value='{{c.comp_char_range.sup}}' required></div></div>
+                  <div class='col-sm-4'><input id='to' name="{{c.characteristic.id}}'to'" type='number' min='{{c.characteristic.characteristic_range.inf}}' max='{{c.characteristic.characteristic_range.sup}}' class='form-control' value='{{c.comp_char_range.sup}}' required></div></div>
                 </li>
               {% else %}
               {% if c.characteristic.char_type.id == 2 %}
                 <li class='list-group-item' id="{{c.characteristic.id}}">
                   <button class='close' onclick='delChar(this)'>x</button>
                   <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                  <div class='form-group' style='margin-bottom: 40pt'><input id='number' type='number' name="{{c.characteristic.id}}" class='form-control' value='{{c.comp_char_number.number}}' required></div>
+                  <div class='form-group' style='margin-bottom: 40pt'><input id='number' type='number' name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control' value='{{c.comp_char_number.number}}' required></div>
                 </li>
               {% else %}
                 <li class='list-group-item' id={{c.characteristic.id}}>
