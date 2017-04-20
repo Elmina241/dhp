@@ -95,6 +95,7 @@ function getAmmount() {
     mat_ammount = mat_ammount + m;
   }
   ammount.textContent = mat_ammount.toFixed(2) + " кг";
+  $("#list_amm").attr('value', mat_ammount.toFixed(2));
 };
 
 function getName(m_id, m) {

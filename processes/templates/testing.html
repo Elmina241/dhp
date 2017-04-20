@@ -20,58 +20,36 @@ function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-function addComp(mat_id, amm, mat_code){
+
+function getElems(char_id, li_id){
   var csrftoken = getCookie('csrftoken');
   $.ajax({
         type: "POST",
-        url: 'add_comp/',
+        url: 'get_elems/',
         data: {
-          'mat_id': mat_id,
-          'amm': amm
+          'char_id': char_id
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
-        success: function onAjaxSuccess()
+        success: function onAjaxSuccess(data)
         {
-          $("#"+mat_id).text(amm);
-          $("#"+mat_id).parent().attr("class", "success");
-          $("#"+mat_id).parent().find("td").eq(0).html("<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>")
-          $("#"+mat_id).parent().find("td").eq(5).html("<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>");
-          getAmmount();
-          $("#type").attr("value", "");
+          var d = JSON.parse(data)
+          var vars = d.vars;
+          //var checked = d.checked;
+          elems = ""
+          for (id in vars){
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'>" + " " + vars[id] + "</label></div>";
+          }
+          $("#" + li_id).append(elems);
         }
       });
 }
 
-function getMatAmm(mat_id, add){
-  var type = $("#type").val();
-  if ($("#type").val()=="add") return parseFloat($("#"+mat_id).text()) + parseFloat(add);
-  else return $("#compAmm").val();
-};
-
 $(document).ready(function(){
-  getAmmount();
-  $('#addComp').on('show.bs.modal', function (event) {
-    // получить кнопку, которая его открыло
-    var button = $(event.relatedTarget)[0];
-    var code = button.dataset.code;
-    var mat = button.dataset.mat;
-    var amm = button.dataset.amm;
-    $(this).find('#matCode').text(code);
-    $(this).find('#type').attr("value", button.dataset.type);
-    $(this).find('#compAmm').attr("value", amm);
-    $(this).find('#mat_id').attr("value", mat);
-  })
+
 });
 
 </script>
@@ -79,14 +57,12 @@ $(document).ready(function(){
 <ul class="steps steps-5" style="margin-left: 0">
   <li><a href="#" title=""><em>Ожидание</em></a></li>
   <li><a href="#" title=""><em>Запущен</em></a></li>
-  <li class="current"><a href="#" title=""><em>Смешение</em></a></li>
-  <li><a href="#" title=""><em>Тестирование</em></a></li>
+  <li><a href="#" title=""><em>Смешение</em></a></li>
+  <li  class="current"><a href="#" title=""><em>Тестирование</em></a></li>
   <li><a href="#" title=""><em>Завершён</em></a></li>
 </ul>
 
-<form action="testing/" id="f" method="POST">{% csrf_token %}<input type="hidden" id="list_amm" name="list_amm" value=""></form>
-<button type="button" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить смешение</button>
-<!--<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>-->
+<button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
 <button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -99,7 +75,6 @@ $(document).ready(function(){
 <div class="panel-body">
 
   <div class="input-group" style ="margin: left; margin-left:10pt">
-    <!--<form action="save_process/" id="form" method="post" class="form-horizontal">-->
       {% csrf_token %}
       <div class="col-sm-3">
         <h5><p><b>Дата начала: </b></p></div></h5>
@@ -129,7 +104,7 @@ $(document).ready(function(){
 
 
       </div>
-      <div class="modal fade" id="addComp">
+      <!--<div class="modal fade" id="addComp">
         <div class="modal-dialog modal-sm" >
           <div class="modal-content">
             <div class="modal-header">
@@ -146,26 +121,36 @@ $(document).ready(function(){
               </div>
             </div>
     </div>
-  </div>
+  </div> -->
     <div class="panel panel-default" style ="margin: auto">
     <div class="panel-heading">
-        <h4 class="panel-title">Загрузочный лист</h4>
+        <h4 class="panel-title">Качественные показатели</h4>
     </div>
     <div class="panel-body">
-    <table class="table table-sm" id="materials2" style="width:100%; margin: auto">
-      <thead>
-        <tr>
-          <th></th><th>Код</th><th>Наименование</th><th>Количество, кг</th><th>Добавлено, кг</th><th></th><th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for c in comp %}
-          {% if c.loaded == True %} <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
-          {% else %}<tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td id="{{c.mat.id}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}">Добавить</button></td><td></td></tr>
-          {% endif %}
-        {% endfor %}
-      </tbody>
-    </table>
+
+      <form action="save_kneading_char/" method="post" id="form">
+        {% csrf_token %}
+            <ul class="list-group" id="chars" style="width: 50%; margin:auto">
+              {% for c in chars %}
+                {% if c.characteristic.char_type.id != 3 %}
+                  <li class='list-group-item' id="{{c.characteristic.id}}">
+                    <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
+                    <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
+                  </li>
+                {% else %}
+                  <li class='list-group-item' id={{c.characteristic.id}}>
+                    <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
+                      <script>getElems({{c.id}}, {{c.characteristic.id}})</script>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+            <input type="hidden" id="json" name="json" value="">
+            <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+        </form>
+
+
+
   </div>
 </div>
 </div>
