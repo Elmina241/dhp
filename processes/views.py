@@ -1,8 +1,8 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Composition_char, Material, Components, Formula, Formula_component, Reactor
-from .models import Loading_list, List_component, Kneading, State, State_log
+from tables.models import Composition, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
+from .models import Kneading_char_number, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
 from django.utils import timezone
@@ -199,6 +199,7 @@ def kneading_detail(request, kneading_id):
     if state_id == 4:
         return render(request, 'testing.html', {
                                                 "chars": Composition_char.objects.filter(comp = kneading.list.formula.composition),
+                                                "kneading_chars": Kneading_char.objects.filter(kneading = kneading),
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 5:
@@ -209,16 +210,16 @@ def save_kneading_char(request, kneading_id):
     Kneading_char.objects.filter(kneading = kneading).delete()
     chars = Composition_char.objects.filter(comp = kneading.list.formula.composition)
     for char in chars:
-        if (char.char_type.id != 3):
-            if str(char.id) in request.POST:
-                kneading_char = Kneading_char_number(kneading = kneading, characteristic = char, number = request.POST[str(char.id)])
+        if (char.characteristic.char_type.id != 3):
+            if str(char.characteristic.id) in request.POST:
+                kneading_char = Kneading_char_number(kneading = kneading, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
                 kneading_char.save()
         else:
-            if (str(char.id) + "'checked'") in request.POST:
-                char_var = request.POST[str(char.id) + "'checked'"]
-                char = Kneading_char(kneading = kneading, characteristic = char)
-                char.save()
+            if (str(char.characteristic.id) + "'checked'") in request.POST:
+                char_var = request.POST[str(char.characteristic.id) + "'checked'"]
+                kneading_char = Kneading_char(kneading = kneading, characteristic = char.characteristic)
+                kneading_char.save()
                 set_var = get_object_or_404(Set_var, pk=char_var)
-                kneading_char_var = Kneading_char_var(kneading_char = char, char_var = set_var)
-                сomp_char_var.save()
-    return redirect('characteristics')
+                kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
+                kneading_char_var.save()
+    return redirect('kneading_detail', kneading_id = kneading_id)

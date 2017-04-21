@@ -243,6 +243,8 @@ class Characteristic(models.Model):
     group = models.ForeignKey('Char_group')
     def __str__(self):
         return ('' if self.group.name == 'отсутствует' else self.group.name + ': ') + self.name
+    def get_group(self):
+        return '' if self.group.name == 'отсутствует' else self.group.name + ': '
 
 class Char_group(models.Model):
     name = models.CharField(max_length=200)

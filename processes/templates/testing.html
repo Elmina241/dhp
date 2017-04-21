@@ -130,14 +130,17 @@ $(document).ready(function(){
 
       <form action="save_kneading_char/" method="post" id="form">
         {% csrf_token %}
-            <ul class="list-group" id="chars" style="width: 50%; margin:auto">
+        <div style="width: 50%; margin:auto">
+            <ul class="list-group" id="chars">
               {% for c in chars %}
                 {% if c.characteristic.char_type.id != 3 %}
+                  <li class="list-group-item list-group-item-warning">{{c.characteristic.get_group }}</li>
                   <li class='list-group-item' id="{{c.characteristic.id}}">
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                    <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
+                    <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number'  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                   </li>
                 {% else %}
+                  <li class="list-group-item list-group-item-warning">{{ c.characteristic.get_group }}</li>
                   <li class='list-group-item' id={{c.characteristic.id}}>
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                       <script>getElems({{c.id}}, {{c.characteristic.id}})</script>
@@ -146,8 +149,9 @@ $(document).ready(function(){
               {% endfor %}
             </ul>
             <input type="hidden" id="json" name="json" value="">
-            <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+            <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
         </form>
+      </div>
 
 
 
