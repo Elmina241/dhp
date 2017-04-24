@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^process/get_state/$', views.get_state, name = 'get_state'),
     url(r'^process/(?P<kneading_id>[0-9]+)/$', views.kneading_detail, name='kneading_detail'),
     url(r'^process/(?P<kneading_id>[0-9]+)/start_process/$', views.start_kneading, name='start_kneading'),
+    url(r'^process/(?P<kneading_id>[0-9]+)/finish_testing/$', views.finish_testing, name='finish_testing'),
     url(r'^process/(?P<kneading_id>[0-9]+)/mixing/$', views.start_mixing, name='start_mixing'),
     url(r'^process/(?P<composition_id>[0-9]+)/get_elems/$', tables.views.get_elems, name='get_elems'),
     url(r'^process/(?P<kneading_id>[0-9]+)/testing/$', views.start_testing, name='start_testing'),

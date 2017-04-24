@@ -2,7 +2,7 @@ from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Composition, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
-from .models import Kneading_char_number, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
+from .models import Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
 from django.utils import timezone
@@ -167,6 +167,16 @@ def start_testing(request, kneading_id):
                                             "location": "/processes/process/",
                                             "p": kneading})
 
+def finish_testing(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
+    st.save()
+    batch = Batch(kneading = kneading)
+    batch.save()
+    return render(request, 'finished.html', {
+                                            "location": "/processes/process/",
+                                            "p": batch})
+
 def kneading_detail(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     state_id = State_log.objects.filter(kneading = kneading).last().state.pk
@@ -197,13 +207,37 @@ def kneading_detail(request, kneading_id):
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 4:
+        isTested = (Kneading_char.objects.filter(kneading = kneading).count() != 0)
+        if isTested:
+            chars = Kneading_char.objects.filter(kneading = kneading)
+        else:
+            chars = Composition_char.objects.filter(comp = kneading.list.formula.composition)
         return render(request, 'testing.html', {
-                                                "chars": Composition_char.objects.filter(comp = kneading.list.formula.composition),
+                                                "chars": chars,
+                                                "isTested": isTested,
+                                                "isValid": kneading.isValid,
                                                 "kneading_chars": Kneading_char.objects.filter(kneading = kneading),
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 5:
-        return null
+        batch = Batch.objects.filter(kneading = kneading)[0]
+        chars = {}
+        temp_chars = Kneading_char.objects.filter(kneading = kneading)
+        i = 0
+        for c in temp_chars:
+            if c.characteristic.char_type.id != 3:
+                try:
+                    chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.kneading_char_number.number}
+                except Kneading_char_number.DoesNotExist:
+                    chars[i] = {}
+            else:
+                val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
+                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+            i = i+1
+        return render(request, 'finished.html', {"comps": List_component.objects.filter(list = kneading.list),
+                                                "chars": chars,
+                                                "location": "/processes/process/",
+                                                "p": batch})
 
 def save_kneading_char(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
@@ -222,4 +256,6 @@ def save_kneading_char(request, kneading_id):
                 set_var = get_object_or_404(Set_var, pk=char_var)
                 kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
                 kneading_char_var.save()
+    #kneading.isTested = True
+    #kneading.save()
     return redirect('kneading_detail', kneading_id = kneading_id)

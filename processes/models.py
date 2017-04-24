@@ -20,12 +20,14 @@ class Kneading(models.Model):
     start_date = models.DateField()
     finish_date = models.DateField()
     reactor = models.ForeignKey('tables.Reactor')
+    isValid = models.BooleanField(default = False)
     def __str__(self):
         return self.list.formula.get_name()
 
 
 class Batch(models.Model):
     kneading = models.OneToOneField('Kneading')
+    finish_date = models.DateField(auto_now_add=True)
     def __str__(self):
         return self.id
 

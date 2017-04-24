@@ -62,7 +62,7 @@ $(document).ready(function(){
   <li><a href="#" title=""><em>Завершён</em></a></li>
 </ul>
 
-<button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
+<button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
 <button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -127,7 +127,13 @@ $(document).ready(function(){
         <h4 class="panel-title">Качественные показатели</h4>
     </div>
     <div class="panel-body">
-
+      {% if isTasted %}
+      {% if isValid %}
+        <div class="alert alert-success" role="alert">Партия соответствует показателям качества</div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">Партия не соответсвует показателям качества</div>
+      {% endif %}
+      {% endif %}
       <form action="save_kneading_char/" method="post" id="form">
         {% csrf_token %}
         <div style="width: 50%; margin:auto">
