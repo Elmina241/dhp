@@ -48,6 +48,45 @@ function getElems(char_id, li_id){
       });
 }
 
+function getCheckedElems(char_id, li_id){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_checked_elems/',
+        data: {
+          'char_id': char_id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          var d = JSON.parse(data)
+          var vars = d.vars;
+          var checked = d.checked;
+          elems = ""
+          for (id in vars){
+            if (arrayObjectIndexOf(checked, vars[id]) == -1){
+              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name=" + li_id + "'checked_list'>" + vars[id] + "</label></div>";
+            }
+            else {
+              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " checked" + " name=" + li_id + "'checked_list'>" + vars[id] + "</label></div>";
+            }
+          }
+          $("#" + li_id).append(elems);
+        }
+      });
+}
+
+function arrayObjectIndexOf(myArray, searchTerm) {
+    for(i in myArray) {
+        if (myArray[i] == searchTerm) return i;
+    }
+    return -1;
+}
+
 $(document).ready(function(){
 
 });
@@ -127,12 +166,12 @@ $(document).ready(function(){
         <h4 class="panel-title">Качественные показатели</h4>
     </div>
     <div class="panel-body">
-      {% if isTasted %}
-      {% if isValid %}
-        <div class="alert alert-success" role="alert">Партия соответствует показателям качества</div>
-        {% else %}
-        <div class="alert alert-danger" role="alert">Партия не соответсвует показателям качества</div>
-      {% endif %}
+      {% if isTested %}
+        {% if isValid %}
+          <div class="alert alert-success" role="alert">Партия соответствует показателям качества</div>
+          {% else %}
+          <div class="alert alert-danger" role="alert">Партия не соответсвует показателям качества</div>
+        {% endif %}
       {% endif %}
       <form action="save_kneading_char/" method="post" id="form">
         {% csrf_token %}
@@ -143,13 +182,13 @@ $(document).ready(function(){
                   <li class="list-group-item list-group-item-warning">{{c.characteristic.get_group }}</li>
                   <li class='list-group-item' id="{{c.characteristic.id}}">
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                    <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number'  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
+                    <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' value="{{c.kneading_char_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                   </li>
                 {% else %}
                   <li class="list-group-item list-group-item-warning">{{ c.characteristic.get_group }}</li>
                   <li class='list-group-item' id={{c.characteristic.id}}>
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                      <script>getElems({{c.id}}, {{c.characteristic.id}})</script>
+                      <script>getCheckedElems({{c.id}}, {{c.characteristic.id}})</script>
                   </li>
                 {% endif %}
               {% endfor %}

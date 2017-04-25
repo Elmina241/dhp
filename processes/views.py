@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
+from tables.models import Composition, Characteristic_set_var, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 from .models import Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
@@ -239,6 +239,26 @@ def kneading_detail(request, kneading_id):
                                                 "location": "/processes/process/",
                                                 "p": batch})
 
+def get_checked_elems(request, composition_id):
+    if request.method == 'POST':
+        if 'char_id' in request.POST:
+            char = get_object_or_404(Kneading_char, pk=request.POST['char_id'])
+            data = {}
+            vars = {}
+            checked = {}
+            all_var = Characteristic_set_var.objects.filter(char_set = char.characteristic)
+            length = Characteristic_set_var.objects.filter(char_set = char.characteristic).count()
+            for i in range(0, length):
+                vars[str(all_var[i].char_var.id)] = all_var[i].char_var.name
+            checked_var = Kneading_char_var.objects.filter(kneading_char = char)
+            #length = Comp_char_var.objects.filter(comp_char = char).count()
+            #for i in range(0, length):
+            checked[str(checked_var[0].char_var.id)] = checked_var[0].char_var.name
+            data['vars'] =  vars
+            data['checked'] = checked
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)
+
 def save_kneading_char(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     Kneading_char.objects.filter(kneading = kneading).delete()
@@ -256,6 +276,9 @@ def save_kneading_char(request, kneading_id):
                 set_var = get_object_or_404(Set_var, pk=char_var)
                 kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
                 kneading_char_var.save()
+    #Проверка на соответсвие показателям
+    
+
     #kneading.isTested = True
     #kneading.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
