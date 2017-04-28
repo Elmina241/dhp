@@ -268,6 +268,7 @@ def save_kneading_char(request, kneading_id):
             if str(char.characteristic.id) in request.POST:
                 kneading_char = Kneading_char_number(kneading = kneading, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
                 kneading_char.save()
+                #Проверка на соответсвие показателям
         else:
             if (str(char.characteristic.id) + "'checked'") in request.POST:
                 char_var = request.POST[str(char.characteristic.id) + "'checked'"]
@@ -276,8 +277,8 @@ def save_kneading_char(request, kneading_id):
                 set_var = get_object_or_404(Set_var, pk=char_var)
                 kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
                 kneading_char_var.save()
-    #Проверка на соответсвие показателям
-    
+                #Проверка на соответсвие показателям
+
 
     #kneading.isTested = True
     #kneading.save()
