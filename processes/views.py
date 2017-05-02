@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Characteristic_set_var, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
+from tables.models import Composition, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 from .models import Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
@@ -263,12 +263,18 @@ def save_kneading_char(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     Kneading_char.objects.filter(kneading = kneading).delete()
     chars = Composition_char.objects.filter(comp = kneading.list.formula.composition)
+    isValid = True
     for char in chars:
         if (char.characteristic.char_type.id != 3):
             if str(char.characteristic.id) in request.POST:
                 kneading_char = Kneading_char_number(kneading = kneading, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
                 kneading_char.save()
                 #Проверка на соответсвие показателям
+                comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
+                if (char.characteristic.char_type.id == 1):
+                    isValid = isValid & (kneading_char.number <= comp_char.сomp_char_range.sup & kneading_char.number >= comp_char.сomp_char_range.inf)
+                if (char.characteristic.char_type.id == 2):
+                    isValid = isValid & (kneading_char.number == comp_char.сomp_char_number.number)
         else:
             if (str(char.characteristic.id) + "'checked'") in request.POST:
                 char_var = request.POST[str(char.characteristic.id) + "'checked'"]
@@ -278,8 +284,9 @@ def save_kneading_char(request, kneading_id):
                 kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
                 kneading_char_var.save()
                 #Проверка на соответсвие показателям
-
-
-    #kneading.isTested = True
-    #kneading.save()
+                comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
+                isValid = isValid & (Comp_char_var.objects.filter(comp_char = comp_char, char_var = set_var).count() != 0)
+    kneading.isTested = True
+    kneading.isValid = isValid
+    kneading.save()
     return redirect('kneading_detail', kneading_id = kneading_id)

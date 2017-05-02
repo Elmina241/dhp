@@ -185,11 +185,19 @@ $(document).ready(function(){
                     <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' value="{{c.kneading_char_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                   </li>
                 {% else %}
+
                   <li class="list-group-item list-group-item-warning">{{ c.characteristic.get_group }}</li>
                   <li class='list-group-item' id={{c.characteristic.id}}>
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
+                    {% if isTested %}
                       <script>getCheckedElems({{c.id}}, {{c.characteristic.id}})</script>
+                      {% else %}
+                      <script>getElems({{c.id}}, {{c.characteristic.id}})</script>
+                      {% endif %}
                   </li>
+
+
+
                 {% endif %}
               {% endfor %}
             </ul>
