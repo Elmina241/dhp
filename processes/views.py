@@ -129,12 +129,13 @@ def start_kneading(request, kneading_id):
     l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
-    return render(request, 'started.html', {"components": json.dumps(components),
-                                            "materials": json.dumps(materials),
-                                            "l_c": json.dumps(l_comp),
-                                            "c_id": kneading.list.formula.composition.id,
-                                            "location": "/processes/process/",
-                                            "p": kneading})
+    return redirect('kneading_detail', kneading_id = kneading_id)
+    #return render(request, 'started.html', {"components": json.dumps(components),
+                                            #"materials": json.dumps(materials),
+                                            #"l_c": json.dumps(l_comp),
+                                            #"c_id": kneading.list.formula.composition.id,
+                                            #"location": "/processes/process/",
+                                            #"p": kneading})
 
 def start_mixing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
@@ -147,13 +148,14 @@ def start_mixing(request, kneading_id):
     l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
-    return render(request, 'mixing.html', {"components": json.dumps(components),
-                                            "materials": json.dumps(materials),
-                                            "comp": List_component.objects.filter(list=kneading.list),
-                                            "l_c": json.dumps(l_comp),
-                                            "c_id": kneading.list.formula.composition.id,
-                                            "location": "/processes/process/",
-                                            "p": kneading})
+    return redirect('kneading_detail', kneading_id = kneading_id)
+    #return render(request, 'mixing.html', {"components": json.dumps(components),
+                                            #"materials": json.dumps(materials),
+                                            #"comp": List_component.objects.filter(list=kneading.list),
+                                            #"l_c": json.dumps(l_comp),
+                                            #"c_id": kneading.list.formula.composition.id,
+                                            #"location": "/processes/process/",
+                                            #"p": kneading})
 
 def start_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
@@ -162,10 +164,10 @@ def start_testing(request, kneading_id):
          kneading.list.save()
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=4))
     st.save()
-    return render(request, 'testing.html', {
-                                            "chars": Composition_char.objects.filter(comp = kneading.list.formula.composition),
-                                            "location": "/processes/process/",
-                                            "p": kneading})
+    return redirect('kneading_detail', kneading_id = kneading_id)
+    #return render(request, 'testing.html', { "chars": Composition_char.objects.filter(comp = kneading.list.formula.composition),
+                                            #"location": "/processes/process/",
+                                            #"p": kneading})
 
 def finish_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
@@ -173,6 +175,7 @@ def finish_testing(request, kneading_id):
     st.save()
     batch = Batch(kneading = kneading)
     batch.save()
+    #Добавить передаваемые данные
     return render(request, 'finished.html', {
                                             "location": "/processes/process/",
                                             "p": batch})
@@ -272,7 +275,8 @@ def save_kneading_char(request, kneading_id):
                 #Проверка на соответсвие показателям
                 comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
                 if (char.characteristic.char_type.id == 1):
-                    isValid = isValid & (kneading_char.number <= comp_char.сomp_char_range.sup & kneading_char.number >= comp_char.сomp_char_range.inf)
+                    range = Comp_char_range.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
+                    isValid = isValid & ((float(kneading_char.number) <= float(range.sup)) & (float(kneading_char.number) >= float(range.inf)))
                 if (char.characteristic.char_type.id == 2):
                     isValid = isValid & (kneading_char.number == comp_char.сomp_char_number.number)
         else:
