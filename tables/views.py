@@ -493,11 +493,16 @@ def add_composition(request):
         name = request.POST['name']
         group = get_object_or_404(Composition_group, pk=request.POST['group'])
         sgr = request.POST['sgr']
+        if request.POST['isFinal'] == 'on':
+            isFinal = False
+        else:
+            isFinal = True
         comp = Composition(
             code = code,
             name = name,
             group = group,
-            sgr = sgr)
+            sgr = sgr,
+            isFinal = isFinal)
     except (KeyError, Composition_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:

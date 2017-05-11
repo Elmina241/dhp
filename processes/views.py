@@ -103,7 +103,7 @@ def save_process(request):
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))
             st.save()
-        return redirect('loading_lists')
+        return redirect('mixing')
 
 def get_state(request):
     if request.method == 'POST':
@@ -176,9 +176,7 @@ def finish_testing(request, kneading_id):
     batch = Batch(kneading = kneading)
     batch.save()
     #Добавить передаваемые данные
-    return render(request, 'finished.html', {
-                                            "location": "/processes/process/",
-                                            "p": batch})
+    return redirect('kneading_detail', kneading_id = kneading_id)
 
 def kneading_detail(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)

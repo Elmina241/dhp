@@ -93,6 +93,7 @@ class Composition(models.Model):
     name = models.CharField(max_length=80)
     sgr = models.CharField(max_length=80)
     group = models.ForeignKey('Composition_group')
+    isFinal = models.BooleanField(default = True)
     def __str__(self):
         return self.name
     def get_name(self):
@@ -231,6 +232,24 @@ class Formula_component(models.Model):
     ammount = models.FloatField()
     def __str__(self):
         return self.mat.name
+
+#Составной компонент
+class Compl_comp(models.Model):
+    code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
+    def __str__(self):
+        return self.name
+
+#Составляющая составного компонента
+class Compl_comp_comp(models.Model):
+    compl = models.ForeignKey('Compl_comp')
+    mat = models.ForeignKey('Material')
+    ammount = models.FloatField()
+    def __str__(self):
+        return self.mat.name
+
+#Характеристики
+
 
 class Characteristic_type(models.Model):
     name = models.CharField(max_length=80)
