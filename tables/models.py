@@ -235,8 +235,10 @@ class Formula_component(models.Model):
 
 #Составной компонент
 class Compl_comp(models.Model):
+    composition = models.ForeignKey('Composition', blank=True)
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
+    ammount = models.FloatField()
     def __str__(self):
         return self.name
 

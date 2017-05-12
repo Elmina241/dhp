@@ -2,7 +2,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
+from .models import Characteristic_range, Compl_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 import json
 from django.core import serializers
@@ -26,6 +26,8 @@ def new_characteristic(request):
         {"types": Characteristic_type.objects.all,
         "groups": Char_group.objects.all,
         "header": "Добавление характеристики", "location": "/tables/characteristics/"})
+
+
 
 def packing(request):
     return render(request, "packing.html",
@@ -59,7 +61,10 @@ def compositions(request):
     return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Рецепты", "location": "/tables/compositions/"})
 
 def comp_chars(request):
-    return render(request, "comp_chars.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Рецепты", "location": "/tables/characteristics/"})
+    return render(request, "comp_chars.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Характеристики", "location": "/tables/characteristics/"})
+
+def complex_comps(request):
+    return render(request, "complex_comps.html", {"comps": Compl_comp.objects.all, "header": "Технологические композиции", "location": "/tables/complex_comps/"})
 
 def detail(request, material_id):
     return render(request, "material.html",
@@ -114,6 +119,29 @@ def formula_detail(request, formula_id):
                 "f_components": "0",
                 "materials": json.dumps(materials),
                 "location": "/tables/formulas/"
+                })
+        else:
+            f_components = serializers.serialize("json", Formula_component.objects.filter(formula=get_object_or_404(Formula, pk=formula_id)))
+            return render(request, "formula.html",
+                {"formula": get_object_or_404(Formula, pk=formula_id),
+                "components": json.dumps(components),
+                "compositions": Composition.objects.all,
+                "f_components": json.dumps(f_components),
+                "materials": json.dumps(materials),
+                "location": "/tables/formulas/"
+                })
+
+def new_comp(request, comp_id):
+        components = serializers.serialize("json", Components.objects.all())
+        materials = serializers.serialize("json", Material.objects.all())
+        if (comp_id == '0'):
+            return render(request, "new_component.html",
+                {"comp": None,
+                "components": json.dumps(components),
+                "compositions": Composition.objects.all,
+                "f_components": "0",
+                "materials": json.dumps(materials),
+                "location": "/tables/complex_comps/"
                 })
         else:
             f_components = serializers.serialize("json", Formula_component.objects.filter(formula=get_object_or_404(Formula, pk=formula_id)))

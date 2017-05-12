@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^formulas/$', views.formulas, name = 'formulas'),
     url(r'^characteristics/$', views.characteristics, name = 'characteristics'),
     url(r'^comp_chars/$', views.comp_chars, name = 'comp_chars'),
+    url(r'^complex_comps/$', views.complex_comps, name = 'complex_comps'),
     # добавление записей
     url(r'^products/new_product/$', views.new_product, name = 'new_product'),
     url(r'^compositions/new_composition/$', views.new_composition, name = 'new_composition'),
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^characteristics/new_characteristic/$', views.new_characteristic, name = 'new_characteristic'),
     url(r'^characteristics/new_characteristic/add_characteristic/$', views.add_characteristic, name = 'add_characteristic'),
     url(r'^storage/0/$', views.storage_detail, name='storage_detail'),
+    url(r'^complex_comps/(?P<comp_id>[0-9]+)/$', views.new_comp, name='new_comp'),
     # удаление записей
     url(r'^products/del_product/$', views.del_product, name = 'del_product'),
     url(r'^materials/del_material/$', views.del_material, name = 'del_material'),
