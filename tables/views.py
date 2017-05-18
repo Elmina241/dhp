@@ -140,6 +140,7 @@ def new_comp(request, comp_id):
                 "components": json.dumps(components),
                 "compositions": Composition.objects.all,
                 "f_components": "0",
+                "materials2": Material.objects.all(),
                 "materials": json.dumps(materials),
                 "location": "/tables/complex_comps/"
                 })
