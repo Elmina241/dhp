@@ -762,6 +762,33 @@ def save_formula(request, formula_id):
                     cmps.save()
         return redirect('formulas')
 
+def save_comp(request):
+    comp = Compl_comp()
+    #if ('comp_type' in request.POST):
+        #c_type = request.POST['comp_type']
+    if 'code' in request.POST:
+        c_type = request.POST['comp_type']
+        comp.code = request.POST['code']
+        comp.name = request.POST['name']
+        comp.ammount = request.POST['ammount']
+        if c_type == "comp":
+            composition = get_object_or_404(Composition, pk=request.POST['composition'])
+            comp.composition = composition
+    comp.save()
+    if 'json' in request.POST:
+        table = request.POST['json']
+        data = json.loads(table)
+        for d in data:
+            mat = Material.objects.filter(code=d['Код'])[0]
+            if d['Код'] in request.POST:
+                if c_type == "comp":
+                    ammount=request.POST[d['Код']]
+                else:
+                    ammount = d['Содержание, %']
+                cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=request.POST[d['Код']])
+                cmps.save()
+        return redirect('formulas')
+
 def get_char(request, composition_id):
     if request.method == 'POST':
         if 'char_id' in request.POST:

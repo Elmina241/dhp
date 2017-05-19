@@ -173,4 +173,8 @@ function saveRow(){
         tbody.appendChild(row);
       }
     }
+    var code = document.getElementById("composition").selectedOptions[0].textContent.substring(0, 5);
+    var name = document.getElementById("composition").selectedOptions[0].textContent.substring(5);
+    $("#code").attr("value", code);
+    $("#name1").attr("value", name);
   };
