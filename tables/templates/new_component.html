@@ -10,17 +10,17 @@ $(document).ready(function(){
 <script type="text/javascript">
 function showOrHide(cb) {
   if (cb.value == "new") {
-    $("#name1").attr("disabled", false);
-    $("#code").attr("disabled", false);
+    $("#name1").attr("readonly", false);
+    $("#code").attr("readonly", false);
     $("#compSel").css("display", "none");
     $("#newMat").css("display", "block");
     $("#materials tr").eq(0).find("th").eq(2).html("Содержание, %");
   }
   else {
     $("#materials tr").eq(0).find("th").eq(2).html("Количество, кг");
-    $("#code").attr("disabled", true);
+    $("#code").attr("readonly", true);
     $("#newMat").css("display", "none");
-    $("#name1").attr("disabled", true);
+    $("#name1").attr("readonly", true);
     $("#compSel").css("display", "block");
   }
 };
