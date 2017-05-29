@@ -105,6 +105,31 @@ def save_process(request):
             st.save()
         return redirect('mixing')
 
+def get_processes(request):
+    if request.method == 'GET':
+        p = {}
+        for k in Kneading.objects.all():
+            p[str(k.id)]={'start': k.start_date.strftime('%d.%m.%Y'), 'end': k.finish_date.strftime('%d.%m.%Y'), 'reactor': str(k.reactor), 'formula': k.list.formula.get_name(), 'amount': str(k.list.ammount), 'state': str(get_state_id(k))}
+        json_data = json.dumps(p)
+        #processes = serializers.serialize("json", p)
+        return HttpResponse(json_data)
+
+def get_lists(request):
+    if request.method == 'GET':
+        p = {}
+        for l in List_component.objects.all():
+            k = Kneading.objects.filter(list = l.list)
+            if k.count() != 0:
+                m_name = l.mat.name
+                m_code = l.mat.code
+                p[str(l.id)]={'process': str(k[0].id), 'mat_code': m_code, 'mat_name': m_name, 'amount': str(l.ammount), 'loaded': int(l.loaded)}
+        json_data = json.dumps(p)
+        #processes = serializers.serialize("json", p)
+        return HttpResponse(json_data)
+
+def get_state_id(kneading):
+    return State_log.objects.filter(kneading = kneading).last().state.id
+
 def get_state(request):
     if request.method == 'POST':
         if 'id' in request.POST:
