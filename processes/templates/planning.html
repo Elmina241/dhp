@@ -1,5 +1,15 @@
 {% extends 'processes/base.html' %}
 {% block content %}
+<style>
+   hr {
+    margin-top: 4pt;
+    margin-bottom: 4pt;
+    border: none; /* Убираем границу */
+    background-color: #D3D3D3; /* Цвет линии */
+    color: #D3D3D3; /* Цвет линии для IE6-7 */
+    height: 1px; /* Толщина линии */
+   }
+  </style>
 <script type="text/javascript">
 $(document).ready(function(){
   var dp = $('#datepicker');
@@ -61,10 +71,15 @@ $(document).ready(function(){
         </div>
       </div>
       <br><br>
+      <div class="col-sm-12">
+      <div class="col-sm-6">
+      <div class="panel panel-default" style ="margin: auto">
+        <div class="panel-heading"><b><h4 class="panel-title">Состав</h4></b></div>
+        <div class="panel-body">
       <table class="table table-sm" id="materials" style="width:100%; margin: auto">
         <thead>
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th>
+            <th>Код</th><th>Наименование</th><th>Мин., кг</th><th>Макс., кг</th><th>Количество, кг</th><th>В загрузочном листе, кг</th>
           </tr>
         </thead>
         <tbody>
@@ -77,6 +92,65 @@ $(document).ready(function(){
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+<div class="col-sm-6">
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading"><b><h4 class="panel-title">Загрузочный лист</h4></b>
+    <hr>
+  <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить реактив</button>
+  <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить составной компонент</button>
+  <div class="modal fade" id="newComp">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">x</button>
+          <h4>Добавление реактива</h4>
+        </div>
+        <div class="modal-body">
+  <div style="margin: auto">
+    <label for="material">Реактив:</label>
+    <select class="form-control" id="material">
+      {% for m in materials %}
+      <option value="{{ m.code }}">{{ m.get_name }}</option>
+      {% endfor %}</select>
+      <br>
+      <label for="min">Минимум:</label>
+      <div class="input-group">
+        <input type="number" class="form-control bfh-number" max="100" min="0"  value="100" id="min"> <span class="input-group-addon">%</span></p>
+      </div>
+      <br>
+      <label for="max">Максимум:</label>
+      <div class="input-group">
+        <input type="number" class="form-control bfh-number" max="100" min="0"  value="100" id="max"> <span class="input-group-addon">%</span></p>
+      </div>
+  </div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addRow('components');return false;" data-dismiss="modal">Добавить</button></div>
+</div>
+</div>
+</div>
+</div>
+  <div class="panel-body">
+<table class="table table-sm" id="materials" style="width:100%; margin: auto">
+  <thead>
+    <tr>
+      <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ВД01</td>
+      <td>Вода</td>
+      <td id="water"></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
       <br>
       <input type="hidden" id="json" name="json" value="">
       <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
