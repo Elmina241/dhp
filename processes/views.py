@@ -44,6 +44,7 @@ def planning(request):
     return render(request, "planning.html",
         {"components": json.dumps(components),
         "materials": json.dumps(materials),
+        "materials2": Material.objects.all,
         "f_c": json.dumps(f_comp),
         "f": json.dumps(formula),
         "reactors": Reactor.objects.all,

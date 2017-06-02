@@ -43,6 +43,9 @@ function getComponents(c, m, f_c, f) {
   }
 };
 
+
+
+
 //получить номер состава
 function getComp(f, f_id){
   var i = 0;
@@ -179,4 +182,49 @@ function getComponents2(c, m, l_c, l_id, t_name) {
         $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + mat_amm + '</td>').appendTo(tbody);
       }
   }
+};
+
+/** Скрипты для страницы планирование **/
+//Формирование таблицы состава в планировании
+function getCompositionT(c, m, f_c, f) {
+  var table = $("#materials tbody");
+  var rowCount = $('#materials tr').length;
+  for (i = 2; i < rowCount; i++) $('#materials tr').eq(i).remove();
+  var sel = document.getElementById("formula");
+  var sel_id = sel.value;
+  var components = JSON.parse(c);
+  var materials = JSON.parse(m);
+  var formulas = JSON.parse(f);
+  var f_comp = JSON.parse(f_c);
+  var amm = $("#ammount").val();
+  for (i = 0; i < f_comp.length; i++){
+    if (f_comp[i].fields.formula == sel_id){
+      var row = document.createElement("TR");
+      var bounds = getMinMax(components, getComp(formulas, f_comp[i].fields.formula), f_comp[i].fields.mat);
+      $("<tr id=" + f_comp[i].fields.mat + "><td>" + getCode(f_comp[i].fields.mat, materials) + "</td><td>" + getName(f_comp[i].fields.mat, materials) + "</td><td>" + ((bounds.min/100)*amm).toFixed(2) + "</td><td>" +
+      + ((bounds.max/100)*amm).toFixed(2) + "</td><td name=" + getCode(f_comp[i].fields.mat, materials) + ">" + (f_comp[i].fields.ammount/1020*amm).toFixed(2) + "</td><td></td><tr>").appendTo(table);
+    }
+  }
+};
+
+function changeWaterT() {
+  var ammount = document.getElementById("ammount").value;
+  var water1 = document.getElementById("water");
+  var water2 = document.getElementById("water2");
+  var w_a = document.getElementById("water_amm");
+  var tbody = document.getElementById("materials");
+  var mat_ammount = 0;
+  for (i=2; i<tbody.rows.length; i++){
+    var m = tbody.rows[i].children[4];
+    if (m==undefined) m2 = 0;
+    else  m2 = parseInt(m.textContent);
+    mat_ammount = mat_ammount + m2;
+  }
+  water1.textContent = (ammount - mat_ammount).toFixed(2);
+  if (w_a != null) w_a.value = (ammount - mat_ammount).toFixed(2);
+  if (water2 != null) water2.textContent = (ammount - mat_ammount).toFixed(2);
+  if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
+  else var table = $('#materials2').tableToJSON();
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
 };
