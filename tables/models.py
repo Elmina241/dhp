@@ -241,6 +241,8 @@ class Compl_comp(models.Model):
     ammount = models.FloatField()
     def __str__(self):
         return self.name
+    def get_name(self):
+        return self.code + ' ' + self.name
 
 #Составляющая составного компонента
 class Compl_comp_comp(models.Model):

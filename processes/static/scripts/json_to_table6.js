@@ -111,11 +111,12 @@ function getName(m_id, m) {
   return name;
 };
 
-function getMinMax(c, comp, mat){
+function getMinMax(c, comp, mat, fComp, formula){
   var i=0;
   var bounds = {
     min: 0,
-    max: 0
+    max: 0,
+    amm: 0
   };
   var flag = false;
   while (i < c.length && !flag){
@@ -126,21 +127,36 @@ function getMinMax(c, comp, mat){
     }
     i++;
   }
+  i=0;
+  if (fComp!=undefined){
+    var flag = false;
+    while (i < fComp.length && !flag){
+      if (fComp[i].fields.mat == mat && fComp[i].fields.formula == formula){
+        bounds.amm = fComp[i].fields.ammount;
+        flag = true;
+      }
+      i++;
+    }
+  }
   return bounds;
 }
 
-function changeMinMax(c, f){
+
+//Изменяет не только минимум и максимум, но и количество компонента в составе
+function changeMinMax(c, f, f_c){
   var components = JSON.parse(c);
   var form = JSON.parse(f);
+  var fComp = JSON.parse(f_c);
   var amm = $("#ammount").val();
   var comp = getComp(form, $("#formula").val());
   var size = $("#materials tr").size();
   for (var i = 2; i < size; i++){
     var row = $("#materials tr").eq(i);
     var code = row.attr("id");
-    var bounds = getMinMax(components, comp, code);
+    var bounds = getMinMax(components, comp, code, fComp, $("#formula").val());
     $("#materials tr").eq(i).find('td').eq(2).text(((bounds.min/100)*amm).toFixed(2));
     $("#materials tr").eq(i).find('td').eq(3).text(((bounds.max/100)*amm).toFixed(2));
+    $("#materials tr").eq(i).find('td').eq(4).text(((bounds.amm/1020)*amm).toFixed(2));
     $("#materials tr").eq(i).find('input').attr('min', ((bounds.min/100)*amm).toFixed(2));
     $("#materials tr").eq(i).find('input').attr('max', ((bounds.max/100)*amm).toFixed(2));
   }
@@ -228,3 +244,64 @@ function changeWaterT() {
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 };
+
+//Добавление реактива в загрузочный лист
+function addMaterial(){
+  var id = document.getElementById("material").selectedOptions[0].value
+  var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
+  var name = document.getElementById("material").selectedOptions[0].textContent.substring(5);
+  /*var amm = $("#percent").val();
+  var waterAmm = $("#ВД01").val() - amm;
+  $("#ВД01").attr("value", waterAmm);*/
+  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm({{compl_comp_comps}});return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td>" + "</tr>");
+  $("#newComp").modal("hide");
+}
+
+function addComplComp(){
+  var id = document.getElementById("material").selectedOptions[0].value
+  var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
+  var name = document.getElementById("complComp").selectedOptions[0].textContent.substring(5);
+  /*var amm = $("#percent").val();
+  var waterAmm = $("#ВД01").val() - amm;
+  $("#ВД01").attr("value", waterAmm);*/
+  $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm({{compl_comp_comps}});return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td>" + "</tr>");
+  $("#newComp").modal("hide");
+}
+
+function deleteRow(r)
+{
+  var i=r.parentNode.parentNode.rowIndex;
+  document.getElementById('loadList').deleteRow(i);
+  changeMatAm();
+}
+
+//Расчёт количества реактивов в загрузочном листе
+function changeMatAm(components){
+  var tbody = document.getElementById("loadList");
+  var mats = document.getElementById("materials");
+  var comps = JSON.parse(components);
+  for (j=2; j < mats.rows.length; j++){
+    td = $("#materials tr").eq(j).find("td").eq(5).text("0");
+  }
+  for (i=2; i<tbody.rows.length; i++){
+    var tr = $("#loadList tr").eq(i);
+    var code = tr.find("td").eq(0).text();
+    var id = tr.attr("id");
+    if (tr.attr("name") == "compl"){
+      var newAm = tr.find("input").val();
+      for (j=0; j < comps.length; j++){
+        if (comps[j].fields.compl == id){
+          matId = comps[j].fields.mat;
+          var amm = $("#materials tr#" + matId).find("td").eq(5).text();
+          matAm = (newAm/100)*comps[j].fields.ammount;
+          $("#materials tr#" + matId).find("td").eq(5).text(parseInt(amm) + parseInt(matAm));
+        }
+      }
+    }
+    else{
+      var amm = $("#materials tr#" + id).find("td").eq(5).text();
+      var newAm = tr.find("input").val();
+      $("#materials tr#" + id).find("td").eq(5).text(parseInt(amm) + parseInt(newAm));
+    }
+  }
+}

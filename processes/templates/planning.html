@@ -50,7 +50,7 @@ $(document).ready(function(){
           <div class="col-sm-10"><input type="text" data-provide="datepicker" class="input-sm form-control" name="end" /></div>
         </div>
         </div>
-  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}});changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
+  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}}, {{f_c}});changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
 </div>
 <div class="form-group">
   <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Реактор: </label>
@@ -70,9 +70,11 @@ $(document).ready(function(){
           {% endfor %}</select>
         </div>
       </div>
-      <br><br>
+      <input type="hidden" id="json" name="json" value="">
+      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:7pt"/>
+      </form>
       <div class="col-sm-12">
-      <div class="col-sm-6">
+      <div class="col-md-12 col-lg-7">
       <div class="panel panel-default" style ="margin: auto">
         <div class="panel-heading"><b><h4 class="panel-title">Состав</h4></b></div>
         <div class="panel-body">
@@ -95,12 +97,13 @@ $(document).ready(function(){
     </div>
   </div>
 </div>
-<div class="col-sm-6">
+<div class="col-md-12 col-lg-5">
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading"><b><h4 class="panel-title">Загрузочный лист</h4></b>
     <hr>
   <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить реактив</button>
-  <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить составной компонент</button>
+  <button class="btn btn-success" data-toggle="modal" data-target="#newComplComp"><i class="glyphicon glyphicon-plus"></i> Добавить составной компонент</button>
+
   <div class="modal fade" id="newComp">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -108,21 +111,46 @@ $(document).ready(function(){
           <button class="close" data-dismiss="modal">x</button>
           <h4>Добавление реактива</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="height:60pt">
   <div style="margin: auto">
     <label for="material">Реактив:</label>
     <select class="form-control" id="material">
       {% for m in materials2 %}
-      <option value="{{ m.code }}">{{ m.get_name }}</option>
+      <option value="{{ m.id }}">{{ m.get_name }}</option>
       {% endfor %}</select>
       </div>
   </div>
-</div>
-<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addRow('components');return false;" data-dismiss="modal">Добавить</button></div>
-</div>
-</div>
+
+<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addMaterial();return false;" data-dismiss="modal">Добавить</button></div>
 </div>
 </div>
+</div>
+
+<div class="modal fade" id="newComplComp">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">x</button>
+        <h4>Добавление составного компонента</h4>
+      </div>
+      <div class="modal-body" style="height:60pt">
+<div style="margin: auto">
+  <label for="material">Технологическая композиция:</label>
+  <select class="form-control" id="complComp">
+    {% for c in compl_comps %}
+    <option value="{{ c.id }}">{{ c.get_name }}</option>
+    {% endfor %}</select>
+    </div>
+</div>
+
+<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addComplComp();return false;" data-dismiss="modal">Добавить</button></div>
+</div>
+</div>
+</div>
+
+
+</div>
+
   <div class="panel-body">
 <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
   <thead>
@@ -142,11 +170,11 @@ $(document).ready(function(){
 </div>
 </div>
 </div>
+</div>
       <br>
-      <input type="hidden" id="json" name="json" value="">
-      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
+
   </div>
-  </form>
+
 </div>
 </div>
 {% endblock content %}

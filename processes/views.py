@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
+from tables.models import Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 from .models import Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
@@ -41,10 +41,13 @@ def planning(request):
     f_comp = serializers.serialize("json", Formula_component.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
+    compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     return render(request, "planning.html",
         {"components": json.dumps(components),
         "materials": json.dumps(materials),
         "materials2": Material.objects.all,
+        "compl_comps": Compl_comp.objects.all,
+        "compl_comp_comps": json.dumps(compl_comp_comps),
         "f_c": json.dumps(f_comp),
         "f": json.dumps(formula),
         "reactors": Reactor.objects.all,

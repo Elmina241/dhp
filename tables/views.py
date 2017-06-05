@@ -780,9 +780,10 @@ def save_comp(request):
         data = json.loads(table)
         for d in data:
             mat = Material.objects.filter(code=d['Код'])[0]
+            #Содержание компонентов сохраняется в %
             if d['Код'] in request.POST:
                 if c_type == "comp":
-                    ammount=request.POST[d['Код']]
+                    ammount = request.POST[d['Код']]/(comp.ammount / 100)
                 else:
                     ammount = d['Содержание, %']
                 cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=request.POST[d['Код']])
