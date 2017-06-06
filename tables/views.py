@@ -2,7 +2,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Compl_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
+from .models import Characteristic_range, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 import json
 from django.core import serializers
@@ -781,12 +781,15 @@ def save_comp(request):
         for d in data:
             mat = Material.objects.filter(code=d['Код'])[0]
             #Содержание компонентов сохраняется в %
-            if d['Код'] in request.POST:
+            #if d['Код'] in request.POST:
+            if d['Код']!='ВД01':
                 if c_type == "comp":
-                    ammount = request.POST[d['Код']]/(comp.ammount / 100)
+                    if d['Код'] in request.POST:
+                        ammount = request.POST[d['Код']]/(comp.ammount / 100)
                 else:
-                    ammount = d['Содержание, %']
-                cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=request.POST[d['Код']])
+                    str_am = d['Содержание, %']
+                    ammount = float(str_am)
+                cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=ammount)
                 cmps.save()
         return redirect('formulas')
 

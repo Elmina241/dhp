@@ -253,18 +253,19 @@ function addMaterial(){
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm({{compl_comp_comps}});return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td>" + "</tr>");
+  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td>" + "</tr>");
   $("#newComp").modal("hide");
 }
 
 function addComplComp(){
-  var id = document.getElementById("material").selectedOptions[0].value
-  var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
+  var id = document.getElementById("complComp").selectedOptions[0].value
+  var code = document.getElementById("complComp").selectedOptions[0].textContent.substring(0,4);
   var name = document.getElementById("complComp").selectedOptions[0].textContent.substring(5);
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
   $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm({{compl_comp_comps}});return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td>" + "</tr>");
+  //$("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
   $("#newComp").modal("hide");
 }
 
@@ -294,7 +295,7 @@ function changeMatAm(components){
           matId = comps[j].fields.mat;
           var amm = $("#materials tr#" + matId).find("td").eq(5).text();
           matAm = (newAm/100)*comps[j].fields.ammount;
-          $("#materials tr#" + matId).find("td").eq(5).text(parseInt(amm) + parseInt(matAm));
+          $("#materials tr#" + matId).find("td").eq(5).text((parseFloat(amm) + parseFloat(matAm)).toFixed(2));
         }
       }
     }
