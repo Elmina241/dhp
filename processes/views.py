@@ -89,11 +89,14 @@ def save_process(request):
             data = json.loads(table)
             for d in data:
                 if d['Код']!='ВД01':
-                    mat = Material.objects.filter(code=d['Код'])[0]
-                    ammount=request.POST[d['Код']]
-                    if d['Код'] in request.POST:
-                        cmps = List_component(list=list, mat=mat, ammount=request.POST[d['Код']])
-                        cmps.save()
+                    ammount=d['%']
+                    if Material.objects.filter(code=d['Код']).count() == 0:
+                        mat = Compl_comp.objects.filter(code=d['Код'])[0]
+                        cmps = List_component(list=list, compl=mat, ammount=ammount)
+                    else:
+                        mat = Material.objects.filter(code=d['Код'])[0]
+                        cmps = List_component(list=list, mat=mat, ammount=ammount)
+                    cmps.save()
         #сохранение процесса
         if 'start' in request.POST:
             kneading = Kneading()
@@ -214,6 +217,15 @@ def kneading_detail(request, kneading_id):
     l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
+    l_comp2 = List_component.objects.filter(list = kneading.list)
+    #Добавить минимум максимум
+    for (c in l_comp2):
+        comps = {}
+        if c.mat!=null:
+            p[str(c.id)]={'mat_code': c.mat.code, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded)}
+        else:
+            p[str(c.id)]={'mat_code': c.compl.code, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded)}
+    json_data = json.dumps(c)
     if state_id == 1:
         return render(request, 'waiting.html', {"components": json.dumps(components),
                                                 "materials": json.dumps(materials),

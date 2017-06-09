@@ -784,8 +784,7 @@ def save_comp(request):
             #if d['Код'] in request.POST:
             if d['Код']!='ВД01':
                 if c_type == "comp":
-                    if d['Код'] in request.POST:
-                        ammount = request.POST[d['Код']]/(comp.ammount / 100)
+                    ammount = float(d['%']) * 100 / float(comp.ammount)
                 else:
                     str_am = d['Содержание, %']
                     ammount = float(str_am)

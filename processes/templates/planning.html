@@ -21,6 +21,7 @@ $(document).ready(function(){
   });
   $('#formula').trigger("change");
   addValidation();
+//  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
 <div class="panel panel-default" style ="margin: auto">
@@ -50,7 +51,7 @@ $(document).ready(function(){
           <div class="col-sm-10"><input type="text" data-provide="datepicker" class="input-sm form-control" name="end" /></div>
         </div>
         </div>
-  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}}, {{f_c}});changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
+  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}}, {{f_c}});changeWaterL();changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
 </div>
 <div class="form-group">
   <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Реактор: </label>
@@ -64,13 +65,14 @@ $(document).ready(function(){
       <div class="form-group">
         <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
         <div class="col-sm-10">
-        <select class="form-control" id="formula" name="formula" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});changeWater();return false;">
+        <select class="form-control" id="formula" name="formula" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});changeWaterL();changeWaterT();return false;">
           {% for f in formulas %}
           <option value="{{ f.id }}">{{ f }}</option>
           {% endfor %}</select>
         </div>
       </div>
       <input type="hidden" id="json" name="json" value="">
+      <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
       <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:7pt"/>
       </form>
       <div class="col-sm-12">
@@ -91,6 +93,7 @@ $(document).ready(function(){
             <td>-</td>
             <td>-</td>
             <td id="water"></td>
+            <td id="water2"></td>
           </tr>
         </tbody>
       </table>
@@ -103,7 +106,6 @@ $(document).ready(function(){
     <hr>
   <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить реактив</button>
   <button class="btn btn-success" data-toggle="modal" data-target="#newComplComp"><i class="glyphicon glyphicon-plus"></i> Добавить составной компонент</button>
-
   <div class="modal fade" id="newComp">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -155,16 +157,15 @@ $(document).ready(function(){
 <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
   <thead>
     <tr>
-      <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th>
+      <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th><th style="visibility:collapse;width:1px">%</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>ВД01</td>
       <td>Вода</td>
-      <td id="water"></td>
+      <td id="water1"></td>
     </tr>
-    <tr id="24" name="compl"><td>3658</td><td>ХГТ</td><td><input type='number' class='form-control' name="3658" onchange="changeMatAm({{compl_comp_comps}});return false;"></td><td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td></tr>
   </tbody>
 </table>
 </div>

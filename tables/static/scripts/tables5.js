@@ -119,6 +119,9 @@ function saveRow(){
     var mat_ammount = 0;
     for (i=2; i<tbody.rows.length; i++){
       var m = tbody.rows[i].children[2].children[0].valueAsNumber;
+      var temp = $("#materials tr").eq(i).find("td").eq(3);
+      temp.css("visibility", "collapse");
+      temp.text(m);
       if (isNaN(m)) m = 0;
       mat_ammount = mat_ammount + m;
     }
@@ -151,6 +154,7 @@ function saveRow(){
         /*var td3 = document.createElement("TD");
         var td4 = document.createElement("TD");*/
         var td5 = document.createElement("TD");
+        var td6 = document.createElement("TD");
         var input = document.createElement("input");
         input.type = "number";
         input.name = getCode(components[i].fields.mat, materials);
@@ -170,6 +174,7 @@ function saveRow(){
         /*row.appendChild(td3);
         row.appendChild(td4);*/
         row.appendChild(td5);
+        row.appendChild(td6);
         tbody.appendChild(row);
       }
     }

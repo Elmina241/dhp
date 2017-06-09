@@ -1,5 +1,5 @@
 from django.db import models
-from tables.models import Composition, Material, Formula, Reactor, Characteristic, Set_var
+from tables.models import Composition, Compl_comp, Material, Formula, Reactor, Characteristic, Set_var
 
 class Loading_list(models.Model):
     formula = models.ForeignKey('tables.Formula')
@@ -9,7 +9,8 @@ class Loading_list(models.Model):
 
 class List_component(models.Model):
     list = models.ForeignKey('Loading_list')
-    mat = models.ForeignKey('tables.Material')
+    compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
+    mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
     ammount = models.FloatField()
     loaded = models.BooleanField(default = False)
     def __str__(self):

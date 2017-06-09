@@ -56,6 +56,7 @@ function saveTable() {
   var mat_ammount = 0;
   for (i=2; i<tbody.rows.length; i++){
     var m = tbody.rows[i].children[4].children[0].valueAsNumber;
+    //$("#materials tr").eq(i).find("td").eq(3).text();
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
   }
