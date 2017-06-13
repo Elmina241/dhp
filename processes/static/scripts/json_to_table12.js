@@ -202,6 +202,29 @@ function getComponents2(c, m, l_c, l_id, t_name) {
   }
 };
 
+//Функция для отображения загрузочного листа с составными компонентами
+function getLoadList(loadList, t_name) {
+  var tbody = $("#"+t_name+" tbody")[0];
+  //var list = JSON.parse(loadList);
+  var amm = $("#ammount").val();
+  for (i in loadList){
+      if (loadList[i].min!='-'){
+        var min = ((loadList[i].min/100)*amm).toFixed(2);
+        var max = ((loadList[i].min/100)*amm).toFixed(2);
+      }
+      else{
+        var min = "-";
+        var max = "-";
+      }
+      if (t_name=='materials'){
+        $('<tr id='+ i + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + loadList[i].mat_code + " onchange='changeWater();return false;' min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>').appendTo(tbody);
+      }
+      else{
+        $('<tr id='+ i + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + loadList[i].amount + '</td>').appendTo(tbody);
+      }
+  }
+};
+
 /** Скрипты для страницы планирование **/
 //Формирование таблицы состава в планировании
 function getCompositionT(c, m, f_c, f) {

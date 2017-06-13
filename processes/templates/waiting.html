@@ -29,7 +29,7 @@ $(document).ready(function(){
 
 <div class="panel-body">
   <div class="input-group" style ="margin: left; margin-left:10pt">
-    <form action="save_process/" id="form" method="post" class="form-horizontal">
+    <form action="save_load_list/" id="form" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="col-sm-3">
         <h5><p><b>Дата начала: </b></p></div></h5>
@@ -69,8 +69,10 @@ $(document).ready(function(){
             <div class="modal-body">
   <!--<div class="form-group">--><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" onchange="changeMinMax2({{components}}, {{c_id}});changeWater();return false;"><span class="input-group-addon">кг</span></div>
 </div>
-        <input hidden class="form-control" id="formula" name="formula" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
-        <input hidden class="form-control" id="formula2" name="formula2" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">
+        <!--<input hidden class="form-control" id="formula" name="formula" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
+        <input hidden class="form-control" id="formula2" name="formula2" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">-->
+        <input hidden class="form-control" id="formula" name="formula" onchange="getLoadList({{load_list}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
+        <input hidden class="form-control" id="formula2" name="formula2" onchange="getLoadList({{load_list}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">
       </div>
       <br><br>
       <table class="table table-sm" id="materials" style="width:100%; margin: auto">

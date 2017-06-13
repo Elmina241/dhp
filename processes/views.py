@@ -75,6 +75,29 @@ def save_list(request, kneading_id):
                 cmps.save()
         return redirect('loading_lists')
 
+def save_load_list(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    list = kneading.list
+    if 'ammount' in request.POST:
+        ammount = request.POST['ammount']
+        list.ammount = ammount
+    list.save()
+    if 'json' in request.POST:
+        List_component.objects.filter(list = list).delete()
+        table = request.POST['json']
+        data = json.loads(table)
+        for d in data:
+            if d['Код']!='ВД01':
+                ammount=d["Количество, кг"]
+                if Material.objects.filter(code=d['Код']).count() == 0:
+                    mat = Compl_comp.objects.filter(code=d['Код'])[0]
+                    cmps = List_component(list=list, compl=mat, ammount=ammount)
+                else:
+                    mat = Material.objects.filter(code=d['Код'])[0]
+                    cmps = List_component(list=list, mat=mat, ammount=ammount)
+                cmps.save()
+        return redirect('kneading_detail', kneading_id = kneading_id)
+
 def save_process(request):
     list = Loading_list()
     #сохранение загрузочного листа
@@ -147,7 +170,13 @@ def get_state(request):
 def add_comp(request, kneading_id):
     if request.method == 'POST':
         if 'mat_id' in request.POST:
-            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
+            if request.POST['type'] == 'compl':
+                mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])
+                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
+            else:
+                mat = Material.objects.filter(pk=request.POST['mat_id'])
+                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+            #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             comp.ammount = request.POST['amm']
             comp.loaded = True
             comp.save()
@@ -219,18 +248,25 @@ def kneading_detail(request, kneading_id):
     formula = serializers.serialize("json", Formula.objects.all())
     l_comp2 = List_component.objects.filter(list = kneading.list)
     #Добавить минимум максимум
-    for (c in l_comp2):
-        comps = {}
-        if c.mat!=null:
-            p[str(c.id)]={'mat_code': c.mat.code, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded)}
+    comps = {}
+    for c in l_comp2:
+        if c.compl is None:
+            if Components.objects.filter(comp = c.list.formula.composition, mat = c.mat).count() == 0:
+                min = 0 #костыль!!! добавить проверку на наличие всех компонентов в рецепте
+                max = 0
+            else:
+                min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
+                max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
+            comps[str(c.id)]={'mat_code': c.mat.code, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max}
         else:
-            p[str(c.id)]={'mat_code': c.compl.code, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded)}
-    json_data = json.dumps(c)
+            comps[str(c.id)]={'mat_code': c.compl.code, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-'}
+    load_list = json.dumps(comps)
     if state_id == 1:
         return render(request, 'waiting.html', {"components": json.dumps(components),
                                                 "materials": json.dumps(materials),
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
+                                                "load_list": load_list,
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 2:
@@ -238,6 +274,7 @@ def kneading_detail(request, kneading_id):
                                                 "materials": json.dumps(materials),
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
+                                                "load_list": load_list,
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 3:
@@ -245,6 +282,7 @@ def kneading_detail(request, kneading_id):
                                                 "materials": json.dumps(materials),
                                                 "comp": List_component.objects.filter(list=kneading.list),
                                                 "l_c": json.dumps(l_comp),
+                                                "load_list": load_list,
                                                 "c_id": kneading.list.formula.composition.id,
                                                 "location": "/processes/process/",
                                                 "p": kneading})
