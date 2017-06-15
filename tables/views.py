@@ -138,7 +138,7 @@ def new_comp(request, comp_id):
             return render(request, "new_component.html",
                 {"comp": None,
                 "components": json.dumps(components),
-                "compositions": Composition.objects.all,
+                "compositions": Composition.objects.filter(isFinal=False),
                 "f_components": "0",
                 "materials2": Material.objects.all(),
                 "materials": json.dumps(materials),

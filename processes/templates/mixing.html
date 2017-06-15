@@ -68,7 +68,7 @@ $(document).ready(function(){
     var code = button.dataset.code;
     var mat = button.dataset.mat;
     var amm = button.dataset.amm;
-    var isCompl = button.dataset.isCompl;
+    var isCompl = button.dataset.iscompl;
     $(this).find('#matCode').text(code);
     $(this).find('#type').attr("value", button.dataset.type);
     $(this).find('#compAmm').attr("value", amm);
@@ -166,15 +166,15 @@ $(document).ready(function(){
         {% for c in comp %}
           {% if c.loaded == True %}
             {% if c.mat == None %}
-              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.compl.code}}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="compl" data-code="{{c.compl.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.compl.code}}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{{c.compl.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="compl" data-code="{{c.compl.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
             {% else %}
-              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
             {% endif %}
           {% else %}
             {% if c.mat == None %}
               <tr><td></td><td>{{c.compl.code}}</td><td>{{c.compl.name}}</td><td id="{{c.compl.code}}">{{c.ammount}}</td><td id="{{c.compl.id}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.compl.code}}" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}" data-isCompl="compl">Добавить</button></td><td></td></tr>
             {% else %}
-              <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td id="{{c.mat.id}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}">Добавить</button></td><td></td></tr>
+              <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td id="{{c.mat.id}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}" data-isCompl="">Добавить</button></td><td></td></tr>
             {% endif %}
           {% endif %}
         {% endfor %}

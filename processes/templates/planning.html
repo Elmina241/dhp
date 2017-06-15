@@ -32,7 +32,7 @@ $(document).ready(function(){
   <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 <div class="panel-body">
-  <div class="input-group" style ="margin: auto">
+  <div class="input-group col-sm-8" style ="margin: auto">
     <form action="save_process/" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="form-group">
@@ -73,8 +73,10 @@ $(document).ready(function(){
       </div>
       <input type="hidden" id="json" name="json" value="">
       <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
-      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:7pt"/>
+      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:9pt"/>
       </form>
+      </div>
+      <hr>
       <div class="col-sm-12">
       <div class="col-md-12 col-lg-7">
       <div class="panel panel-default" style ="margin: auto">
@@ -172,7 +174,7 @@ $(document).ready(function(){
 </div>
 </div>
 </div>
-</div>
+
       <br>
 
   </div>

@@ -297,6 +297,7 @@ function deleteRow(r)
   var i=r.parentNode.parentNode.rowIndex;
   document.getElementById('loadList').deleteRow(i);
   changeMatAm();
+  changeWaterL();
 }
 
 //Расчёт количества реактивов в загрузочном листе
@@ -315,6 +316,7 @@ function changeMatAm(){
     var id = tr.attr("id");
     if (tr.attr("name") == "compl"){
       var newAm = tr.find("input").val();
+      if (newAm=="") newAm = 0;
       for (j=0; j < comps.length; j++){
         if (comps[j].fields.compl == id){
           matId = comps[j].fields.mat;
@@ -327,6 +329,7 @@ function changeMatAm(){
     else{
       var amm = $("#materials tr#" + id).find("td").eq(5).text();
       var newAm = tr.find("input").val();
+      if (newAm == "") newAm = 0;
       $("#materials tr#" + id).find("td").eq(5).text((parseFloat(amm) + parseFloat(newAm)).toFixed(2));
     }
   }

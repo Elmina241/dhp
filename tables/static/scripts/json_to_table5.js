@@ -1,4 +1,5 @@
-function getComponents(c, m, f='') {
+//для состава
+function getComponentsF(c, m, f='') {
   var table = document.getElementById("materials");
   var length = table.rows.length;
   for (i = 2; i < length; i++) table.deleteRow(2);

@@ -36,7 +36,7 @@ $(document).ready(function(){
             <option value="{{ c.id }}">{{ c.get_name }}</option>
             {% endif %}
           {% endfor %}</select>
-          <button type="button" id="b1" class="btn btn-default" style="margin-left:2%" onclick="getComponents({{components}}, {{materials}}, {{f_components}});saveTable();return false;">
+          <button type="button" id="b1" class="btn btn-default" style="margin-left:2%" onclick="getComponentsF({{components}}, {{materials}}, {{f_components}});saveTable();return false;">
             Выбрать
           </button>
         </div>
