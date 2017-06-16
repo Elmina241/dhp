@@ -17,20 +17,36 @@ def mixing(request):
 def list_detail(request, list_id):
     components = serializers.serialize("json", Components.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
+    f_comp = serializers.serialize("json", Formula_component.objects.all())
+    formula = serializers.serialize("json", Formula.objects.all())
+    compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     if (list_id == '0'):
         return render(request, "loading_list.html",
             {"list": None,
             "components": json.dumps(components),
             "compositions": Composition.objects.all,
             "materials": json.dumps(materials),
+            "materials2": Material.objects.all,
+            "compl_comps": Compl_comp.objects.all,
+            "compl_comp_comps": json.dumps(compl_comp_comps),
+            "f_c": json.dumps(f_comp),
+            "f": json.dumps(formula),
+            "formulas": Formula.objects.all,
             "location": "/processes/loading_lists/",
             "header": "Загрузочные листы"
             })
     else:
         return render(request, "loading_list.html",
             {"list": get_object_or_404(Loading_list, pk=list_id),
+            "list_comps": List_component.objects.filter(list=get_object_or_404(Loading_list, pk=list_id)),
             "components": json.dumps(components),
             "materials": json.dumps(materials),
+            "materials2": Material.objects.all,
+            "compl_comps": Compl_comp.objects.all,
+            "compl_comp_comps": json.dumps(compl_comp_comps),
+            "formulas": Formula.objects.all,
+            "f_c": json.dumps(f_comp),
+            "f": json.dumps(formula),
             "compositions": Composition.objects.all,
             "location": "/processes/loading_lists/",
             "header": "Загрузочные листы"
@@ -56,23 +72,28 @@ def planning(request):
         "header": "Планирование"
         })
 
-def save_list(request, kneading_id):
-    kneading = get_object_or_404(Kneading, pk=kneading_id)
-    list = kneading.list
+def save_list(request, list_id):
+    list = Loading_list()
+    #сохранение загрузочного листа
     if 'ammount' in request.POST:
         ammount = request.POST['ammount']
+        formula = get_object_or_404(Formula, pk=request.POST['formula'])
         list.ammount = ammount
-    list.save()
-    if 'json' in request.POST:
-        table = request.POST['json']
-        data = json.loads(table)
-        for d in data:
-            if d['Код']!='ВД01':
-                mat = Material.objects.filter(code=d['Код'])[0]
-                ammount=d["Количество, кг"]
-                cmps = List_component.objects.filter(list=list, mat=mat)[0]
-                cmps.ammount=ammount
-                cmps.save()
+        list.formula = formula
+        list.save()
+        if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            for d in data:
+                if d['Код']!='ВД01':
+                    ammount=d['%']
+                    if Material.objects.filter(code=d['Код']).count() == 0:
+                        mat = Compl_comp.objects.filter(code=d['Код'])[0]
+                        cmps = List_component(list=list, compl=mat, ammount=ammount)
+                    else:
+                        mat = Material.objects.filter(code=d['Код'])[0]
+                        cmps = List_component(list=list, mat=mat, ammount=ammount)
+                    cmps.save()
         return redirect('loading_lists')
 
 def save_load_list(request, kneading_id):

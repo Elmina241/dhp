@@ -3,14 +3,9 @@
 
 <script type="text/javascript">
 $(document).ready(function (){
-    var MyDate = document.getElementById("MyDate");
-    var dt=new Date();
-    var month = dt.getMonth()+1;
-    if (month<10) month='0'+month;
-    var day = dt.getDate();
-    if (day<10) day='0'+day;
-    var year = dt.getFullYear();
-    MyDate.value=day+'.'+month+'.'+year;
+    $('#formula').trigger("change");
+    changeMatAm();
+    changeWaterL();
 });
 </script>
 
@@ -26,44 +21,142 @@ $(document).ready(function (){
   <p><strong>{{ error_message }}</strong></p>
   {% endif %}
 <div class="panel-body">
-  <div class="input-group" style ="margin: auto">
+  <div class="input-group col-sm-8" style ="margin: auto">
     <form action="save_list/" method="post" class="form-horizontal">
       {% csrf_token %}
-      <div class="form-group"><label for="MyDate" class="col-sm-2 control-label" style="font-size: medium">Дата: </label><div class="col-sm-10"><input id="MyDate" type="text" class="form-control" readonly></div>
-  </div>
-  <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><input id="ammount" name="ammount" type="number" class="form-control" onchange="changeWater();return false;" value="{{list.ammount}}"></div>
-</div>
-      <div class="form-group">
-        <label for="material" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
-        <div class="col-sm-10">
-        <select class="form-control" id="composition" name="composition" style="width:78.5%">
-          {% for c in compositions %}
-          <option value="{{ c.id }}">{{ c.get_name }}</option>
-          {% endfor %}</select>
-          <button type="button" class="btn btn-default" onclick="getComponents({{components}}, {{materials}});return false;" style="margin-left:2%">Выбрать</button>
+      <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number"  value="{{list.ammount}}" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}}, {{f_c}});changeWaterL();changeWaterT();return false;"><span class="input-group-addon">кг</span></div></div>
+    </div>
+          <div class="form-group">
+            <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
+            <div class="col-sm-10">
+            <select class="form-control" id="formula" name="formula" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});changeWaterL();changeWaterT();return false;">
+              {% for f in formulas %}
+                {% if list.formula == f %}
+                  <option value="{{ f.id }}" selected>{{ f }}</option>
+                {% else %}
+                  <option value="{{ f.id }}">{{ f }}</option>
+                {% endif %}
+              {% endfor %}</select>
+            </div>
+          </div>
+          <input type="hidden" id="json" name="json" value="">
+          <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
+          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:9pt"/>
+          </form>
+          </div>
+          <hr>
+          <div class="col-sm-12">
+          <div class="col-md-12 col-lg-7">
+          <div class="panel panel-default" style ="margin: auto">
+            <div class="panel-heading"><b><h4 class="panel-title">Состав</h4></b></div>
+            <div class="panel-body">
+          <table class="table table-sm" id="materials" style="width:100%; margin: auto">
+            <thead>
+              <tr>
+                <th>Код</th><th>Наименование</th><th>Мин., кг</th><th>Макс., кг</th><th>Количество, кг</th><th>В загрузочном листе, кг</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ВД01</td>
+                <td>Вода</td>
+                <td>-</td>
+                <td>-</td>
+                <td id="water"></td>
+                <td id="water2"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
       </div>
-      <br><br>
-      <table class="table table-sm" id="materials" style="width:100%; margin: auto">
-        <thead>
+    </div>
+    <div class="col-md-12 col-lg-5">
+    <div class="panel panel-default" style ="margin: auto">
+      <div class="panel-heading"><b><h4 class="panel-title">Загрузочный лист</h4></b>
+        <hr>
+      <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Реактив</button>
+      <button class="btn btn-success" data-toggle="modal" data-target="#newComplComp"><i class="glyphicon glyphicon-plus"></i> Составной компонент</button>
+      <div class="modal fade" id="newComp">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal">x</button>
+              <h4>Добавление реактива</h4>
+            </div>
+            <div class="modal-body" style="height:60pt">
+      <div style="margin: auto">
+        <label for="material">Реактив:</label>
+        <select class="form-control" id="material">
+          {% for m in materials2 %}
+          <option value="{{ m.id }}">{{ m.get_name }}</option>
+          {% endfor %}</select>
+          </div>
+      </div>
+
+    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addMaterial();return false;" data-dismiss="modal">Добавить</button></div>
+    </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="newComplComp">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">x</button>
+            <h4>Добавление составного компонента</h4>
+          </div>
+          <div class="modal-body" style="height:60pt">
+    <div style="margin: auto">
+      <label for="material">Технологическая композиция:</label>
+      <select class="form-control" id="complComp">
+        {% for c in compl_comps %}
+        <option value="{{ c.id }}">{{ c.get_name }}</option>
+        {% endfor %}</select>
+        </div>
+    </div>
+
+    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addComplComp();return false;" data-dismiss="modal">Добавить</button></div>
+    </div>
+    </div>
+    </div>
+
+
+    </div>
+
+      <div class="panel-body">
+    <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
+      <thead>
+        <tr>
+          <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th><th style="visibility:collapse;width:1px">%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ВД01</td>
+          <td>Вода</td>
+          <td id="water1"></td>
+        </tr>
+        {% for c in list_comps %}
+          {% if c.mat == None %}
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум</th><th>Максимум</th><th>Количество</th>
+            <td>{{c.compl.code}}</td>
+            <td>{{c.compl.name}}</td>
+            <td><input type="number" value="{{c.ammount}}" disabled></td>
           </tr>
-        </thead>
-        <tbody>
+          {% else %}
           <tr>
-            <td>ВД01</td>
-            <td>Вода</td>
-            <td>-</td>
-            <td>-</td>
-            <td id="water"></td>
+            <td>{{c.mat.code}}</td>
+            <td>{{c.mat.name}}</td>
+            <td><input type="number" value="{{c.ammount}}" disabled></td>
           </tr>
-        </tbody>
-      </table>
-      <br>
-      <input type="hidden" id="json" name="json" value="">
-      <input type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    </div>
   </div>
   </form>
 </div>

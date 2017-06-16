@@ -8,3 +8,12 @@
     -2px 2px white,
     -2px -2px white;
 }
+
+hr {
+ margin-top: 4pt;
+ margin-bottom: 4pt;
+ border: none; /* Убираем границу */
+ background-color: #D3D3D3; /* Цвет линии */
+ color: #D3D3D3; /* Цвет линии для IE6-7 */
+ height: 1px; /* Толщина линии */
+}
