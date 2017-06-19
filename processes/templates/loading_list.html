@@ -5,16 +5,24 @@
 $(document).ready(function (){
     $('#formula').trigger("change");
     changeMatAm();
-    changeWaterL();
+    changeWaterP();
+    if($("#isList").attr("value")=="true") disButtons();
 });
+function disButtons(){
+  $("#formula").prop("disabled", true);
+  $("button").prop("disabled", true);
+  $("#send").prop("disabled", true);
+}
 </script>
 
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
     {% if list == None %}
       <h4 class="panel-title">Добавление записи</h4>
+      <input type="hidden" id="isList" value="false">
       {% else %}
-      <h4 class="panel-title">Редактирование записи: {{ list }}</h4>
+      <h4 class="panel-title">Просмотр записи: {{ list }}</h4>
+      <input type="hidden" id="isList" value="true">
       {% endif %}
   </div>
   {% if error_message %}
@@ -24,12 +32,10 @@ $(document).ready(function (){
   <div class="input-group col-sm-8" style ="margin: auto">
     <form action="save_list/" method="post" class="form-horizontal">
       {% csrf_token %}
-      <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number"  value="{{list.ammount}}" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}}, {{f_c}});changeWaterL();changeWaterT();return false;"><span class="input-group-addon">кг</span></div></div>
-    </div>
           <div class="form-group">
             <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
             <div class="col-sm-10">
-            <select class="form-control" id="formula" name="formula" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});changeWaterL();changeWaterT();return false;">
+            <select class="form-control" id="formula" name="formula" onchange="getCompositionP({{components}}, {{materials}}, {{f_c}}, {{f}});changeWaterP();changeWaterTP();return false;">
               {% for f in formulas %}
                 {% if list.formula == f %}
                   <option value="{{ f.id }}" selected>{{ f }}</option>
@@ -53,7 +59,7 @@ $(document).ready(function (){
           <table class="table table-sm" id="materials" style="width:100%; margin: auto">
             <thead>
               <tr>
-                <th>Код</th><th>Наименование</th><th>Мин., кг</th><th>Макс., кг</th><th>Количество, кг</th><th>В загрузочном листе, кг</th>
+                <th>Код</th><th>Наименование</th><th>Мин., %</th><th>Макс., %</th><th>Количество, %</th><th>В загрузочном листе, %</th>
               </tr>
             </thead>
             <tbody>
@@ -93,7 +99,7 @@ $(document).ready(function (){
           </div>
       </div>
 
-    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addMaterial();return false;" data-dismiss="modal">Добавить</button></div>
+    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addMaterialP();return false;" data-dismiss="modal">Добавить</button></div>
     </div>
     </div>
     </div>
@@ -115,7 +121,7 @@ $(document).ready(function (){
         </div>
     </div>
 
-    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addComplComp();return false;" data-dismiss="modal">Добавить</button></div>
+    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addComplCompP();return false;" data-dismiss="modal">Добавить</button></div>
     </div>
     </div>
     </div>
@@ -127,7 +133,7 @@ $(document).ready(function (){
     <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th><th style="visibility:collapse;width:1px">%</th>
+          <th>Код</th><th>Наименование</th><th>Количество, %</th><th></th><th style="visibility:collapse;width:1px">%</th>
         </tr>
       </thead>
       <tbody>
@@ -138,16 +144,16 @@ $(document).ready(function (){
         </tr>
         {% for c in list_comps %}
           {% if c.mat == None %}
-          <tr>
+          <tr id="{{c.compl.id}}" name="compl">
             <td>{{c.compl.code}}</td>
             <td>{{c.compl.name}}</td>
-            <td><input type="number" value="{{c.ammount}}" disabled></td>
+            <td><input type="number" value="{{c.ammount}}" readonly></td>
           </tr>
           {% else %}
-          <tr>
+          <tr id="{{c.mat.id}}">
             <td>{{c.mat.code}}</td>
             <td>{{c.mat.name}}</td>
-            <td><input type="number" value="{{c.ammount}}" disabled></td>
+            <td><input type="number" value="{{c.ammount}}" readonly></td>
           </tr>
           {% endif %}
         {% endfor %}

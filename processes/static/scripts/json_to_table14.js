@@ -248,6 +248,47 @@ function getCompositionT(c, m, f_c, f) {
   }
 };
 
+//Получение списка загрузочных листов
+function getListOfModels(lists) {
+  var rowCount = $('#list option').length;
+  for (i = 1; i < rowCount; i++) $('#list option:last').remove();
+  var sel = document.getElementById("formula");
+  var sel_id = sel.value;
+  var modelLists = JSON.parse(lists);
+  for (i = 0; i < modelLists.length; i++){
+    if (modelLists[i].fields.formula == sel_id){
+      $('#list').append("<option value=" + modelLists[i].pk + ">" + modelLists[i].pk + " " + sel.textContent + "</option>");
+    }
+  }
+};
+
+//Получение макета загрузочного листа
+function getModelList(m, m_c, compl) {
+  var table = $("#loadList tbody");
+  var rowCount = $('#loadList tr').length;
+  for (i = 2; i < rowCount; i++) $('#loadList tr').eq(2).remove();
+  var sel = document.getElementById("list");
+  var sel_id = sel.value;
+  var materials = JSON.parse(m);
+  var m_comp = JSON.parse(m_c);
+  var complComp = JSON.parse(compl);
+  var amm = $("#ammount").val();
+  for (i = 0; i < m_comp.length; i++){
+    if (m_comp[i].fields.list == sel_id){
+      var row = document.createElement("TR");
+      var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
+      if (m_comp[i].fields.compl == null){
+        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>").appendTo(table);
+      }
+      else{
+        $("<tr id=" + m_comp[i].fields.compl + " name='compl'><td>" + getCode(m_comp[i].fields.compl, complComp) + "</td><td>" + getName(m_comp[i].fields.compl, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.compl, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>").appendTo(table);
+      }
+      }
+    }
+    changeMatAm();
+    changeWaterL();
+};
+
 function changeWaterT() {
   var ammount = document.getElementById("ammount").value;
   var water1 = document.getElementById("water");
@@ -356,3 +397,105 @@ function changeWaterL() {
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
 };
+
+/** Скрипты для страницы загрузочных листов **/
+//Формирование таблицы состава в процентах
+function getCompositionP(c, m, f_c, f) {
+  var table = $("#materials tbody");
+  var rowCount = $('#materials tr').length;
+  for (i = 2; i < rowCount; i++) $('#materials tr').eq(i).remove();
+  var sel = document.getElementById("formula");
+  var sel_id = sel.value;
+  var components = JSON.parse(c);
+  var materials = JSON.parse(m);
+  var formulas = JSON.parse(f);
+  var f_comp = JSON.parse(f_c);
+  for (i = 0; i < f_comp.length; i++){
+    if (f_comp[i].fields.formula == sel_id){
+      var row = document.createElement("TR");
+      var bounds = getMinMax(components, getComp(formulas, f_comp[i].fields.formula), f_comp[i].fields.mat);
+      $("<tr id=" + f_comp[i].fields.mat + "><td>" + getCode(f_comp[i].fields.mat, materials) + "</td><td>" + getName(f_comp[i].fields.mat, materials) + "</td><td>" + bounds.min.toFixed(2) + "</td><td>" +
+      + bounds.max.toFixed(2) + "</td><td name=" + getCode(f_comp[i].fields.mat, materials) + ">" + (f_comp[i].fields.ammount/1020*100).toFixed(2) + "</td><td></td><tr>").appendTo(table);
+    }
+  }
+};
+
+
+//Подсчёт воды в загрузочном листе
+function changeWaterP() {
+  var water1 = document.getElementById("water1");
+  var water2 = document.getElementById("water2");
+  var w_a = document.getElementById("water_amm");
+  var tbody = document.getElementById("loadList");
+  var mat_ammount = 0;
+  for (i=2; i<tbody.rows.length; i++){
+    var m = tbody.rows[i].children[2].children[0].valueAsNumber;
+    if (isNaN(m)) m = 0;
+    mat_ammount = mat_ammount + m;
+  }
+  water1.textContent = (100 - mat_ammount).toFixed(2);
+  if (w_a != null) w_a.value = (100 - mat_ammount).toFixed(2);
+  //if (water2 != null) water2.textContent = (100 - mat_ammount).toFixed(2);
+  /*if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();*/
+  var table = $('#loadList').tableToJSON();
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
+};
+
+function changeWaterTP() {
+  var water1 = document.getElementById("water");
+  var w_a = document.getElementById("water_amm");
+  var tbody = document.getElementById("materials");
+  var mat_ammount = 0;
+  var mat_ammount2 = 0;
+  for (i=2; i<tbody.rows.length; i++){
+    var m = tbody.rows[i].children[4];
+    if (m==undefined) m2 = 0;
+    else  m2 = parseInt(m.textContent);
+    mat_ammount = mat_ammount + m2;
+    var m1 = tbody.rows[i].children[5];
+    if (m1 == undefined) m2 = 0;
+    else  m2 = parseInt(m1.textContent);
+    if (isNaN(m2)) m2=0;
+    mat_ammount2 = mat_ammount2 + m2;
+  }
+  document.getElementById("water2").textContent = (100 - mat_ammount2).toFixed(2);
+  water1.textContent = (100 - mat_ammount).toFixed(2);
+  if (w_a != null) w_a.value = (100 - mat_ammount).toFixed(2);
+  if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
+  else var table = $('#materials2').tableToJSON();
+  var field = document.getElementById('json');
+  field.value = JSON.stringify(table);
+};
+
+//Добавление реактива в макет
+function addMaterialP(){
+  var id = document.getElementById("material").selectedOptions[0].value
+  var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
+  var name = document.getElementById("material").selectedOptions[0].textContent.substring(5);
+  /*var amm = $("#percent").val();
+  var waterAmm = $("#ВД01").val() - amm;
+  $("#ВД01").attr("value", waterAmm);*/
+  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterP();changeWaterTP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRowP(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+  $("#newComp").modal("hide");
+}
+
+function addComplCompP(){
+  var id = document.getElementById("complComp").selectedOptions[0].value
+  var code = document.getElementById("complComp").selectedOptions[0].textContent.substring(0,4);
+  var name = document.getElementById("complComp").selectedOptions[0].textContent.substring(5);
+  /*var amm = $("#percent").val();
+  var waterAmm = $("#ВД01").val() - amm;
+  $("#ВД01").attr("value", waterAmm);*/
+  $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterP();changeWaterTP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRowP(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+  $("#newComp").modal("hide");
+}
+
+function deleteRowP(r)
+{
+  var i=r.parentNode.parentNode.rowIndex;
+  document.getElementById('loadList').deleteRow(i);
+  changeMatAm();
+  changeWaterP();
+  changeWaterTP()
+}

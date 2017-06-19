@@ -2,14 +2,14 @@ from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
-from .models import Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
+from .models import Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
 from django.utils import timezone
 import datetime
 
 def loading_lists(request):
-    return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Loading_list.objects.all})
+    return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Model_list.objects.all})
 
 def mixing(request):
     return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all})
@@ -37,8 +37,8 @@ def list_detail(request, list_id):
             })
     else:
         return render(request, "loading_list.html",
-            {"list": get_object_or_404(Loading_list, pk=list_id),
-            "list_comps": List_component.objects.filter(list=get_object_or_404(Loading_list, pk=list_id)),
+            {"list": get_object_or_404(Model_list, pk=list_id),
+            "list_comps": Model_component.objects.filter(list=get_object_or_404(Model_list, pk=list_id)),
             "components": json.dumps(components),
             "materials": json.dumps(materials),
             "materials2": Material.objects.all,
@@ -55,14 +55,20 @@ def list_detail(request, list_id):
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())
     f_comp = serializers.serialize("json", Formula_component.objects.all())
+    c_comps = serializers.serialize("json", Compl_comp.objects.all())
+    models = serializers.serialize("json", Model_list.objects.all())
+    m_comp = serializers.serialize("json", Model_component.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     return render(request, "planning.html",
         {"components": json.dumps(components),
         "materials": json.dumps(materials),
+        "model_lists": json.dumps(models),
+        "model_comps": json.dumps(m_comp),
         "materials2": Material.objects.all,
         "compl_comps": Compl_comp.objects.all,
+        "compl_comps2": json.dumps(c_comps),
         "compl_comp_comps": json.dumps(compl_comp_comps),
         "f_c": json.dumps(f_comp),
         "f": json.dumps(formula),
@@ -73,12 +79,10 @@ def planning(request):
         })
 
 def save_list(request, list_id):
-    list = Loading_list()
+    list = Model_list()
     #сохранение загрузочного листа
-    if 'ammount' in request.POST:
-        ammount = request.POST['ammount']
+    if 'formula' in request.POST:
         formula = get_object_or_404(Formula, pk=request.POST['formula'])
-        list.ammount = ammount
         list.formula = formula
         list.save()
         if 'json' in request.POST:
@@ -89,10 +93,10 @@ def save_list(request, list_id):
                     ammount=d['%']
                     if Material.objects.filter(code=d['Код']).count() == 0:
                         mat = Compl_comp.objects.filter(code=d['Код'])[0]
-                        cmps = List_component(list=list, compl=mat, ammount=ammount)
+                        cmps = Model_component(list=list, compl=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
-                        cmps = List_component(list=list, mat=mat, ammount=ammount)
+                        cmps = Model_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
         return redirect('loading_lists')
 

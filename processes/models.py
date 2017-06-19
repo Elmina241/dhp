@@ -1,6 +1,21 @@
 from django.db import models
 from tables.models import Composition, Compl_comp, Material, Formula, Reactor, Characteristic, Set_var
 
+#Макет загрузочного листа. Объём компонентов в процентах
+class Model_list(models.Model):
+    formula = models.ForeignKey('tables.Formula')
+    def __str__(self):
+        return self.formula.get_name()
+
+class Model_component(models.Model):
+    list = models.ForeignKey('Model_list')
+    compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
+    mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
+    ammount = models.FloatField()
+    def __str__(self):
+        return self.mat.name
+
+#Загрузочный лист
 class Loading_list(models.Model):
     formula = models.ForeignKey('tables.Formula')
     ammount = models.FloatField()
@@ -16,6 +31,7 @@ class List_component(models.Model):
     def __str__(self):
         return self.mat.name
 
+#Процесс смешения
 class Kneading(models.Model):
     list = models.ForeignKey('Loading_list')
     start_date = models.DateField()
@@ -25,7 +41,7 @@ class Kneading(models.Model):
     def __str__(self):
         return self.list.formula.get_name()
 
-
+#Партия
 class Batch(models.Model):
     kneading = models.OneToOneField('Kneading')
     finish_date = models.DateField(auto_now_add=True)

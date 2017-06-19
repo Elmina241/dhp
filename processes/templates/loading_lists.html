@@ -8,7 +8,7 @@
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>id</th><th>Наименование</th><th>Объём</th>
+                    <th></th><th>id</th><th>Наименование</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -17,7 +17,6 @@
                     <td><input type="checkbox" value="{{ l.id }}" name="del_list"></td>
                     <td>{{ l.id }}</td>
                     <td onClick="window.location.href='/processes/loading_lists/{{ l.id }}/'">{{ l }}</td>
-                    <td>{{ l.ammount }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
