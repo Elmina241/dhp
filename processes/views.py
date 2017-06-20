@@ -326,6 +326,28 @@ def kneading_detail(request, kneading_id):
                                                 "p": kneading})
     if state_id == 5:
         batch = Batch.objects.filter(kneading = kneading)[0]
+        #Получение состава
+        components = {}
+        for c in Formula_component.objects.filter(formula = kneading.list.formula):
+            components[c.mat.id] = {};
+            components[c.mat.id]['code'] = c.mat.code
+            components[c.mat.id]['name'] = c.mat.name
+            components[c.mat.id]['amount'] = 0
+            water = List_component.objects.filter(list=kneading.list, mat=get_object_or_404(Material, code='ВД01'))[0]
+            components[water.mat.id] = {};
+            components[water.mat.id]['code'] = water.mat.code
+            components[water.mat.id]['name'] = water.mat.name
+            components[water.mat.id]['amount'] = water.mat.ammount
+        #добавить воду
+        for c in List_component.objects.filter(list = kneading.list):
+            if c.compl is None:
+                if c.mat.id in components:
+                    components[c.mat.id]['amount'] = round(components[c.mat.id]['amount'] + c.ammount, 2)
+            else:
+                for c2 in Compl_comp_comp.objects.filter(compl = c.compl):
+                    if c2.mat.id in components:
+                        components[c2.mat.id]['amount'] = round(components[c2.mat.id]['amount'] + (c2.ammount / c.compl.ammount) * c.ammount, 2)
+        #Получение значений характеристик контроля качества
         chars = {}
         temp_chars = Kneading_char.objects.filter(kneading = kneading)
         i = 0
@@ -341,6 +363,7 @@ def kneading_detail(request, kneading_id):
             i = i+1
         return render(request, 'finished.html', {"comps": List_component.objects.filter(list = kneading.list),
                                                 "chars": chars,
+                                                "components": components,
                                                 "location": "/processes/process/",
                                                 "p": batch})
 

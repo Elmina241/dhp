@@ -1,5 +1,3 @@
-
-
 function getComponents(c, m, f_c, f) {
   var table = document.getElementById("materials");
   var length = table.rows.length;
@@ -278,15 +276,16 @@ function getModelList(m, m_c, compl) {
       var row = document.createElement("TR");
       var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
       if (m_comp[i].fields.compl == null){
-        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       else{
-        $("<tr id=" + m_comp[i].fields.compl + " name='compl'><td>" + getCode(m_comp[i].fields.compl, complComp) + "</td><td>" + getName(m_comp[i].fields.compl, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.compl, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.compl + " name='compl'><td>" + getCode(m_comp[i].fields.compl, complComp) + "</td><td>" + getName(m_comp[i].fields.compl, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.compl, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       }
     }
     changeMatAm();
     changeWaterL();
+    changeWaterT();
 };
 
 function changeWaterT() {
@@ -295,15 +294,22 @@ function changeWaterT() {
   var w_a = document.getElementById("water_amm");
   var tbody = document.getElementById("materials");
   var mat_ammount = 0;
+  var mat_ammount2 = 0;
   for (i=2; i<tbody.rows.length; i++){
     var m = tbody.rows[i].children[4];
     if (m==undefined) m2 = 0;
     else  m2 = parseInt(m.textContent);
     mat_ammount = mat_ammount + m2;
+    var m1 = tbody.rows[i].children[5];
+    if (m1 == undefined) m2 = 0;
+    else  m2 = parseInt(m1.textContent);
+    if (isNaN(m2)) m2=0;
+    mat_ammount2 = mat_ammount2 + m2;
   }
+  document.getElementById("water2").textContent = (ammount - mat_ammount2).toFixed(2);
   water1.textContent = (ammount - mat_ammount).toFixed(2);
   if (w_a != null) w_a.value = (ammount - mat_ammount).toFixed(2);
-  if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
+  if ($('#materials2').length == 0) var table = $('#loadList').tableToJSON();
   else var table = $('#materials2').tableToJSON();
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
@@ -462,7 +468,7 @@ function changeWaterTP() {
   document.getElementById("water2").textContent = (100 - mat_ammount2).toFixed(2);
   water1.textContent = (100 - mat_ammount).toFixed(2);
   if (w_a != null) w_a.value = (100 - mat_ammount).toFixed(2);
-  if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();
+  if ($('#materials2').length == 0) var table = $('#loadList').tableToJSON();
   else var table = $('#materials2').tableToJSON();
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);

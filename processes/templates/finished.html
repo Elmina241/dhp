@@ -77,7 +77,7 @@ function lookChar(t){
                     </tr>
                   </thead>
                   <tbody>
-                    {% for c in comps %}
+                    <!--{% for c in comps %}
                     <tr>
 											{% if c.mat == None %}
 												<td>{{ c.compl.code }}</td>
@@ -89,7 +89,14 @@ function lookChar(t){
                       	<td>{{ c.ammount }}</td>
 											{% endif %}
                     </tr>
-                    {% endfor %}
+                    {% endfor %}-->
+										{% for key, values in components.items %}
+										<tr>
+											{% for key1, value in values.items %}
+												<td>{{ value }}</td>
+											{% endfor %}
+										</tr>
+										{% endfor %}
                   </tbody>
                 </table>
               </div>

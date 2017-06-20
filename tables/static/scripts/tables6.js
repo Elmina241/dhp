@@ -142,17 +142,14 @@ function saveRow(){
     var sel_id = sel.value;
     var components = JSON.parse(c);
     var materials = JSON.parse(m);
-    //var compositions = JSON.parse(comps);
     var amm = $("#ammount").val();
     var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
     for (i = 0; i < components.length; i++){
-      if (components[i].fields.comp == sel_id){
+      if (components[i].fields.formula == sel_id){
         var row = document.createElement("TR");
         row.setAttribute('id', components[i].fields.mat);
         var td1 = document.createElement("TD");
         var td2 = document.createElement("TD");
-        /*var td3 = document.createElement("TD");
-        var td4 = document.createElement("TD");*/
         var td5 = document.createElement("TD");
         var td6 = document.createElement("TD");
         var input = document.createElement("input");
@@ -160,19 +157,12 @@ function saveRow(){
         input.name = getCode(components[i].fields.mat, materials);
         input.setAttribute('onchange', "changeWater();return false;");
         input.setAttribute('step', "0.01");
-        //input.value = (components[i].fields.ammount/1020*amm).toFixed(2);
-        //var bounds = getMinMax(components, getComp(formulas, f_comp[i].fields.formula), f_comp[i].fields.mat);
+        input.setAttribute('value', ((components[i].fields.ammount/1020)*amm).toFixed(2));
         td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
         td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
-        /*td3.appendChild(document.createTextNode(((bounds.min/100)*amm).toFixed(2)));
-        td4.appendChild(document.createTextNode(((bounds.max/100)*amm).toFixed(2)));
-        input.setAttribute('min', ((bounds.min/100)*amm).toFixed(2));
-        input.setAttribute('max', ((bounds.max/100)*amm).toFixed(2));*/
         td5.appendChild(input);
         row.appendChild(td1);
         row.appendChild(td2);
-        /*row.appendChild(td3);
-        row.appendChild(td4);*/
         row.appendChild(td5);
         row.appendChild(td6);
         tbody.appendChild(row);

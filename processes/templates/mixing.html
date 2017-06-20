@@ -44,19 +44,27 @@ function addComp(mat_id, amm, mat_code, isCompl){
         },
         success: function onAjaxSuccess()
         {
-          $("#"+mat_id).text(amm);
-          $("#"+mat_id).parent().attr("class", "success");
-          $("#"+mat_id).parent().find("td").eq(0).html("<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>")
-          $("#"+mat_id).parent().find("td").eq(5).html("<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>");
+          var obj = document.getElementById(mat_code);
+          obj.parentElement.children[4].textContent = amm;
+          obj.parentElement.classList.add("success");
+          obj.parentElement.children[0].innerHTML = "<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>";
+          obj.parentElement.children[5].innerHTML = "<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + " data-isCompl=" + isCompl + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>";
+          /*$("#"+mat_code).parent().find("td").eq(4).text(amm);
+          $("#"+mat_code).parent().attr("class", "success");
+          $("#"+mat_code).parent().find("td").eq(0).html("<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>")
+          $("#"+mat_code).parent().find("td").eq(5).html("<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + " data-isCompl=" + isCompl + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>");*/
           getAmmount();
           $("#type").attr("value", "");
         }
       });
 }
 
-function getMatAmm(mat_id, add){
+function getMatAmm(mat_code, add){
   var type = $("#type").val();
-  if ($("#type").val()=="add") return parseFloat($("#"+mat_id).text()) + parseFloat(add);
+  if ($("#type").val()=="add") {
+    var old = document.getElementById(mat_code).textContent;
+    return parseFloat(old) + parseFloat(add);
+  }
   else return $("#compAmm").val();
 };
 
@@ -146,7 +154,7 @@ $(document).ready(function(){
               <input type="hidden" id="type" value="">
               <input type="hidden" id="isCompl" value="">
               <div class="modal-footer">
-                <input value="Добавить" onclick="addComp($('#mat_id').val(), getMatAmm($('#mat_id').val(), $('#compAmm').val()), $('#matCode').text(), $('#isCompl').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                <input value="Добавить" onclick="addComp($('#mat_id').val(), getMatAmm($('#matCode').text(), $('#compAmm').val()), $('#matCode').text(), $('#isCompl').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
               </div>
             </div>
     </div>
@@ -166,15 +174,15 @@ $(document).ready(function(){
         {% for c in comp %}
           {% if c.loaded == True %}
             {% if c.mat == None %}
-              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.compl.code}}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{{c.compl.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="compl" data-code="{{c.compl.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{% spaceless %}{{c.compl.code}}{% endspaceless %}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.compl.code}}{% endspaceless %}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="compl" data-code="{% spaceless %}{{c.compl.code}}{% endspaceless %}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
             {% else %}
-              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.id}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
             {% endif %}
           {% else %}
             {% if c.mat == None %}
-              <tr><td></td><td>{{c.compl.code}}</td><td>{{c.compl.name}}</td><td id="{{c.compl.code}}">{{c.ammount}}</td><td id="{{c.compl.id}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.compl.code}}" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}" data-isCompl="compl">Добавить</button></td><td></td></tr>
+              <tr><td></td><td>{% spaceless %}{{c.compl.code}}{% endspaceless %}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.compl.code}}{% endspaceless %}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{% spaceless %}{{c.compl.code}}{% endspaceless %}" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}" data-isCompl="compl">Добавить</button></td><td></td></tr>
             {% else %}
-              <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td id="{{c.mat.id}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}" data-isCompl="">Добавить</button></td><td></td></tr>
+              <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}" data-isCompl="">Добавить</button></td><td></td></tr>
             {% endif %}
           {% endif %}
         {% endfor %}

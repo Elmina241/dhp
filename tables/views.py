@@ -131,18 +131,26 @@ def formula_detail(request, formula_id):
                 "location": "/tables/formulas/"
                 })
 
+def get_comps(request):
+    components = {}
+    if 'comp_id' in request.POST:
+        for c in Compl_comp_comp.objects.filter(compl__pk = request.POST['comp_id']):
+            components[c.id] = {'code': c.mat.code, 'name': c.mat.name, 'amount': c.ammount}
+    return HttpResponse(json.dumps(components))
+
 def new_comp(request, comp_id):
-        components = serializers.serialize("json", Components.objects.all())
+        components = serializers.serialize("json", Formula_component.objects.all())
         materials = serializers.serialize("json", Material.objects.all())
         if (comp_id == '0'):
             return render(request, "new_component.html",
                 {"comp": None,
                 "components": json.dumps(components),
-                "compositions": Composition.objects.filter(isFinal=False),
+                "compositions": Formula.objects.filter(composition__isFinal=False),
                 "f_components": "0",
                 "materials2": Material.objects.all(),
                 "materials": json.dumps(materials),
-                "location": "/tables/complex_comps/"
+                "location": "/tables/complex_comps/",
+                "header": "Технологические композиции"
                 })
         else:
             f_components = serializers.serialize("json", Formula_component.objects.filter(formula=get_object_or_404(Formula, pk=formula_id)))

@@ -73,6 +73,7 @@ urlpatterns = [
     url(r'^formulas/(?P<formula_id>[0-9]+)/save_formula/$', views.save_formula, name='save_formula'),
     url(r'^complex_comps/0/save_comp/$', views.save_comp, name='save_comp'),
     # Запросы
+    url(r'^complex_comps/get_comps/$', views.get_comps, name='get_comps'),
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/get_char/$', views.get_char, name='get_char'),
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/get_elems/$', views.get_elems, name='get_elems')
 ]

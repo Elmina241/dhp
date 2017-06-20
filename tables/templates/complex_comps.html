@@ -1,12 +1,78 @@
 {% extends 'tables/base.html' %}
 {% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function getComps(comp_id, amm, name){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_comps/',
+        data: {
+          'comp_id': comp_id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          comps = JSON.parse(data);
+          var table = $("#compTable tbody");
+          var rowCount = $('#compTable tr').length;
+          for (i = 1; i < rowCount; i++) $('#compTable tr').eq(1).remove();
+          var matAm = 0;
+          for (c in comps){
+            matAm = matAm + comps[c].amount;
+            $("<tr><td>" + comps[c].code + "</td><td>" + comps[c].name + "</td><td>" + ((comps[c].amount/100)*parseFloat(amm)).toFixed(2) + "</td></tr>").appendTo(table);
+          }
+          $("<tr><td>ВД01</td><td>Вода</td><td>" + (parseFloat(amm) - (matAm/100)*parseFloat(amm)).toFixed(2) + "</td></tr>").appendTo(table);
+          $("#tableName").text("Компоненты композиции " + name);
+          $('#components').modal('show');
+        }
+      });
+}
+$(document).ready(function(){
+  $('#list').on('click', 'tr', function(){
+    var ind = $(this).attr("id");
+    var amm = $(this).find('td').eq(3).text();
+    var name = $(this).find('td').eq(2).text();
+    getComps(ind, amm, name);
+  });
+});
+</script>
           <form action="del_comp/" method="post">
           {% csrf_token %}
           <button type="button" class="btn btn-default" onClick="window.location.href='/tables/complex_comps/0/'">Добавить запись</button>
           <input type="submit" class="btn btn-default" value="Удалить">
           <br><br>
           {% if comps %}
-          <table class="table table-hover table-sm">
+          <table class="table table-hover table-sm" id="list">
             <thead>
               <tr  class="well well-sm">
                 <th></th><th>Код</th><th>Наименование</th><th>Количество, кг</th>
@@ -14,10 +80,10 @@
             </thead>
             <tbody>
               {% for c in comps %}
-              <tr>
+              <tr id="{{c.id}}">
                 <td><input type="checkbox" value="{{ c.id }}" name="del_list1"></td>
                 <td>{{ c.code }}</td>
-                <td onClick="window.location.href='/tables/complex_comps/{{ c.id }}/'">{{ c.name }}</td>
+                <td>{{ c.name }}</td>
                 <td>{{c.ammount}}</td>
               </tr>
               {% endfor %}
@@ -28,4 +94,27 @@
           {% endif %}
         </div>
         </form>
+        <div class="modal fade" id="components">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" data-dismiss="modal">x</button>
+                <h4 id="tableName">Компоненты</h4>
+              </div>
+              <div class="modal-body">
+                <table class="table table-hover table-sm" id="compTable">
+                  <thead>
+                    <tr  class="well well-sm">
+                      <th>Код</th><th>Наименование</th><th>Количество</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer"></div>
+            </div>
+          </div>
+        </div>
   {% endblock content %}
