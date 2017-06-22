@@ -1,5 +1,29 @@
 {% extends 'tables/base.html' %}
 {% block content %}
+<script>
+$(document).ready(function(){
+  $("[name='group1']").change(function(){
+    var sel = $("[name='group1']");
+    var group = sel.find(":selected").text();
+    if (group == "Все"){
+      $("tr").each(function(){
+        $(this).show();
+      });
+    }
+    else {
+      $("tr").each(function(){
+        $(this).hide();
+      });
+      $("tr td:contains(" + group + ")").filter(function() {
+          return $(this).text() == group;
+        }).each(function(){
+          $(this).parent().show();
+        });
+        $("tr").eq(0).show();
+      }
+    });
+});
+</script>
 <ul class="nav nav-tabs nav-justified">
   <li><a href="/tables/characteristics/">Все характеристики</a></li>
   <li class="active"><a href="/tables/comp_chars/">Характеристики рецептов</a></li>
@@ -16,14 +40,12 @@
    <option value="{{ g.id }}">{{ g.name }}</option>
    {% endif %}
    {% endfor %}</select>
-   <input type="submit" class="btn btn-default" value="Применить" class="form-control"><a href="/tables/compositions/"> <button type="button" class="btn btn-default">Сбросить</button></a>
-</form>
-          <br><br>
+   <hr>
           {% if compositions %}
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th>Код</th><th>Наименование</th>
+                    <th>Код</th><th>Наименование</th><th>Группа</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -31,6 +53,7 @@
                   <tr>
                     <td>{{ c.code }}</td>
                     <td onClick="window.location.href='/tables/comp_chars/{{ c.id }}/'">{{ c.name }}</td>
+                    <td>{{ c.group }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

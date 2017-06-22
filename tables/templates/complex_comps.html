@@ -58,12 +58,21 @@ function getComps(comp_id, amm, name){
       });
 }
 $(document).ready(function(){
-  $('#list').on('click', 'tr', function(){
+  $('#list tr').each(function(){
+    $(this).find('td').eq(2).on('click', function(){
+      var ind = $(this).parent().attr("id");
+      var amm = $(this).parent().find('td').eq(3).text();
+      var name = $(this).parent().find('td').eq(2).text();
+      getComps(ind, amm, name);
+    });
+  }
+  );
+  /*$('#list').on('click', 'tr', function(){
     var ind = $(this).attr("id");
     var amm = $(this).find('td').eq(3).text();
     var name = $(this).find('td').eq(2).text();
     getComps(ind, amm, name);
-  });
+  });*/
 });
 </script>
           <form action="del_comp/" method="post">

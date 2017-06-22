@@ -1,0 +1,72 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $('#formula').trigger("change");
+  $('#formula2').trigger("change");
+});</script>
+
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title"><b>Процесс № {{p.id}} (Прерван)</b></h4>
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+
+<div class="panel-body">
+
+  <div class="input-group" style ="margin: left; margin-left:10pt">
+    <form action="save_load_list/" id="form" method="post" class="form-horizontal">
+      {% csrf_token %}
+      <div class="col-sm-3">
+        <h5><p><b>Дата начала: </b></p></div></h5>
+          <div class="col-sm-7">
+          <h5><p>{{p.start_date|date:"d.m.Y"}}</p></div>
+          <div class="col-sm-3">
+          <h5><p><b>Дата конца: </b></p></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.finish_date|date:"d.m.Y"}}</p>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Реактор: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.reactor}}</p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Состав: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.list}}</p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Объём: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.list.ammount}} кг</p></h5>
+          </div>
+      </div>
+
+
+      </div>
+      <input hidden id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control">
+<input hidden class="form-control" id="formula2" name="formula2" onchange="getLoadList({{load_list}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">
+    <div class="panel panel-default" style ="margin: auto">
+    <div class="panel-heading">
+        <h4 class="panel-title">Загрузочный лист</h4>
+    </div>
+    <div class="panel-body">
+    <table class="table table-sm" id="materials2" style="width:100%; margin: auto">
+      <thead>
+        <tr>
+          <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water2"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </form>
+</div>
+</div>
+{% endblock content %}

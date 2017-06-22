@@ -102,7 +102,7 @@ $(document).ready(function(){
 </ul>
 
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
-<button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
+<a href="stop_process/"><button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button></a>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
       <h4 class="panel-title"><b>Процесс № {{p.id}}</b></h4>

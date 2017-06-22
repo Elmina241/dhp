@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^get_lists/$', views.get_lists, name = 'get_lists'),
     url(r'^process/(?P<kneading_id>[0-9]+)/$', views.kneading_detail, name='kneading_detail'),
     url(r'^process/(?P<kneading_id>[0-9]+)/start_process/$', views.start_kneading, name='start_kneading'),
+    url(r'^process/(?P<kneading_id>[0-9]+)/stop_process/$', views.stop_process, name='stop_process'),
     url(r'^process/(?P<kneading_id>[0-9]+)/finish_testing/$', views.finish_testing, name='finish_testing'),
     url(r'^process/(?P<kneading_id>[0-9]+)/mixing/$', views.start_mixing, name='start_mixing'),
     url(r'^process/(?P<composition_id>[0-9]+)/get_elems/$', tables.views.get_elems, name='get_elems'),

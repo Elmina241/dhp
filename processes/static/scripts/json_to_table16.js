@@ -255,7 +255,7 @@ function getListOfModels(lists) {
   var modelLists = JSON.parse(lists);
   for (i = 0; i < modelLists.length; i++){
     if (modelLists[i].fields.formula == sel_id){
-      $('#list').append("<option value=" + modelLists[i].pk + ">" + modelLists[i].pk + " " + sel.textContent + "</option>");
+      $('#list').append("<option value=" + modelLists[i].pk + ">" + modelLists[i].pk + " " + $("#formula :selected").text() + "</option>");
     }
   }
 };

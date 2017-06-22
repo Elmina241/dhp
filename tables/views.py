@@ -316,6 +316,20 @@ def del_box(request):
         del_obj.delete()
     return redirect('boxing')
 
+def del_comp(request):
+    del_var = request.POST.getlist('del_list1')
+    for d in del_var:
+        del_obj = get_object_or_404(Compl_comp, pk=d)
+        del_obj.delete()
+    return redirect('complex_comps')
+
+def del_characteristic(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Characteristic, pk=d)
+        del_obj.delete()
+    return redirect('characteristics')
+
 def del_cap(request):
     del_var = request.POST.getlist('del_list')
     for d in del_var:

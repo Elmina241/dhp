@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 <a href="start_process/"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Запустить процесс</button></a>
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
-<button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
+<a href="stop_process/"><button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button></a>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
       <h4 class="panel-title"><b>Процесс № {{p.id}}</b></h4>
@@ -67,10 +67,9 @@ $(document).ready(function(){
               <h4>Редактирование загрузочного листа</h4>
             </div>
             <div class="modal-body">
-  <!--<div class="form-group">--><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" onchange="changeMinMax2({{components}}, {{c_id}});changeWater();return false;"><span class="input-group-addon">кг</span></div>
+  <label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" onchange="changeMinMax2({{components}}, {{c_id}});changeWater();return false;"><span class="input-group-addon">кг</span></div>
 </div>
-        <!--<input hidden class="form-control" id="formula" name="formula" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
-        <input hidden class="form-control" id="formula2" name="formula2" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">-->
+
         <input hidden class="form-control" id="formula" name="formula" onchange="getLoadList({{load_list}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
         <input hidden class="form-control" id="formula2" name="formula2" onchange="getLoadList({{load_list}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">
       </div>
