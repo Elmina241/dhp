@@ -31,6 +31,7 @@ $(document).ready(function(){
       $('#closeButton').html("<i class='glyphicon glyphicon-chevron-down'></i>");
     }
   }
+
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
@@ -42,8 +43,16 @@ $(document).ready(function(){
       <p><strong>{{ error_message }}</strong></p>
     {% endif %}
     <div class="panel-body">
+      <div id="error" class="alert alert-danger" role="alert" style="display:none">
+        Загрузочный лист не соответствует составу
+      </div>
+      <div id="dateError" class="alert alert-danger" role="alert" style="display:none">
+        Не указана дата
+      </div>
+      <div id="errors" class="alert alert-danger" role="alert" style="display:none">
+      </div>
       <div class="input-group col-sm-8" style ="margin: auto">
-        <form action="save_process/" method="post" class="form-horizontal">
+        <form id = "form" action="save_process/" method="post" class="form-horizontal">
           {% csrf_token %}
           <div class="form-group">
             <label for="process" class="col-sm-2 control-label" style="font-size: medium">Процесс: </label>
@@ -56,9 +65,9 @@ $(document).ready(function(){
           </div>
           <div class="input-daterange input-group" id="datepicker">
             <div class="form-group"><label for="start" class="col-sm-2 control-label" style="font-size: medium">Дата начала: </label>
-              <div class="col-sm-10"><input type="text" data-provide="datepicker" class="input-sm form-control" name="start" /></div></div>
+              <div class="col-sm-10"><input type="text" required data-provide="datepicker" class="input-sm form-control" name="start" /></div></div>
               <div class="form-group"><label for="end" class="col-sm-2 control-label" style="font-size: medium">Дата конца: </label>
-                <div class="col-sm-10"><input type="text" data-provide="datepicker" class="input-sm form-control" name="end" /></div>
+                <div class="col-sm-10"><input type="text" required data-provide="datepicker" class="input-sm form-control" name="end" /></div>
               </div>
             </div>
             <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}}, {{f_c}});changeWaterL();changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
@@ -90,7 +99,7 @@ $(document).ready(function(){
             </div>
             <input type="hidden" id="json" name="json" value="">
             <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
-            <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
+            <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
           </form>
         </div>
         <hr>

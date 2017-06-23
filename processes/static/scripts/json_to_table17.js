@@ -228,7 +228,7 @@ function getLoadList(loadList, t_name) {
 function getCompositionT(c, m, f_c, f) {
   var table = $("#materials tbody");
   var rowCount = $('#materials tr').length;
-  for (i = 2; i < rowCount; i++) $('#materials tr').eq(i).remove();
+  for (i = 2; i < rowCount; i++) $('#materials tr').eq(2).remove();
   var sel = document.getElementById("formula");
   var sel_id = sel.value;
   var components = JSON.parse(c);
@@ -382,6 +382,131 @@ function changeMatAm(){
   }
 }
 
+//Проверка соответствия реактивов загрузочного листа реактивам состава
+function checkList(){
+  var tbody = document.getElementById("loadList");
+  var mats = document.getElementById("materials");
+  compl_comp_comps = $("#compl_comp_comps").attr("value");
+  var comps = JSON.parse(JSON.parse(compl_comp_comps));
+  var error = false;
+  var composition = {}
+  for (i=2; i<mats.rows.length; i++){
+    if ($("#materials tr").eq(i).find('td').eq(0).length != 0){
+      composition[$("#materials tr").eq(i).find('td').eq(0).text()] = false;
+    }
+  }
+  for (i=2; i<tbody.rows.length; i++){
+    var tr = $("#loadList tr").eq(i);
+    var code = tr.find("td").eq(0).text();
+    var id = tr.attr("id");
+    if (tr.attr("name") == "compl"){
+      for (j=0; j < comps.length; j++){
+        if (comps[j].fields.compl == id){
+          matId = comps[j].fields.mat;
+          if ($("#materials tr#" + matId).length == 0){
+            error = true;
+          }
+          else {
+            composition[$("#materials tr#" + matId).find('td').eq(0).text()] = true;
+          }
+        }
+      }
+    }
+    else{
+      error = error || ($("#materials tr#" + id).length == 0);
+      composition[code] = true;
+    }
+  }
+  for (c in composition){
+    if (composition[c] == false){
+      error = true;
+    }
+  }
+  if (error) $("#error").show();
+  else $("#error").hide();
+}
+
+//Проверка соответствия границам рецепта
+function checkBounds(){
+  var mats = document.getElementById("materials");
+  var errors = {'length': 0};
+  for (i=2; i<mats.rows.length; i++){
+    var val = parseFloat($("#materials tr").eq(i).find('td').eq(5).text());
+    var min = parseFloat($("#materials tr").eq(i).find('td').eq(2).text());
+    var max = parseFloat($("#materials tr").eq(i).find('td').eq(3).text());
+    if (val > max || val < min){
+      errors[$("#materials tr").eq(i).find('td').eq(0).text()] = $("#materials tr").eq(i).find('td').eq(1).text();
+      errors.length ++;
+    }
+  }
+  if (errors.length!=0) {
+    delete errors.length;
+    message = "Количество реактивов не соответсвует допустимым границам";
+    for (e in errors){
+      message = message + "; " + e + " " + errors[e];
+    }
+    $("#errors").text(message);
+    $("#errors").show();
+  }
+  else $("#errors").hide();
+}
+
+//Проверка соответствия границам рецепта в планировании
+function checkBoundsP(){
+  var mats = document.getElementById("materials");
+  var errors = {'length': 0};
+  for (i=2; i<mats.rows.length; i++){
+    var val = parseFloat($("#materials tr").eq(i).find('td').eq(5).text());
+    var min = parseFloat($("#materials tr").eq(i).find('td').eq(2).text());
+    var max = parseFloat($("#materials tr").eq(i).find('td').eq(3).text());
+    if (val > max || val < min){
+      errors[$("#materials tr").eq(i).find('td').eq(0).text()] = $("#materials tr").eq(i).find('td').eq(1).text();
+      errors.length ++;
+    }
+  }
+  if (errors.length!=0) {
+    delete errors.length;
+    message = "Количество реактивов не соответсвует допустимым границам";
+    for (e in errors){
+      message = message + "; " + e + " " + errors[e];
+    }
+    message = message + " <a href='#' class='alert-link' id='errorLink'>(Всё равно создать процесс)</a>";
+    $("#errors").html(message);
+    $('#errorLink').on('click', function() {
+      $("#form").submit();
+    });
+    $("#errors").show();
+  }
+  else $("#errors").hide();
+}
+
+//Проверка на ошибки
+function submitList(){
+  checkList();
+  checkBounds();
+  if ($("#errors").css('display')=='none' && $("#error").css('display')=='none'){
+    $("#form").submit();
+  }
+}
+
+//Проверка на ошибки
+function submitPlan(){
+  $("#dateError").hide();
+  checkList();
+  if ($("#error").css('display')=='none'){
+    var temp = document.getElementsByName('start')[0];
+    if (document.getElementsByName('start')[0].value == "" || document.getElementsByName('end')[0].value == ""){
+      $("#dateError").show();
+    }
+    else{
+      checkBoundsP();
+      if ($("#errors").css('display')=='none'){
+        $("#form").submit();
+      }
+    }
+  }
+}
+
 //Подсчёт воды в загрузочном листе
 function changeWaterL() {
   var ammount = document.getElementById("ammount").value;
@@ -409,7 +534,7 @@ function changeWaterL() {
 function getCompositionP(c, m, f_c, f) {
   var table = $("#materials tbody");
   var rowCount = $('#materials tr').length;
-  for (i = 2; i < rowCount; i++) $('#materials tr').eq(i).remove();
+  for (i = 2; i < rowCount; i++) $('#materials tr').eq(2).remove();
   var sel = document.getElementById("formula");
   var sel_id = sel.value;
   var components = JSON.parse(c);
