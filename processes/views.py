@@ -52,6 +52,13 @@ def list_detail(request, list_id):
             "header": "Загрузочные листы"
             })
 
+def del_list(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Model_list, pk=d)
+        del_obj.delete()
+    return redirect('loading_lists')
+
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())
     f_comp = serializers.serialize("json", Formula_component.objects.all())
@@ -60,6 +67,7 @@ def planning(request):
     m_comp = serializers.serialize("json", Model_component.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
+    reactors = serializers.serialize("json", Reactor.objects.all())
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     return render(request, "planning.html",
         {"components": json.dumps(components),
@@ -73,6 +81,7 @@ def planning(request):
         "f_c": json.dumps(f_comp),
         "f": json.dumps(formula),
         "reactors": Reactor.objects.all,
+        "reactors2": json.dumps(reactors),
         "formulas": Formula.objects.all,
         "location": "/processes/planning/",
         "header": "Планирование"
@@ -196,11 +205,15 @@ def add_comp(request, kneading_id):
     if request.method == 'POST':
         if 'mat_id' in request.POST:
             if request.POST['type'] == 'compl':
-                mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])
+                mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])[0]
+                mat.ammount = mat.ammount - float(request.POST['amm'])
                 comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
+                mat.save()
             else:
-                mat = Material.objects.filter(pk=request.POST['mat_id'])
+                mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
+                mat.ammount = mat.ammount - float(request.POST['amm'])
                 comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+                mat.save()
             #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             comp.ammount = request.POST['amm']
             comp.loaded = True

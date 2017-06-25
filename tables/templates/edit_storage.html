@@ -54,6 +54,9 @@ $(document).ready(function (){
           <h5><b>Наименование:</b></h5>
           <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{storage.name}}" required></p>
           <br><br><br>
+          <h5><b>Наименование средства:</b></h5>
+          <input type="text" class="form-control" placeholder="Наименование средства" size = "80" name = "product" value="{{storage.product}}" required></p>
+          <br><br><br>
           <h5><b>Объём:</b><br></h5>
           <div class="input-group">
             <input type="number" class="form-control bfh-number" min="0" id="capacity" name="capacity" value="{{ storage.capacity }}"> <span class="input-group-addon">л</span></p>
@@ -70,6 +73,9 @@ $(document).ready(function (){
             <input type="number" class="form-control bfh-number" min="0"  name="max" value="{{ storage.max }}" id="max"> <span class="input-group-addon">л</span></p>
           </div>
           <br>
+          <h5><b>Расположение:</b></h5>
+          <input type="text" class="form-control" placeholder="Расположение" size = "80" name = "location" value="{{storage.location}}" required></p>
+          <br><br><br>
           <h5><b>Готов:</b><br></h5>
           <div class="input-group">
             <input type="checkbox" name="ready" {{ storage.get_check }}>

@@ -6,6 +6,7 @@ app_name = 'processes'
 
 urlpatterns = [
     url(r'^loading_lists/$', views.loading_lists, name = 'loading_lists'),
+    url(r'^loading_lists/del_list/$', views.del_list, name = 'del_list'),
     url(r'^planning/$', views.planning, name = 'planning'),
     url(r'^process/$', views.mixing, name = 'mixing'),
     url(r'^process/get_state/$', views.get_state, name = 'get_state'),

@@ -29,6 +29,13 @@ $(document).ready(function(){
                       {% endfor %}
                     </select></p></p>
                     <br><br><br>
+                    <h5><b>Крышка:</b><br></h5>
+                    <p><select class="form-control" name="cap">
+                      {% for c in caps %}
+                      <option value="{{c.id}}">{{c.name}}</option>
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
                     <h5><b>Форма:</b><br></h5>
                     <p><select class="form-control" name="form">
                       {% for f in forms %}
@@ -48,6 +55,13 @@ $(document).ready(function(){
                     <p><select class="form-control" name="option">
                       {% for o in options %}
                       <option value="{{o.id}}">{{o.name}}</option>
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Тара:</b><br></h5>
+                    <p><select class="form-control" name="container">
+                      {% for c in containers %}
+                      <option value="{{c.id}}">{{c.name}}</option>
                       {% endfor %}
                     </select></p></p>
                     <br><br><br>

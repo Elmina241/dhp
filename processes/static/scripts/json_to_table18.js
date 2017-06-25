@@ -276,7 +276,7 @@ function getModelList(m, m_c, compl) {
       var row = document.createElement("TR");
       var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
       if (m_comp[i].fields.compl == null){
-        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       else{
         $("<tr id=" + m_comp[i].fields.compl + " name='compl'><td>" + getCode(m_comp[i].fields.compl, complComp) + "</td><td>" + getName(m_comp[i].fields.compl, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.compl, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
@@ -451,6 +451,19 @@ function checkBounds(){
   else $("#errors").hide();
 }
 
+//Проверка на вмещаемость реактора
+function checkRector(){
+  $("#reactorError").hide();
+  rId = $("#reactor :selected").val();
+  var am = $("#ammount").val();
+  var reactors = JSON.parse(JSON.parse($("#reactors").attr("value")));
+  for (i=0; i < reactors.length; i++){
+    if (reactors[i].pk = rId){
+      if (am > reactors[i].fields.max || am < reactors[i].fields.min) $("#reactorError").show();
+    }
+  }
+}
+
 //Проверка соответствия границам рецепта в планировании
 function checkBoundsP(){
   var mats = document.getElementById("materials");
@@ -499,11 +512,67 @@ function submitPlan(){
       $("#dateError").show();
     }
     else{
-      checkBoundsP();
-      if ($("#errors").css('display')=='none'){
-        $("#form").submit();
+      checkRector();
+      if ($("#reactorError").css('display')=='none'){
+        checkBoundsP();
+        if ($("#errors").css('display')=='none'){
+          checkMatAm();
+          if ($("#amountError").css('display')=='none'){
+            $("#form").submit();
+          }
+        }
       }
     }
+  }
+}
+
+//Проверка наличия реактивов
+function checkMatAm(){
+  $("#amountError").hide();
+  var length = $("#loadList").find('tr').length;
+  compl_comp = JSON.parse(JSON.parse($("#compl_comp").attr("value")));
+  materials = JSON.parse(JSON.parse($("#reagents").attr("value")));
+  var errors = {'length': 0};
+  for (i=2; i < length; i++){
+    var tr = $("#loadList tr").eq(i);
+    var code = tr.find("td").eq(0).text();
+    var id = tr.attr("id");
+    if (tr.attr("name") == "compl"){
+      var am = tr.find("input").val();
+      if (am=="") am = 0;
+      for (j=0; j < compl_comp.length; j++){
+        if (compl_comp[j].pk == id){
+          curAm = parseFloat(compl_comp[j].fields.ammount);
+          if (am > curAm){
+            errors[compl_comp[j].fields.code] = curAm;
+            errors['length'] = errors['length'] +1;
+          }
+        }
+      }
+    }
+    else{
+      var am = tr.find("input").val();
+      if (am == "") am = 0;
+      for (j=0; j < materials.length; j++){
+        if (materials[j].pk == id){
+          curAm = parseFloat(materials[j].fields.ammount);
+          if (am > curAm){
+            errors[materials[j].fields.code] = curAm;
+            errors['length'] = errors['length'] +1;
+          }
+        }
+      }
+    }
+  }
+
+  if (errors.length!=0) {
+    delete errors.length;
+    message = "Недостаточно реактивов";
+    for (e in errors){
+      message = message + "; " + e + "- доступное количество: " + errors[e];
+    }
+    $("#amountError").html(message);
+    $("#amountError").show();
   }
 }
 
@@ -628,5 +697,5 @@ function deleteRowP(r)
   document.getElementById('loadList').deleteRow(i);
   changeMatAm();
   changeWaterP();
-  changeWaterTP()
+  changeWaterTP();
 }

@@ -1,7 +1,66 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script>
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function addComp(mat_id, amm){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'add_matAm/',
+        data: {
+          'mat_id': mat_id,
+          'amm': (parseFloat(amm) + parseFloat($("#compAmm").val()))
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          var obj = $("#"+mat_id);
+          obj.parent().parent().find('td').eq(5).text((parseFloat(amm) + parseFloat($("#compAmm").val())));
+          }
+      });
+}
+
 $(document).ready(function(){
+  $('#addComp').on('show.bs.modal', function (event) {
+    // получить кнопку, которая его открыло
+    var button = $(event.relatedTarget)[0];
+    var mat = button.dataset.mat;
+    var amm = button.dataset.amm;
+    var code = button.dataset.code;
+    $(this).find('#compAmm').attr("value", amm);
+    $(this).find('#mat_id').attr("value", mat);
+    $(this).find('#matCode').text(code);
+    $(this).find('#mat_am').attr("value", amm);
+  });
   $("[name='group1']").change(function(){
     var sel = $("[name='group1']");
     var group = sel.find(":selected").text();
@@ -46,7 +105,7 @@ $(document).ready(function(){
           <table class="table table-hover table-sm" id="materials">
             <thead>
               <tr>
-                <th></th><th>Артикул</th><th>Группа</th><th>Наименование</th><th>Ед. изм.</th><th>Количество</th><th>Концентрация</th>
+                <th></th><th>Артикул</th><th>Группа</th><th>Наименование</th><th>Ед. изм.</th><th>Количество, кг</th><th></th>
               </tr>
             </thead>
             <tbody>
@@ -56,11 +115,9 @@ $(document).ready(function(){
                 <td>{{ m.code }}</td>
                 <td>{{ m.group.name }}</td>
                 <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
-                <!--<td>{{ m.prefix.name }}</td>-->
-                <!--<td>{{ m.mark }}</td>-->
                 <td>{{ m.unit.name }}</td>
                 <td>{{ m.ammount }}</td>
-                <td>{{ m.concentration }}</td>
+                <td><button class="btn btn-default" type="button" id="{{m.id}}" data-toggle="modal" data-target="#addComp" data-amm="{{m.ammount}}" data-code="{{m.code}}" data-mat="{{m.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -70,4 +127,21 @@ $(document).ready(function(){
           {% endif %}
         </div>
         </form>
+        <div class="modal fade" id="addComp">
+          <div class="modal-dialog modal-sm" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" data-dismiss="modal">x</button>
+                <h4 id="matCode"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
+                <input type="hidden" id="mat_id" value="">
+                <input type="hidden" id="mat_am" value="">
+                <div class="modal-footer">
+                  <input value="Добавить" onclick="addComp($('#mat_id').val(), $('#mat_am').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                </div>
+              </div>
+            </div>
+          </div>
   {% endblock content %}

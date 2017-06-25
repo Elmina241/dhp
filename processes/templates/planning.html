@@ -49,9 +49,14 @@ $(document).ready(function(){
       <div id="dateError" class="alert alert-danger" role="alert" style="display:none">
         Не указана дата
       </div>
+      <div id="amountError" class="alert alert-danger" role="alert" style="display:none">
+      </div>
+      <div id="reactorError" class="alert alert-danger" role="alert" style="display:none">
+        Объём композиции выходит за границы объёма реактора.
+      </div>
       <div id="errors" class="alert alert-danger" role="alert" style="display:none">
       </div>
-      <div class="input-group col-sm-8" style ="margin: auto">
+      <div class="input-group col-sm-10" style ="margin: auto">
         <form id = "form" action="save_process/" method="post" class="form-horizontal">
           {% csrf_token %}
           <div class="form-group">
@@ -98,6 +103,9 @@ $(document).ready(function(){
               </div>
             </div>
             <input type="hidden" id="json" name="json" value="">
+            <input type="hidden" id="compl_comp" name="compl_comp" value="{{compl_comps2}}">
+            <input type="hidden" id="reagents" name="reagents" value="{{materials}}">
+            <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
             <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
             <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
           </form>

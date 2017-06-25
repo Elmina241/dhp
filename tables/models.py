@@ -75,6 +75,9 @@ class Product(models.Model):
     option = models.ForeignKey('Product_option')
     detail = models.ForeignKey('Product_detail')
     mark = models.ForeignKey('Product_mark')
+    container = models.ForeignKey('Container_group', default = 0, null=True)
+    cap = models.ForeignKey('Cap_group', default = 0, null=True)
+    weight = models.FloatField(default = 0)
     def __str__(self):
         full_name = self.form.name + ' ' + self.use.name + ' ' + ('' if self.option.name == 'отсутствует' else (self.option.name + ' ')) + ('' if self.detail.name == 'отсутствует' else self.detail.name) + ' (' + self.mark.name + ')'
         return full_name
@@ -196,6 +199,8 @@ class Production(models.Model):
 class Reactor(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
+    product = models.CharField(max_length=250)
+    location = models.CharField(max_length=80)
     #capacity = models.FloatField()
     min = models.FloatField()
     max = models.FloatField()

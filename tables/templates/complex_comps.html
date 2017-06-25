@@ -27,6 +27,29 @@ $.ajaxSetup({
         }
     }
 });
+
+function addComp(comp_id, amm){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'add_compAm/',
+        data: {
+          'comp_id': comp_id,
+          'amm': (parseFloat(amm) + parseFloat($("#compAmm").val()))
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          var obj = $("#"+comp_id);
+          obj.find('td').eq(3).text((parseFloat(amm) + parseFloat($("#compAmm").val())));
+          }
+      });
+}
+
 function getComps(comp_id, amm, name){
   var csrftoken = getCookie('csrftoken');
   $.ajax({
@@ -58,6 +81,17 @@ function getComps(comp_id, amm, name){
       });
 }
 $(document).ready(function(){
+  $('#addComp').on('show.bs.modal', function (event) {
+    // получить кнопку, которая его открыло
+    var button = $(event.relatedTarget)[0];
+    var comp = button.dataset.comp;
+    var amm = button.dataset.amm;
+    var code = button.dataset.code;
+    $(this).find('#compAmm').attr("value", amm);
+    $(this).find('#comp_id').attr("value", comp);
+    $(this).find('#compCode').text(code);
+    $(this).find('#comp_am').attr("value", amm);
+  });
   $('#list tr').each(function(){
     $(this).find('td').eq(2).on('click', function(){
       var ind = $(this).parent().attr("id");
@@ -84,7 +118,7 @@ $(document).ready(function(){
           <table class="table table-hover table-sm" id="list">
             <thead>
               <tr  class="well well-sm">
-                <th></th><th>Код</th><th>Наименование</th><th>Количество, кг</th>
+                <th></th><th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +128,7 @@ $(document).ready(function(){
                 <td>{{ c.code }}</td>
                 <td>{{ c.name }}</td>
                 <td>{{c.ammount}}</td>
+                <td><button class="btn btn-default" type="button" data-toggle="modal" data-target="#addComp" data-amm="{{c.ammount}}" data-code="{{c.code}}" data-comp="{{c.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -126,4 +161,21 @@ $(document).ready(function(){
             </div>
           </div>
         </div>
+        <div class="modal fade" id="addComp">
+          <div class="modal-dialog modal-sm" >
+            <div class="modal-content">
+              <div class="modal-header">
+                <button class="close" data-dismiss="modal">x</button>
+                <h4 id="compCode"></h4>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
+                <input type="hidden" id="comp_id" value="">
+                <input type="hidden" id="comp_am" value="">
+                <div class="modal-footer">
+                  <input value="Добавить" onclick="addComp($('#comp_id').val(), $('#comp_am').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                </div>
+              </div>
+            </div>
+          </div>
   {% endblock content %}

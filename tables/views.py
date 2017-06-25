@@ -79,6 +79,8 @@ def pr_detail(request, product_id):
         "location": "/tables/products/",
         "groups": Product_group.objects.all,
         "forms": Product_form.objects.all,
+        "caps": Cap_group.objects.all,
+        "containers": Container_group.objects.all,
         "uses": Product_use.objects.all,
         "marks": Product_mark.objects.all,
         "details": Product_detail.objects.all,
@@ -391,6 +393,8 @@ def new_product(request):
     "location": "/tables/products/",
     "forms": Product_form.objects.all,
     "uses": Product_use.objects.all,
+    "caps": Cap_group.objects.all,
+    "containers": Container_group.objects.all,
     "marks": Product_mark.objects.all,
     "details": Product_detail.objects.all,
     "options": Product_option.objects.all,})
@@ -494,6 +498,8 @@ def save_product(request, product_id):
         group = get_object_or_404(Product_group, pk=request.POST['group'])
         form = get_object_or_404(Product_form, pk=request.POST['form'])
         use = get_object_or_404(Product_use, pk=request.POST['use'])
+        cap = get_object_or_404(Cap_group, pk=request.POST['cap'])
+        container = get_object_or_404(Container_group, pk=request.POST['container'])
         option = get_object_or_404(Product_option, pk=request.POST['option'])
         detail = get_object_or_404(Product_detail, pk=request.POST['detail'])
         mark = get_object_or_404(Product_mark, pk=request.POST['mark'])
@@ -506,6 +512,8 @@ def save_product(request, product_id):
         product.option = option
         product.detail = detail
         product.mark = mark
+        product.cap = cap
+        product.container = container
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'products.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
@@ -519,6 +527,8 @@ def add_product(request):
         group = get_object_or_404(Product_group, pk=request.POST['group'])
         form = get_object_or_404(Product_form, pk=request.POST['form'])
         use = get_object_or_404(Product_use, pk=request.POST['use'])
+        cap = get_object_or_404(Cap_group, pk=request.POST['cap'])
+        container = get_object_or_404(Container_group, pk=request.POST['container'])
         option = get_object_or_404(Product_option, pk=request.POST['option'])
         detail = get_object_or_404(Product_detail, pk=request.POST['detail'])
         mark = get_object_or_404(Product_mark, pk=request.POST['mark'])
@@ -530,6 +540,8 @@ def add_product(request):
             use = use,
             option = option,
             detail = detail,
+            cap = cap,
+            container = container,
             mark = mark)
 
     except (KeyError, Material_group.DoesNotExist):
@@ -746,8 +758,12 @@ def save_storage(request, storage_id):
             ready = False
         storage.ready = ready
         if (s_type == 'reactor'):
+            product = request.POST['product']
+            location = request.POST['location']
             min = request.POST['min']
             max = request.POST['max']
+            storage.product = product
+            storage.location = location
             storage.min = min
             storage.max = max
         storage.code = code
@@ -883,3 +899,19 @@ def save_comp_char(request, composition_id):
                         сomp_char_var = Comp_char_var(comp_char = char, char_var = set_var)
                         сomp_char_var.save()
         return redirect('characteristics')
+
+def add_matAm(request):
+    if request.method == 'POST':
+        if 'mat_id' in request.POST:
+            mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
+            mat.ammount = request.POST['amm']
+            mat.save()
+            return HttpResponse("ok")
+
+def add_compAm(request):
+    if request.method == 'POST':
+        if 'comp_id' in request.POST:
+            comp = Compl_comp.objects.filter(pk=request.POST['comp_id'])[0]
+            comp.ammount = request.POST['amm']
+            comp.save()
+            return HttpResponse("ok")

@@ -33,6 +33,17 @@ $(document).ready(function(){
                       {% endfor %}
                     </select></p></p>
                     <br><br><br>
+                    <h5><b>Крышка:</b><br></h5>
+                    <p><select class="form-control" name="cap">
+                      {% for c in caps %}
+                      {% if product.cap == c %}
+                      <option selected value="{{c.id}}">{{c.name}}</option>
+                      {% else %}
+                      <option value="{{c.id}}">{{c.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
                     <h5><b>Форма:</b><br></h5>
                     <p><select class="form-control" name="form">
                       {% for f in forms %}
@@ -63,6 +74,17 @@ $(document).ready(function(){
                       <option selected value="{{o.id}}">{{o.name}}</option>
                       {% else %}
                       <option value="{{o.id}}">{{o.name}}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select></p></p>
+                    <br><br><br>
+                    <h5><b>Тара:</b><br></h5>
+                    <p><select class="form-control" name="container">
+                      {% for c in containers %}
+                      {% if product.container == c %}
+                      <option selected value="{{c.id}}">{{c.name}}</option>
+                      {% else %}
+                      <option value="{{c.id}}">{{c.name}}</option>
                       {% endif %}
                       {% endfor %}
                     </select></p></p>
