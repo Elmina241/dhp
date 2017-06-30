@@ -1,0 +1,58 @@
+body {
+    font: 10pt Arial, Helvetica, sans-serif; /* Шрифт на веб-странице */
+    /*background: #e1dfb9; /* Цвет фона */
+}
+h2 {
+    font-size: 1.1em; /* Размер шрифта */
+    color: #800040; /* Цвет текста */
+    margin-top: 0; /* Отступ сверху */
+}
+#container {
+     width: 100%;; /* Ширина слоя */
+     margin: 0 auto; /* Выравнивание по центру */
+    /*background: #f0f0f0; /* Цвет фона левой колонки */
+}
+#header {
+    font-size: 2.2em; /* Размер текста */
+    text-align: center; /* Выравнивание по центру */
+    padding: 5px; /* Отступы вокруг текста */
+    background: #8fa09b; /* Цвет фона шапки */
+    color: #ffe; /* Цвет текста */
+}
+#sidebar1 {
+    margin-top: 10px;
+    width: 100px; /* Ширина слоя */
+    padding: 0 10px; /* Отступы вокруг текста */
+    float: left; /* Обтекание по правому краю */
+    background: #333333; /* Цвет фона */
+}
+#content1 {
+    padding: 10px; /* Поля вокруг текста */
+    background: #333333; /* Цвет фона правой колонки */
+}
+
+#two-column{
+    width: 100%;
+}
+#two-column #left{
+    width: 45%;
+    float: left;
+}
+#two-column #right{
+    width: 45%;
+    float: right;
+}
+
+
+#footer {
+    /*background: #8fa09b; /* Цвет фона подвала */
+    color: #fff; /* Цвет текста */
+    padding: 5px; /* Отступы вокруг текста */
+    clear: left; /* Отменяем действие float */
+}
+
+#line {
+  color: #fff; /* Цвет текста */
+  display: : inline-block;
+  float: left;
+}

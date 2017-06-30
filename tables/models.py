@@ -79,7 +79,8 @@ class Product(models.Model):
     cap = models.ForeignKey('Cap_group', default = 0, null=True)
     weight = models.FloatField(default = 0)
     def __str__(self):
-        full_name = self.form.name + ' ' + self.use.name + ' ' + ('' if self.option.name == 'отсутствует' else (self.option.name + ' ')) + ('' if self.detail.name == 'отсутствует' else self.detail.name) + ' (' + self.mark.name + ')'
+        opt = ' (' + self.mark.name + ', ' + ('' if self.container is None else (self.container.name + ', ')) + ('' if self.cap is None else (self.cap.name + ', ')) + str(self.weight) + ' кг.' + ')'
+        full_name = self.form.name + ' ' + self.use.name + ' ' + ('' if self.option.name == 'отсутствует' else (self.option.name + ' ')) + ('' if self.detail.name == 'отсутствует' else self.detail.name) + opt
         return full_name
     def get_short_code(self):
         return self.code[9:]
@@ -137,7 +138,7 @@ class Container(models.Model):
     colour = models.ForeignKey('Colour')
     mat = models.ForeignKey('Container_mat')
     def __str__(self):
-        return self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
+        return 'Нет' if self.code == 'Т000' else self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
 
 #Модели для укупорки
 
@@ -158,7 +159,7 @@ class Cap(models.Model):
     colour = models.ForeignKey('Colour')
     mat = models.ForeignKey('Container_mat')
     def __str__(self):
-        return self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
+        return 'Нет' if self.code == 'У000' else self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
 
 #Модели для упаковки
 
@@ -166,7 +167,7 @@ class Boxing(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     def __str__(self):
-        return self.name
+        return 'Нет' if self.code == 'Я000' else self.name
 
 #Модели для этикетки
 
@@ -180,7 +181,7 @@ class Sticker(models.Model):
     product = models.ForeignKey('Product')
     part = models.ForeignKey('Sticker_part')
     def __str__(self):
-        return "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name
+        return 'Нет' if self.code == '0000Э' else "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name + ' ' + self.product.mark.name + ' ' + ('' if self.product.option.name == 'отсутствует' else self.product.option.name)
 
 #Модели для производства
 

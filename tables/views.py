@@ -298,10 +298,11 @@ def new_composition(request):
     {"materials": Material.objects.all, "header": "Добавление рецепта", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
 
 def del_material(request):
-    del_var = request.POST.getlist('del_list')
-    for d in del_var:
-        del_obj = get_object_or_404(Material, pk=d)
-        del_obj.delete()
+    if 'del_list1' in request.POST:
+        del_var = request.POST.getlist('del_list1')
+        for d in del_var:
+            del_obj = get_object_or_404(Material, pk=d)
+            del_obj.delete()
     return redirect('index')
 
 def del_product(request):
@@ -503,7 +504,7 @@ def save_product(request, product_id):
         option = get_object_or_404(Product_option, pk=request.POST['option'])
         detail = get_object_or_404(Product_detail, pk=request.POST['detail'])
         mark = get_object_or_404(Product_mark, pk=request.POST['mark'])
-
+        weight = request.POST['weight']
         product.code = code
         product.name = name
         product.group = group
@@ -514,6 +515,7 @@ def save_product(request, product_id):
         product.mark = mark
         product.cap = cap
         product.container = container
+        product.weight = weight
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'products.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
@@ -524,6 +526,7 @@ def add_product(request):
     try:
         code = request.POST['code']
         name = request.POST['name']
+        weight = request.POST['weight']
         group = get_object_or_404(Product_group, pk=request.POST['group'])
         form = get_object_or_404(Product_form, pk=request.POST['form'])
         use = get_object_or_404(Product_use, pk=request.POST['use'])
@@ -542,7 +545,8 @@ def add_product(request):
             detail = detail,
             cap = cap,
             container = container,
-            mark = mark)
+            mark = mark,
+            weight = weight)
 
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
@@ -766,6 +770,8 @@ def save_storage(request, storage_id):
             storage.location = location
             storage.min = min
             storage.max = max
+        else:
+            storage.capacity = request.POST['capacity']
         storage.code = code
         storage.name = name
         #storage.capacity = capacity

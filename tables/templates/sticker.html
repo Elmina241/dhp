@@ -28,9 +28,9 @@ $(document).ready(function(){
           <p><select class="form-control" name="product">
             {% for p in products %}
             {% if sticker.product == p %}
-            <option selected value="{{p.id}}">{{p.name}}</option>
+            <option selected value="{{p.id}}">{{p.code}} {{p}}</option>
             {% else %}
-            <option value="{{p.id}}">{{p.name}}</option>
+            <option value="{{p.id}}">{{p.code}} {{p}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>
