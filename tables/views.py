@@ -2,7 +2,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
+from .models import Characteristic_range, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 import json
 from django.core import serializers
@@ -62,6 +62,9 @@ def compositions(request):
 
 def comp_chars(request):
     return render(request, "comp_chars.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Характеристики", "location": "/tables/characteristics/"})
+
+def mat_chars(request):
+    return render(request, "mat_chars.html", {"materials": Material.objects.all, "groups": Material_group.objects.all, "header": "Характеристики", "location": "/tables/characteristics/"})
 
 def complex_comps(request):
     return render(request, "complex_comps.html", {"comps": Compl_comp.objects.all, "header": "Технологические композиции", "location": "/tables/complex_comps/"})
@@ -192,6 +195,14 @@ def comp_char_detail(request, composition_id):
                 {"composition": get_object_or_404(Composition, pk=composition_id),
                 "characteristics": Characteristic.objects.all(),
                 "chars": Composition_char.objects.filter(comp = get_object_or_404(Composition, pk=composition_id)),
+                "location": "/tables/characteristics/"
+                })
+
+def mat_char_detail(request, mat_id):
+        return render(request, "mat_char.html",
+                {"material": get_object_or_404(Material, pk=mat_id),
+                "characteristics": Characteristic.objects.all(),
+                "chars": Material_char.objects.filter(mat = get_object_or_404(Material, pk=mat_id)),
                 "location": "/tables/characteristics/"
                 })
 
@@ -816,7 +827,7 @@ def save_comp(request):
         comp.name = request.POST['name']
         comp.ammount = request.POST['ammount']
         if c_type == "comp":
-            composition = get_object_or_404(Composition, pk=request.POST['composition'])
+            composition = Composition.objects.filter(code = request.POST['code'])[0]
             comp.composition = composition
     comp.save()
     if 'json' in request.POST:
@@ -877,6 +888,18 @@ def get_elems(request, composition_id):
             data['checked'] = checked
             json_data = json.dumps(data)
             return HttpResponse(json_data)
+
+def save_mat_char(request, mat_id):
+    mat = get_object_or_404(Material, pk=mat_id)
+    Material_char.objects.filter(mat = mat).delete()
+    if 'json' in request.POST:
+        chars = request.POST['json']
+        data = json.loads(chars)
+        for d in data:
+            char = get_object_or_404(Characteristic, pk=d)
+            m_char = Material_char(mat = mat, characteristic = char)
+            m_char.save()
+        return redirect('characteristics')
 
 
 def save_comp_char(request, composition_id):

@@ -329,4 +329,22 @@ class Comp_char_var(models.Model):
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
 
-#Модели для составного компонента
+#Характеристики реактивов
+class Material_char(models.Model):
+    mat = models.ForeignKey('Material')
+    characteristic = models.ForeignKey('Characteristic')
+    def __str__(self):
+        return self.characteristic.name
+    def get_name(self):
+        return self.mat.name + ' ' + self.characteristic.name
+
+class Mat_char_number(Material_char):
+    number = models.FloatField()
+    def __str__(self):
+        return self.get_name()
+
+class Mat_char_var(models.Model):
+    mat_char = models.ForeignKey('Material_char')
+    char_var = models.ForeignKey('Set_var')
+    def __str__(self):
+        return self.mat_char.get_name() + ' ' + self.char_var.name

@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'processes',
+    'log',
     'tables.apps.TablesConfig',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,0 +1,66 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    //getCharVal();
+    $('form').on('submit',function(e){
+       e.preventDefault();
+  });
+  var chars = [];
+  $("#chars li").each(function(indx, element){
+    chars.push($(element).attr("id"));
+  });
+  var json = JSON.stringify(chars);
+  $("#json").attr('value', JSON.stringify(chars));
+  });
+</script>
+<button class='btn btn-success' data-toggle='modal' data-target='#newComp' style="margin-bottom: 10pt"><i class='glyphicon glyphicon-plus'></i> Добавить характеристику</button>
+<div class="modal fade" id="newComp">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">x</button>
+        <h4>Добавление характеристики</h4>
+      </div>
+      <div class="modal-body">
+<div style="margin: auto">
+  <select class="form-control" id="char">
+    {% for c in characteristics %}
+    <option value="{{ c.id }}">{{ c }}</option>
+    {% endfor %}</select>
+</div>
+</div>
+<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="getCharName()" data-dismiss="modal">Добавить</button></div>
+</div>
+</div>
+</div>
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title">Характеристики реактива: {{ material }}</h4>
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+
+<div class="panel-body">
+  <div class="input-group" style ="margin: auto">
+    <form action="save_mat_char/" method="post" id="form">
+      {% csrf_token %}
+          <ul class="list-group" id="chars">
+            {% for c in chars %}
+                <li class='list-group-item' id="{{c.characteristic.id}}">
+                  <button class='close' onclick='delChar(this)'>x</button>
+                  <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
+                </li>
+            {% endfor %}
+          </ul>
+          <input type="hidden" id="json" name="json" value="">
+          <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+      </form>
+    </div>
+  </div>
+  </div>
+
+
+{% endblock content %}

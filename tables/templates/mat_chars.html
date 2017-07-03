@@ -26,8 +26,8 @@ $(document).ready(function(){
 </script>
 <ul class="nav nav-tabs nav-justified">
   <li><a href="/tables/characteristics/">Все характеристики</a></li>
-  <li class="active"><a href="/tables/comp_chars/">Характеристики рецептов</a></li>
-  <li><a href="/tables/mat_chars/">Характеристики реактивов</a></li>
+  <li><a href="/tables/comp_chars/">Характеристики рецептов</a></li>
+  <li class="active"><a href="/tables/mat_chars/">Характеристики реактивов</a></li>
 </ul>
 <form action="get_group_comp/" method="POST" class="form-inline" style="margin-top: 20pt">
   {% csrf_token %}
@@ -42,7 +42,7 @@ $(document).ready(function(){
    {% endif %}
    {% endfor %}</select>
    <hr>
-          {% if compositions %}
+          {% if materials %}
               <table class="table table-sm" style="font-size: 110%;">
                 <thead>
                   <tr>
@@ -50,11 +50,11 @@ $(document).ready(function(){
                   </tr>
                 </thead>
                 <tbody>
-                  {% for c in compositions %}
+                  {% for m in materials %}
                   <tr>
-                    <td>{{ c.code }}</td>
-                    <td onClick="window.location.href='/tables/comp_chars/{{ c.id }}/'">{{ c.name }}</td>
-                    <td>{{ c.group }}</td>
+                    <td>{{ m.code }}</td>
+                    <td onClick="window.location.href='/tables/mat_chars/{{ m.id }}/'">{{ m.name }}</td>
+                    <td>{{ m.group }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

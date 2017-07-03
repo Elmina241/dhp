@@ -1,0 +1,70 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $("[name='group1']").change(function(){
+    var sel = $("[name='group1']");
+    var group = sel.find(":selected").text();
+    if (group == "Все"){
+      $("tr").each(function(){
+        $(this).show();
+      });
+    }
+    else {
+      $("tr").each(function(){
+        $(this).hide();
+      });
+      $("tr td:contains(" + group + ")").filter(function() {
+          return $(this).text() == group;
+        }).each(function(){
+          $(this).parent().show();
+        });
+      }
+      $("tr").eq(0).show();
+    });
+});
+</script>
+<form action="get_group/" method="POST" class="form-inline">
+  {% csrf_token %}
+ Фильтр по группе:
+ <select class="form-control" name="group1">
+   <option value="-1" selected>Все</option>
+   {% for g in groups %}
+   {% if g == group %}
+    <option value="{{ g.id }}" selected="">{{ g.name }}</option>
+   {% else %}
+    <option value="{{ g.id }}">{{ g.name }}</option>
+   {% endif %}
+   {% endfor %}</select>
+   <hr>
+          <form action="del_material_log/" method="post">
+          {% csrf_token %}
+          <a href="new_material_log/"><button type="button" class="btn btn-default">Добавить запись</button></a>
+          <input type="submit" class="btn btn-default" value="Удалить">
+          <br><br>
+          {% if material_logs %}
+          <table class="table table-hover table-sm" id="materials">
+            <thead>
+              <tr>
+                <th></th><th>Дата</th><th>Код</th><th>Группа</th><th>Наименование</th><th>Количество, кг</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in material_logs %}
+              <tr>
+                <td><input type="checkbox" value="{{ m.id }}" name="del_list1"></td>
+                <td>{{ m.date }}</td>
+                <td>{{ m.code }}</td>
+                <td>{{ m.mat.group.name }}</td>
+                <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
+                <td>{{ m.amount }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No materials are available right now.</p>
+          {% endif %}
+        </div>
+        </form>
+  {% endblock content %}

@@ -150,6 +150,19 @@ function getChar(char_id){
         }
       });
 }
+
+function getCharName(){
+  id = $('#char').val();
+  name = $('#char :selected').text();
+  char = "<li class='list-group-item' id=" + id + "><button class='close' onclick='delChar(this)'>x</button><h4 style='text-decoration: underline; color: mediumseagreen'>" + name + "</h4></li>";
+  $("#chars").append(char);
+  var chars = [];
+  $("#chars li").each(function(indx, element){
+    chars.push($(element).attr("id"));
+  });
+  var json = JSON.stringify(chars);
+  $("#json").attr('value', JSON.stringify(chars));
+}
 //Функция получения элементов множества
 function getElems(char_id, li_id){
   var csrftoken = getCookie('csrftoken');
