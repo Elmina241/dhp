@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 
@@ -245,6 +246,7 @@ class Compl_comp(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     ammount = models.FloatField()
+    store_amount = models.FloatField(default = 0)
     def __str__(self):
         return self.name
     def get_name(self):

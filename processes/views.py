@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -206,7 +207,7 @@ def add_comp(request, kneading_id):
         if 'mat_id' in request.POST:
             if request.POST['type'] == 'compl':
                 mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])[0]
-                mat.ammount = mat.ammount - float(request.POST['amm'])
+                mat.store_amount = mat.store_amount - float(request.POST['amm'])
                 comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
                 mat.save()
             else:
@@ -357,16 +358,19 @@ def kneading_detail(request, kneading_id):
             components[water.mat.id] = {};
             components[water.mat.id]['code'] = water.mat.code
             components[water.mat.id]['name'] = water.mat.name
-            components[water.mat.id]['amount'] = water.mat.ammount
-        #добавить воду
+            components[water.mat.id]['amount'] = 0
+        comp_amm = 0;
         for c in List_component.objects.filter(list = kneading.list):
             if c.compl is None:
                 if c.mat.id in components:
                     components[c.mat.id]['amount'] = round(components[c.mat.id]['amount'] + c.ammount, 2)
+                    comp_amm = comp_amm + c.ammount
             else:
                 for c2 in Compl_comp_comp.objects.filter(compl = c.compl):
                     if c2.mat.id in components:
                         components[c2.mat.id]['amount'] = round(components[c2.mat.id]['amount'] + (c2.ammount / c.compl.ammount) * c.ammount, 2)
+                        comp_amm = comp_amm + round((c2.ammount / c.compl.ammount) * c.ammount, 2)
+        components[water.mat.id]['amount'] = round(components[water.mat.id]['amount'] + (kneading.list.ammount - comp_amm), 2)
         #Получение значений характеристик контроля качества
         chars = {}
         temp_chars = Kneading_char.objects.filter(kneading = kneading)

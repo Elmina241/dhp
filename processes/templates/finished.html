@@ -77,19 +77,6 @@ function lookChar(t){
                     </tr>
                   </thead>
                   <tbody>
-                    <!--{% for c in comps %}
-                    <tr>
-											{% if c.mat == None %}
-												<td>{{ c.compl.code }}</td>
-                      	<td>{{ c.compl }}</td>
-                      	<td>{{ c.ammount }}</td>
-											{% else %}
-                      	<td>{{ c.mat.code }}</td>
-                      	<td>{{ c.mat }}</td>
-                      	<td>{{ c.ammount }}</td>
-											{% endif %}
-                    </tr>
-                    {% endfor %}-->
 										{% for key, values in components.items %}
 										<tr>
 											{% for key1, value in values.items %}

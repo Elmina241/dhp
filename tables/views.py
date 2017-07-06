@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -826,6 +827,7 @@ def save_comp(request):
         comp.code = request.POST['code']
         comp.name = request.POST['name']
         comp.ammount = request.POST['ammount']
+        comp.store_amount = request.POST['ammount']
         if c_type == "comp":
             composition = Composition.objects.filter(code = request.POST['code'])[0]
             comp.composition = composition
@@ -941,6 +943,6 @@ def add_compAm(request):
     if request.method == 'POST':
         if 'comp_id' in request.POST:
             comp = Compl_comp.objects.filter(pk=request.POST['comp_id'])[0]
-            comp.ammount = request.POST['amm']
+            comp.store_amount = request.POST['amm']
             comp.save()
             return HttpResponse("ok")

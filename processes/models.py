@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from tables.models import Composition, Compl_comp, Material, Formula, Reactor, Characteristic, Set_var
 

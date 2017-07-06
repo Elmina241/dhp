@@ -445,7 +445,11 @@ function checkBounds(){
     for (e in errors){
       message = message + "; " + e + " " + errors[e];
     }
-    $("#errors").text(message);
+    message = message + " <a href='#' class='alert-link' id='errorLink'>(Всё равно создать загрузочный лист)</a>";
+    $("#errors").html(message);
+    $('#errorLink').on('click', function() {
+      $("#form").submit();
+    });
     $("#errors").show();
   }
   else $("#errors").hide();
@@ -458,7 +462,7 @@ function checkRector(){
   var am = $("#ammount").val();
   var reactors = JSON.parse(JSON.parse($("#reactors").attr("value")));
   for (i=0; i < reactors.length; i++){
-    if (reactors[i].pk = rId){
+    if (reactors[i].pk == rId){
       if (am > reactors[i].fields.max || am < reactors[i].fields.min) $("#reactorError").show();
     }
   }
