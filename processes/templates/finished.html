@@ -79,15 +79,14 @@ function lookChar(t){
                   <tbody>
 										{% for key, values in components.items %}
 										<tr>
-											{% for key1, value in values.items %}
-												<td>{{ value }}</td>
-											{% endfor %}
+											<td>{{values.code}}</td>
+											<td>{{values.name}}</td>
+											<td>{{values.amount}}</td>
 										</tr>
 										{% endfor %}
                   </tbody>
                 </table>
               </div>
-
           </div>
           <h4 style="margin-top:20pt">Контроль качества</h4>
           <hr style="border: none; background-color: mediumseagreen; color: mediumseagreen; height: 2px">
@@ -103,9 +102,9 @@ function lookChar(t){
               <tbody>
                 {% for key, values in chars.items %}
                 <tr>
-                  {% for key1, value in values.items %}
-                    <td>{{ value }}</td>
-                  {% endfor %}
+									<td>{{values.group}}</td>
+									<td>{{values.name}}</td>
+									<td>{{values.value}}</td>
                 </tr>
                 {% endfor %}
               </tbody>
