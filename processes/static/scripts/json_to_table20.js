@@ -298,11 +298,11 @@ function changeWaterT() {
   for (i=2; i<tbody.rows.length; i++){
     var m = tbody.rows[i].children[4];
     if (m==undefined) m2 = 0;
-    else  m2 = parseInt(m.textContent);
+    else  m2 = parseFloat(m.textContent);
     mat_ammount = mat_ammount + m2;
     var m1 = tbody.rows[i].children[5];
     if (m1 == undefined) m2 = 0;
-    else  m2 = parseInt(m1.textContent);
+    else  m2 = parseFloat(m1.textContent);
     if (isNaN(m2)) m2=0;
     mat_ammount2 = mat_ammount2 + m2;
   }
@@ -655,11 +655,11 @@ function changeWaterTP() {
   for (i=2; i<tbody.rows.length; i++){
     var m = tbody.rows[i].children[4];
     if (m==undefined) m2 = 0;
-    else  m2 = parseInt(m.textContent);
+    else  m2 = parseFloat(m.textContent);
     mat_ammount = mat_ammount + m2;
     var m1 = tbody.rows[i].children[5];
     if (m1 == undefined) m2 = 0;
-    else  m2 = parseInt(m1.textContent);
+    else  m2 = parseFloat(m1.textContent);
     if (isNaN(m2)) m2=0;
     mat_ammount2 = mat_ammount2 + m2;
   }

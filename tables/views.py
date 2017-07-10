@@ -847,7 +847,7 @@ def save_comp(request):
                     ammount = float(str_am)
                 cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=ammount)
                 cmps.save()
-        return redirect('formulas')
+        return redirect('complex_comps')
 
 def get_char(request, composition_id):
     if request.method == 'POST':
