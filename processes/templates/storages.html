@@ -1,0 +1,42 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+    {% csrf_token %}
+          <button type="button" class="btn btn-default" onClick="window.location.href='/processes/move/'" style="margin-bottom:5pt">Переток</button>
+          {% if reactors %}
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr  class="well well-sm">
+                <th></th><th>Код</th><th>Наименование</th><th>Объём</th><th>Содержимое</th><th></th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+              {% for r in reactors %}
+              <tr>
+                <td><input type="checkbox" value="{{ r.id }}" name="del_list1"></td>
+                <td>{{ r.code }}</td>
+                <td onClick="window.location.href='/tables/storage/reactor/{{ r.id }}/'">{{ r.name }}</td>
+                <td>-</td>
+                <td>{{ r.min }}</td>
+                <td>{{ r.max }}</td>
+                <td><input type="checkbox" disabled {{ r.get_check }}></td>
+              </tr>
+              {% endfor %}
+              <tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+              {% for t in tanks %}
+              <tr>
+                <td><input type="checkbox" value="{{ t.id }}" name="del_list2"></td>
+                <td>{{ t.code }}</td>
+                <td onClick="window.location.href='/tables/storage/tank/{{ t.id }}/'">{{ t.name }}</td>
+                <td>{{ t.capacity }}</td>
+                <td>-</td>
+                <td>-</td>
+                <td><input type="checkbox" disabled {{ t.get_check }}></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No materials are available right now.</p>
+          {% endif %}
+  {% endblock content %}

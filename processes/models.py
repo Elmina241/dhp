@@ -91,3 +91,33 @@ class Kneading_char_var(models.Model):
     char_var = models.ForeignKey('tables.Set_var')
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
+
+#Модели для содержимого хранилищ
+
+class Reactor_content(models.Model):
+    reactor = models.ForeignKey('tables.Reactor')
+    content_type = (
+        (1, 'Партия'),
+        (2, 'Прерванный процесс'),
+        (3, 'Пустой'),
+    )
+    amount = models.FloatField()
+    date = models.DateField(auto_now_add=True)
+    batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
+    kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
+    def __str__(self):
+        return self.reactor.code + ' ' + self.reactor.name + ' ' + self.content_type
+
+class Tank_content(models.Model):
+    Tank = models.ForeignKey('tables.Tank')
+    content_type = (
+        (1, 'Партия'),
+        (2, 'Прерванный процесс'),
+        (3, 'Пустой'),
+    )
+    amount = models.FloatField()
+    date = models.DateField(auto_now_add=True)
+    batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
+    kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
+    def __str__(self):
+        return self.reactor.code + ' ' + self.reactor.name + ' ' + self.content_type
