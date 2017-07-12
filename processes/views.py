@@ -2,8 +2,8 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
-from .models import Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
+from tables.models import Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
+from .models import Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 from django.core import serializers
 from django.utils import timezone
@@ -11,6 +11,9 @@ import datetime
 
 def loading_lists(request):
     return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Model_list.objects.all})
+
+def storages(request):
+    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all})
 
 def mixing(request):
     return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all})
@@ -59,6 +62,7 @@ def del_list(request):
         del_obj = get_object_or_404(Model_list, pk=d)
         del_obj.delete()
     return redirect('loading_lists')
+
 
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())
@@ -179,6 +183,29 @@ def get_processes(request):
         #processes = serializers.serialize("json", p)
         return HttpResponse(json_data)
 
+def pack(request):
+    if request.method == 'POST':
+        if request.POST['type'] == 'r':
+            storage = get_object_or_404(Reactor_content, pk=request.POST['id'])
+        else:
+            storage = get_object_or_404(Tank_content, pk=request.POST['id'])
+        storage.amount = storage.amount - float(request.POST['amm'])
+        if storage.amount == 0:
+            storage.content_type = 3
+        storage.save()
+        return HttpResponse('ok')
+
+def drop(request):
+    if request.method == 'POST':
+        if request.POST['type'] == 'r':
+            storage = get_object_or_404(Reactor_content, pk=request.POST['id'])
+        else:
+            storage = get_object_or_404(Tank_content, pk=request.POST['id'])
+        storage.amount = 0
+        storage.content_type = 3
+        storage.save()
+        return HttpResponse('ok')
+
 def get_lists(request):
     if request.method == 'GET':
         p = {}
@@ -217,6 +244,10 @@ def add_comp(request, kneading_id):
                 mat.save()
             #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             comp.ammount = request.POST['amm']
+            kneading = get_object_or_404(Kneading, pk=kneading_id)
+            reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
+            reactor_content.amount = kneading.list.ammount
+            reactor_content.save()
             comp.loaded = True
             comp.save()
             return HttpResponse("ok")
@@ -244,6 +275,10 @@ def start_mixing(request, kneading_id):
          cmps.save()
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=3))
     st.save()
+    reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
+    reactor_content.content_type = 2
+    reactor_content.kneading = kneading
+    reactor_content.save()
     components = serializers.serialize("json", Components.objects.all())
     l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
     materials = serializers.serialize("json", Material.objects.all())
@@ -273,6 +308,11 @@ def finish_testing(request, kneading_id):
     st.save()
     batch = Batch(kneading = kneading)
     batch.save()
+    reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
+    reactor_content.content_type = 1
+    reactor_content.amount = kneading.list.ammount
+    reactor_content.batch = batch
+    reactor_content.save()
     #Добавить передаваемые данные
     return redirect('kneading_detail', kneading_id = kneading_id)
 

@@ -1,37 +1,153 @@
 {% extends 'processes/base.html' %}
 {% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function pack(id, amm, newAm, t){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'pack/',
+        data: {
+          'id': id,
+          'amm': newAm,
+          'type': t
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          var obj = $("#"+t+"-"+id);
+          res = parseFloat(amm) - parseFloat(newAm);
+          obj.text(res);
+          if (res == 0){
+            obj.parent().find('td').eq(3).text("Пусто");
+            obj.parent().find('td').eq(4).html("");
+            obj.parent().find('td').eq(5).html("");
+          }
+        }
+      });
+}
+
+function drop(id, t){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'drop/',
+        data: {
+          'id': id,
+          'type': t
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          var obj = $("#"+t+"-"+id);
+          obj.text(0);
+          obj.parent().find('td').eq(3).text("Пусто");
+          obj.parent().find('td').eq(4).html("");
+          obj.parent().find('td').eq(5).html("");
+        }
+      });
+}
+
+$(document).ready(function(){
+  $('#pack').on('show.bs.modal', function (event) {
+    // получить кнопку, которая его открыло
+    var button = $(event.relatedTarget)[0];
+    var stor_id = $(button).attr("id");
+    var amm = button.dataset.amm;
+    var code = button.dataset.code;
+    var sType = button.dataset.t;
+    $(this).find('#amm').attr("value", amm);
+    $(this).find('#stor_id').attr("value", stor_id);
+    $(this).find('#storCode').text(code);
+    $(this).find('#storType').attr("value", sType);
+  });
+});
+</script>
     {% csrf_token %}
           <button type="button" class="btn btn-default" onClick="window.location.href='/processes/move/'" style="margin-bottom:5pt">Переток</button>
           {% if reactors %}
           <table class="table table-hover table-sm">
             <thead>
               <tr  class="well well-sm">
-                <th></th><th>Код</th><th>Наименование</th><th>Объём</th><th>Содержимое</th><th></th><th></th>
+                <th>Код</th><th>Наименование</th><th>Объём</th><th>Содержимое</th><th></th><th></th>
               </tr>
             </thead>
             <tbody>
-              <tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td></tr>
               {% for r in reactors %}
               <tr>
-                <td><input type="checkbox" value="{{ r.id }}" name="del_list1"></td>
-                <td>{{ r.code }}</td>
-                <td onClick="window.location.href='/tables/storage/reactor/{{ r.id }}/'">{{ r.name }}</td>
-                <td>-</td>
-                <td>{{ r.min }}</td>
-                <td>{{ r.max }}</td>
-                <td><input type="checkbox" disabled {{ r.get_check }}></td>
+                <td>{{ r.reactor.code }}</td>
+                <td>{{ r.reactor.name }}</td>
+                <td id="r-{{r.id}}">{{ r.amount }}</td>
+                {% if r.content_type == 1 %}
+                <td>{{r.batch.id}} {{r.batch.kneading.list.formula.composition.name}}</td>
+                <td><button class="btn btn-default" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
+                <td><button class="btn btn-default" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
+                {% else %}
+                {% if r.content_type == 2 %}
+                <td>{{r.kneading.id}} {{r.kneading.list.formula.composition.name}}</td>
+                <td></td>
+                <td><button class="btn btn-default" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
+                {% else %}
+                <td>Пусто</td>
+                <td></td><td></td>
+                {% endif %}
+                {% endif %}
               </tr>
               {% endfor %}
-              <tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td></tr>
               {% for t in tanks %}
               <tr>
-                <td><input type="checkbox" value="{{ t.id }}" name="del_list2"></td>
-                <td>{{ t.code }}</td>
-                <td onClick="window.location.href='/tables/storage/tank/{{ t.id }}/'">{{ t.name }}</td>
-                <td>{{ t.capacity }}</td>
-                <td>-</td>
-                <td>-</td>
-                <td><input type="checkbox" disabled {{ t.get_check }}></td>
+                <td>{{ t.tank.code }}</td>
+                <td>{{ t.tank.name }}</td>
+                <td id="t-{{t.id}}">{{ t.amount }}</td>
+                {% if t.content_type == 1 %}
+                <td>{{t.batch.id}} {{t.batch.kneading.list.formula.composition.name}}</td>
+                <td><button class="btn btn-default" type="button" id="{{t.id}}" data-toggle="modal" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
+                <td><button class="btn btn-default" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
+                {% else %}
+                {% if t.content_type == 2 %}
+                <td>{{t.kneading.id}} {{t.kneading.list.formula.composition.name}}</td>
+                <td></td>
+                <td><button class="btn btn-default" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
+                {% else %}
+                <td>Пусто</td>
+                <td></td><td></td>
+                {% endif %}
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>
@@ -39,4 +155,38 @@
           {% else %}
           <p>No materials are available right now.</p>
           {% endif %}
+          <div class="modal fade" id="pack">
+            <div class="modal-dialog modal-sm" >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button class="close" data-dismiss="modal">x</button>
+                  <h4 id="storCode"></h4>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
+                  <input type="hidden" id="stor_id" value="">
+                  <input type="hidden" id="amm" value="">
+                  <input type="hidden" id="storType" value="">
+                  <div class="modal-footer">
+                    <input value="Фасовать" onclick="pack($('#stor_id').val(), $('#amm').val(), $('#compAmm').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal fade" id="move">
+              <div class="modal-dialog modal-lg" >
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4>Переток</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
+
+                    <div class="modal-footer">
+                      <input value="Применить" onclick="pack($('#stor_id').val(), $('#amm').val(), $('#compAmm').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
   {% endblock content %}
