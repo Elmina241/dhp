@@ -127,7 +127,7 @@ $(document).ready(function(){
                 <td><input type="checkbox" value="{{ c.id }}" name="del_list1"></td>
                 <td>{{ c.code }}</td>
                 <td>{{ c.name }}</td>
-                <td>{{c.store_amount}}</td>
+                <td>{{c.store_amount|floatformat:2}}</td>
                 <td><button class="btn btn-default" type="button" data-toggle="modal" data-target="#addComp" data-amm="{{c.store_amount}}" data-code="{{c.code}}" data-comp="{{c.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td>
                 <td style="visibility:collapse;">{{c.ammount}}</td>
               </tr>

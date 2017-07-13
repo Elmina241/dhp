@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
 from .models import Characteristic_range, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
+from processes.models import Reactor_content, Tank_content
 import json
 from django.core import serializers
 
@@ -788,6 +789,12 @@ def save_storage(request, storage_id):
         storage.name = name
         #storage.capacity = capacity
         storage.save()
+        if (s_type == 'reactor'):
+            r_c = Reactor_content(reactor = storage, amount = 0)
+            r_c.save()
+        else:
+            t_c = Tank_content(tank = storage, amount = 0)
+            t_c.save()
         return redirect('storage')
     else:
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})

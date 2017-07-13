@@ -13,7 +13,7 @@ def loading_lists(request):
     return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Model_list.objects.all})
 
 def storages(request):
-    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all})
+    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all})
 
 def mixing(request):
     return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all})
@@ -204,6 +204,30 @@ def drop(request):
         storage.amount = 0
         storage.content_type = 3
         storage.save()
+        return HttpResponse('ok')
+
+def move(request):
+    if request.method == 'POST':
+        if request.POST['donor'][0] == 'r':
+            donor = get_object_or_404(Reactor_content, reactor=request.POST['donor'][2:])
+        else:
+            donor = get_object_or_404(Tank_content, tank=request.POST['donor'][2:])
+        if request.POST['acc'][0] == 'r':
+            accepting = get_object_or_404(Reactor_content, reactor=request.POST['acc'][2:])
+        else:
+            accepting = get_object_or_404(Tank_content, tank=request.POST['acc'][2:])
+        amm = float(request.POST['amm'])
+        donor.amount = donor.amount - amm
+        accepting.content_type = donor.content_type
+        accepting.amount = accepting.amount + amm
+        if donor.content_type == 1:
+            accepting.batch = donor.batch
+        else:
+            accepting.kneading = donor.kneading
+        if donor.amount == 0:
+            donor.content_type = 3
+        donor.save()
+        accepting.save()
         return HttpResponse('ok')
 
 def get_lists(request):

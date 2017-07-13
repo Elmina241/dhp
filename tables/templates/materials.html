@@ -116,7 +116,7 @@ $(document).ready(function(){
                 <td>{{ m.group.name }}</td>
                 <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
                 <td>{{ m.unit.name }}</td>
-                <td>{{ m.ammount }}</td>
+                <td>{{ m.ammount|floatformat:2 }}</td>
                 <td><button class="btn btn-default" type="button" id="{{m.id}}" data-toggle="modal" data-target="#addComp" data-amm="{{m.ammount}}" data-code="{{m.code}}" data-mat="{{m.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td>
               </tr>
               {% endfor %}

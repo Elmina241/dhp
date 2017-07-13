@@ -47,6 +47,7 @@ function pack(id, amm, newAm, t){
           var obj = $("#"+t+"-"+id);
           res = parseFloat(amm) - parseFloat(newAm);
           obj.text(res);
+          obj.parent().find('td').eq(4).find('button').attr('data-amm', res)
           if (res == 0){
             obj.parent().find('td').eq(3).text("Пусто");
             obj.parent().find('td').eq(4).html("");
@@ -81,6 +82,56 @@ function drop(id, t){
       });
 }
 
+function move(){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'move/',
+        data: {
+          'acc': $('#accepting').val(),
+          'donor': $('#donor').val(),
+          'amm': $('#moveAmm').val()
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          location.reload();
+        }
+      });
+}
+
+function checkMove(){
+  $("#error").hide();
+  accId = $('#accepting').val();
+  donorId = $('#donor').val();
+  amm = $('#moveAmm').val();
+  accepting = $("#c" + accId).parent();
+  donor = $("#c" + donorId).parent();
+  donorAm = parseFloat($(donor).find('td').eq(2).text());
+  accAm = parseFloat($(accepting).find('td').eq(2).text());
+  donorComp = $(donor).find('td').eq(3).text();
+  accComp = $(accepting).find('td').eq(3).text();
+  if (donorAm == 0) {
+    $("#error").text("Донор пуст");
+    $("#error").show();
+  }
+  else if(donorAm < amm){
+    $("#error").text("Недостаточно композиции в доноре");
+    $("#error").show();
+  }
+  else if(donorComp!=accComp&&accComp!="Пусто"){
+    $("#error").text("Акцептор не пуст");
+    $("#error").show();
+  }
+  else{
+    move();
+  }
+}
+
 $(document).ready(function(){
   $('#pack').on('show.bs.modal', function (event) {
     // получить кнопку, которая его открыло
@@ -97,7 +148,7 @@ $(document).ready(function(){
 });
 </script>
     {% csrf_token %}
-          <button type="button" class="btn btn-default" onClick="window.location.href='/processes/move/'" style="margin-bottom:5pt">Переток</button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#move"  style="margin-bottom:5pt">Переток</button>
           {% if reactors %}
           <table class="table table-hover table-sm">
             <thead>
@@ -109,18 +160,18 @@ $(document).ready(function(){
               <tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td></tr>
               {% for r in reactors %}
               <tr>
-                <td>{{ r.reactor.code }}</td>
+                <td id="cr-{{r.reactor.id}}">{{ r.reactor.code }}</td>
                 <td>{{ r.reactor.name }}</td>
                 <td id="r-{{r.id}}">{{ r.amount }}</td>
                 {% if r.content_type == 1 %}
                 <td>{{r.batch.id}} {{r.batch.kneading.list.formula.composition.name}}</td>
-                <td><button class="btn btn-default" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
-                <td><button class="btn btn-default" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
+                <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
+                <td><button class="btn btn-danger btn-sm" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
                 {% else %}
                 {% if r.content_type == 2 %}
                 <td>{{r.kneading.id}} {{r.kneading.list.formula.composition.name}}</td>
                 <td></td>
-                <td><button class="btn btn-default" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
+                <td><button class="btn btn-danger btn-sm" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
                 {% else %}
                 <td>Пусто</td>
                 <td></td><td></td>
@@ -131,18 +182,18 @@ $(document).ready(function(){
               <tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td></tr>
               {% for t in tanks %}
               <tr>
-                <td>{{ t.tank.code }}</td>
+                <td id="ct-{{t.tank.id}}">{{ t.tank.code }}</td>
                 <td>{{ t.tank.name }}</td>
                 <td id="t-{{t.id}}">{{ t.amount }}</td>
                 {% if t.content_type == 1 %}
                 <td>{{t.batch.id}} {{t.batch.kneading.list.formula.composition.name}}</td>
-                <td><button class="btn btn-default" type="button" id="{{t.id}}" data-toggle="modal" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
-                <td><button class="btn btn-default" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
+                <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
+                <td><button class="btn btn-danger btn-sm" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
                 {% else %}
                 {% if t.content_type == 2 %}
                 <td>{{t.kneading.id}} {{t.kneading.list.formula.composition.name}}</td>
                 <td></td>
-                <td><button class="btn btn-default" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
+                <td><button class="btn btn-danger btn-sm" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
                 {% else %}
                 <td>Пусто</td>
                 <td></td><td></td>
@@ -174,17 +225,54 @@ $(document).ready(function(){
               </div>
             </div>
             <div class="modal fade" id="move">
-              <div class="modal-dialog modal-lg" >
+              <div class="modal-dialog modal-md" >
                 <div class="modal-content">
                   <div class="modal-header">
                     <button class="close" data-dismiss="modal">x</button>
                     <h4>Переток</h4>
                   </div>
                   <div class="modal-body">
-                    <div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
-
-                    <div class="modal-footer">
-                      <input value="Применить" onclick="pack($('#stor_id').val(), $('#amm').val(), $('#compAmm').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                    <div id="error" class="alert alert-danger" role="alert" style="display:none">
+                    </div>
+                    <div class="form-group">
+                    <div class="form-group">
+                      <label for="donor" class="col-sm-2 control-label" style="font-size: small">Донор: </label>
+                      <div class="col-sm-10">
+                        <select class="form-control" id="donor" name="donor">
+                          {% for r in reactor %}
+                            <option value="r-{{ r.id }}">{{ r }}</option>
+                          {% endfor %}
+                          {% for t in tank %}
+                            <option value="t-{{ t.id }}">{{ t }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="accepting" style="margin-top:10pt" class="col-sm-2 control-label" style="font-size: small">Акцептор: </label>
+                      <div class="col-sm-10" style="margin-top:10pt">
+                        <select class="form-control" id="accepting" name="accepting">
+                          {% for r in reactor %}
+                            <option value="r-{{ r.id }}">{{ r }}</option>
+                          {% endfor %}
+                          {% for t in tank %}
+                            <option value="t-{{ t.id }}">{{ t }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group" >
+                      <label for="moveAmm" class="col-sm-2 control-label" style="margin-top:10pt" style="font-size: small">
+                        Количество:
+                      </label>
+                      <div class="col-sm-10" style="margin-top:10pt">
+                      <div class="input-group"><input type="number" id="moveAmm" name="moveAmm" class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top:100pt">
+                      <input value="Применить" onclick="checkMove();return false;" class="btn btn-primary" style="float: right"/>
                     </div>
                   </div>
                 </div>

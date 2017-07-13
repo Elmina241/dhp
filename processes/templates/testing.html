@@ -179,14 +179,14 @@ $(document).ready(function(){
             <ul class="list-group" id="chars">
               {% for c in chars %}
                 {% if c.characteristic.char_type.id != 3 %}
-                  <li class="list-group-item list-group-item-warning">{{c.characteristic.get_group }}</li>
+                  <li class="list-group-item list-group-item active">{{c.characteristic.get_group }}</li>
                   <li class='list-group-item' id="{{c.characteristic.id}}">
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                     <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' value="{{c.kneading_char_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                   </li>
                 {% else %}
 
-                  <li class="list-group-item list-group-item-warning">{{ c.characteristic.get_group }}</li>
+                  <li class="list-group-item list-group-item active">{{ c.characteristic.get_group }}</li>
                   <li class='list-group-item' id={{c.characteristic.id}}>
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                     {% if isTested %}
