@@ -311,11 +311,10 @@ def new_composition(request):
     {"materials": Material.objects.all, "header": "Добавление рецепта", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
 
 def del_material(request):
-    if 'del_list1' in request.POST:
-        del_var = request.POST.getlist('del_list1')
-        for d in del_var:
-            del_obj = get_object_or_404(Material, pk=d)
-            del_obj.delete()
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Material, pk=d)
+        del_obj.delete()
     return redirect('index')
 
 def del_product(request):

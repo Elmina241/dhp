@@ -111,7 +111,7 @@ $(document).ready(function(){
             <tbody>
               {% for m in materials %}
               <tr>
-                <td><input type="checkbox" value="{{ m.id }}" name="del_list1"></td>
+                <td><input type="checkbox" value="{{ m.id }}" name="del_list"></td>
                 <td>{{ m.code }}</td>
                 <td>{{ m.group.name }}</td>
                 <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
