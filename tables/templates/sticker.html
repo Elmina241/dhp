@@ -3,6 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   addValidation();
+  $('#f').addClass("active");
 });
 </script>
 <div class="panel panel-default" style ="margin: auto">
@@ -28,9 +29,9 @@ $(document).ready(function(){
           <p><select class="form-control" name="product">
             {% for p in products %}
             {% if sticker.product == p %}
-            <option selected value="{{p.id}}">{{p.code}} {{p}}</option>
+            <option selected value="{{p.id}}">{{p.code}} {{p.get_short_name}}</option>
             {% else %}
-            <option value="{{p.id}}">{{p.code}} {{p}}</option>
+            <option value="{{p.id}}">{{p.code}} {{p.get_short_name}}</option>
             {% endif %}
             {% endfor %}
           </select></p></p>

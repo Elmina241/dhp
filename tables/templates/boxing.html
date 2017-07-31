@@ -1,11 +1,10 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<ul class="nav nav-tabs nav-justified">
-  <li><a href="/tables/packing/">Тара</a></li>
-  <li><a href="/tables/caps/">Укупорка</a></li>
-  <li class="active"><a href="/tables/boxing/">Упаковка</a></li>
-  <li><a href="/tables/stickers/">Этикетка</a></li>
-</ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#f').addClass("active");
+  });
+</script>
 
 <form action="del_box/" method="post" style="margin-top: 40px">
 {% csrf_token %}

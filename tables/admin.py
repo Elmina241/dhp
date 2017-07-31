@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Char_group, Composition_char, Comp_char_var, Characteristic, Characteristic_set_var, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_use, Product_form, Product_option, Product_detail, Product_mark, Product, Composition_group, Container_group, Container_form, Colour, Container_mat, Container, Cap_group, Cap_form, Cap, Boxing, Sticker_part, Sticker, Composition, Components, Production, Reactor, Tank, Formula_component, Formula
+from .models import Char_group, Composition_char, Boxing_mat, Box_group, Comp_char_var, Characteristic, Characteristic_set_var, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_use, Product_form, Product_option, Product_detail, Product_mark, Product, Composition_group, Container_group, Colour, Container_mat, Container, Cap_group, Cap, Boxing, Sticker_part, Sticker, Composition, Components, Production, Reactor, Tank, Formula_component, Formula
 
 admin.site.register(Material_group)
 admin.site.register(Prefix)
@@ -16,12 +16,10 @@ admin.site.register(Composition)
 admin.site.register(Components)
 admin.site.register(Composition_group)
 admin.site.register(Container_group)
-admin.site.register(Container_form)
 admin.site.register(Colour)
 admin.site.register(Container_mat)
 admin.site.register(Container)
 admin.site.register(Cap_group)
-admin.site.register(Cap_form)
 admin.site.register(Cap)
 admin.site.register(Boxing)
 admin.site.register(Sticker_part)
@@ -37,5 +35,7 @@ admin.site.register(Characteristic_set_var)
 admin.site.register(Characteristic)
 admin.site.register(Composition_char)
 admin.site.register(Comp_char_var)
+admin.site.register(Boxing_mat)
+admin.site.register(Box_group)
 
 # Register your models here.

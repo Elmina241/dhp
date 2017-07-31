@@ -3,6 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   addValidation();
+  $('#f').addClass("active");
 });</script>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -20,12 +21,50 @@ $(document).ready(function(){
   <div class="input-group" style ="margin: auto">
     <form action="save_box/" method="post">
       {% csrf_token %}
+      <div id="two-column">
+        <div id="left">
           <h5><b>Артикул:</b><h5>
-          <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" value="{{ box.code }}" required></p>
+          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{ box.code }}" required></p>
           <br><br><br>
-          <h5><b>Наименование:</b><h5>
-          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{ box.name }}" required></p>
+          <h5><b>Вид:</b><br></h5>
+          <p><select class="form-control" name="group">
+            {% for g in groups %}
+            {% if box.group == g %}
+            <option selected value="{{g.id}}">{{g.name}}</option>
+            {% else %}
+            <option value="{{g.id}}">{{g.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
           <br><br><br>
+          <h5><b>Форма:</b><br></h5>
+          <p><input type="text" class="form-control" placeholder="Форма" size = "80" name = "form" value="{{ box.form }}" required></p></p></p>
+          <br><br><br>
+        </div>
+        <div id="right">
+          <h5><b>Цвет:</b><br></h5>
+          <p><select class="form-control" name="colour">
+            {% for c in colours %}
+            {% if box.colour == c %}
+            <option selected value="{{c.id}}">{{c.name}}</option>
+            {% else %}
+            <option value="{{c.id}}">{{c.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <h5><b>Материал:</b><br></h5>
+          <p><select class="form-control" name="boxing_mat">
+            {% for m in materials %}
+            {% if box.mat == m %}
+            <option selected value="{{m.id}}">{{m.name}}</option>
+            {% else %}
+            <option value="{{m.id}}">{{m.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
+          <br><br><br>
+          <br><br><br><br><br><br>
           <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
     </div>
     </div>

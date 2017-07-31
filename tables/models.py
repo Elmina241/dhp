@@ -85,6 +85,8 @@ class Product(models.Model):
         return full_name
     def get_short_code(self):
         return self.code[9:]
+    def get_short_name(self):
+        return self.form.name + ' ' + self.use.name + ' ' + ('' if self.option.name == 'отсутствует' else (self.option.name + ' ')) + ('' if self.detail.name == 'отсутствует' else self.detail.name)
 
 #Модели для рецептов
 
@@ -117,11 +119,6 @@ class Container_group(models.Model):
     def __str__(self):
         return self.name
 
-class Container_form(models.Model):
-    name = models.CharField(max_length=80)
-    def __str__(self):
-        return self.name
-
 class Colour(models.Model):
     name = models.CharField(max_length=80)
     def __str__(self):
@@ -135,11 +132,11 @@ class Container_mat(models.Model):
 class Container(models.Model):
     code = models.CharField(max_length=80)
     group = models.ForeignKey('Container_group')
-    form = models.ForeignKey('Container_form')
+    form = models.CharField(max_length=80)
     colour = models.ForeignKey('Colour')
     mat = models.ForeignKey('Container_mat')
     def __str__(self):
-        return 'Нет' if self.code == 'Т000' else self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
+        return 'Нет' if self.code == 'Т000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
 #Модели для укупорки
 
@@ -148,27 +145,35 @@ class Cap_group(models.Model):
     def __str__(self):
         return self.name
 
-class Cap_form(models.Model):
+class Cap(models.Model):
+    code = models.CharField(max_length=80)
+    group = models.ForeignKey('Cap_group')
+    form = models.CharField(max_length=80)
+    colour = models.ForeignKey('Colour')
+    mat = models.ForeignKey('Container_mat')
+    def __str__(self):
+        return 'Нет' if self.code == 'У000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
+
+#Модели для упаковки
+
+class Box_group(models.Model):
     name = models.CharField(max_length=80)
     def __str__(self):
         return self.name
 
-class Cap(models.Model):
-    code = models.CharField(max_length=80)
-    group = models.ForeignKey('Cap_group')
-    form = models.ForeignKey('Cap_form')
-    colour = models.ForeignKey('Colour')
-    mat = models.ForeignKey('Container_mat')
+class Boxing_mat(models.Model):
+    name = models.CharField(max_length=80)
     def __str__(self):
-        return 'Нет' if self.code == 'У000' else self.group.name + " " + self.form.name + " " + self.mat.name + " " + self.colour.name
-
-#Модели для упаковки
+        return self.name
 
 class Boxing(models.Model):
     code = models.CharField(max_length=80)
-    name = models.CharField(max_length=80)
+    group = models.ForeignKey('Box_group', default = 0, null=True)
+    form = models.CharField(max_length=80)
+    colour = models.ForeignKey('Colour', default = 0, null=True)
+    mat = models.ForeignKey('Boxing_mat', default = 0, null=True)
     def __str__(self):
-        return 'Нет' if self.code == 'Я000' else self.name
+        return 'Нет' if self.code == 'Я000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
 #Модели для этикетки
 

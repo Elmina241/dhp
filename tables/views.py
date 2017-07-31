@@ -2,8 +2,8 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Container_form, Cap_group, Cap_form, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
+from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Cap_group, Sticker_part, Formula_component, Formula
+from .models import Characteristic_range, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 from processes.models import Reactor_content, Tank_content
 import json
@@ -33,7 +33,7 @@ def new_characteristic(request):
 
 def packing(request):
     return render(request, "packing.html",
-        {"containers": Container.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+        {"containers": Container.objects.all, "header": "Тара", "location": "/tables/packing/"})
 
 def formulas(request):
     return render(request, "formulas.html",
@@ -41,7 +41,7 @@ def formulas(request):
 
 def caps(request):
     return render(request, "caps.html",
-        {"caps": Cap.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+        {"caps": Cap.objects.all, "header": "Укупорка", "location": "/tables/packing/"})
 
 def production(request):
     return render(request, "production.html",
@@ -53,11 +53,11 @@ def storage(request):
 
 def boxing(request):
     return render(request, "boxing.html",
-        {"boxes": Boxing.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+        {"boxes": Boxing.objects.all, "header": "Упаковка", "location": "/tables/packing/"})
 
 def stickers(request):
     return render(request, "stickers.html",
-        {"stickers": Sticker.objects.all, "header": "Фасовка", "location": "/tables/packing/"})
+        {"stickers": Sticker.objects.all, "header": "Этикетка", "location": "/tables/packing/"})
 
 def compositions(request):
     return render(request, "compositions.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Рецепты", "location": "/tables/compositions/"})
@@ -225,8 +225,7 @@ def container_detail(request, container_id):
             "groups": Container_group.objects.all,
             "colours": Colour.objects.all,
             "materials": Container_mat.objects.all,
-            "location": "/tables/packing/",
-            "forms": Container_form.objects.all
+            "location": "/tables/packing/"
             })
     else:
         return render(request, "container.html",
@@ -234,8 +233,7 @@ def container_detail(request, container_id):
             "groups": Container_group.objects.all,
             "colours": Colour.objects.all,
             "materials": Container_mat.objects.all,
-            "location": "/tables/packing/",
-            "forms": Container_form.objects.all
+            "location": "/tables/packing/"
             })
 
 def cap_detail(request, cap_id):
@@ -245,8 +243,7 @@ def cap_detail(request, cap_id):
             "groups": Cap_group.objects.all,
             "colours": Colour.objects.all,
             "materials": Container_mat.objects.all,
-            "location": "/tables/packing/",
-            "forms": Cap_form.objects.all
+            "location": "/tables/packing/"
             })
     else:
         return render(request, "cap.html",
@@ -254,19 +251,24 @@ def cap_detail(request, cap_id):
             "groups": Cap_group.objects.all,
             "colours": Colour.objects.all,
             "materials": Container_mat.objects.all,
-            "location": "/tables/packing/",
-            "forms": Cap_form.objects.all
+            "location": "/tables/packing/"
             })
 
 def box_detail(request, box_id):
     if (box_id == '0'):
         return render(request, "box.html",
             {"box": None,
+            "groups": Box_group.objects.all,
+            "colours": Colour.objects.all,
+            "materials": Boxing_mat.objects.all,
             "location": "/tables/packing/",
             })
     else:
         return render(request, "box.html",
             {"box": get_object_or_404(Boxing, pk=box_id),
+            "groups": Box_group.objects.all,
+            "colours": Colour.objects.all,
+            "materials": Boxing_mat.objects.all,
             "location": "/tables/packing/"
             })
 
@@ -657,7 +659,7 @@ def save_container(request, container_id):
     try:
         code = request.POST['code']
         group = get_object_or_404(Container_group, pk=request.POST['group'])
-        form = get_object_or_404(Container_form, pk=request.POST['form'])
+        form = request.POST['form']
         colour = get_object_or_404(Colour, pk=request.POST['colour'])
         mat = get_object_or_404(Container_mat, pk=request.POST['container_mat'])
         container.code = code
@@ -679,7 +681,7 @@ def save_cap(request, cap_id):
     try:
         code = request.POST['code']
         group = get_object_or_404(Cap_group, pk=request.POST['group'])
-        form = get_object_or_404(Cap_form, pk=request.POST['form'])
+        form = request.POST['form']
         colour = get_object_or_404(Colour, pk=request.POST['colour'])
         mat = get_object_or_404(Container_mat, pk=request.POST['container_mat'])
         cap.code = code
@@ -698,11 +700,17 @@ def save_box(request, box_id):
         box = Boxing()
     else:
         box = get_object_or_404(Boxing, pk=box_id)
-    if ('name' in request.POST) & ('code' in request.POST):
+    if 'code' in request.POST:
+        group = get_object_or_404(Box_group, pk=request.POST['group'])
+        form = request.POST['form']
+        colour = get_object_or_404(Colour, pk=request.POST['colour'])
+        mat = get_object_or_404(Boxing_mat, pk=request.POST['boxing_mat'])
         code = request.POST['code']
-        name = request.POST['name']
         box.code = code
-        box.name = name
+        box.group = group
+        box.form = form
+        box.colour = colour
+        box.mat = mat
         box.save()
         return redirect('boxing')
     else:

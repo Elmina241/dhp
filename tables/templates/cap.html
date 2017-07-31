@@ -3,6 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   addValidation();
+  $('#f').addClass("active");
 });</script>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -37,15 +38,7 @@ $(document).ready(function(){
           </select></p></p>
           <br><br><br>
           <h5><b>Форма:</b><br></h5>
-          <p><select class="form-control" name="form">
-            {% for f in forms %}
-            {% if cap.form == f %}
-            <option selected value="{{f.id}}">{{f.name}}</option>
-            {% else %}
-            <option value="{{f.id}}">{{f.name}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
+          <p><input type="text" class="form-control" placeholder="Форма" size = "80" name = "form" value="{{ cap.form }}" required></p></p></p>
           <br><br><br>
         </div>
         <div id="right">

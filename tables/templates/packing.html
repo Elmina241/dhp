@@ -1,11 +1,11 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<ul class="nav nav-tabs nav-justified">
-  <li class="active"><a href="/tables/packing/">Тара</a></li>
-  <li><a href="/tables/caps/">Укупорка</a></li>
-  <li><a href="/tables/boxing/">Упаковка</a></li>
-  <li><a href="/tables/stickers/">Этикетка</a></li>
-</ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#f').addClass("active");
+  });
+</script>
+
 
 <form action="del_packing/" method="post" style="margin-top: 40px">
 {% csrf_token %}
@@ -26,7 +26,7 @@
       <td>{{ c.code }}</td>
       <td onClick="window.location.href='/tables/packing/{{ c.id }}/'">{{ c }}</td>
       <td>{{ c.group.name }}</td>
-      <td>{{ c.form.name }}</td>
+      <td>{{ c.form }}</td>
       <td>{{ c.colour.name }}</td>
       <td>{{ c.mat.name }}</td>
     </tr>
