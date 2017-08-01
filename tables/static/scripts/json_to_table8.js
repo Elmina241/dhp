@@ -22,18 +22,18 @@ function getComponentsF(c, m, f='') {
       var input = document.createElement("input");
       input.type = "number";
       input.name = getCode(components[i].fields.mat, materials);
-      if (f!="0") input.value = getAmmount(components[i].fields.mat, f_comp);
+      if (f!="0") input.value = ((getAmmount(components[i].fields.mat, f_comp)/1020)*100).toFixed(2);
       input.setAttribute('onchange', "saveTable();return false;");
       input.setAttribute('step', "0.01");
       td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
       td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
-      td3.appendChild(document.createTextNode(components[i].fields.min));
-      td4.appendChild(document.createTextNode(components[i].fields.max));
+      //td3.appendChild(document.createTextNode(components[i].fields.min));
+      //td4.appendChild(document.createTextNode(components[i].fields.max));
       td5.appendChild(input);
       row.appendChild(td1);
       row.appendChild(td2);
-      row.appendChild(td3);
-      row.appendChild(td4);
+      //row.appendChild(td3);
+      //row.appendChild(td4);
       row.appendChild(td5);
       tbody.appendChild(row);
     }
@@ -51,12 +51,12 @@ function getCode(m_id, m) {
 };
 
 function saveTable() {
-  var ammount = 1020;
+  var ammount = 100;
   var water = document.getElementById("ВД01");
   var tbody = document.getElementById("materials");
   var mat_ammount = 0;
   for (i=2; i<tbody.rows.length; i++){
-    var m = tbody.rows[i].children[4].children[0].valueAsNumber;
+    var m = tbody.rows[i].children[2].children[0].valueAsNumber;
     //$("#materials tr").eq(i).find("td").eq(3).text();
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
