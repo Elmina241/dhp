@@ -214,6 +214,7 @@ def comp_detail(request, composition_id):
         {"comp": get_object_or_404(Composition, pk=composition_id),
         "groups": Composition_group.objects.all,
         "location": "/tables/compositions/",
+        "forms": Product_form.objects.all(),
         "comps": Components.objects.filter(comp=get_object_or_404(Composition, pk=composition_id)),
         "materials": Material.objects.all
         })
@@ -310,7 +311,7 @@ def new_material(request):
 
 def new_composition(request):
     return render(request, "new_composition.html",
-    {"materials": Material.objects.all, "header": "Добавление рецепта", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
+    {"materials": Material.objects.all, "forms": Product_form.objects.all(), "header": "Добавление рецепта", "location": "/tables/compositions/", "groups": Composition_group.objects.all})
 
 def del_material(request):
     del_var = request.POST.getlist('del_list')
@@ -582,6 +583,7 @@ def add_composition(request):
             code = code,
             name = name,
             group = group,
+            form = get_object_or_404(Product_form, pk=request.POST['form']),
             sgr = sgr,
             isFinal = isFinal)
     except (KeyError, Composition_group.DoesNotExist):
@@ -636,6 +638,7 @@ def save_composition(request, composition_id):
         comp.name = name
         comp.group = group
         comp.sgr = sgr
+        comp.form = get_object_or_404(Product_form, pk=request.POST['form'])
     except (KeyError, Composition_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:

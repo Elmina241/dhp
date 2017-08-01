@@ -24,6 +24,16 @@ $(document).ready(function(){
           <h5><b>Наименование:</b></h5>
           <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{ comp.name }}" required></p>
           <br><br><br>
+          <h5><b>Форма:</b><br></h5>
+          <p><select class="form-control" name="form">
+            {% for f in forms %}
+            {% if comp.form == f %}
+            <option selected value="{{f.id}}">{{f.name}}</option>
+            {% else %}
+            <option value="{{f.id}}">{{f.name}}</option>
+            {% endif %}
+            {% endfor %}
+          </select></p></p>
         </div>
         <div id="right">
           <h5><b>Группа:</b><br></h5>
@@ -39,7 +49,14 @@ $(document).ready(function(){
           <br><br><br>
           <h5><b>СГР:</b><br></h5>
           <input type="text" class="form-control" placeholder="СГР" size = "50" name = "sgr" value="{{ comp.sgr }}" required></p>
-          <br><br><br><br>
+          <br><br><br>
+          <h5><b>Технологическая:  </b><br><br>
+            {% if comp.isFinal %}
+            <input type="checkbox" name="isFinal">
+            {% else %}
+            <input type="checkbox" name="isFinal" checked>
+            {% endif %}
+          </h5>
           <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
           <input type="hidden" id="json" name="json" value="">
         </form>

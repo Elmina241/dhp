@@ -71,7 +71,7 @@ class Product(models.Model):
     code = models.CharField(max_length=13)
     name = models.CharField(max_length=80)
     group = models.ForeignKey('Product_group')
-    form = models.ForeignKey('Product_form')
+    #form = models.ForeignKey('Product_form')
     use = models.ForeignKey('Product_use')
     option = models.ForeignKey('Product_option')
     detail = models.ForeignKey('Product_detail')
@@ -100,6 +100,7 @@ class Composition(models.Model):
     name = models.CharField(max_length=80)
     sgr = models.CharField(max_length=80)
     group = models.ForeignKey('Composition_group')
+    form = models.ForeignKey('Product_form', null=True)
     isFinal = models.BooleanField(default = True)
     def __str__(self):
         return self.name
