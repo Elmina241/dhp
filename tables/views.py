@@ -2,7 +2,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product_option, Product_detail, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Cap_group, Sticker_part, Formula_component, Formula
+from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Cap_group, Sticker_part, Formula_component, Formula
 from .models import Characteristic_range, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 from processes.models import Reactor_content, Tank_content
@@ -88,8 +88,12 @@ def pr_detail(request, product_id):
         "containers": Container_group.objects.all,
         "uses": Product_use.objects.all,
         "marks": Product_mark.objects.all,
-        "details": Product_detail.objects.all,
-        "options": Product_option.objects.all,})
+        "compositions": Composition.objects.all,
+        "containers": Container.objects.all,
+        "caps": Cap.objects.all,
+        "stickers": Sticker.objects.all,
+        "boxing": Boxing.objects.all,
+        "units": Unit.objects.all()})
 
 def comm_detail(request, commodity_id):
         if (commodity_id == '0'):
@@ -414,8 +418,12 @@ def new_product(request):
     "caps": Cap_group.objects.all,
     "containers": Container_group.objects.all,
     "marks": Product_mark.objects.all,
-    "details": Product_detail.objects.all,
-    "options": Product_option.objects.all,})
+    "compositions": Composition.objects.all,
+    "containers": Container.objects.all,
+    "caps": Cap.objects.all,
+    "stickers": Sticker.objects.all,
+    "boxing": Boxing.objects.all,
+    "units": Unit.objects.all()})
 
 def add_material(request):
     try:
@@ -511,28 +519,34 @@ def comp_group(request):
 def save_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     try:
+        commodity = product.production
+        composition = get_object_or_404(Composition, pk=request.POST['composition'])
+        container = get_object_or_404(Container, pk=request.POST['container'])
+        cap = get_object_or_404(Cap, pk=request.POST['cap'])
+        sticker = get_object_or_404(Sticker, pk=request.POST['sticker'])
+        boxing = get_object_or_404(Boxing, pk=request.POST['boxing'])
+        commodity.composition = composition
+        commodity.container = container
+        commodity.cap = cap
+        commodity.sticker = sticker
+        commodity.boxing = boxing
+        commodity.weight = request.POST['weight']
+        commodity.unit = get_object_or_404(Unit, pk=request.POST['unit'])
+        commodity.save()
         code = request.POST['code']
         name = request.POST['name']
         group = get_object_or_404(Product_group, pk=request.POST['group'])
-        form = get_object_or_404(Product_form, pk=request.POST['form'])
         use = get_object_or_404(Product_use, pk=request.POST['use'])
-        cap = get_object_or_404(Cap_group, pk=request.POST['cap'])
-        container = get_object_or_404(Container_group, pk=request.POST['container'])
-        option = get_object_or_404(Product_option, pk=request.POST['option'])
-        detail = get_object_or_404(Product_detail, pk=request.POST['detail'])
+        option = request.POST['option']
+        detail = request.POST['detail']
         mark = get_object_or_404(Product_mark, pk=request.POST['mark'])
-        weight = request.POST['weight']
         product.code = code
         product.name = name
         product.group = group
-        product.form = form
         product.use = use
         product.option = option
         product.detail = detail
         product.mark = mark
-        product.cap = cap
-        product.container = container
-        product.weight = weight
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'products.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
@@ -541,29 +555,36 @@ def save_product(request, product_id):
 
 def add_product(request):
     try:
+        commodity = Production()
+        composition = get_object_or_404(Composition, pk=request.POST['composition'])
+        container = get_object_or_404(Container, pk=request.POST['container'])
+        cap = get_object_or_404(Cap, pk=request.POST['cap'])
+        sticker = get_object_or_404(Sticker, pk=request.POST['sticker'])
+        boxing = get_object_or_404(Boxing, pk=request.POST['boxing'])
+        commodity.composition = composition
+        commodity.container = container
+        commodity.cap = cap
+        commodity.sticker = sticker
+        commodity.boxing = boxing
+        commodity.weight = request.POST['weight']
+        commodity.unit = get_object_or_404(Unit, pk=request.POST['unit'])
+        commodity.save()
         code = request.POST['code']
         name = request.POST['name']
-        weight = request.POST['weight']
         group = get_object_or_404(Product_group, pk=request.POST['group'])
-        form = get_object_or_404(Product_form, pk=request.POST['form'])
         use = get_object_or_404(Product_use, pk=request.POST['use'])
-        cap = get_object_or_404(Cap_group, pk=request.POST['cap'])
-        container = get_object_or_404(Container_group, pk=request.POST['container'])
-        option = get_object_or_404(Product_option, pk=request.POST['option'])
-        detail = get_object_or_404(Product_detail, pk=request.POST['detail'])
+        option = request.POST['option']
+        detail = request.POST['detail']
         mark = get_object_or_404(Product_mark, pk=request.POST['mark'])
         product = Product(
             code = code,
             name = name,
             group = group,
-            form = form,
             use = use,
             option = option,
             detail = detail,
-            cap = cap,
-            container = container,
             mark = mark,
-            weight = weight)
+            production = commodity)
 
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})

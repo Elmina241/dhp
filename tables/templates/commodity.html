@@ -35,7 +35,7 @@ $(document).ready(function(){
           {% else %}
           <input type="hidden" value="{{commodity.product.id}}" name="product"><h4>{{commodity.product.code}} {{commodity.product}}</h4>
           {% endif %}
-          <h5><b>Состав:</b><br></h5>
+          <h5><b>Рецепт:</b><br></h5>
           <p><select class="form-control" name="composition">
             {% for c in compositions %}
             {% if commodity.composition == c %}

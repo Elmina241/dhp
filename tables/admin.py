@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Char_group, Composition_char, Boxing_mat, Box_group, Comp_char_var, Characteristic, Characteristic_set_var, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_use, Product_form, Product_option, Product_detail, Product_mark, Product, Composition_group, Container_group, Colour, Container_mat, Container, Cap_group, Cap, Boxing, Sticker_part, Sticker, Composition, Components, Production, Reactor, Tank, Formula_component, Formula
+from .models import Char_group, Composition_char, Boxing_mat, Box_group, Comp_char_var, Characteristic, Characteristic_set_var, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_use, Product_form, Product_mark, Product, Composition_group, Container_group, Colour, Container_mat, Container, Cap_group, Cap, Boxing, Sticker_part, Sticker, Composition, Components, Production, Reactor, Tank, Formula_component, Formula
 
 admin.site.register(Material_group)
 admin.site.register(Prefix)
@@ -8,8 +8,6 @@ admin.site.register(Material)
 admin.site.register(Product_group)
 admin.site.register(Product_use)
 admin.site.register(Product_form)
-admin.site.register(Product_option)
-admin.site.register(Product_detail)
 admin.site.register(Product_mark)
 admin.site.register(Product)
 admin.site.register(Composition)

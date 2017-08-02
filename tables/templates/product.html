@@ -14,12 +14,14 @@ $(document).ready(function(){
             <div class="input-group" style ="margin: auto">
               <form action="save_product/" method="post">
                 {% csrf_token %}
-                <div id="two-column">
+                <p><h3>Продукт</h3></p>
+                <hr>
+                <div id="two-column" style="display:inline-block">
                   <div id="left">
                     <h5><b>Код:</b><h5>
                     <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}" required></p>
                     <br><br><br>
-                    <h5><b>Наименование:</b></h5>
+                    <h5><b>Краткое наименование:</b></h5>
                     <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{product.name}}" required></p>
                     <br><br><br>
                     <h5><b>Группа:</b><br></h5>
@@ -33,27 +35,6 @@ $(document).ready(function(){
                       {% endfor %}
                     </select></p></p>
                     <br><br><br>
-                    <h5><b>Крышка:</b><br></h5>
-                    <p><select class="form-control" name="cap">
-                      {% for c in caps %}
-                      {% if product.cap == c %}
-                      <option selected value="{{c.id}}">{{c.name}}</option>
-                      {% else %}
-                      <option value="{{c.id}}">{{c.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
-                    <br><br><br>
-                    <h5><b>Форма:</b><br></h5>
-                    <p><select class="form-control" name="form">
-                      {% for f in forms %}
-                      {% if product.form == f %}
-                      <option selected value="{{f.id}}">{{f.name}}</option>
-                      {% else %}
-                      <option value="{{f.id}}">{{f.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
                   </div>
                   <div id="right">
                     <h5><b>Назначение:</b><br></h5>
@@ -68,37 +49,10 @@ $(document).ready(function(){
                     </select></p></p>
                     <br><br><br>
                     <h5><b>Варианты:</b><br></h5>
-                    <p><select class="form-control" name="option">
-                      {% for o in options %}
-                      {% if product.option == o %}
-                      <option selected value="{{o.id}}">{{o.name}}</option>
-                      {% else %}
-                      <option value="{{o.id}}">{{o.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
-                    <br><br><br>
-                    <h5><b>Тара:</b><br></h5>
-                    <p><select class="form-control" name="container">
-                      {% for c in containers %}
-                      {% if product.container == c %}
-                      <option selected value="{{c.id}}">{{c.name}}</option>
-                      {% else %}
-                      <option value="{{c.id}}">{{c.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
+                    <input type="text" class="form-control" placeholder="Варианты" size = "80" name = "option" value ="{{product.option}}"></p>
                     <br><br><br>
                     <h5><b>Уточнение:</b><br></h5>
-                    <p><select class="form-control" name="detail">
-                      {% for d in details %}
-                      {% if product.detail == d %}
-                      <option selected value="{{d.id}}">{{d.name}}</option>
-                      {% else %}
-                      <option value="{{d.id}}">{{d.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
+                  <input type="text" class="form-control" placeholder="Уточнение" size = "80" name = "detail" value ="{{product.detail}}"></p>
                     <br><br><br>
                     <h5><b>Марка:</b><br></h5>
                     <p><select class="form-control" name="mark">
@@ -110,13 +64,86 @@ $(document).ready(function(){
                       {% endif %}
                       {% endfor %}
                     </select></p></p>
-                    <br><br><br>
-                    <h5><b>Вес:</b></h5>
-                    <input type="number" class="form-control" placeholder="Вес" value="{{product.weight}}" step="0.01" name = "weight" required></p>
-                    <br><br><br><br>
-                    <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
                   </div>
                 </div>
+                <br>
+                <p><h3>Макет</h3></p>
+                <hr>
+                <div id="two-column" style="display:inline-block">
+                  <div id="left">
+                  <h5><b>Рецепт:</b><br></h5>
+                  <p><select class="form-control" name="composition">
+                    {% for c in compositions %}
+                    {% if product.production.composition == c %}
+                    <option selected value="{{c.id}}">{{c.code}} {{c.name}}</option>
+                    {% else %}
+                    <option value="{{c.id}}">{{c.code}} {{c.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select></p></p>
+                  <br><br><br>
+                  <h5><b>Тара:</b><br></h5>
+                  <p><select class="form-control" name="container">
+                    {% for c in containers %}
+                    {% if product.production.container == c %}
+                    <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
+                    {% else %}
+                    <option value="{{c.id}}">{{c.code}} {{c}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select></p></p>
+                  <br><br><br>
+                  <h5><b>Укупорка:</b><br></h5>
+                  <p><select class="form-control" name="cap">
+                    {% for c in caps %}
+                    {% if product.production.cap == c %}
+                    <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
+                    {% else %}
+                    <option value="{{c.id}}">{{c.code}} {{c}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select></p></p>
+                </div>
+                  <div id="right">
+                  <h5><b>Этикетка:</b><br></h5>
+                  <p><select class="form-control" name="sticker">
+                    {% for s in stickers %}
+                    {% if product.production.sticker == s %}
+                    <option selected value="{{s.id}}">{{s.code}} {{s}}</option>
+                    {% else %}
+                    <option value="{{s.id}}">{{s.code}} {{s}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select></p></p>
+                  <br><br><br>
+                  <h5><b>Упаковка:</b><br></h5>
+                  <p><select class="form-control" name="boxing">
+                    {% for b in boxing %}
+                    {% if product.production.boxing == b %}
+                    <option selected value="{{b.id}}">{{b.code}} {{b.name}}</option>
+                    {% else %}
+                    <option value="{{b.id}}">{{b.code}} {{b.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select></p></p>
+                  <br><br><br>
+                  <h5><b>Вес:</b></h5>
+                  <input type="number" class="form-control" placeholder="Вес" value="{{product.production.weight}}" step="0.01" name = "weight" required></p>
+                  <br><br><br>
+                  <h5><b>Ед. изм.:</b><br></h5>
+                  <p><select class="form-control" name="unit">
+                    {% for u in units %}
+                    {% if product.production.unit == u %}
+                    <option selected value="{{u.id}}">{{u.name}}</option>
+                    {% else %}
+                    <option value="{{u.id}}">{{u.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select></p></p>
+                </div>
+                </div>
+                <hr>
+                <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
               </form>
             </div>
           </div>

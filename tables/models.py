@@ -52,16 +52,6 @@ class Product_use(models.Model):
     def __str__(self):
         return self.name
 
-class Product_option(models.Model):
-    name = models.CharField(max_length=200)
-    def __str__(self):
-        return self.name
-
-class Product_detail(models.Model):
-    name = models.CharField(max_length=200)
-    def __str__(self):
-        return self.name
-
 class Product_mark(models.Model):
     name = models.CharField(max_length=200)
     def __str__(self):
@@ -71,22 +61,19 @@ class Product(models.Model):
     code = models.CharField(max_length=13)
     name = models.CharField(max_length=80)
     group = models.ForeignKey('Product_group')
-    #form = models.ForeignKey('Product_form')
     use = models.ForeignKey('Product_use')
-    option = models.ForeignKey('Product_option')
-    detail = models.ForeignKey('Product_detail')
+    option = models.CharField(max_length=80)
+    detail = models.CharField(max_length=80)
     mark = models.ForeignKey('Product_mark')
-    container = models.ForeignKey('Container_group', default = 0, null=True)
-    cap = models.ForeignKey('Cap_group', default = 0, null=True)
-    weight = models.FloatField(default = 0)
+    production = models.OneToOneField('Production', null=True)
     def __str__(self):
-        opt = ' (' + self.mark.name + ', ' + ('' if self.container is None else (self.container.name + ', ')) + ('' if self.cap is None else (self.cap.name + ', ')) + str(self.weight) + ' кг.' + ')'
-        full_name = self.form.name + ' ' + self.use.name + ' ' + ('' if self.option.name == 'отсутствует' else (self.option.name + ' ')) + ('' if self.detail.name == 'отсутствует' else self.detail.name) + opt
+        opt = ' (' + self.mark.name + ', ' + ('' if self.production is None else (self.production.container.mat.name + " " + self.production.container.group.name + ', ')) + ('' if self.production is None else (self.production.cap.group.name + ', ')) + ('0' if self.production is None else str(self.production.weight)) + ' кг.' + ')'
+        full_name =  ('' if self.production is None or self.production.composition.form is None else self.production.composition.form.name) + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail) + opt
         return full_name
     def get_short_code(self):
         return self.code[9:]
     def get_short_name(self):
-        return self.form.name + ' ' + self.use.name + ' ' + ('' if self.option.name == 'отсутствует' else (self.option.name + ' ')) + ('' if self.detail.name == 'отсутствует' else self.detail.name)
+        return self.form.name + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail)
 
 #Модели для рецептов
 
@@ -188,17 +175,20 @@ class Sticker(models.Model):
     product = models.ForeignKey('Product')
     part = models.ForeignKey('Sticker_part')
     def __str__(self):
-        return 'Нет' if self.code == '0000Э' else "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name + ' ' + self.product.mark.name + ' ' + ('' if self.product.option.name == 'отсутствует' else self.product.option.name)
+        return 'Нет' if self.code == '0000Э' else "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name + ' ' + self.product.mark.name + ' ' + ('' if self.product.option == 'отсутствует' else self.product.option)
+
 
 #Модели для производства
 
 class Production(models.Model):
-    product = models.ForeignKey('Product')
+    #product = models.ForeignKey('Product')
     composition = models.ForeignKey('Composition')
     container = models.ForeignKey('Container')
     cap = models.ForeignKey('Cap')
     sticker = models.ForeignKey('Sticker')
     boxing = models.ForeignKey('Boxing')
+    weight = models.FloatField(default = 0)
+    unit = models.ForeignKey('Unit', null = True)
     def __str__(self):
         return self.product.name
 
