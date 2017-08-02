@@ -253,6 +253,7 @@ class Compl_comp(models.Model):
     name = models.CharField(max_length=80)
     ammount = models.FloatField()
     store_amount = models.FloatField(default = 0)
+    form = models.ForeignKey('Product_form', blank=True, null=True)
     def __str__(self):
         return self.name
     def get_name(self):

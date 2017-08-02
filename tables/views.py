@@ -155,6 +155,7 @@ def new_comp(request, comp_id):
                 "compositions": Formula.objects.filter(composition__isFinal=False),
                 "f_components": "0",
                 "materials2": Material.objects.all(),
+                "forms": Product_form.objects.all(),
                 "materials": json.dumps(materials),
                 "location": "/tables/complex_comps/",
                 "header": "Технологические композиции"
@@ -166,6 +167,7 @@ def new_comp(request, comp_id):
                 "components": json.dumps(components),
                 "compositions": Composition.objects.all,
                 "f_components": json.dumps(f_components),
+                "forms": Product_form.objects.all(),
                 "materials": json.dumps(materials),
                 "location": "/tables/formulas/"
                 })
@@ -846,6 +848,8 @@ def save_comp(request):
         comp.name = request.POST['name']
         comp.ammount = request.POST['ammount']
         comp.store_amount = request.POST['ammount']
+        if 'form' in request.POST:
+            comp.form = get_object_or_404(Product_form, pk=request.POST['form'])
         if c_type == "comp":
             composition = Composition.objects.filter(code = request.POST['code'])[0]
             comp.composition = composition
