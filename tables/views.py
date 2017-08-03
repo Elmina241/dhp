@@ -519,7 +519,7 @@ def comp_group(request):
 def save_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     try:
-        commodity = product.production
+        commodity = Production() if product.production is None else product.production
         composition = get_object_or_404(Composition, pk=request.POST['composition'])
         container = get_object_or_404(Container, pk=request.POST['container'])
         cap = get_object_or_404(Cap, pk=request.POST['cap'])
@@ -530,8 +530,16 @@ def save_product(request, product_id):
         commodity.cap = cap
         commodity.sticker = sticker
         commodity.boxing = boxing
-        commodity.weight = request.POST['weight']
-        commodity.unit = get_object_or_404(Unit, pk=request.POST['unit'])
+        commodity.compAmount = request.POST['compAmount']
+        commodity.contAmount = request.POST['contAmount']
+        commodity.capAmount = request.POST['capAmount']
+        commodity.stickerAmount = request.POST['stickerAmount']
+        commodity.boxingAmount = request.POST['boxingAmount']
+        commodity.compUnit = get_object_or_404(Unit, pk=request.POST['compUnit'])
+        commodity.contUnit = get_object_or_404(Unit, pk=request.POST['contUnit'])
+        commodity.capUnit = get_object_or_404(Unit, pk=request.POST['capUnit'])
+        commodity.stickerUnit = get_object_or_404(Unit, pk=request.POST['stickerUnit'])
+        commodity.boxingUnit = get_object_or_404(Unit, pk=request.POST['boxingUnit'])
         commodity.save()
         code = request.POST['code']
         name = request.POST['name']
@@ -547,6 +555,7 @@ def save_product(request, product_id):
         product.option = option
         product.detail = detail
         product.mark = mark
+        product.production = commodity
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'products.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
@@ -566,8 +575,16 @@ def add_product(request):
         commodity.cap = cap
         commodity.sticker = sticker
         commodity.boxing = boxing
-        commodity.weight = request.POST['weight']
-        commodity.unit = get_object_or_404(Unit, pk=request.POST['unit'])
+        commodity.compAmount = request.POST['compAmount']
+        commodity.contAmount = request.POST['contAmount']
+        commodity.capAmount = request.POST['capAmount']
+        commodity.stickerAmount = request.POST['stickerAmount']
+        commodity.boxingAmount = request.POST['boxingAmount']
+        commodity.compUnit = get_object_or_404(Unit, pk=request.POST['compUnit'])
+        commodity.contUnit = get_object_or_404(Unit, pk=request.POST['contUnit'])
+        commodity.capUnit = get_object_or_404(Unit, pk=request.POST['capUnit'])
+        commodity.stickerUnit = get_object_or_404(Unit, pk=request.POST['stickerUnit'])
+        commodity.boxingUnit = get_object_or_404(Unit, pk=request.POST['boxingUnit'])
         commodity.save()
         code = request.POST['code']
         name = request.POST['name']

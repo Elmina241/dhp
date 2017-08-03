@@ -67,7 +67,7 @@ class Product(models.Model):
     mark = models.ForeignKey('Product_mark')
     production = models.OneToOneField('Production', null=True)
     def __str__(self):
-        opt = ' (' + self.mark.name + ', ' + ('' if self.production is None else (self.production.container.mat.name + " " + self.production.container.group.name + ', ')) + ('' if self.production is None else (self.production.cap.group.name + ', ')) + ('0' if self.production is None else str(self.production.weight)) + ' кг.' + ')'
+        opt = ' (' + self.mark.name + ', ' + ('' if self.production is None else (self.production.container.mat.name + " " + self.production.container.group.name + ', ')) + ('' if self.production is None else (self.production.cap.group.name + ', ')) + ('0' if self.production is None else str(self.production.compAmount)) + ' кг.' + ')'
         full_name =  ('' if self.production is None or self.production.composition.form is None else self.production.composition.form.name) + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail) + opt
         return full_name
     def get_short_code(self):
@@ -181,14 +181,21 @@ class Sticker(models.Model):
 #Модели для производства
 
 class Production(models.Model):
-    #product = models.ForeignKey('Product')
     composition = models.ForeignKey('Composition')
     container = models.ForeignKey('Container')
     cap = models.ForeignKey('Cap')
     sticker = models.ForeignKey('Sticker')
     boxing = models.ForeignKey('Boxing')
-    weight = models.FloatField(default = 0)
-    unit = models.ForeignKey('Unit', null = True)
+    compAmount = models.FloatField(default = 0)
+    compUnit = models.ForeignKey('Unit', null = True)
+    contAmount = models.FloatField(default = 0)
+    contUnit = models.ForeignKey('Unit', null = True, related_name="cont_unit")
+    capAmount = models.FloatField(default = 0)
+    capUnit = models.ForeignKey('Unit', null = True, related_name="cap_unit")
+    stickerAmount = models.FloatField(default = 0)
+    stickerUnit = models.ForeignKey('Unit', null = True, related_name="sticker_unit")
+    boxingAmount = models.FloatField(default = 0)
+    boxingUnit = models.ForeignKey('Unit', null = True, related_name="boxing_unit")
     def __str__(self):
         return self.product.name
 
