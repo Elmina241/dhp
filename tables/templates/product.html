@@ -3,6 +3,16 @@
 <script type="text/javascript">
 $(document).ready(function(){
   addValidation();
+  document.getElementById('closeButton').onclick=function(){
+    if ($('#model').css('display') == 'none'){
+      $('#model').css('display', 'block');
+      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-up'></i>");
+    }
+    else {
+      $('#model').css('display', 'none');
+      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-down'></i>");
+    }
+  };
 });
 </script>
         <div class="panel panel-default" style ="margin: auto">
@@ -16,8 +26,7 @@ $(document).ready(function(){
                 {% csrf_token %}
                 <p><h3>Продукт</h3></p>
                 <hr>
-                <div id="two-column" style="display:inline-block">
-                  <div id="left">
+                <div id="two-column" style="width:80%;margin:auto">
                     <h5><b>Код:</b><h5>
                     <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}" required></p>
                     <br><br><br>
@@ -35,8 +44,6 @@ $(document).ready(function(){
                       {% endfor %}
                     </select></p></p>
                     <br><br><br>
-                  </div>
-                  <div id="right">
                     <h5><b>Назначение:</b><br></h5>
                     <p><select class="form-control" name="use">
                       {% for u in uses %}
@@ -64,11 +71,11 @@ $(document).ready(function(){
                       {% endif %}
                       {% endfor %}
                     </select></p></p>
-                  </div>
                 </div>
                 <br>
-                <p><h3>Макет</h3></p>
+                <p><h3 style="margin-top:40pt">Макет <button type="button" class="btn btn-default" id="closeButton"><i class="glyphicon glyphicon-chevron-down"></i></button></h3></p>
                 <hr>
+                <div id="model" style="display: none">
                 <div id="two-column" style="display:inline-block">
                   <div id="left">
                   <h5><b>Рецепт:</b><br></h5>
@@ -119,9 +126,9 @@ $(document).ready(function(){
                   <p><select class="form-control" name="boxing">
                     {% for b in boxing %}
                     {% if product.production.boxing == b %}
-                    <option selected value="{{b.id}}">{{b.code}} {{b.name}}</option>
+                    <option selected value="{{b.id}}">{{b.code}} {{b}}</option>
                     {% else %}
-                    <option value="{{b.id}}">{{b.code}} {{b.name}}</option>
+                    <option value="{{b.id}}">{{b.code}} {{b}}</option>
                     {% endif %}
                     {% endfor %}
                   </select></p></p>
@@ -200,6 +207,7 @@ $(document).ready(function(){
                   {% endfor %}
                 </select></p></p>
               </div>
+                </div>
                 </div>
                 <hr>
                 <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>

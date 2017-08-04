@@ -106,9 +106,9 @@ $(document).ready(function(){
                   <p><select class="form-control" name="boxing">
                     {% for b in boxing %}
                     {% if commodity.boxing == b %}
-                    <option selected value="{{b.id}}">{{b.code}} {{b.name}}</option>
+                    <option selected value="{{b.id}}">{{b.code}} {{b}}</option>
                     {% else %}
-                    <option value="{{b.id}}">{{b.code}} {{b.name}}</option>
+                    <option value="{{b.id}}">{{b.code}} {{b}}</option>
                     {% endif %}
                     {% endfor %}
                   </select></p></p>
