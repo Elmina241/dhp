@@ -1,0 +1,184 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<style>
+   hr {
+    margin-top: 4pt;
+    margin-bottom: 4pt;
+    border: none; /* Убираем границу */
+    background-color: #D3D3D3; /* Цвет линии */
+    color: #D3D3D3; /* Цвет линии для IE6-7 */
+    height: 1px; /* Толщина линии */
+   }
+  </style>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#formula').trigger("change");
+  addValidation();
+  document.getElementById('closeButton').onclick=function(){
+    if ($('#materialsPanel').css('display') == 'none'){
+      $('#materialsPanel').css('display', 'block');
+      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-up'></i>");
+    }
+    else {
+      $('#materialsPanel').css('display', 'none');
+      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-down'></i>");
+    }
+  }
+});</script>
+
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title">Формирование технологической композиции</h4>
+  </div>
+    {% if error_message %}
+      <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    <div class="panel-body">
+      <div id="error" class="alert alert-danger" role="alert" style="display:none">
+        Загрузочный лист не соответствует составу
+      </div>
+      <div id="dateError" class="alert alert-danger" role="alert" style="display:none">
+        Не указана дата
+      </div>
+      <div id="amountError" class="alert alert-danger" role="alert" style="display:none">
+      </div>
+      <div id="reactorError" class="alert alert-danger" role="alert" style="display:none">
+        Объём композиции выходит за границы объёма реактора.
+      </div>
+      <div id="errors" class="alert alert-danger" role="alert" style="display:none">
+      </div>
+      <div class="input-group col-sm-10" style ="margin: auto">
+        <form id = "form" action="save_process/" method="post" class="form-horizontal">
+          {% csrf_token %}
+
+            <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});getListOfModels({{model_lists}});changeWaterL();changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
+            </div>
+            <div class="form-group">
+              <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Реактор: </label>
+              <div class="col-sm-10">
+                <select class="form-control" id="reactor" name="reactor">
+                  {% for r in reactors %}
+                    <option value="{{ r.id }}">{{ r }}</option>
+                  {% endfor %}</select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
+              <div class="col-sm-10">
+                <select class="form-control" id="formula" name="formula" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});getListOfModels({{model_lists}});changeWaterL();changeWaterT();return false;">
+                  {% for f in formulas %}
+                    <option value="{{ f.id }}">{{ f }}</option>
+                  {% endfor %}</select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="list" class="col-sm-2 control-label" style="font-size: medium">Загрузочный лист: </label>
+              <div class="col-sm-10">
+                <select class="form-control" id="list" name="list" onchange="getModelList({{materials}}, {{model_comps}}, {{compl_comps2}});return false">
+                  <option value="0" selected>Новый</option>
+              </div>
+            </div>
+            <input type="hidden" id="json" name="json" value="">
+            <input type="hidden" id="compl_comp" name="compl_comp" value="{{compl_comps2}}">
+            <input type="hidden" id="reagents" name="reagents" value="{{materials}}">
+            <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
+            <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
+            <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
+          </form>
+        </div>
+        <hr>
+        <div class="col-sm-12">
+          <div class="panel panel-default" style ="margin: auto">
+            <div class="panel-heading"><b><h4 class="panel-title"><button type="button" class="btn btn-info" id="closeButton"><i class="glyphicon glyphicon-chevron-down"></i></button> Состав</h4></b>
+            </div>
+            <div class="panel-body" id="materialsPanel" style="display: none">
+              <table class="table table-sm" id="materials" style="width:100%; margin: auto">
+                <thead>
+                  <tr>
+                    <th>Код</th><th>Наименование</th><th>Мин., кг</th><th>Макс., кг</th><th>Количество, кг</th><th>В загрузочном листе, кг</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ВД01</td>
+                    <td>Вода</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td id="water"></td>
+                    <td id="water2"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <br>
+        <div class="panel panel-default" style ="margin: auto">
+          <div class="panel-heading"><b><h4 class="panel-title">Загрузочный лист</h4></b>
+            <hr>
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Реактив</button>
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#newComplComp"><i class="glyphicon glyphicon-plus"></i> Составной компонент</button>
+            <div class="modal fade" id="newComp">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4>Добавление реактива</h4>
+                  </div>
+                <div class="modal-body" style="height:60pt">
+                  <div style="margin: auto">
+                    <label for="material">Реактив:</label>
+                    <select class="form-control" id="material">
+                      {% for m in materials2 %}
+                      <option value="{{ m.id }}">{{ m.get_name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addMaterial();return false;" data-dismiss="modal">Добавить</button></div>
+                </div>
+              </div>
+            </div>
+            <div class="modal fade" id="newComplComp">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4>Добавление составного компонента</h4>
+                  </div>
+                  <div class="modal-body" style="height:60pt">
+                    <div style="margin: auto">
+                      <label for="material">Технологическая композиция:</label>
+                      <select class="form-control" id="complComp">
+                        {% for c in compl_comps %}
+                          <option value="{{ c.id }}">{{ c.get_name }}</option>
+                        {% endfor %}</select>
+                    </div>
+                  </div>
+                  <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addComplComp();return false;" data-dismiss="modal">Добавить</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
+              <thead>
+                <tr>
+                  <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th><th style="visibility:collapse;width:1px">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ВД01</td>
+                  <td>Вода</td>
+                  <td id="water1"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+        <br>
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -18,6 +18,33 @@ def storages(request):
 def mixing(request):
     return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all})
 
+def new_tech_comp(request):
+    components = serializers.serialize("json", Components.objects.all())
+    f_comp = serializers.serialize("json", Formula_component.objects.all())
+    c_comps = serializers.serialize("json", Compl_comp.objects.all())
+    models = serializers.serialize("json", Model_list.objects.all())
+    m_comp = serializers.serialize("json", Model_component.objects.all())
+    materials = serializers.serialize("json", Material.objects.all())
+    formula = serializers.serialize("json", Formula.objects.filter(composition__isFinal = False))
+    reactors = serializers.serialize("json", Reactor.objects.all())
+    compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
+    return render(request, "new_tech_comp.html", {
+    "header": "Формирование технологической композиции",
+    "location": "/processes/new_tech_comp/",
+    "components": json.dumps(components),
+    "materials": json.dumps(materials),
+    "model_lists": json.dumps(models),
+    "model_comps": json.dumps(m_comp),
+    "materials2": Material.objects.all,
+    "compl_comps": Compl_comp.objects.all,
+    "compl_comps2": json.dumps(c_comps),
+    "compl_comp_comps": json.dumps(compl_comp_comps),
+    "f_c": json.dumps(f_comp),
+    "f": json.dumps(formula),
+    "reactors": Reactor.objects.all,
+    "reactors2": json.dumps(reactors),
+    "formulas": Formula.objects.filter(composition__isFinal = False)})
+
 def list_detail(request, list_id):
     components = serializers.serialize("json", Components.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
