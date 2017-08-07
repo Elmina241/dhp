@@ -49,13 +49,14 @@ class Batch(models.Model):
     def __str__(self):
         return self.id
 
-
-# удалить
-class Batch_characteristic(models.Model):
+#Состав партии
+class Batch_comp(models.Model):
     batch = models.ForeignKey('Batch')
-    #characteristic = models.ForeignKey('tables.Characteristic')
+    mat = models.ForeignKey('tables.Material')
+    ammount = models.FloatField()
     def __str__(self):
-        return self.batch
+        return self.mat.name
+
 
 class State(models.Model):
     name = models.CharField(max_length=80)
