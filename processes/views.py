@@ -201,6 +201,58 @@ def save_process(request):
             st.save()
         return redirect('mixing')
 
+def save_tech_comp(request):
+    list = Loading_list()
+    #сохранение загрузочного листа
+    if 'ammount' in request.POST:
+        ammount = request.POST['ammount']
+        formula = get_object_or_404(Formula, pk=request.POST['formula'])
+        list.ammount = ammount
+        list.formula = formula
+        list.save()
+        comp_amm = 0
+        if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            for d in data:
+                if d['Код']!='ВД01':
+                    ammount=d['%']
+                    comp_amm = comp_amm + float(ammount)
+                    if Material.objects.filter(code=d['Код']).count() == 0:
+                        mat = Compl_comp.objects.filter(code=d['Код'])[0]
+                        cmps = List_component(list=list, compl=mat, ammount=ammount)
+                    else:
+                        mat = Material.objects.filter(code=d['Код'])[0]
+                        cmps = List_component(list=list, mat=mat, ammount=ammount)
+                    cmps.save()
+        mat = Material.objects.filter(code="ВД01")[0]
+        water_amm = float(list.ammount) - comp_amm
+        cmps = List_component(list=list, mat=mat, ammount=water_amm)
+        cmps.save()
+        #сохранение процесса
+        if 'reactor' in request.POST:
+            kneading = Kneading()
+            reactor = get_object_or_404(Reactor, pk=request.POST['reactor'])
+            kneading.start_date = datetime.date.today()
+            kneading.finish_date = datetime.date.today()
+            kneading.list = list
+            kneading.reactor = reactor
+            kneading.save()
+            st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
+            st.save()
+        #Сохранение партии
+        batch = Batch()
+        batch.kneading = kneading
+        batch.finish_date = datetime.date.today()
+        batch.save()
+        #Добавление в реактор
+        reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
+        reactor_content.content_type = 1
+        reactor_content.amount = kneading.list.ammount
+        reactor_content.batch = batch
+        reactor_content.save()
+        return redirect('mixing')
+
 def get_processes(request):
     if request.method == 'GET':
         p = {}

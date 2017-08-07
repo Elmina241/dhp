@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^process/(?P<kneading_id>[0-9]+)/add_comp/$', views.add_comp, name='add_comp'),
     url(r'^loading_lists/(?P<list_id>[0-9]+)/save_list/$', views.save_list, name='save_list'),
     url(r'^planning/save_process/$', views.save_process, name = 'save_process'),
+    url(r'^new_tech_comp/save_tech_comp/$', views.save_tech_comp, name = 'save_tech_comp'),
     url(r'^loading_lists/(?P<list_id>[0-9]+)/$', views.list_detail, name='list_detail'),
     url(r'^process/(?P<kneading_id>[0-9]+)/save_load_list/$', views.save_load_list, name='save_load_list'),
     url(r'^process/(?P<kneading_id>[0-9]+)/save_kneading_char/$', views.save_kneading_char, name='save_kneading_char'),

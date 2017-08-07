@@ -48,7 +48,7 @@ $(document).ready(function(){
       <div id="errors" class="alert alert-danger" role="alert" style="display:none">
       </div>
       <div class="input-group col-sm-10" style ="margin: auto">
-        <form id = "form" action="save_process/" method="post" class="form-horizontal">
+        <form id = "form" action="save_tech_comp/" method="post" class="form-horizontal">
           {% csrf_token %}
 
             <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});getListOfModels({{model_lists}});changeWaterL();changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>
@@ -83,7 +83,7 @@ $(document).ready(function(){
             <input type="hidden" id="reagents" name="reagents" value="{{materials}}">
             <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
             <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
-            <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
+            <input type="button" id="send" value="Сохранить" onclick="submitTechComp()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
           </form>
         </div>
         <hr>

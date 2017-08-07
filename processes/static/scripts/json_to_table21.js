@@ -506,7 +506,7 @@ function submitList(){
   }
 }
 
-//Проверка на ошибки
+//Проверка на ошибки в плане
 function submitPlan(){
   $("#dateError").hide();
   checkList();
@@ -527,6 +527,24 @@ function submitPlan(){
         }
       }
     }
+  }
+}
+
+//Проверка на ошибки в формировании технологической композиции
+function submitTechComp(){
+  $("#dateError").hide();
+  checkList();
+  if ($("#error").css('display')=='none'){
+      checkRector();
+      if ($("#reactorError").css('display')=='none'){
+        checkBoundsP();
+        if ($("#errors").css('display')=='none'){
+          checkMatAm();
+          if ($("#amountError").css('display')=='none'){
+            $("#form").submit();
+          }
+        }
+      }
   }
 }
 
