@@ -10,8 +10,8 @@ $(document).ready(function(){
 <script type="text/javascript">
 function showOrHide(cb) {
   if (cb.value == "new") {
-    $("#name1").attr("readonly", false);
-    $("#code").attr("readonly", false);
+    //$("#name1").attr("readonly", false);
+    //$("#code").attr("readonly", false);
     $("#compSel").css("display", "none");
     $("#formSel").css("display", "block");
     $("#newMat").css("display", "block");
@@ -20,9 +20,9 @@ function showOrHide(cb) {
   }
   else {
     $("#materials tr").eq(0).find("th").eq(2).html("Количество, кг");
-    $("#code").attr("readonly", true);
+    //$("#code").attr("readonly", true);
     $("#newMat").css("display", "none");
-    $("#name1").attr("readonly", true);
+    //$("#name1").attr("readonly", true);
     $("#formSel").css("display", "none");
     $("#compSel").css("display", "block");
     $('#composition').trigger("change");

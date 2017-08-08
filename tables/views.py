@@ -891,6 +891,11 @@ def save_comp(request):
         if c_type == "comp":
             composition = Composition.objects.filter(code = request.POST['code'])[0]
             comp.composition = composition
+        else:
+            composition = Composition(code = request.POST['code'], name = request.POST['name'], sgr = "", group = get_object_or_404(Composition_group, pk=8), form = get_object_or_404(Product_form, pk=request.POST['form']), isFinal = False)
+            composition.save()
+            formula = Formula(code = request.POST['code'], composition = composition)
+            formula.save()
     comp.save()
     if 'json' in request.POST:
         table = request.POST['json']
@@ -905,6 +910,10 @@ def save_comp(request):
                 else:
                     str_am = d['Содержание, %']
                     ammount = float(str_am)
+                    f_comp = Formula_component(formula = formula, mat = mat, ammount = (ammount/100)*1020)
+                    f_comp.save()
+                    c_comp = Components(comp = composition, mat = mat, min = 0, max = 100)
+                    c_comp.save()
                 cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=ammount)
                 cmps.save()
         return redirect('complex_comps')
