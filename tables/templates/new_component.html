@@ -7,35 +7,7 @@ $(document).ready(function(){
   addValidation();
 });
 </script>
-<script type="text/javascript">
-function showOrHide(cb) {
-  if (cb.value == "new") {
-    //$("#name1").attr("readonly", false);
-    //$("#code").attr("readonly", false);
-    $("#compSel").css("display", "none");
-    $("#formSel").css("display", "block");
-    $("#newMat").css("display", "block");
-    $("#materials tr").eq(0).find("th").eq(2).html("Содержание, %");
-    //$("#ammount").attr("onchange", "");
-  }
-  else {
-    $("#materials tr").eq(0).find("th").eq(2).html("Количество, кг");
-    //$("#code").attr("readonly", true);
-    $("#newMat").css("display", "none");
-    //$("#name1").attr("readonly", true);
-    $("#formSel").css("display", "none");
-    $("#compSel").css("display", "block");
-    $('#composition').trigger("change");
-    //$("#ammount").attr("onchange", "getComponents({{components}}, {{materials}});");
-  }
-};
-$(document).ready(function (){
-    if (document.getElementById("cb2").checked) {
-      showOrHide(document.getElementById("cb2"));
-    }
-    else showOrHide(document.getElementById("cb1"));
-});
-</script>
+
 
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -52,64 +24,34 @@ $(document).ready(function (){
   <div class="input-group" style ="margin: auto">
     <form action="save_comp/" method="post" class="form-horizontal">
       {% csrf_token %}
-      <div class="form-group" style="margin: 20pt; margin-left:100pt">
-      <label class="radio-inline"><input name="comp_type" type="radio" id ='cb1' onclick = 'showOrHide(this);' value="new" checked><b>Новая композиция</b></label>
-      <label class="radio-inline"><input name="comp_type" type="radio" id ='cb2' value="comp" onclick = 'showOrHide(this);'><b>Существующий рецепт</b></label>
-    </div>
-      <div class="form-group" id="compSel" style="display:none">
-      <label for="composition" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:2pt">Рецепт: </label>
+
+      <div class="form-group">
+        <div class="form-group"><label for="code" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Код: </label><div class="col-sm-8"><input id="code" name="code" type="text" class="form-control" required></div></div>
+        <div class="form-group"><label for="name" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Наименование: </label><div class="col-sm-8"><input id="name1" name="name" type="text" class="form-control" required></div></div>
+        <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Объём: </label><div class="col-sm-8"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="getComponents2({{components}}, {{materials}});changeWater();return false;"><span class="input-group-addon">кг</span></div></div></div>
+
+      <div class="form-group">
+      <label for="composition" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Рецепт: </label>
       <div class="col-sm-8">
-      <select class="form-control" id="composition" name="composition" onchange="getComponents({{components}}, {{materials}});changeWater();return false;">
+      <select class="form-control" id="composition" name="composition" onchange="getListOfFormulas({{formulas}});getComponents2({{components}}, {{materials}});changeWater();return false;">
         {% for c in compositions %}
           <option value="{{ c.id }}">{{ c.get_name }}</option>
         {% endfor %}</select>
       </div>
       </div>
-      <div class="form-group">
-        <div class="form-group"><label for="code" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Код: </label><div class="col-sm-8"><input id="code" name="code" type="text" class="form-control" required></div></div>
-        <div class="form-group"><label for="name" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Наименование: </label><div class="col-sm-8"><input id="name1" name="name" type="text" class="form-control" required></div></div>
-          <div class="form-group" id="formSel">
-          <label for="form" class="col-sm-2 control-label" style="font-size: medium; margin-left:20pt; margin-right:0pt">Форма: </label>
-        <div class="col-sm-8"><select class="form-control" id="form" name="form" >
-          {% for f in forms %}
-            <option value="{{ f.id }}">{{ f.name }}</option>
-          {% endfor %}
-        </select>
+      <div class="form-group" id="compSel">
+      <label for="formula" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Состав: </label>
+      <div class="col-sm-8">
+      <select class="form-control" id="formula" name="formula" onchange="getComponents2({{components}}, {{materials}});changeWater();return false;">
+      </select>
       </div>
       </div>
-        <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium; margin-left:10pt; margin-right:10pt">Объём: </label><div class="col-sm-8"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="changeMinMax({{components}}, {{f}});changeWater();return false;"><span class="input-group-addon">кг</span></div></div></div>
       </div>
       <input type="hidden" id="json" name="json" value="">
       <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-bottom:0pt"/>
     </form>
       <div class="panel panel-default" style ="margin: auto; margin-top:50pt">
         <div class="panel-heading">
-        <button class="btn btn-success" id="newMat" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить реактив</button>
-        <div class="modal fade" id="newComp">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button class="close" data-dismiss="modal">x</button>
-                <h4>Добавление реактива</h4>
-              </div>
-              <div class="modal-body">
-        <div style="margin: auto">
-          <label for="material">Реактив:</label>
-          <select class="form-control" id="material">
-            {% for m in materials2 %}
-            <option value="{{ m.code }}">{{ m.get_name }}</option>
-            {% endfor %}</select>
-            <br>
-            <label for="percent">Содержание:</label>
-            <div class="input-group">
-              <input type="number" class="form-control bfh-number" max="100" min="0" id="percent"> <span class="input-group-addon">%</span></p>
-            </div>
-        </div>
-      </div>
-      <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="addMat();return false;">Добавить</button></div>
-      </div>
-      </div>
-      </div>
     </div>
     <div class="panel-body">
       <table class="table table-sm" id="materials" style="width:500pt; margin: auto">

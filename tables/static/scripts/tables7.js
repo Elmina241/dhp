@@ -173,3 +173,44 @@ function saveRow(){
     $("#code").attr("value", code);
     $("#name1").attr("value", name);
   };
+
+//функция получения состава технологической композиции
+  function getComponents2(c, m) {
+    var table = document.getElementById("materials");
+    var length = table.rows.length;
+    for (i = 2; i < length; i++) table.deleteRow(2);
+    var sel = document.getElementById("formula");
+    var sel_id = sel.value;
+    var components = JSON.parse(c);
+    var materials = JSON.parse(m);
+    var amm = $("#ammount").val();
+    var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
+    for (i = 0; i < components.length; i++){
+      if (components[i].fields.formula == sel_id){
+        var row = document.createElement("TR");
+        row.setAttribute('id', components[i].fields.mat);
+        var td1 = document.createElement("TD");
+        var td2 = document.createElement("TD");
+        var td5 = document.createElement("TD");
+        var td6 = document.createElement("TD");
+        var input = document.createElement("input");
+        input.type = "number";
+        input.name = getCode(components[i].fields.mat, materials);
+        input.setAttribute('onchange', "changeWater();return false;");
+        input.setAttribute('step', "0.01");
+        input.setAttribute('value', ((components[i].fields.ammount/1020)*amm).toFixed(2));
+        td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
+        td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
+        td5.appendChild(input);
+        row.appendChild(td1);
+        row.appendChild(td2);
+        row.appendChild(td5);
+        row.appendChild(td6);
+        tbody.appendChild(row);
+      }
+    }
+    var code = document.getElementById("composition").selectedOptions[0].textContent.substring(0, 5);
+    var name = document.getElementById("composition").selectedOptions[0].textContent.substring(5);
+    $("#code").attr("value", code);
+    $("#name1").attr("value", name);
+  };

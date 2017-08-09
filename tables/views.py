@@ -152,14 +152,16 @@ def get_comps(request):
 def new_comp(request, comp_id):
         components = serializers.serialize("json", Formula_component.objects.all())
         materials = serializers.serialize("json", Material.objects.all())
+        formulas = serializers.serialize("json", Formula.objects.all())
         if (comp_id == '0'):
             return render(request, "new_component.html",
                 {"comp": None,
                 "components": json.dumps(components),
-                "compositions": Formula.objects.filter(composition__isFinal=False),
+                "compositions": Composition.objects.filter(isFinal=False),
                 "f_components": "0",
                 "materials2": Material.objects.all(),
                 "forms": Product_form.objects.all(),
+                "formulas": json.dumps(formulas),
                 "materials": json.dumps(materials),
                 "location": "/tables/complex_comps/",
                 "header": "Технологические композиции"
@@ -881,21 +883,15 @@ def save_comp(request):
     #if ('comp_type' in request.POST):
         #c_type = request.POST['comp_type']
     if 'code' in request.POST:
-        c_type = request.POST['comp_type']
+        #c_type = request.POST['comp_type']
         comp.code = request.POST['code']
         comp.name = request.POST['name']
         comp.ammount = request.POST['ammount']
         comp.store_amount = request.POST['ammount']
-        if 'form' in request.POST:
-            comp.form = get_object_or_404(Product_form, pk=request.POST['form'])
-        if c_type == "comp":
-            composition = Composition.objects.filter(code = request.POST['code'])[0]
-            comp.composition = composition
-        else:
-            composition = Composition(code = request.POST['code'], name = request.POST['name'], sgr = "", group = get_object_or_404(Composition_group, pk=8), form = get_object_or_404(Product_form, pk=request.POST['form']), isFinal = False)
-            composition.save()
-            formula = Formula(code = request.POST['code'], composition = composition)
-            formula.save()
+        #if 'form' in request.POST:
+            #comp.form = get_object_or_404(Product_form, pk=request.POST['form'])
+        formula = Formula.objects.filter(pk = request.POST['formula'])[0]
+        comp.formula = formula
     comp.save()
     if 'json' in request.POST:
         table = request.POST['json']
@@ -905,15 +901,7 @@ def save_comp(request):
             #Содержание компонентов сохраняется в %
             #if d['Код'] in request.POST:
             if d['Код']!='ВД01':
-                if c_type == "comp":
-                    ammount = float(d['%']) * 100 / float(comp.ammount)
-                else:
-                    str_am = d['Содержание, %']
-                    ammount = float(str_am)
-                    f_comp = Formula_component(formula = formula, mat = mat, ammount = (ammount/100)*1020)
-                    f_comp.save()
-                    c_comp = Components(comp = composition, mat = mat, min = 0, max = 100)
-                    c_comp.save()
+                ammount = float(d['%']) * 100 / float(comp.ammount)
                 cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=ammount)
                 cmps.save()
         return redirect('complex_comps')

@@ -50,6 +50,20 @@ function getCode(m_id, m) {
   return id;
 };
 
+//Получение списка составов
+function getListOfFormulas(lists) {
+  var rowCount = $('#formula option').length;
+  for (i = 0; i < rowCount; i++) $('#formula option:last').remove();
+  var sel = document.getElementById("composition");
+  var sel_id = sel.value;
+  var modelLists = JSON.parse(lists);
+  for (i = 0; i < modelLists.length; i++){
+    if (modelLists[i].fields.composition == sel_id){
+      $('#formula').append("<option value=" + modelLists[i].pk + ">" + modelLists[i].fields.code + " " + $("#composition :selected").text() + "</option>");
+    }
+  }
+};
+
 function saveTable() {
   var ammount = 100;
   var water = document.getElementById("ВД01");
