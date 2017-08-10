@@ -111,7 +111,7 @@ function saveRow(){
   };
 
   function changeWater() {
-    var ammount = document.getElementById("ammount").value;
+    var ammount = 100;
     var water1 = document.getElementById("water");
     var water2 = document.getElementById("water2");
     var w_a = document.getElementById("water_amm");
@@ -183,7 +183,7 @@ function saveRow(){
     var sel_id = sel.value;
     var components = JSON.parse(c);
     var materials = JSON.parse(m);
-    var amm = $("#ammount").val();
+    var amm = 100;
     var tbody = document.getElementById("materials").getElementsByTagName("TBODY")[0];
     for (i = 0; i < components.length; i++){
       if (components[i].fields.formula == sel_id){

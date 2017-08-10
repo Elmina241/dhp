@@ -860,6 +860,7 @@ def save_formula(request, formula_id):
     try:
         if 'code' in request.POST:
             formula.code = request.POST['code']
+            formula.name = request.POST['name']
             composition = get_object_or_404(Composition, pk=request.POST['composition'])
             formula.composition = composition
     except (KeyError, Formula.DoesNotExist):
@@ -901,7 +902,7 @@ def save_comp(request):
             #Содержание компонентов сохраняется в %
             #if d['Код'] in request.POST:
             if d['Код']!='ВД01':
-                ammount = float(d['%']) * 100 / float(comp.ammount)
+                ammount = float(d['%'])
                 cmps = Compl_comp_comp(compl=comp, mat=mat, ammount=ammount)
                 cmps.save()
         return redirect('complex_comps')

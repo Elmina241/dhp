@@ -72,9 +72,9 @@ function getComps(comp_id, amm, name){
           var matAm = 0;
           for (c in comps){
             matAm = matAm + comps[c].amount;
-            $("<tr><td>" + comps[c].code + "</td><td>" + comps[c].name + "</td><td>" + ((comps[c].amount/100)*parseFloat(amm)).toFixed(2) + "</td></tr>").appendTo(table);
+            $("<tr><td>" + comps[c].code + "</td><td>" + comps[c].name + "</td><td>" + (comps[c].amount).toFixed(2) + "</td></tr>").appendTo(table);
           }
-          $("<tr><td>ВД01</td><td>Вода</td><td>" + (parseFloat(amm) - (matAm/100)*parseFloat(amm)).toFixed(2) + "</td></tr>").appendTo(table);
+          $("<tr><td>ВД01</td><td>Вода</td><td>" + (100 - matAm).toFixed(2) + "</td></tr>").appendTo(table);
           $("#tableName").text("Компоненты композиции " + name);
           $('#components').modal('show');
         }
@@ -144,7 +144,7 @@ $(document).ready(function(){
                 <table class="table table-hover table-sm" id="compTable">
                   <thead>
                     <tr  class="well well-sm">
-                      <th>Код</th><th>Наименование</th><th>Количество</th>
+                      <th>Код</th><th>Наименование</th><th>Содержание, %</th>
                     </tr>
                   </thead>
                   <tbody>

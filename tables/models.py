@@ -229,9 +229,10 @@ class Tank(models.Model):
 
 class Formula(models.Model):
     code = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, null=True)
     composition = models.ForeignKey('Composition')
     def __str__(self):
-        return self.code + ' ' + self.composition.name
+        return self.composition.name + (' ' if self.name is None else (' ' + self.name))
     def get_name(self):
         return self.code + ' ' + self.composition.name
 

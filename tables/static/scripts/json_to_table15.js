@@ -59,7 +59,11 @@ function getListOfFormulas(lists) {
   var modelLists = JSON.parse(lists);
   for (i = 0; i < modelLists.length; i++){
     if (modelLists[i].fields.composition == sel_id){
-      $('#formula').append("<option value=" + modelLists[i].pk + ">" + modelLists[i].fields.code + " " + $("#composition :selected").text() + "</option>");
+      shortName = "";
+      if (modelLists[i].fields.name != null){
+        shortName = modelLists[i].fields.name;
+      }
+      $('#formula').append("<option value=" + modelLists[i].pk + ">" + modelLists[i].fields.code + " " + $("#composition :selected").text().substring(5) + ' ' +  shortName + "</option>");
     }
   }
 };

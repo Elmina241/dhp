@@ -276,7 +276,7 @@ def save_tech_comp(request):
                         comp_amm = comp_amm + round((c2.ammount / c.compl.ammount) * c.ammount, 2)
         components[water.mat.id]['amount'] = round(float(components[water.mat.id]['amount']) + (float(kneading.list.ammount) - comp_amm), 2)
         for c in components:
-            comp = Batch_comp(batch = batch, mat = Material.objects.filter(code = components[c]['code'])[0], ammount = components[c]['amount'])
+            comp = Batch_comp(batch = batch, mat = Material.objects.filter(code = components[c]['code'])[0], ammount = ((components[c]['amount']/float(list.ammount))*100))
             comp.save()
         return redirect('mixing')
 
@@ -468,7 +468,7 @@ def finish_testing(request, kneading_id):
                     comp_amm = comp_amm + round((c2.ammount / c.compl.ammount) * c.ammount, 2)
     components[water.mat.id]['amount'] = round(float(components[water.mat.id]['amount']) + (float(kneading.list.ammount) - comp_amm), 2)
     for c in components:
-        comp = Batch_comp(batch = batch, mat = Material.objects.filter(code = components[c]['code'])[0], ammount = components[c]['amount'])
+        comp = Batch_comp(batch = batch, mat = Material.objects.filter(code = components[c]['code'])[0], ammount = (components[c]['amount']/float(kneading.list.ammount))*100)
         comp.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
 
