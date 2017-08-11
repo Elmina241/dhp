@@ -359,6 +359,16 @@ def get_state(request):
             name = log.get_state()
             return HttpResponse(name)
 
+def check_is_empty(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            reactor = Reactor_content.objects.filter(reactor = get_object_or_404(Reactor, pk=request.POST['id']))[0]
+            if reactor.content_type == 3:
+                res = "empty"
+            else:
+                res = "hasContent"
+            return HttpResponse(res)
+
 def add_comp(request, kneading_id):
     if request.method == 'POST':
         if 'mat_id' in request.POST:

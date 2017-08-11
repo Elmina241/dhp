@@ -33,4 +33,5 @@ urlpatterns = [
     url(r'^process/(?P<kneading_id>[0-9]+)/save_load_list/$', views.save_load_list, name='save_load_list'),
     url(r'^process/(?P<kneading_id>[0-9]+)/save_kneading_char/$', views.save_kneading_char, name='save_kneading_char'),
     url(r'^new_tech_comp/$', views.new_tech_comp, name = 'new_tech_comp'),
+    url(r'^new_tech_comp/check_is_empty/$', views.check_is_empty, name = 'check_is_empty'),
 ]
