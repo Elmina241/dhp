@@ -90,6 +90,13 @@ def del_list(request):
         del_obj.delete()
     return redirect('loading_lists')
 
+def del_process(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Kneading, pk=d)
+        del_obj.delete()
+    return redirect('mixing')
+
 
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())
