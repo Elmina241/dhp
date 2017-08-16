@@ -114,7 +114,7 @@ def planning(request):
         "model_lists": json.dumps(models),
         "model_comps": json.dumps(m_comp),
         "materials2": Material.objects.all,
-        "compl_comps": Compl_comp.objects.all,
+        "compl_comps": Formula.objects.filter(composition__isFinal = False),
         "compl_comps2": json.dumps(c_comps),
         "compl_comp_comps": json.dumps(compl_comp_comps),
         "f_c": json.dumps(f_comp),

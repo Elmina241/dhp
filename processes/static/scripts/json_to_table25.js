@@ -275,11 +275,11 @@ function getModelList(m, m_c, compl) {
     if (m_comp[i].fields.list == sel_id){
       var row = document.createElement("TR");
       var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
-      if (m_comp[i].fields.compl == null){
+      if (m_comp[i].fields.formula == null){
         $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       else{
-        $("<tr id=" + m_comp[i].fields.compl + " name='compl'><td>" + getCode(m_comp[i].fields.compl, complComp) + "</td><td>" + getName(m_comp[i].fields.compl, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.compl, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.formula + " name='compl'><td>" + getCode(m_comp[i].fields.formula, complComp) + "</td><td>" + getName(m_comp[i].fields.formula, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.formula, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       }
     }
