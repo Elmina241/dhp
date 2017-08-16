@@ -10,7 +10,8 @@ class Model_list(models.Model):
 
 class Model_component(models.Model):
     list = models.ForeignKey('Model_list')
-    compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
+    #compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
+    formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
     ammount = models.FloatField()
     def __str__(self):

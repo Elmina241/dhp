@@ -47,7 +47,7 @@ function disButtons(){
             </div>
           </div>
           <input type="hidden" id="json" name="json" value="">
-          <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
+          <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{f_c}}">
           <input type="button" id="send" value="Сохранить" class="btn btn-primary" onclick="submitList();" style="float: right; margin-bottom:9pt"/>
           </form>
           </div>
@@ -150,9 +150,9 @@ function disButtons(){
         </tr>
         {% for c in list_comps %}
           {% if c.mat == None %}
-          <tr id="{{c.compl.id}}" name="compl">
-            <td>{{c.compl.code}}</td>
-            <td>{{c.compl.name}}</td>
+          <tr id="{{c.formula.id}}" name="compl">
+            <td>{{c.formula.code}}</td>
+            <td>{{c.formula}}</td>
             <td><input type="number" value="{{c.ammount}}" readonly></td>
           </tr>
           {% else %}

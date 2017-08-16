@@ -58,7 +58,7 @@ def list_detail(request, list_id):
             "compositions": Composition.objects.all,
             "materials": json.dumps(materials),
             "materials2": Material.objects.all,
-            "compl_comps": Compl_comp.objects.all,
+            "compl_comps": Formula.objects.filter(composition__isFinal = False),
             "compl_comp_comps": json.dumps(compl_comp_comps),
             "f_c": json.dumps(f_comp),
             "f": json.dumps(formula),
@@ -73,7 +73,7 @@ def list_detail(request, list_id):
             "components": json.dumps(components),
             "materials": json.dumps(materials),
             "materials2": Material.objects.all,
-            "compl_comps": Compl_comp.objects.all,
+            "compl_comps": Formula.objects.filter(composition__isFinal = False),
             "compl_comp_comps": json.dumps(compl_comp_comps),
             "formulas": Formula.objects.all,
             "f_c": json.dumps(f_comp),
@@ -140,8 +140,8 @@ def save_list(request, list_id):
                 if d['Код']!='ВД01':
                     ammount=d['%']
                     if Material.objects.filter(code=d['Код']).count() == 0:
-                        mat = Compl_comp.objects.filter(code=d['Код'])[0]
-                        cmps = Model_component(list=list, compl=mat, ammount=ammount)
+                        mat = Formula.objects.filter(code=d['Код'])[0]
+                        cmps = Model_component(list=list, formula=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
                         cmps = Model_component(list=list, mat=mat, ammount=ammount)

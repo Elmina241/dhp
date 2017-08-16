@@ -365,10 +365,10 @@ function changeMatAm(){
       var newAm = tr.find("input").val();
       if (newAm=="") newAm = 0;
       for (j=0; j < comps.length; j++){
-        if (comps[j].fields.compl == id){
+        if (comps[j].fields.formula == id){
           matId = comps[j].fields.mat;
           var amm = $("#materials tr#" + matId).find("td").eq(5).text();
-          matAm = (newAm/100)*comps[j].fields.ammount;
+          matAm = (newAm/100)*(comps[j].fields.ammount/1020)*100;
           $("#materials tr#" + matId).find("td").eq(5).text((parseFloat(amm) + parseFloat(matAm)).toFixed(2));
         }
       }
@@ -401,7 +401,7 @@ function checkList(){
     var id = tr.attr("id");
     if (tr.attr("name") == "compl"){
       for (j=0; j < comps.length; j++){
-        if (comps[j].fields.compl == id){
+        if (comps[j].fields.formula == id){
           matId = comps[j].fields.mat;
           if ($("#materials tr#" + matId).length == 0){
             error = true;
