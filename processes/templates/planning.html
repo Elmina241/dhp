@@ -35,6 +35,7 @@ $(document).ready(function(){
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
+
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
       <h4 class="panel-title">Добавление процесса</h4>
@@ -105,7 +106,9 @@ $(document).ready(function(){
             <input type="hidden" id="json" name="json" value="">
             <input type="hidden" id="compl_comp" name="compl_comp" value="{{compl_comps2}}">
             <input type="hidden" id="reagents" name="reagents" value="{{materials}}">
+            <input type="hidden" id="formula_names" name="formula_names" value="{{formula_names}}">
             <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
+            <input type="hidden" id="batches" name="batches" value="{{batches}}">
             <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{f_c}}">
             <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
           </form>
@@ -187,13 +190,14 @@ $(document).ready(function(){
             <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
               <thead>
                 <tr>
-                  <th>Код</th><th>Наименование</th><th>Количество, кг</th><th></th><th style="visibility:collapse;width:1px">%</th>
+                  <th>Код</th><th>Наименование</th><th>Композиция</th><th>Количество, кг</th><th></th><th style="visibility:collapse;width:1px">%</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>ВД01</td>
                   <td>Вода</td>
+                  <td></td>
                   <td id="water1"></td>
                 </tr>
               </tbody>

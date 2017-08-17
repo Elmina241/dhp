@@ -107,6 +107,21 @@ def planning(request):
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
     reactors = serializers.serialize("json", Reactor.objects.all())
+    formula_names = {}
+    for f in Formula.objects.all():
+        formula_names[str(f.pk)] = str(f)
+    batches = {}
+    i=0
+    for r in Reactor_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1"}
+        i=i+1
+    for t in Tank_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2"}
+        i=i+1
+    for c in Compl_comp.objects.all():
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3"}
+        i=i+1
+
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     return render(request, "planning.html",
         {"components": json.dumps(components),
@@ -119,11 +134,13 @@ def planning(request):
         "compl_comp_comps": json.dumps(compl_comp_comps),
         "f_c": json.dumps(f_comp),
         "f": json.dumps(formula),
+        "formula_names": json.dumps(formula_names),
         "reactors": Reactor.objects.all,
         "reactors2": json.dumps(reactors),
         "formulas": Formula.objects.all,
         "location": "/processes/planning/",
-        "header": "Планирование"
+        "header": "Планирование",
+        "batches": json.dumps(batches)
         })
 
 def save_list(request, list_id):

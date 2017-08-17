@@ -27,6 +27,7 @@ class Loading_list(models.Model):
 class List_component(models.Model):
     list = models.ForeignKey('Loading_list')
     compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
+    batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
     ammount = models.FloatField()
     loaded = models.BooleanField(default = False)

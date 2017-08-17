@@ -276,10 +276,10 @@ function getModelList(m, m_c, compl) {
       var row = document.createElement("TR");
       var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
       if (m_comp[i].fields.formula == null){
-        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td></td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       else{
-        $("<tr id=" + m_comp[i].fields.formula + " name='compl'><td>" + getCode(m_comp[i].fields.formula, complComp) + "</td><td>" + getName(m_comp[i].fields.formula, complComp) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.formula, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.formula + " name='compl'><td>" + getCode(m_comp[i].fields.formula, complComp) + "</td><td>" + getFormulaName(m_comp[i].fields.formula) + "</td><td>" + getSelectOfComp(m_comp[i].fields.formula) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.formula, complComp) + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       }
     }
@@ -287,6 +287,15 @@ function getModelList(m, m_c, compl) {
     changeWaterL();
     changeWaterT();
 };
+
+function getFormulaName(id){
+  var names = JSON.parse($("#formula_names").attr("value"));
+  for (n in names){
+    if (n == id){
+      return names[n];
+    }
+  }
+}
 
 function changeWaterT() {
   var ammount = document.getElementById("ammount").value;
@@ -323,8 +332,21 @@ function addMaterial(){
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td></td><td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
   $("#newComp").modal("hide");
+}
+
+//Получение списка технологических композиций
+function getSelectOfComp(id){
+  var batches = JSON.parse($("#batches").attr("value"));
+  res = "<select class='form-control' id='b'"+id+" name='b'"+id+">";
+  for (b in batches){
+    if (batches[b].formula == id){
+      res = res + "<option value="+batches[b].type+"t"+batches[b].id+">"+ batches[b].name + "</option>";
+    }
+  }
+  res = res + "</select>";
+  return res;
 }
 
 function addComplComp(){
@@ -334,7 +356,7 @@ function addComplComp(){
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+  $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td>" + getSelectOfComp(id) + "</td><td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
 
   $("#newComp").modal("hide");
 }
@@ -358,7 +380,7 @@ function changeMatAm(){
   }
   for (i=2; i<tbody.rows.length; i++){
     var tr = $("#loadList tr").eq(i);
-    tr.find("td").eq(4).text(tr.find("input").val());
+    tr.find("td").eq(5).text(tr.find("input").val());
     var code = tr.find("td").eq(0).text();
     var id = tr.attr("id");
     if (tr.attr("name") == "compl"){
@@ -663,7 +685,7 @@ function changeWaterL() {
   var tbody = document.getElementById("loadList");
   var mat_ammount = 0;
   for (i=2; i<tbody.rows.length; i++){
-    var m = tbody.rows[i].children[2].children[0].valueAsNumber;
+    var m = tbody.rows[i].children[3].children[0].valueAsNumber;
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
   }
