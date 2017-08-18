@@ -339,7 +339,7 @@ function addMaterial(){
 //Получение списка технологических композиций
 function getSelectOfComp(id){
   var batches = JSON.parse($("#batches").attr("value"));
-  res = "<select class='form-control' id='b'"+id+" name='b'"+id+">";
+  res = "<select class='form-control' id='b"+id+"' name='b'"+id+">";
   for (b in batches){
     if (batches[b].formula == id){
       res = res + "<option value="+batches[b].type+"t"+batches[b].id+">"+ batches[b].name + "</option>";
@@ -392,6 +392,15 @@ function changeMatAm(){
           var amm = $("#materials tr#" + matId).find("td").eq(5).text();
           matAm = (newAm/100)*(comps[j].fields.ammount/1020)*100;
           $("#materials tr#" + matId).find("td").eq(5).text((parseFloat(amm) + parseFloat(matAm)).toFixed(2));
+          //Формат ячейики сложного компонента: тип(1,2,3)_ключ композиции_количество
+          var batch = $("#b"+id + " :selected").val();
+          var t = "";
+          var bId = "";
+          if (batch != undefined) {
+            t = batch[0];
+            bId = batch.substr(2);
+          }
+          tr.find("td").eq(5).text(t+"_"+bId+"_"+tr.find("input").val());
         }
       }
     }

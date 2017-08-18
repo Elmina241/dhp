@@ -204,8 +204,19 @@ def save_process(request):
                 if d['Код']!='ВД01':
                     ammount=d['%']
                     if Material.objects.filter(code=d['Код']).count() == 0:
-                        mat = Compl_comp.objects.filter(code=d['Код'])[0]
-                        cmps = List_component(list=list, compl=mat, ammount=ammount)
+                        t = ammount[0]
+                        id = ammount.split("_")[1]
+                        ammount = ammount.split("_")[2]
+                        if t == "1":
+                            mat = get_object_or_404(Reactor_content, pk = id)
+                            cmps = List_component(list=list, batch=mat.batch, ammount=ammount)
+                        else:
+                            if t == "2":
+                                mat = get_object_or_404(Tank_content, pk = id)
+                                cmps = List_component(list=list, batch=mat.batch, ammount=ammount)
+                            else:
+                                mat = get_object_or_404(Compl_comp, pk = id)
+                                cmps = List_component(list=list, compl=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
                         cmps = List_component(list=list, mat=mat, ammount=ammount)
@@ -518,15 +529,19 @@ def kneading_detail(request, kneading_id):
     comps = {}
     for c in l_comp2:
         if c.compl is None:
-            if Components.objects.filter(comp = c.list.formula.composition, mat = c.mat).count() == 0:
-                min = 0 #костыль!!! добавить проверку на наличие всех компонентов в рецепте
-                max = 0
+            if c.batch is None:
+                if Components.objects.filter(comp = c.list.formula.composition, mat = c.mat).count() == 0:
+                    min = 0 #костыль!!! добавить проверку на наличие всех компонентов в рецепте
+                    max = 0
+                else:
+                    min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
+                    max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
+                comps[str(c.id)]={'mat_code': c.mat.code, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max}
             else:
-                min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
-                max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
-            comps[str(c.id)]={'mat_code': c.mat.code, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max}
+                comps[str(c.id)]={'mat_code': c.batch.id, 'mat_name': str(c.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-'}
         else:
             comps[str(c.id)]={'mat_code': c.compl.code, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-'}
+
     load_list = json.dumps(comps)
     if state_id == 1:
         return render(request, 'waiting.html', {"components": json.dumps(components),
