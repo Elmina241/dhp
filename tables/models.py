@@ -234,7 +234,7 @@ class Formula(models.Model):
     def __str__(self):
         return self.composition.name + (' ' if self.name is None else (' ' + self.name))
     def get_name(self):
-        return self.code + ' ' + self.composition.name
+        return self.composition.name + (' ' if self.name is None else (' ' + self.name))
 
 
 class Formula_component(models.Model):
