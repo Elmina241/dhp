@@ -25,6 +25,7 @@ class Material(models.Model):
     prefix = models.ForeignKey('Prefix')
     mark = models.CharField(max_length=80)
     ammount = models.FloatField()
+    reserved = models.FloatField(default = 0)
     unit = models.ForeignKey('Unit')
     concentration = models.FloatField()
     price = models.FloatField()
@@ -250,6 +251,7 @@ class Compl_comp(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     ammount = models.FloatField()
+    reserved = models.FloatField(default = 0)
     store_amount = models.FloatField(default = 0)
     form = models.ForeignKey('Product_form', blank=True, null=True)
     def __str__(self):

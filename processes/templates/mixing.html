@@ -170,20 +170,28 @@ $(document).ready(function(){
         {% for c in comp %}
           {% if c.loaded == True %}
             {% if c.mat == None %}
-              {% if c.batch == None %}
+              {% if c.compl != None %}
                 <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{% spaceless %}{{c.compl.code}}{% endspaceless %}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.compl.code}}{% endspaceless %}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="compl" data-code="{% spaceless %}{{c.compl.code}}{% endspaceless %}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
               {% else %}
-                <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{% spaceless %}{{c.batch.id}}{% endspaceless %}</td><td>{{c.batch.kneading.list.formula.get_name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.batch.id}}{% endspaceless %}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="batch" data-code="{% spaceless %}{{c.batch.id}}{% endspaceless %}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.batch.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+                {% if c.r_cont == None %}
+                  <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{% spaceless %}{{c.t_cont.batch.id}}{% endspaceless %}</td><td>{{c.t_cont.batch.kneading.list.formula.get_name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.t_cont.batch.id}}{% endspaceless %}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="tank" data-code="{% spaceless %}{{c.t_cont.batch.id}}{% endspaceless %}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.t_cont.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+                  {% else %}
+                  <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{% spaceless %}{{c.r_cont.batch.id}}{% endspaceless %}</td><td>{{c.r_cont.batch.kneading.list.formula.get_name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.r_cont.batch.id}}{% endspaceless %}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="reactor" data-code="{% spaceless %}{{c.r_cont.batch.id}}{% endspaceless %}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.r_cont.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+                  {% endif %}
                 {% endif %}
                 {% else %}
               <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
             {% endif %}
           {% else %}
             {% if c.mat == None %}
-            {% if c.batch == None %}
+            {% if c.compl != None %}
               <tr><td></td><td>{% spaceless %}{{c.compl.code}}{% endspaceless %}</td><td>{{c.compl.name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.compl.code}}{% endspaceless %}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{% spaceless %}{{c.compl.code}}{% endspaceless %}" data-amm="{{c.ammount}}" data-mat="{{c.compl.id}}" data-isCompl="compl">Добавить</button></td><td></td></tr>
             {% else %}
-            <tr><td></td><td>{% spaceless %}{{c.batch.id}}{% endspaceless %}</td><td>{{c.batch.kneading.list.formula.get_name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.batch.id}}{% endspaceless %}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{% spaceless %}{{c.batch.id}}{% endspaceless %}" data-amm="{{c.ammount}}" data-mat="{{c.batch.id}}" data-isCompl="batch">Добавить</button></td><td></td></tr>
+            {% if c.r_cont == None %}
+            <tr><td></td><td>{% spaceless %}{{c.t_cont.batch.id}}{% endspaceless %}</td><td>{{c.t_cont.batch.kneading.list.formula.get_name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.t_cont.batch.id}}{% endspaceless %}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{% spaceless %}{{c.t_cont.batch.id}}{% endspaceless %}" data-amm="{{c.ammount}}" data-mat="{{c.t_cont.id}}" data-isCompl="tank">Добавить</button></td><td></td></tr>
+            {% else %}
+            <tr><td></td><td>{% spaceless %}{{c.r_cont.batch.id}}{% endspaceless %}</td><td>{{c.r_cont.batch.kneading.list.formula.get_name}}</td><td>{{c.ammount}}</td><td id="{% spaceless %}{{c.r_cont.batch.id}}{% endspaceless %}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{% spaceless %}{{c.r_cont.batch.id}}{% endspaceless %}" data-amm="{{c.ammount}}" data-mat="{{c.r_cont.id}}" data-isCompl="reactor">Добавить</button></td><td></td></tr>
+            {% endif %}
             {% endif %}
             {% else %}
               <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}" data-isCompl="">Добавить</button></td><td></td></tr>

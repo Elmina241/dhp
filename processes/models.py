@@ -27,7 +27,9 @@ class Loading_list(models.Model):
 class List_component(models.Model):
     list = models.ForeignKey('Loading_list')
     compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
-    batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
+    #batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
+    r_cont = models.ForeignKey('Reactor_content', blank=True, default = None, null=True)
+    t_cont = models.ForeignKey('Tank_content', blank=True, default = None, null=True)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
     ammount = models.FloatField()
     loaded = models.BooleanField(default = False)
@@ -99,6 +101,7 @@ class Kneading_char_var(models.Model):
 class Reactor_content(models.Model):
     reactor = models.ForeignKey('tables.Reactor')
     content_type = models.FloatField(default = 3)
+    reserved = models.FloatField(default = 0)
     amount = models.FloatField()
     date = models.DateField(auto_now_add=True)
     batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
@@ -110,6 +113,7 @@ class Tank_content(models.Model):
     tank = models.ForeignKey('tables.Tank')
     content_type = models.FloatField(default = 3)
     amount = models.FloatField()
+    reserved = models.FloatField(default = 0)
     date = models.DateField(auto_now_add=True)
     batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
     kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
