@@ -502,6 +502,7 @@ function checkRector(){
 //Проверка соответствия границам рецепта в планировании
 function checkBoundsP(){
   var mats = document.getElementById("materials");
+  $("#errors").hide();
   var errors = {'length': 0};
   for (i=2; i<mats.rows.length; i++){
     var val = parseFloat($("#materials tr").eq(i).find('td').eq(5).text());
@@ -521,7 +522,7 @@ function checkBoundsP(){
     message = message + " <a href='#' class='alert-link' id='errorLink'>(Всё равно создать процесс)</a>";
     $("#errors").html(message);
     $('#errorLink').on('click', function() {
-      $("#form").submit();
+      checkIsEmpty($("#reactor").val());
     });
     $("#errors").show();
   }
@@ -549,11 +550,11 @@ function submitPlan(){
     else{
       checkRector();
       if ($("#reactorError").css('display')=='none'){
-        checkBoundsP();
-        if ($("#errors").css('display')=='none'){
-          checkMatAm();
-          if ($("#amountError").css('display')=='none'){
-            $("#form").submit();
+        checkMatAm();
+        if ($("#amountError").css('display')=='none'){
+          checkBoundsP();
+          if ($("#errors").css('display')=='none'){
+            checkIsEmpty($("#reactor").val());
           }
         }
       }
@@ -574,7 +575,6 @@ function submitTechComp(){
           checkMatAm();
           if ($("#amountError").css('display')=='none'){
               checkIsEmpty($("#reactor").val());
-
           }
         }
       }
@@ -641,19 +641,27 @@ function checkMatAm(){
   var length = $("#loadList").find('tr').length;
   compl_comp = JSON.parse(JSON.parse($("#compl_comp").attr("value")));
   materials = JSON.parse(JSON.parse($("#reagents").attr("value")));
+  batches = JSON.parse($("#batches").attr("value"));
   var errors = {'length': 0};
   for (i=2; i < length; i++){
     var tr = $("#loadList tr").eq(i);
     var code = tr.find("td").eq(0).text();
     var id = tr.attr("id");
     if (tr.attr("name") == "compl"){
+      var batch = $("#b"+id + " :selected").val();
+      var t = "";
+      var bId = "";
+      if (batch != undefined) {
+        t = batch[0];
+        bId = batch.substr(2);
+      }
       var am = tr.find("input").val();
       if (am=="") am = 0;
-      for (j=0; j < compl_comp.length; j++){
-        if (compl_comp[j].pk == id){
-          curAm = parseFloat(compl_comp[j].fields.ammount);
+      for (j in batches){
+        if (batches[j].id == bId && t == batches[j].type){
+          curAm = parseFloat(batches[j].amount);
           if (am > curAm){
-            errors[compl_comp[j].fields.code] = curAm;
+            errors[batches[j].name] = curAm;
             errors['length'] = errors['length'] +1;
           }
         }

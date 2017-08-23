@@ -107,19 +107,20 @@ def planning(request):
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
     reactors = serializers.serialize("json", Reactor.objects.all())
+    batch_comps = serializers.serialize("json", Batch_comp.objects.all())
     formula_names = {}
     for f in Formula.objects.all():
         formula_names[str(f.pk)] = str(f)
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1"}
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
         i=i+1
     for t in Tank_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2"}
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
         i=i+1
     for c in Compl_comp.objects.all():
-        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3"}
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
         i=i+1
 
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
@@ -140,7 +141,8 @@ def planning(request):
         "formulas": Formula.objects.all,
         "location": "/processes/planning/",
         "header": "Планирование",
-        "batches": json.dumps(batches)
+        "batches": json.dumps(batches),
+        "batch_comps": json.dumps(batch_comps)
         })
 
 def save_list(request, list_id):
@@ -209,17 +211,22 @@ def save_process(request):
                         ammount = ammount.split("_")[2]
                         if t == "1":
                             mat = get_object_or_404(Reactor_content, pk = id)
-                            cmps = List_component(list=list, r_cont=mat, ammount=ammount, reserved = ammount)
+                            mat.reserved = mat.reserved + float(ammount)
+                            mat.save()
+                            cmps = List_component(list=list, r_cont=mat, ammount=ammount)
                         else:
                             if t == "2":
                                 mat = get_object_or_404(Tank_content, pk = id)
-                                cmps = List_component(list=list, t_cont=mat, ammount=ammount, reserved = ammount)
+                                mat.reserved = mat.reserved + float(ammount)
+                                cmps = List_component(list=list, t_cont=mat, ammount=ammount)
                             else:
                                 mat = get_object_or_404(Compl_comp, pk = id)
-                                cmps = List_component(list=list, compl=mat, ammount=ammount, reserved = ammount)
+                                mat.reserved = mat.reserved + float(ammount)
+                                cmps = List_component(list=list, compl=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
-                        cmps = List_component(list=list, mat=mat, ammount=ammount, reserved = ammount)
+                        mat.reserved = mat.reserved + float(ammount)
+                        cmps = List_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
         #сохранение процесса
         if 'start' in request.POST:
@@ -410,27 +417,27 @@ def add_comp(request, kneading_id):
             if request.POST['type'] == 'compl':
                 mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])[0]
                 mat.store_amount = mat.store_amount - float(request.POST['amm'])
-                mat.reserved = mat.store_amount
+                mat.reserved = mat.reserved - float(request.POST['amm'])
                 comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
                 mat.save()
             else:
                 if request.POST['type'] == 'tank':
                         content = Tank_content.objects.filter(pk = request.POST['mat_id'])[0]
                         content.amount = content.amount - float(request.POST['amm'])
-                        content.reserved = content.amount
+                        content.reserved = content.reserved - float(request.POST['amm'])
                         comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
                         content.save()
                 else:
                     if request.POST['type'] == 'reactor':
                         content = Reactor_content.objects.filter(pk = request.POST['mat_id'])[0]
                         content.amount = content.amount - float(request.POST['amm'])
-                        content.reserved = content.amount
+                        content.reserved = content.reserved - float(request.POST['amm'])
                         comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
                         content.save()
                     else:
                         mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
                         mat.ammount = mat.ammount - float(request.POST['amm'])
-                        mat.reserved = mat.amount
+                        mat.reserved = mat.reserved - float(request.POST['amm'])
                         comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
                         mat.save()
             #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]

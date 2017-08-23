@@ -55,6 +55,9 @@ $(document).ready(function(){
       <div id="reactorError" class="alert alert-danger" role="alert" style="display:none">
         Объём композиции выходит за границы объёма реактора.
       </div>
+      <div id="reactorIsNotEmpty" class="alert alert-danger" role="alert" style="display:none">
+        Реактор занят.
+      </div>
       <div id="errors" class="alert alert-danger" role="alert" style="display:none">
       </div>
       <div class="input-group col-sm-10" style ="margin: auto">
@@ -109,6 +112,7 @@ $(document).ready(function(){
             <input type="hidden" id="formula_names" name="formula_names" value="{{formula_names}}">
             <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
             <input type="hidden" id="batches" name="batches" value="{{batches}}">
+            <input type="hidden" id="batch_comps" name="batch_comps" value="{{batch_comps}}">
             <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{f_c}}">
             <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
           </form>
