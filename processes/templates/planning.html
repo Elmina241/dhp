@@ -112,8 +112,9 @@ $(document).ready(function(){
             <input type="hidden" id="formula_names" name="formula_names" value="{{formula_names}}">
             <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
             <input type="hidden" id="batches" name="batches" value="{{batches}}">
+            <input type="hidden" id="f_c" name="f_c" value="{{f_c}}">
             <input type="hidden" id="batch_comps" name="batch_comps" value="{{batch_comps}}">
-            <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{f_c}}">
+            <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{compl_comp_comps}}">
             <input type="button" id="send" value="Сохранить" onclick="submitPlan()" class="btn btn-primary" style="float: right; margin-bottom:9pt; margin-top:9pt"/>
           </form>
         </div>
@@ -181,7 +182,7 @@ $(document).ready(function(){
                       <label for="material">Технологическая композиция:</label>
                       <select class="form-control" id="complComp">
                         {% for c in compl_comps %}
-                          <option value="{{ c.id }}">{{ c.get_name }}</option>
+                          <option value="{{ c.id }}">{{ c.get_name2 }}</option>
                         {% endfor %}</select>
                     </div>
                   </div>

@@ -28,6 +28,17 @@ def new_tech_comp(request):
     formula = serializers.serialize("json", Formula.objects.filter(composition__isFinal = False))
     reactors = serializers.serialize("json", Reactor.objects.all())
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
+    batches = {}
+    i=0
+    for r in Reactor_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        i=i+1
+    for t in Tank_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        i=i+1
+    for c in Compl_comp.objects.all():
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        i=i+1
     return render(request, "new_tech_comp.html", {
     "header": "Формирование технологической композиции",
     "location": "/processes/new_tech_comp/",
@@ -43,6 +54,7 @@ def new_tech_comp(request):
     "f": json.dumps(formula),
     "reactors": Reactor.objects.all,
     "reactors2": json.dumps(reactors),
+    "batches": json.dumps(batches),
     "formulas": Formula.objects.filter(composition__isFinal = False)})
 
 def list_detail(request, list_id):
@@ -114,10 +126,10 @@ def planning(request):
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
         i=i+1
     for t in Tank_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
         i=i+1
     for c in Compl_comp.objects.all():
         batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
@@ -262,10 +274,14 @@ def save_tech_comp(request):
                     comp_amm = comp_amm + float(ammount)
                     if Material.objects.filter(code=d['Код']).count() == 0:
                         mat = Compl_comp.objects.filter(code=d['Код'])[0]
-                        cmps = List_component(list=list, compl=mat, ammount=ammount, reserved = ammount)
+                        mat.store_amount = mat.store_amount - float(ammount)
+                        mat.save()
+                        cmps = List_component(list=list, compl=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
-                        cmps = List_component(list=list, mat=mat, ammount=ammount, reserved = ammount)
+                        mat.ammount = mat.ammount - float(ammount)
+                        mat.save()
+                        cmps = List_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
         mat = Material.objects.filter(code="ВД01")[0]
         water_amm = float(list.ammount) - comp_amm

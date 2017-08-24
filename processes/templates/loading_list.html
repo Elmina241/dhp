@@ -48,6 +48,7 @@ function disButtons(){
           </div>
           <input type="hidden" id="json" name="json" value="">
           <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{f_c}}">
+          <input type="hidden" id="f_c" name="f_c" value="{{f_c}}">
           <input type="button" id="send" value="Сохранить" class="btn btn-primary" onclick="submitList();" style="float: right; margin-bottom:9pt"/>
           </form>
           </div>
@@ -122,7 +123,7 @@ function disButtons(){
       <label for="material">Технологическая композиция:</label>
       <select class="form-control" id="complComp">
         {% for c in compl_comps %}
-        <option value="{{ c.id }}">{{ c.get_name }}</option>
+        <option value="{{ c.id }}">{{ c.get_name2 }}</option>
         {% endfor %}</select>
         </div>
     </div>
