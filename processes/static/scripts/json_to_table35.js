@@ -215,13 +215,26 @@ function getLoadList(loadList, t_name) {
         var max = "-";
       }
       if (t_name=='materials'){
-        $('<tr id='+ i + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + loadList[i].mat_code + " onchange='changeWater();return false;' min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>').appendTo(tbody);
+        $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + loadList[i].mat_code + " onchange='changeWater();changeMatTable();return false;' min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
       }
       else{
-        $('<tr id='+ i + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + loadList[i].amount + '</td>').appendTo(tbody);
+        $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + loadList[i].amount + '</td>').appendTo(tbody);
       }
   }
 };
+
+//Функция для передачи изменений в загрузочном листе в таблицу materials2
+function changeMatTable(){
+    var rowCount = $('#materials tr').length;
+    for (i = 2; i < rowCount; i++) {
+      var tr = $('#materials tr').eq(i);
+      $('#materials tr').eq(i).find('td').eq(5).text(tr.attr('id') + '_' + tr.find('input').attr('value'));
+    }
+    table = $('#materials').tableToJSON();
+    var field = document.getElementById('json');
+    field.value = JSON.stringify(table);
+}
+
 
 /** Скрипты для страницы планирование **/
 //Формирование таблицы состава в планировании

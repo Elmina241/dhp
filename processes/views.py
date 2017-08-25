@@ -585,14 +585,14 @@ def kneading_detail(request, kneading_id):
                 else:
                     min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
                     max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
-                comps[str(c.id)]={'mat_code': c.mat.code, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max}
+                comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
             else:
                 if c.r_cont is None:
-                    comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-'}
+                    comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 2}
                 else:
-                    comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-'}
+                    comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 1}
         else:
-            comps[str(c.id)]={'mat_code': c.compl.code, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-'}
+            comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 3}
 
     load_list = json.dumps(comps)
     if state_id == 1:
