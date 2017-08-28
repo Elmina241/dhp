@@ -25,6 +25,7 @@ def new_tech_comp(request):
     models = serializers.serialize("json", Model_list.objects.all())
     m_comp = serializers.serialize("json", Model_component.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
+    batch_comps = serializers.serialize("json", Batch_comp.objects.all())
     formula = serializers.serialize("json", Formula.objects.filter(composition__isFinal = False))
     reactors = serializers.serialize("json", Reactor.objects.all())
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
@@ -55,13 +56,15 @@ def new_tech_comp(request):
     "reactors": Reactor.objects.all,
     "reactors2": json.dumps(reactors),
     "batches": json.dumps(batches),
-    "formulas": Formula.objects.filter(composition__isFinal = False)})
+    "formulas": Formula.objects.filter(composition__isFinal = False),
+    "batch_comps": json.dumps(batch_comps)})
 
 def list_detail(request, list_id):
     components = serializers.serialize("json", Components.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
     f_comp = serializers.serialize("json", Formula_component.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
+
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     if (list_id == '0'):
         return render(request, "loading_list.html",
@@ -187,19 +190,46 @@ def save_load_list(request, kneading_id):
         list.ammount = ammount
     list.save()
     if 'json' in request.POST:
+        for c in List_component.objects.filter(list = list):
+            if c.compl is None:
+                if c.r_cont is None and c.t_cont is None:
+                    c.mat.reserved = c.mat.reserved - c.ammount
+                else:
+                    if c.r_cont is None:
+                        c.t_cont.reserved = c.t_cont.reserved - c.ammount
+                    else:
+                        c.r_cont.reserved = c.r_cont.reserved - c.ammount
+            else:
+                c.compl.reserved = c.compl.reserved - c.ammount
         List_component.objects.filter(list = list).delete()
         table = request.POST['json']
         data = json.loads(table)
         for d in data:
             if d['Код']!='ВД01':
-                ammount=d["Количество, кг"]
-                if Material.objects.filter(code=d['Код']).count() == 0:
-                    mat = Compl_comp.objects.filter(code=d['Код'])[0]
+                ammount=d['%']
+                t = ammount[0]
+                id = ammount.split("_")[1]
+                ammount = ammount.split("_")[2]
+                if t == "1":
+                    mat = Reactor_content.objects.filter(id = id)[0]
+                    mat.reserved = mat.reserved + float(ammount)
+                    cmps = List_component(list=list, r_cont=mat, ammount=ammount)
+                    cmps.save()
+                if t == "2":
+                    mat = Tank_content.objects.filter(id = id)[0]
+                    mat.reserved = mat.reserved + float(ammount)
+                    cmps = List_component(list=list, t_cont=mat, ammount=ammount)
+                    cmps.save()
+                if t == "3":
+                    mat = Compl_comp.objects.filter(id = id)[0]
+                    mat.reserved = mat.reserved + float(ammount)
                     cmps = List_component(list=list, compl=mat, ammount=ammount)
-                else:
-                    mat = Material.objects.filter(code=d['Код'])[0]
+                    cmps.save()
+                if t == "4":
+                    mat = Material.objects.filter(id = id)[0]
+                    mat.reserved = mat.reserved + float(ammount)
                     cmps = List_component(list=list, mat=mat, ammount=ammount)
-                cmps.save()
+                    cmps.save()
         return redirect('kneading_detail', kneading_id = kneading_id)
 
 def save_process(request):

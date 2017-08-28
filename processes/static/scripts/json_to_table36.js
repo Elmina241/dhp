@@ -215,7 +215,7 @@ function getLoadList(loadList, t_name) {
         var max = "-";
       }
       if (t_name=='materials'){
-        $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + loadList[i].mat_code + " onchange='changeWater();changeMatTable();return false;' min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+        $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
       }
       else{
         $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + loadList[i].amount + '</td>').appendTo(tbody);
@@ -228,7 +228,9 @@ function changeMatTable(){
     var rowCount = $('#materials tr').length;
     for (i = 2; i < rowCount; i++) {
       var tr = $('#materials tr').eq(i);
-      $('#materials tr').eq(i).find('td').eq(5).text(tr.attr('id') + '_' + tr.find('input').attr('value'));
+      var valEl = document.getElementsByClassName('term')[i-2];
+      var val = valEl.value;
+      $('#materials tr').eq(i).find('td').eq(5).text(tr.attr('id') + '_' + val);
     }
     table = $('#materials').tableToJSON();
     var field = document.getElementById('json');
@@ -481,6 +483,7 @@ function changeMatAmP(){
 
 //Проверка соответствия реактивов загрузочного листа реактивам состава
 function checkList(){
+  $("#error").hide();
   var tbody = document.getElementById("loadList");
   var mats = document.getElementById("materials");
   compl_comp_comps = $("#f_c").attr("value");
@@ -525,6 +528,7 @@ function checkList(){
 
 //Проверка соответствия границам рецепта
 function checkBounds(){
+  $("#errors").hide();
   var mats = document.getElementById("materials");
   var errors = {'length': 0};
   for (i=2; i<mats.rows.length; i++){
@@ -632,7 +636,6 @@ function submitPlan(){
 function submitTechComp(){
   $("#dateError").hide();
   checkList();
-
   if ($("#error").css('display')=='none'){
       checkRector();
       if ($("#reactorError").css('display')=='none'){

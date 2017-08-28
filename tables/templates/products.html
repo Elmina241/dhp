@@ -36,6 +36,7 @@ $(document).ready(function(){
    <option value="{{ g.id }}">{{ g.name }}</option>
    {% endif %}
    {% endfor %}</select>
+ </form>
    <hr>
   <form action="del_product/" method="post">
     {% csrf_token %}

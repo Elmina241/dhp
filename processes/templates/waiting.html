@@ -5,7 +5,12 @@
 $(document).ready(function(){
   $('#formula').trigger("change");
   $('#formula2').trigger("change");
-  validate();
+  //validate();
+  $('#materials .term').bind('input', function(){
+    changeWater();
+    changeMatTable();
+    return false;
+  });
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -93,7 +98,7 @@ $(document).ready(function(){
       <br>
       <input type="hidden" id="json" name="json" value="">
       <div class="modal-footer">
-      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" onclick="event.preventDefault();return false;" style="float: right"/> </div>
+      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
     </div>
     </div>
     </div>

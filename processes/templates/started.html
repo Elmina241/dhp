@@ -5,7 +5,11 @@
 $(document).ready(function(){
   $('#formula').trigger("change");
   $('#formula2').trigger("change");
-  validate();
+  $('#materials .term').bind('input', function(){
+    changeWater();
+    changeMatTable();
+    return false;
+  });
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -80,7 +84,7 @@ $(document).ready(function(){
       <table class="table table-sm" id="materials" style="width:100%; margin: auto">
         <thead>
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th>
+            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
           </tr>
         </thead>
         <tbody>
@@ -97,7 +101,7 @@ $(document).ready(function(){
       <input type="hidden" id="json" name="json" value="">
 
       <div class="modal-footer">
-      <input type="submit" id="send" value="Сохранить" onclick="event.preventDefault();return false;" class="btn btn-primary" style="float: right"/> </div>
+      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
     </div>
     </div>
     </div>
