@@ -386,6 +386,8 @@ def pack(request):
         storage.amount = storage.amount - float(request.POST['amm'])
         if storage.amount == 0:
             storage.content_type = 3
+            storage.batch = None
+            storage.kneading = None
         storage.save()
         return HttpResponse('ok')
 
@@ -397,6 +399,8 @@ def drop(request):
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
         storage.amount = 0
         storage.content_type = 3
+        storage.batch = None
+        storage.kneading = None
         storage.save()
         return HttpResponse('ok')
 
@@ -419,6 +423,8 @@ def move(request):
         else:
             accepting.kneading = donor.kneading
         if donor.amount == 0:
+            storage.batch = None
+            storage.kneading = None
             donor.content_type = 3
         donor.save()
         accepting.save()
