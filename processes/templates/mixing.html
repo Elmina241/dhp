@@ -75,7 +75,9 @@ $(document).ready(function(){
     var isCompl = button.dataset.iscompl;
     $(this).find('#matCode').text(code);
     $(this).find('#type').attr("value", button.dataset.type);
-    $(this).find('#compAmm').attr("value", amm);
+    input = document.getElementById("compAmm");
+    input.value = amm;
+    //$(this).find('#compAmm').attr("value", amm);
     $(this).find('#mat_id').attr("value", mat);
     $(this).find('#isCompl').attr("value", isCompl);
   })
