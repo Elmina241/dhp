@@ -27,7 +27,7 @@ class Loading_list(models.Model):
 class List_component(models.Model):
     list = models.ForeignKey('Loading_list')
     compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
-    #batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
+    formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True)
     r_cont = models.ForeignKey('Reactor_content', blank=True, default = None, null=True)
     t_cont = models.ForeignKey('Tank_content', blank=True, default = None, null=True)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)

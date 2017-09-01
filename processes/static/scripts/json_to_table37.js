@@ -75,7 +75,7 @@ function changeWater() {
   var tbody = document.getElementById("materials");
   var mat_ammount = 0;
   for (i=2; i<tbody.rows.length; i++){
-    var m = tbody.rows[i].children[4].children[0].valueAsNumber;
+    var m = tbody.rows[i].children[5].children[0].valueAsNumber;
     if (isNaN(m)) m = 0;
     mat_ammount = mat_ammount + m;
   }
@@ -215,7 +215,10 @@ function getLoadList(loadList, t_name) {
         var max = "-";
       }
       if (t_name=='materials'){
-        $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+        if (loadList[i].type != "5") $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td></td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+        else {
+          $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + getSelectOfComp(loadList[i].cont_id)  + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+        }
       }
       else{
         $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + loadList[i].amount + '</td>').appendTo(tbody);
@@ -230,11 +233,40 @@ function changeMatTable(){
       var tr = $('#materials tr').eq(i);
       var valEl = document.getElementsByClassName('term')[i-2];
       var val = valEl.value;
-      $('#materials tr').eq(i).find('td').eq(5).text(tr.attr('id') + '_' + val);
+      if (tr.attr('id')[0] == "5"){
+        id = tr.attr('id').substr(2);
+        var batch = $("#b"+id + " :selected").val();
+        var t = "";
+        var bId = "";
+        if (batch != undefined) {
+          t = batch[0];
+          bId = batch.substr(2);
+        }
+        else{
+          t = "4";
+          bId = id;
+        }
+        $('#materials tr').eq(i).find('td').eq(6).text(t + '_' + bId + '_' + val);
+      }
+      else {
+        $('#materials tr').eq(i).find('td').eq(6).text(tr.attr('id') + '_' + val);
+      }
+
     }
     table = $('#materials').tableToJSON();
     var field = document.getElementById('json');
     field.value = JSON.stringify(table);
+}
+
+//Функция проверки незаполненных композиций
+function checkReady(){
+    var rowCount = $('#materials tr').length;
+    for (i = 2; i < rowCount; i++) {
+      var tr = $('#materials tr').eq(i);
+      if (tr.attr('id')[0] == "5"){
+        $("#startMix").prop('disabled', true);;
+      }
+    }
 }
 
 
@@ -443,9 +475,13 @@ function changeMatAmP(){
         t = batch[0];
         bId = batch.substr(2);
       }
+      else{
+        t = "4";
+        bId = tr.attr("id");
+      }
       var newAm = tr.find("input").val();
       if (newAm=="") newAm = 0;
-      if (t!="3"){
+      if (t!="3" && t!= "4"){
         batchId = 0;
         for (b in batches){
           if (batches[b].id == bId && t == batches[b].type) batchId = batches[b].batch;
@@ -460,16 +496,30 @@ function changeMatAmP(){
         }
       }
       else{
-        for (j=0; j < comps.length; j++){
-          if (comps[j].fields.compl == bId){
-            matId = comps[j].fields.mat;
-            var amm = $("#materials tr#" + matId).find("td").eq(5).text();
-            matAm = (newAm/100)*comps[j].fields.ammount;
-            $("#materials tr#" + matId).find("td").eq(5).text((parseFloat(amm) + parseFloat(matAm)).toFixed(2));
+        if (t == "3"){
+          comps = JSON.parse(JSON.parse(compl_comp_comps));
+          for (j=0; j < comps.length; j++){
+            if (comps[j].fields.compl == bId){
+              matId = comps[j].fields.mat;
+              var amm = $("#materials tr#" + matId).find("td").eq(5).text();
+              matAm = (newAm/100)*comps[j].fields.ammount;
+              $("#materials tr#" + matId).find("td").eq(5).text((parseFloat(amm) + parseFloat(matAm)).toFixed(2));
+            }
+          }
+        }
+        else {
+          comps = JSON.parse(JSON.parse($("#f_c").attr("value")));
+          for (j=0; j < comps.length; j++){
+            if (comps[j].fields.formula == bId){
+              matId = comps[j].fields.mat;
+              var amm = $("#materials tr#" + matId).find("td").eq(5).text();
+              matAm = (newAm/1020)*comps[j].fields.ammount;
+              $("#materials tr#" + matId).find("td").eq(5).text((parseFloat(amm) + parseFloat(matAm)).toFixed(2));
+            }
           }
         }
       }
-      //Формат ячейики сложного компонента: тип(1,2,3)_ключ композиции_количество
+      //Формат ячейики сложного компонента: тип(1(реактор),2(танк),3(приобретённая),4(не выбрана))_ключ композиции_количество
       tr.find("td").eq(5).text(t+"_"+bId+"_"+tr.find("input").val());
     }
     else{

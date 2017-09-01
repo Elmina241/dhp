@@ -192,13 +192,14 @@ def save_load_list(request, kneading_id):
     if 'json' in request.POST:
         for c in List_component.objects.filter(list = list):
             if c.compl is None:
-                if c.r_cont is None and c.t_cont is None:
+                if c.r_cont is None and c.t_cont is None and c.formula is None:
                     c.mat.reserved = c.mat.reserved - c.ammount
                 else:
-                    if c.r_cont is None:
+                    if c.r_cont is None and c.formula is None:
                         c.t_cont.reserved = c.t_cont.reserved - c.ammount
                     else:
-                        c.r_cont.reserved = c.r_cont.reserved - c.ammount
+                        if c.formula is None:
+                            c.r_cont.reserved = c.r_cont.reserved - c.ammount
             else:
                 c.compl.reserved = c.compl.reserved - c.ammount
         List_component.objects.filter(list = list).delete()
@@ -229,6 +230,10 @@ def save_load_list(request, kneading_id):
                     mat = Material.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
                     cmps = List_component(list=list, mat=mat, ammount=ammount)
+                    cmps.save()
+                if t == "5":
+                    mat = Formula.objects.filter(id = id)[0]
+                    cmps = List_component(list=list, formula=mat, ammount=ammount)
                     cmps.save()
         return redirect('kneading_detail', kneading_id = kneading_id)
 
@@ -262,9 +267,13 @@ def save_process(request):
                                 mat.reserved = mat.reserved + float(ammount)
                                 cmps = List_component(list=list, t_cont=mat, ammount=ammount)
                             else:
-                                mat = get_object_or_404(Compl_comp, pk = id)
-                                mat.reserved = mat.reserved + float(ammount)
-                                cmps = List_component(list=list, compl=mat, ammount=ammount)
+                                if t == "3":
+                                    mat = get_object_or_404(Compl_comp, pk = id)
+                                    mat.reserved = mat.reserved + float(ammount)
+                                    cmps = List_component(list=list, compl=mat, ammount=ammount)
+                                else:
+                                    mat = get_object_or_404(Formula, pk = id)
+                                    cmps = List_component(list=list, formula=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
                         mat.reserved = mat.reserved + float(ammount)
@@ -614,7 +623,7 @@ def kneading_detail(request, kneading_id):
     comps = {}
     for c in l_comp2:
         if c.compl is None:
-            if c.r_cont is None and c.t_cont is None:
+            if c.r_cont is None and c.t_cont is None and c.formula is None:
                 if Components.objects.filter(comp = c.list.formula.composition, mat = c.mat).count() == 0:
                     min = 0 #костыль!!! добавить проверку на наличие всех компонентов в рецепте
                     max = 0
@@ -623,20 +632,37 @@ def kneading_detail(request, kneading_id):
                     max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
                 comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
             else:
-                if c.r_cont is None:
+                if c.r_cont is None and c.formula is None:
                     comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 2}
                 else:
-                    comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 1}
+                    if c.formula is None:
+                        comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 1}
+                    else:
+                        comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 5}
         else:
             comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 3}
 
     load_list = json.dumps(comps)
+
+    batches = {}
+    i=0
+    for r in Reactor_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        i=i+1
+    for t in Tank_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        i=i+1
+    for c in Compl_comp.objects.all():
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        i=i+1
+
     if state_id == 1:
         return render(request, 'waiting.html', {"components": json.dumps(components),
                                                 "materials": json.dumps(materials),
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
                                                 "load_list": load_list,
+                                                "batches": json.dumps(batches),
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 2:
@@ -645,6 +671,7 @@ def kneading_detail(request, kneading_id):
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
                                                 "load_list": load_list,
+                                                "batches": json.dumps(batches),
                                                 "location": "/processes/process/",
                                                 "p": kneading})
     if state_id == 3:

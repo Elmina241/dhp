@@ -10,6 +10,7 @@ $(document).ready(function(){
     changeMatTable();
     return false;
   });
+  checkReady();
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -21,7 +22,7 @@ $(document).ready(function(){
 </ul>
 
 <form action="mixing/" id="f" method="POST">{% csrf_token %}<input type="hidden" id="water_amm" name="water_amm" value=""></form>
-<!--<a href="mixing/">--><button type="button" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button><!--</a>-->
+<!--<a href="mixing/">--><button type="button" id="startMix" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button><!--</a>-->
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
 <a href="stop_process/"><button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button></a>
 <div class="panel panel-default" style ="margin: auto">
@@ -84,7 +85,7 @@ $(document).ready(function(){
       <table class="table table-sm" id="materials" style="width:100%; margin: auto">
         <thead>
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
+            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Композиция</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
           </tr>
         </thead>
         <tbody>
@@ -93,15 +94,17 @@ $(document).ready(function(){
             <td>Вода</td>
             <td>-</td>
             <td>-</td>
+            <td>-</td>
             <td id="water"></td>
           </tr>
         </tbody>
       </table>
       <br>
       <input type="hidden" id="json" name="json" value="">
+      <input type="hidden" id="batches" name="batches" value="{{batches}}">
 
       <div class="modal-footer">
-      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+      <input type="button" id="send" onclick="changeMatTable();$('#form').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
     </div>
     </div>
     </div>

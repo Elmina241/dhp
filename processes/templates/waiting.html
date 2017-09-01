@@ -82,7 +82,7 @@ $(document).ready(function(){
       <table class="table table-sm" id="materials" style="width:100%; margin: auto">
         <thead>
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
+            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Композиция</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
           </tr>
         </thead>
         <tbody>
@@ -97,8 +97,9 @@ $(document).ready(function(){
       </table>
       <br>
       <input type="hidden" id="json" name="json" value="">
+      <input type="hidden" id="batches" name="batches" value="{{batches}}">
       <div class="modal-footer">
-      <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+      <input type="button" id="send" onclick="changeMatTable();$('#form').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
     </div>
     </div>
     </div>
