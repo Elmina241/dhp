@@ -33,6 +33,7 @@ function lookChar(t){
 </ul>
 
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#move"  style="margin-bottom: 5pt"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>  Переместить партию</button>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
       <!--<h4 class="panel-title"><b> {{p.id}}</b></h4>-->
@@ -112,5 +113,63 @@ function lookChar(t){
           </div>
           </div>
         </div>
+				<div class="modal fade" id="pack">
+					<div class="modal-dialog modal-sm" >
+						<div class="modal-content">
+							<div class="modal-header">
+								<button class="close" data-dismiss="modal">x</button>
+								<h4 id="storCode"></h4>
+							</div>
+							<div class="modal-body">
+								<div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
+								<input type="hidden" id="stor_id" value="">
+								<input type="hidden" id="amm" value="">
+								<input type="hidden" id="storType" value="">
+								<div class="modal-footer">
+									<input value="Фасовать" onclick="pack($('#stor_id').val(), $('#amm').val(), $('#compAmm').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="move">
+						<div class="modal-dialog modal-md" >
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" data-dismiss="modal">x</button>
+									<h4>Перемещение</h4>
+								</div>
+								<div class="modal-body">
+									<div id="error" class="alert alert-danger" role="alert" style="display:none">
+									</div>
+									<div class="form-group">
+									<div class="form-group">
+										<label for="accepting" style="margin-top:10pt" class="col-sm-2 control-label" style="font-size: small">Акцептор: </label>
+										<div class="col-sm-10" style="margin-top:10pt">
+											<select class="form-control" id="accepting" name="accepting">
+												{% for r in reactor %}
+													<option value="r-{{ r.id }}">{{ r }}</option>
+												{% endfor %}
+												{% for t in tank %}
+													<option value="t-{{ t.id }}">{{ t }}</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+									<div class="form-group" >
+										<label for="moveAmm" class="col-sm-2 control-label" style="margin-top:10pt" style="font-size: small">
+											Количество:
+										</label>
+										<div class="col-sm-10" style="margin-top:10pt">
+										<div class="input-group"><input type="number" id="moveAmm" name="moveAmm" class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
+										</div>
+									</div>
+									</div>
+									</div>
+									<div class="modal-footer" style="margin-top:100pt">
+										<input value="Применить" onclick="checkMove();return false;" class="btn btn-primary" style="float: right"/>
+									</div>
+								</div>
+							</div>
+						</div>
 </div>
 {% endblock content %}
