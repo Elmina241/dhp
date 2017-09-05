@@ -810,8 +810,13 @@ def save_storage(request, storage_id):
     if (storage_id == '0'):
         if (s_type == 'reactor'):
             storage = Reactor()
+            r_c = Reactor_content(reactor = storage, amount = 0)
+            r_c.save()
         else:
             storage = Tank()
+            t_c = Tank_content(tank = storage, amount = 0)
+            t_c.save()
+
     else:
         if (s_type == 'reactor'):
             storage = get_object_or_404(Reactor, pk=storage_id)
@@ -841,12 +846,7 @@ def save_storage(request, storage_id):
         storage.name = name
         #storage.capacity = capacity
         storage.save()
-        if (s_type == 'reactor'):
-            r_c = Reactor_content(reactor = storage, amount = 0)
-            r_c.save()
-        else:
-            t_c = Tank_content(tank = storage, amount = 0)
-            t_c.save()
+
         return redirect('storage')
     else:
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})

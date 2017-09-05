@@ -432,8 +432,37 @@ def move(request):
         else:
             accepting.kneading = donor.kneading
         if donor.amount == 0:
-            storage.batch = None
-            storage.kneading = None
+            donor.batch = None
+            donor.kneading = None
+            donor.content_type = 3
+        donor.save()
+        accepting.save()
+        return HttpResponse('ok')
+
+def move_batch(request, kneading_id):
+    if request.method == 'POST':
+        if request.POST['donor'][0] == 'r':
+            donor = get_object_or_404(Reactor_content, pk=request.POST['donor'][2:])
+        else:
+            donor = get_object_or_404(Tank_content, pk=request.POST['donor'][2:])
+        if request.POST['acc'][0] == 'r':
+            accepting = get_object_or_404(Reactor_content, pk=request.POST['acc'][2:])
+        else:
+            accepting = get_object_or_404(Tank_content, pk=request.POST['acc'][2:])
+        amm = float(request.POST['amm'])
+        if accepting.content_type == 3:
+            accepting.batch = donor.batch
+        else:
+            for m in Batch_comp.objects.filter(batch = accepting.batch):
+                comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
+                m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
+                m.save()
+        donor.amount = donor.amount - amm
+        accepting.content_type = donor.content_type
+        accepting.amount = accepting.amount + amm
+        if donor.amount == 0:
+            donor.batch = None
+            donor.kneading = None
             donor.content_type = 3
         donor.save()
         accepting.save()
@@ -757,10 +786,14 @@ def kneading_detail(request, kneading_id):
                 val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
                 chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
             i = i+1
+
         return render(request, 'finished.html', {"comps": List_component.objects.filter(list = kneading.list),
                                                 "chars": chars,
                                                 "components": components,
+                                                "reactor": Reactor_content.objects.all(),
+                                                "tank": Tank_content.objects.all(),
                                                 "location": "/processes/process/",
+                                                "reactor_content" : Reactor_content.objects.filter(batch = batch, reactor = kneading.reactor)[0] if Reactor_content.objects.filter(batch = batch, reactor = kneading.reactor).count()!=0 else None,
                                                 "p": batch})
 
 def get_checked_elems(request, composition_id):

@@ -108,6 +108,8 @@ class Reactor_content(models.Model):
     kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
     def __str__(self):
         return self.reactor.code + ' ' + self.reactor.name + ' ' + self.content_type
+    def to_str(self):
+        return str(self.reactor.code + ' ' + self.reactor.name + ' ' + str(self.content_type))
 
 class Tank_content(models.Model):
     tank = models.ForeignKey('tables.Tank')
@@ -118,4 +120,6 @@ class Tank_content(models.Model):
     batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
     kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
     def __str__(self):
-        return self.reactor.code + ' ' + self.reactor.name + ' ' + self.content_type
+        return self.tank.code + ' ' + self.tank.name + ' ' + self.content_type
+    def to_str(self):
+        return str(self.tank.code + ' ' + self.tank.name + ' ' + str(self.content_type))

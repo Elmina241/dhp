@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^storages/drop/$', views.drop, name = 'drop'),
     url(r'^storages/pack/$', views.pack, name = 'pack'),
     url(r'^storages/move/$', views.move, name = 'move'),
+    url(r'^process/(?P<kneading_id>[0-9]+)/move_batch/$', views.move_batch, name = 'move_batch'),
     url(r'^process/(?P<kneading_id>[0-9]+)/$', views.kneading_detail, name='kneading_detail'),
     url(r'^process/(?P<kneading_id>[0-9]+)/start_process/$', views.start_kneading, name='start_kneading'),
     url(r'^process/(?P<kneading_id>[0-9]+)/stop_process/$', views.stop_process, name='stop_process'),

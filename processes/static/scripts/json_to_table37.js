@@ -264,7 +264,7 @@ function checkReady(){
     for (i = 2; i < rowCount; i++) {
       var tr = $('#materials tr').eq(i);
       if (tr.attr('id')[0] == "5"){
-        $("#startMix").prop('disabled', true);;
+        $("#startMix").prop('disabled', true);
       }
     }
 }

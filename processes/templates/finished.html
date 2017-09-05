@@ -2,6 +2,32 @@
 {% block content %}
 
 <script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 function lookL(t){
 	p = $("#" + t);
 	l = document.getElementById("a-" + t);
@@ -22,6 +48,49 @@ function lookChar(t){
     l.textContent = "Показать результаты тестирования";
 		p.css("display", "none")}
 }
+
+function move(){
+  var csrftoken = getCookie('csrftoken');
+	if ("{{reactor_content.to_str}}" != "") var rContId = "{{reactor_content.id}}";
+	else var rContId = "0";
+  $.ajax({
+        type: "POST",
+        url: 'move_batch/',
+        data: {
+          'acc': $('#accepting').val(),
+          'donor': "r-" + rContId,
+          'amm': $('#moveAmm').val()
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          location.reload();
+        }
+      });
+}
+
+function checkMove(){
+  $("#error").hide();
+  accId = $('#accepting').val();
+  amm = $('#moveAmm').val();
+  donorAm = "{{reactor_content.amount}}";
+  if(donorAm < amm){
+    $("#error").text("Недостаточно композиции в доноре");
+    $("#error").show();
+  }
+  else{
+    move();
+  }
+}
+
+
+$(document).ready(function(){
+  if ("{{reactor_content.to_str}}" == "") $("#moveComp").prop('disabled', true);
+});
 </script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -33,7 +102,7 @@ function lookChar(t){
 </ul>
 
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#move"  style="margin-bottom: 5pt"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>  Переместить партию</button>
+<button type="button" class="btn btn-primary" id="moveComp" data-toggle="modal" data-target="#move"  style="margin-bottom: 5pt"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>  Переместить партию</button>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
       <!--<h4 class="panel-title"><b> {{p.id}}</b></h4>-->
@@ -147,10 +216,14 @@ function lookChar(t){
 										<div class="col-sm-10" style="margin-top:10pt">
 											<select class="form-control" id="accepting" name="accepting">
 												{% for r in reactor %}
-													<option value="r-{{ r.id }}">{{ r }}</option>
+												{% if r.batch.kneading.list.formula == p.kneading.list.formula or r.content_type == 3 %}
+													<option value="r-{{ r.id }}">{{ r.reactor }}</option>
+												{% endif %}
 												{% endfor %}
 												{% for t in tank %}
-													<option value="t-{{ t.id }}">{{ t }}</option>
+												{% if t.batch.kneading.list.formula == p.kneading.list.formula or t.content_type == 3 %}
+													<option value="t-{{ t.id }}">{{ t.tank }}</option>
+												{% endif %}
 												{% endfor %}
 											</select>
 										</div>
@@ -160,7 +233,7 @@ function lookChar(t){
 											Количество:
 										</label>
 										<div class="col-sm-10" style="margin-top:10pt">
-										<div class="input-group"><input type="number" id="moveAmm" name="moveAmm" class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
+										<div class="input-group"><input type="number" id="moveAmm" name="moveAmm" value = {{p.kneading.list.ammount}} class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
 										</div>
 									</div>
 									</div>
