@@ -259,7 +259,8 @@ function changeMatTable(){
 }
 
 //Функция проверки незаполненных композиций
-function checkReady(){
+function checkReady(id){
+    checkIsEmpty2(id);
     var rowCount = $('#materials tr').length;
     for (i = 2; i < rowCount; i++) {
       var tr = $('#materials tr').eq(i);
@@ -267,6 +268,7 @@ function checkReady(){
         $("#startMix").prop('disabled', true);
       }
     }
+
 }
 
 
@@ -642,7 +644,8 @@ function checkBoundsP(){
     message = message + " <a href='#' class='alert-link' id='errorLink'>(Всё равно создать процесс)</a>";
     $("#errors").html(message);
     $('#errorLink').on('click', function() {
-      checkIsEmpty($("#reactor").val());
+      $("#form").submit();
+      $("#errors").hide();
     });
     $("#errors").show();
   }
@@ -674,7 +677,7 @@ function submitPlan(){
         if ($("#amountError").css('display')=='none'){
           checkBoundsP();
           if ($("#errors").css('display')=='none'){
-            checkIsEmpty($("#reactor").val());
+            $("#form").submit();
           }
         }
       }
@@ -746,9 +749,38 @@ function checkIsEmpty(id){
         {
           if (data!="empty") {
             $("#reactorIsNotEmpty").show();
+            $("#startMix").prop('disabled', true);
           }
           else {
+            $("#startMix").prop('disabled', false);
             $("#form").submit();
+          }
+        }
+      });
+}
+
+function checkIsEmpty2(id){
+  $("#reactorIsNotEmpty").hide();
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'check_is_empty2/',
+        data: {
+          'id': id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          if (data!="empty") {
+            $("#reactorIsNotEmpty").show();
+            $("#startMix").prop('disabled', true);
+          }
+          else {
+            $("#startMix").prop('disabled', false);
           }
         }
       });

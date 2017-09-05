@@ -10,7 +10,7 @@ $(document).ready(function(){
     changeMatTable();
     return false;
   });
-  checkReady();
+  checkReady({{p.reactor.id}});
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -21,6 +21,9 @@ $(document).ready(function(){
   <li><a href="#" title=""><em>Завершён</em></a></li>
 </ul>
 
+<div id="reactorIsNotEmpty" class="alert alert-danger" role="alert" style="display:none">
+  Реактор занят.
+</div>
 <form action="mixing/" id="f" method="POST">{% csrf_token %}<input type="hidden" id="water_amm" name="water_amm" value=""></form>
 <!--<a href="mixing/">--><button type="button" id="startMix" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Начать смешение</button><!--</a>-->
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
