@@ -259,16 +259,16 @@ function changeMatTable(){
 }
 
 //Функция проверки незаполненных композиций
-function checkReady(id){
-    checkIsEmpty2(id);
+function checkReady(){
     var rowCount = $('#materials tr').length;
+    var res = false;
     for (i = 2; i < rowCount; i++) {
       var tr = $('#materials tr').eq(i);
       if (tr.attr('id')[0] == "5"){
-        $("#startMix").prop('disabled', true);
+        document.getElementById('startMix').setAttribute('disabled', 'disabled');
       }
     }
-
+    return res;
 }
 
 
@@ -781,6 +781,7 @@ function checkIsEmpty2(id){
           }
           else {
             $("#startMix").prop('disabled', false);
+            checkReady();
           }
         }
       });

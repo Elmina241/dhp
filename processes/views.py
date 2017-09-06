@@ -406,12 +406,35 @@ def drop(request):
             storage = get_object_or_404(Reactor_content, pk=request.POST['id'])
         else:
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
+        check_dependencies(storage, request.POST['type'])
         storage.amount = 0
+        storage.reserved = 0
         storage.content_type = 3
         storage.batch = None
         storage.kneading = None
         storage.save()
         return HttpResponse('ok')
+
+def check_dependencies(storage, t):
+    if t == 'r':
+        for k in Kneading.objects.all():
+            log = State_log.objects.filter(kneading = k).last().state.pk
+            if  log == 1 or log == 2:
+                if List_component.objects.filter(list = k.list, r_cont = storage).count() != 0:
+                    comp = List_component.objects.filter(list = k.list, r_cont = storage)[0]
+                    comp.formula = comp.r_cont.batch.kneading.list.formula
+                    comp.batch = None
+                    comp.save()
+    else:
+        for k in Kneading.objects.all():
+            log = State_log.objects.filter(kneading = k).last().state.pk
+            if  log == 1 or log == 2:
+                if List_component.objects.filter(list = k.list, t_cont = storage).count() != 0:
+                    comp = List_component.objects.filter(list = k.list, t_cont = storage)[0]
+                    comp.formula = comp.t_cont.batch.kneading.list.formula
+                    comp.batch = None
+                    comp.save()
+
 
 def move(request):
     if request.method == 'POST':
@@ -432,6 +455,8 @@ def move(request):
         else:
             accepting.kneading = donor.kneading
         if donor.amount == 0:
+            donor.reserved = 0
+            check_dependencies(donor, request.POST['donor'][0])
             donor.batch = None
             donor.kneading = None
             donor.content_type = 3
