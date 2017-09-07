@@ -82,15 +82,15 @@ function drop(id, t){
       });
 }
 
-function move(){
+function move(acc, donor, amm){
   var csrftoken = getCookie('csrftoken');
   $.ajax({
         type: "POST",
         url: 'move/',
         data: {
-          'acc': $('#accepting').val(),
-          'donor': $('#donor').val(),
-          'amm': $('#moveAmm').val()
+          'acc': acc,
+          'donor': donor,
+          'amm': amm
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -104,10 +104,27 @@ function move(){
       });
 }
 
+function checkDrop(reserved, id, t){
+  if (reserved > 0){
+    $("#confirmButton").click(function() {
+      drop(id, t);
+    });
+    $("#confirm").modal('show');
+  }
+  else {
+    drop(id, t);
+  }
+}
+
 function checkMove(){
   $("#error").hide();
-  accId = $('#accepting').val();
-  donorId = $('#donor').val();
+  acc = $('#accepting').val();
+  accId = acc.split("_")[0];
+  donor = $('#donor').val();
+  donorId = donor.split("_")[0];
+  donorF = donor.split("_")[1];
+  accF = acc.split("_")[1];
+  reserved = donor.split("_")[2];
   amm = $('#moveAmm').val();
   accepting = $("#c" + accId).parent();
   donor = $("#c" + donorId).parent();
@@ -123,12 +140,19 @@ function checkMove(){
     $("#error").text("Недостаточно композиции в доноре");
     $("#error").show();
   }
-  else if(donorComp!=accComp&&accComp!="Пусто"){
+  else if(donorF!=accF&&accComp!="Пусто"){
     $("#error").text("Акцептор не пуст");
     $("#error").show();
   }
   else{
-    move();
+    if (reserved > (donorAm - amm)){
+      $("#confirmButton").click(function() {
+        move(accId, donorId, amm);
+      });
+      $("#confirm").modal('show');
+      $("#move").modal('hide');
+    }
+    else move(accId, donorId, amm);
   }
 }
 
@@ -166,7 +190,7 @@ $(document).ready(function(){
                 {% if r.content_type == 1 %}
                 <td>{{r.batch.id}} {{r.batch.kneading.list.formula.composition.name}}</td>
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
-                <td><button class="btn btn-danger btn-sm" type="button" data-res="{{r.reserved}}" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
+                <td><button class="btn btn-danger btn-sm" type="button" data-res="{{r.reserved}}" id="{{r.id}}" onclick="checkDrop({{r.reserved}}, {{r.id}}, 'r');return false;">Сброс</button></td>
                 {% else %}
                 {% if r.content_type == 2 %}
                 <td>{{r.kneading.id}} {{r.kneading.list.formula.composition.name}}</td>
@@ -188,7 +212,7 @@ $(document).ready(function(){
                 {% if t.content_type == 1 %}
                 <td>{{t.batch.id}} {{t.batch.kneading.list.formula.composition.name}}</td>
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
-                <td><button class="btn btn-danger btn-sm" type="button" data-res="{{t.reserved}}" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
+                <td><button class="btn btn-danger btn-sm" type="button"  id="{{t.id}}" data-formula="{{t.batch.kneading.list.formula.id}}" onclick="checkDrop({{t.reserved}}, {{t.id}}, 't');return false;">Сброс</button></td>
                 {% else %}
                 {% if t.content_type == 2 %}
                 <td>{{t.kneading.id}} {{t.kneading.list.formula.composition.name}}</td>
@@ -229,12 +253,13 @@ $(document).ready(function(){
                 <div class="modal-content">
                   <div class="modal-header">
                     <button class="close" data-dismiss="modal">x</button>
-                    <h4 id="storCode"></h4>
+                    <h4 id="storCode">Предупреждение</h4>
                   </div>
                   <div class="modal-body">
-                    Композиция зарезервирована процессом. Переместить в любом случае?
+                    <p>Композиция зарезервирована процессом.</p>
+                    <p>Переместить в любом случае?</p>
                     <div class="modal-footer">
-                      <input value="Переместить" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                      <input value="Переместить" id = "confirmButton" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
                     </div>
                   </div>
                 </div>
@@ -254,11 +279,11 @@ $(document).ready(function(){
                       <label for="donor" class="col-sm-2 control-label" style="font-size: small">Донор: </label>
                       <div class="col-sm-10">
                         <select class="form-control" id="donor" name="donor">
-                          {% for r in reactor %}
-                            <option value="r-{{ r.id }}">{{ r }}</option>
+                          {% for r in reactors %}
+                            <option value="r-{{ r.reactor.id }}_{{r.batch.kneading.list.formula.id}}_{{r.reserved}}">{{ r.reactor }}</option>
                           {% endfor %}
-                          {% for t in tank %}
-                            <option value="t-{{ t.id }}">{{ t }}</option>
+                          {% for t in tanks %}
+                            <option value="t-{{ t.tank.id }}_{{t.batch.kneading.list.formula.id}}_{{t.reserved}}">{{ t.tank }}</option>
                           {% endfor %}
                         </select>
                       </div>
@@ -267,11 +292,11 @@ $(document).ready(function(){
                       <label for="accepting" style="margin-top:10pt" class="col-sm-2 control-label" style="font-size: small">Акцептор: </label>
                       <div class="col-sm-10" style="margin-top:10pt">
                         <select class="form-control" id="accepting" name="accepting">
-                          {% for r in reactor %}
-                            <option value="r-{{ r.id }}">{{ r }}</option>
+                          {% for r in reactors %}
+                            <option value="r-{{ r.reactor.id }}_{{r.batch.kneading.list.formula.id}}">{{ r.reactor }}</option>
                           {% endfor %}
-                          {% for t in tank %}
-                            <option value="t-{{ t.id }}">{{ t }}</option>
+                          {% for t in tanks %}
+                            <option value="t-{{ t.tank.id }}_{{t.batch.kneading.list.formula.id}}">{{ t.tank }}</option>
                           {% endfor %}
                         </select>
                       </div>

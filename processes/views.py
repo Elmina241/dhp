@@ -214,21 +214,25 @@ def save_load_list(request, kneading_id):
                 if t == "1":
                     mat = Reactor_content.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
+                    mat.save()
                     cmps = List_component(list=list, r_cont=mat, ammount=ammount)
                     cmps.save()
                 if t == "2":
                     mat = Tank_content.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
+                    mat.save()
                     cmps = List_component(list=list, t_cont=mat, ammount=ammount)
                     cmps.save()
                 if t == "3":
                     mat = Compl_comp.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
+                    mat.save()
                     cmps = List_component(list=list, compl=mat, ammount=ammount)
                     cmps.save()
                 if t == "4":
                     mat = Material.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
+                    mat.save()
                     cmps = List_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
                 if t == "5":
@@ -265,11 +269,13 @@ def save_process(request):
                             if t == "2":
                                 mat = get_object_or_404(Tank_content, pk = id)
                                 mat.reserved = mat.reserved + float(ammount)
+                                mat.save()
                                 cmps = List_component(list=list, t_cont=mat, ammount=ammount)
                             else:
                                 if t == "3":
                                     mat = get_object_or_404(Compl_comp, pk = id)
                                     mat.reserved = mat.reserved + float(ammount)
+                                    mat.save()
                                     cmps = List_component(list=list, compl=mat, ammount=ammount)
                                 else:
                                     mat = get_object_or_404(Formula, pk = id)
@@ -277,6 +283,7 @@ def save_process(request):
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
                         mat.reserved = mat.reserved + float(ammount)
+                        mat.save()
                         cmps = List_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
         #сохранение процесса
@@ -447,13 +454,23 @@ def move(request):
         else:
             accepting = get_object_or_404(Tank_content, tank=request.POST['acc'][2:])
         amm = float(request.POST['amm'])
+        if donor.content_type == 1:
+            if accepting.content_type == 3:
+                accepting.batch = donor.batch
+            else:
+                for m in Batch_comp.objects.filter(batch = accepting.batch):
+                    comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
+                    m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
+                    m.save()
+        else:
+            accepting.kneading = donor.kneading
+
         donor.amount = donor.amount - amm
         accepting.content_type = donor.content_type
         accepting.amount = accepting.amount + amm
-        if donor.content_type == 1:
-            accepting.batch = donor.batch
-        else:
-            accepting.kneading = donor.kneading
+        if donor.reserved > donor.amount:
+            donor.reserved = 0
+            check_dependencies(donor, request.POST['donor'][0])
         if donor.amount == 0:
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
