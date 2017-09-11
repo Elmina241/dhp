@@ -39,6 +39,7 @@ class List_component(models.Model):
 #Процесс смешения
 class Kneading(models.Model):
     list = models.ForeignKey('Loading_list')
+    batch_num = models.FloatField(default = 0)
     start_date = models.DateField()
     finish_date = models.DateField()
     reactor = models.ForeignKey('tables.Reactor')

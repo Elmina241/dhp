@@ -87,6 +87,7 @@ class Composition(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     sgr = models.CharField(max_length=80)
+    cur_batch = models.FloatField(default = 0)
     group = models.ForeignKey('Composition_group')
     form = models.ForeignKey('Product_form', null=True)
     isFinal = models.BooleanField(default = True)

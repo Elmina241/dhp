@@ -15,8 +15,12 @@ def loading_lists(request):
 def storages(request):
     return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all})
 
-def mixing(request):
-    return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all})
+def mixing(request, kneading_id = -1):
+    if kneading_id != -1:
+        kneading = get_object_or_404(Kneading, pk=kneading_id)
+    else:
+        kneading = None
+    return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all, "new_kneading": kneading})
 
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
@@ -105,7 +109,7 @@ def del_list(request):
         del_obj.delete()
     return redirect('loading_lists')
 
-def del_process(request):
+def del_process(request, kneading_id = None):
     del_var = request.POST.getlist('del_list')
     for d in del_var:
         del_obj = get_object_or_404(Kneading, pk=d)
@@ -295,11 +299,14 @@ def save_process(request):
             kneading.start_date = datetime.datetime.strptime(st_date, "%d/%m/%Y").date()
             kneading.finish_date = datetime.datetime.strptime(end_date, "%d/%m/%Y").date()
             kneading.list = list
+            kneading.batch_num = formula.composition.cur_batch
+            formula.composition.cur_batch = formula.composition.cur_batch + 1
+            formula.composition.save()
             kneading.reactor = reactor
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))
             st.save()
-        return redirect('mixing')
+        return redirect('mixing', kneading_id = kneading.id)
 
 def save_tech_comp(request):
     list = Loading_list()
@@ -341,6 +348,9 @@ def save_tech_comp(request):
             kneading.finish_date = datetime.date.today()
             kneading.list = list
             kneading.reactor = reactor
+            kneading.batch_num = formula.composition.cur_batch
+            formula.composition.cur_batch = formula.composition.cur_batch + 1
+            formula.composition.save()
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
             st.save()
@@ -526,7 +536,7 @@ def get_lists(request):
 def get_state_id(kneading):
     return State_log.objects.filter(kneading = kneading).last().state.id
 
-def get_state(request):
+def get_state(request, kneading_id = None):
     if request.method == 'POST':
         if 'id' in request.POST:
             log = State_log.objects.filter(kneading = get_object_or_404(Kneading, pk=request.POST['id'])).last()

@@ -46,6 +46,11 @@ $(document).ready(function(){
           <h5><p>{{p.finish_date|date:"d.m.Y"}}</p>
           </div>
           <div class="col-sm-3">
+          <h5><p><b>Партия: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>П-{{p.batch_num|floatformat:"0" }}</p></h5>
+          </div>
+          <div class="col-sm-3">
           <h5><p><b>Реактор: </b></p></h5></div>
           <div class="col-sm-7">
           <h5><p>{{p.reactor}}</p></h5>

@@ -112,7 +112,7 @@ $(document).ready(function(){
   {% endif %}
 
 <div class="panel-body">
-  <h3>Паспорт партии № {{p.id}}</h3>
+  <h3>Паспорт партии № {{p.kneading.batch_num|floatformat:"0" }}</h3>
   <hr style="border: none; background-color: mediumseagreen; color: mediumseagreen; height: 2px">
   <div class="input-group" style ="margin: left; margin-left:10pt">
       <div class="col-sm-5">
