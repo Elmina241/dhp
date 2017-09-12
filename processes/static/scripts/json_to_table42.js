@@ -142,6 +142,25 @@ function getMinMax(c, comp, mat, fComp, formula){
 }
 
 
+//Заполнение полей данными по выбранной партии
+function getKneading(){
+  kneadingId = document.getElementById("kneading").value;
+  var processes = JSON.parse($("#processes").attr("value"));
+  for (p in processes){
+    if (p == kneadingId){
+      $("#ammount").attr("value", processes[p].amount);
+      start = processes[p].start_date.substr(8) + '/' + processes[p].start_date.substr(5,2) + '/' + processes[p].start_date.substr(0, 4);
+      end = processes[p].finish_date.substr(8) + '/' + processes[p].finish_date.substr(5,2) + '/' + processes[p].finish_date.substr(0, 4);
+      $("#start").attr("value", start);
+      $("#end").attr("value", end);
+      $("#reactor").find('option').attr("selected", false);
+      $("#formula").find('option').attr("selected", false);
+      $("#reactor [value = " + processes[p].reactor + "]").attr("selected", "selected");
+      $("#formula [value = " + processes[p].formula + "]").attr("selected", "selected");
+    }
+  }
+}
+
 //Изменяет не только минимум и максимум, но и количество компонента в составе
 function changeMinMax(c, f, f_c){
   var components = JSON.parse(c);

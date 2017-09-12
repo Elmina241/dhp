@@ -164,6 +164,60 @@ def planning(request):
         "batch_comps": json.dumps(batch_comps)
         })
 
+def new_associated_process(request):
+    components = serializers.serialize("json", Components.objects.all())
+    f_comp = serializers.serialize("json", Formula_component.objects.all())
+    c_comps = serializers.serialize("json", Compl_comp.objects.all())
+    models = serializers.serialize("json", Model_list.objects.all())
+    m_comp = serializers.serialize("json", Model_component.objects.all())
+    materials = serializers.serialize("json", Material.objects.all())
+    formula = serializers.serialize("json", Formula.objects.all())
+    reactors = serializers.serialize("json", Reactor.objects.all())
+    processes = {}
+    for k in Kneading.objects.all():
+        log = State_log.objects.filter(kneading = k).last().state.pk
+        if  log == 1 or log == 2:
+            processes[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": str(k.start_date), "finish_date": str(k.finish_date), "reactor": k.reactor.pk, "amount": k.list.ammount, "formula": k.list.formula.pk}
+    batch_comps = serializers.serialize("json", Batch_comp.objects.all())
+    formula_names = {}
+    for f in Formula.objects.all():
+        formula_names[str(f.pk)] = str(f)
+    batches = {}
+    i=0
+    for r in Reactor_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        i=i+1
+    for t in Tank_content.objects.filter(content_type = "1"):
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        i=i+1
+    for c in Compl_comp.objects.all():
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        i=i+1
+
+    compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
+    return render(request, "associated_process.html",
+        {"components": json.dumps(components),
+        "materials": json.dumps(materials),
+        "model_lists": json.dumps(models),
+        "model_comps": json.dumps(m_comp),
+        "materials2": Material.objects.all,
+        "compl_comps": Formula.objects.filter(composition__isFinal = False),
+        "compl_comps2": json.dumps(c_comps),
+        "compl_comp_comps": json.dumps(compl_comp_comps),
+        "f_c": json.dumps(f_comp),
+        "f": json.dumps(formula),
+        "formula_names": json.dumps(formula_names),
+        "processes": processes,
+        "processes2": json.dumps(processes),
+        "reactors": Reactor.objects.all,
+        "reactors2": json.dumps(reactors),
+        "formulas": Formula.objects.all,
+        "location": "/processes/new_associated_process/",
+        "header": "Планирование",
+        "batches": json.dumps(batches),
+        "batch_comps": json.dumps(batch_comps)
+        })
+
 def save_list(request, list_id):
     list = Model_list()
     #сохранение загрузочного листа
