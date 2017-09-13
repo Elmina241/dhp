@@ -356,6 +356,40 @@ function getModelList(m, m_c, compl) {
     changeWaterT();
 };
 
+function getBatchList(m, m_c, compl) {
+  var table = $("#loadList tbody");
+  var rowCount = $('#loadList tr').length;
+  for (i = 2; i < rowCount; i++) $('#loadList tr').eq(2).remove();
+  var sel = document.getElementById("kneading");
+  var sel_id = sel.value;
+  var processes = JSON.parse($("#processes").attr("value"));
+  for (p in processes){
+    if (p == sel_id){
+      b_amm = processes[p].amount;
+      list_id = processes[p].list;
+    }
+  }
+  var materials = JSON.parse(m);
+  var m_comp = m_c;
+  var complComp = JSON.parse(compl);
+  var amm = $("#ammount").val();
+  for (i in m_comp){
+    if (m_comp[i].list == list_id){
+      var row = document.createElement("TR");
+      var matAm = (m_comp[i].ammount/b_amm*amm).toFixed(2) ;
+      if (m_comp[i].mat != null){
+        $("<tr id=" + m_comp[i].mat + "><td>" + getCode(m_comp[i].mat, materials) + "</td><td>" + getName(m_comp[i].mat, materials) + "</td><td></td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].mat, materials) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+      }
+      else{
+          $("<tr id=" + m_comp[i].formula + " name='compl'><td>" + getCode(m_comp[i].formula, complComp) + "</td><td>" + getFormulaName(m_comp[i].formula) + "</td><td>" + getSelectOfComp(m_comp[i].formula) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].formula, complComp) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+      }
+    }
+  }
+  changeMatAmP();
+  changeWaterL();
+  changeWaterT();
+};
+
 function getFormulaName(id){
   var names = JSON.parse($("#formula_names").attr("value"));
   for (n in names){
