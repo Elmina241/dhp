@@ -369,9 +369,13 @@ def save_process(request):
             kneading.start_date = datetime.datetime.strptime(st_date, "%d/%m/%Y").date()
             kneading.finish_date = datetime.datetime.strptime(end_date, "%d/%m/%Y").date()
             kneading.list = list
-            kneading.batch_num = formula.composition.cur_batch
-            formula.composition.cur_batch = formula.composition.cur_batch + 1
-            formula.composition.save()
+            if 'kneading' in request.POST:
+                k = get_object_or_404(Kneading, pk=request.POST['kneading'])
+                kneading.batch_num = k.batch_num
+            else:
+                kneading.batch_num = formula.composition.cur_batch
+                formula.composition.cur_batch = formula.composition.cur_batch + 1
+                formula.composition.save()
             kneading.reactor = reactor
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))

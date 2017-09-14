@@ -48,7 +48,7 @@ function getState(id){
 }
 
 $(document).ready(function(){
-
+  $("#prTable").tablesorter({sortList: [[2,0]]});
 });</script>
 
 <form action="del_process/" method="post">
@@ -62,7 +62,7 @@ $(document).ready(function(){
           <input type="submit" class="btn btn-default" value="Удалить">
           <br><br>
           {% if kneading %}
-              <table class="table table-sm" style="font-size: 110%;">
+              <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
                 <thead>
                   <tr>
                     <th></th><th>№</th><th>Партия</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th><th>Статус</th>
