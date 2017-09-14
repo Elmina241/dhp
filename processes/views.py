@@ -20,7 +20,12 @@ def mixing(request, kneading_id = -1):
         kneading = get_object_or_404(Kneading, pk=kneading_id)
     else:
         kneading = None
-    return render(request, "process.html", {"header": "Процессы смешения", "location": "/processes/process/", "kneading": Kneading.objects.all, "new_kneading": kneading})
+    batches = {}
+    for k in Kneading.objects.all():
+        name = "П-" + str(int(k.batch_num)) + " " + str(k.list.formula)
+        if name not in batches:
+            batches[name] = name
+    return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.all, "new_kneading": kneading, "batches": batches})
 
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
