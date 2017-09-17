@@ -42,9 +42,23 @@ function getState(id){
         },
         success: function onAjaxSuccess(data)
         {
-          $("#"+id).text(data);
+          if (data!="Завершён"){
+            $("#"+id).text(data);
+          }
+          else {
+            $("#"+id).parent().remove();
+          }
         }
       });
+}
+
+function applyFilters(){
+  $("tr").each(function(){
+      $(this).show();
+  });
+  filterState();
+  filterDate();
+  filterBatch();
 }
 
 $(document).ready(function(){
@@ -55,41 +69,16 @@ $(document).ready(function(){
     todayHighlight: true
   });
   $("#prTable").tablesorter({sortList: [[2,0]]});
-  $("[name='groupState']").change(function(){
-    
-      filterState();
-    });
-    $("[name='groupBatch']").change(function(){
-      var sel = $("[name='groupBatch']");
-      var group = sel.find(":selected").text();
-      $("tr").each(function(){
-          $(this).show();
-        });
-      if (group == "Все"){
-      /*  $("tr").each(function(){
-          $(this).show();
-        });*/
-      }
-      else {
-        $("tr").filter(function() {
-            return ($(this).find("td").eq(2).text() + " " + $(this).find("td").eq(3).text()) != group || $(this).is(':hidden');
-          }).each(function(){
-            $(this).hide();
-          });
-        }
-        $("tr").eq(0).show();
-      });
-      $("[name='start']").change(filterDate);
-      $("[name='end']").change(filterDate);
+  $("[name='groupState']").change(applyFilters);
+  $("[name='groupBatch']").change(applyFilters);
+  $("[name='start']").change(applyFilters);
+  $("[name='end']").change(applyFilters);
 });
 function filterDate(){
   var start = $("#groupDateStart").prop("value");
   var startD = new Date(parseInt(start.substr(6)), (parseInt(start.substr(3,2)) - 1), parseInt(start.substr(0,2)));
   var end = $("#groupDateEnd").prop("value");
   var endD = new Date(parseInt(end.substr(6)), (parseInt(end.substr(3,2)) - 1), parseInt(end.substr(0,2)));
-  $("tr").each(function(){
-      $(this).show();
-    });
     $("tr").filter(function() {
         startText = $(this).find("td").eq(4).text();
         startDate = new Date(parseInt(startText.substr(6)), (parseInt(startText.substr(3,2)) - 1), parseInt(startText.substr(0,2)));
@@ -102,9 +91,6 @@ function filterDate(){
 function filterState(){
   var sel = $("[name='groupState']");
   var group = sel.find(":selected").text();
-  $("tr").each(function(){
-      $(this).show();
-    });
   if (group == "Все"){
     /*$("tr").each(function(){
       $(this).show();
@@ -113,6 +99,23 @@ function filterState(){
   else {
     $("tr").filter(function() {
         return $(this).find("td").eq(6).text() != group;
+      }).each(function(){
+        $(this).hide();
+      });
+    }
+    $("tr").eq(0).show();
+}
+function filterBatch(){
+  var sel = $("[name='groupBatch']");
+  var group = sel.find(":selected").text();
+  if (group == "Все"){
+  /*  $("tr").each(function(){
+      $(this).show();
+    });*/
+  }
+  else {
+    $("tr").filter(function() {
+        return ($(this).find("td").eq(2).text() + " " + $(this).find("td").eq(3).text()) != group || $(this).is(':hidden');
       }).each(function(){
         $(this).hide();
       });

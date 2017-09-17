@@ -728,6 +728,11 @@ def stop_process(request, kneading_id):
     st.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
 
+def finish_process(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=7))
+    st.save()
+    return redirect('mixing')
 
 def finish_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
