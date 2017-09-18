@@ -101,7 +101,7 @@ function disButtons(){
         <label for="material">Реактив:</label>
         <select class="form-control" id="material">
           {% for m in materials2 %}
-          <option value="{{ m.id }}">{{ m.get_name }}</option>
+          <option value="{{ m.id }}">{{ m.get_full_name }}</option>
           {% endfor %}</select>
           </div>
       </div>

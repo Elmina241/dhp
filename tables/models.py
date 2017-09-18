@@ -35,6 +35,10 @@ class Material(models.Model):
     def get_name(self):
         full_name = self.code + " " + self.name
         return full_name
+    def get_full_name(self):
+        full_name = self.name + ('' if self.mark == '-' else (' ' + self.mark))
+        full_name = self.code + " " + full_name
+        return full_name
 
 
 # Модели для продукции
