@@ -80,7 +80,7 @@ $(document).ready(function(){
         <label for="material">Реактив:</label>
         <select class="form-control" id="material">
           {% for m in materials %}
-          <option value="{{ m.code }}">{{ m.get_name }}</option>
+          <option value="{{ m.code }}">{{ m.get_full_name }}</option>
           {% endfor %}</select>
           <br>
           <label for="min">Минимум:</label>
@@ -110,7 +110,7 @@ $(document).ready(function(){
           {% for c in comps %}
           <tr>
             <td>{{ c.mat.code }}</td>
-            <td>{{ c.mat.name }}</td>
+            <td>{{ c.mat }}</td>
             <td>{{ c.min }}</td>
             <td>{{ c.max }}</td>
             <td><button class ="btn btn-default" onclick='deleteRow(this)'><i class="glyphicon glyphicon-trash"></i></button></td>

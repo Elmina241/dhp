@@ -157,6 +157,7 @@ function checkMove(){
 }
 
 $(document).ready(function(){
+  $("#prTable").tablesorter({sortList: [[2,0]]});
   $('#pack').on('show.bs.modal', function (event) {
     // получить кнопку, которая его открыло
     var button = $(event.relatedTarget)[0];
@@ -168,32 +169,33 @@ $(document).ready(function(){
     $(this).find('#stor_id').attr("value", stor_id);
     $(this).find('#storCode').text(code);
     $(this).find('#storType').attr("value", sType);
+
   });
 });
 </script>
     {% csrf_token %}
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#move"  style="margin-bottom:5pt">Переток</button>
           {% if reactors %}
-          <table class="table table-hover table-sm">
+          <table class="table table-hover tablesorter" id="prTable">
             <thead>
-              <tr  class="well well-sm">
+              <tr>
                 <th>Код</th><th>Наименование</th><th>Объём</th><th>Содержимое</th><th></th><th></th>
               </tr>
             </thead>
             <tbody>
-              <tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td></tr>
+              <!--<tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td></tr>-->
               {% for r in reactors %}
               <tr>
                 <td id="cr-{{r.reactor.id}}">{{ r.reactor.code }}</td>
                 <td>{{ r.reactor.name }}</td>
                 <td id="r-{{r.id}}">{{ r.amount }}</td>
                 {% if r.content_type == 1 %}
-                <td>{{r.batch.id}} {{r.batch.kneading.list.formula.composition.name}}</td>
+                <td>{{r.batch.id}} {{r.batch.kneading.list.formula}}</td>
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
                 <td><button class="btn btn-danger btn-sm" type="button" data-res="{{r.reserved}}" id="{{r.id}}" onclick="checkDrop({{r.reserved}}, {{r.id}}, 'r');return false;">Сброс</button></td>
                 {% else %}
                 {% if r.content_type == 2 %}
-                <td>{{r.kneading.id}} {{r.kneading.list.formula.composition.name}}</td>
+                <td>{{r.kneading.id}} {{r.kneading.list.formula}}</td>
                 <td></td>
                 <td><button class="btn btn-danger btn-sm" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
                 {% else %}
@@ -203,19 +205,19 @@ $(document).ready(function(){
                 {% endif %}
               </tr>
               {% endfor %}
-              <tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td></tr>
+              <!--<tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td></tr>-->
               {% for t in tanks %}
               <tr>
                 <td id="ct-{{t.tank.id}}">{{ t.tank.code }}</td>
                 <td>{{ t.tank.name }}</td>
                 <td id="t-{{t.id}}">{{ t.amount }}</td>
                 {% if t.content_type == 1 %}
-                <td>{{t.batch.id}} {{t.batch.kneading.list.formula.composition.name}}</td>
+                <td>{{t.batch.id}} {{t.batch.kneading.list.formula}}</td>
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
                 <td><button class="btn btn-danger btn-sm" type="button"  id="{{t.id}}" data-formula="{{t.batch.kneading.list.formula.id}}" onclick="checkDrop({{t.reserved}}, {{t.id}}, 't');return false;">Сброс</button></td>
                 {% else %}
                 {% if t.content_type == 2 %}
-                <td>{{t.kneading.id}} {{t.kneading.list.formula.composition.name}}</td>
+                <td>{{t.kneading.id}} {{t.kneading.list.formula}}</td>
                 <td></td>
                 <td><button class="btn btn-danger btn-sm" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
                 {% else %}

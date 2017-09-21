@@ -55,7 +55,7 @@ $(document).ready(function(){
       <div id="reactorError" class="alert alert-danger" role="alert" style="display:none">
         Объём композиции выходит за границы объёма реактора.
       </div>
-      
+
       <div id="errors" class="alert alert-danger" role="alert" style="display:none">
       </div>
       <div class="input-group col-sm-10" style ="margin: auto">
@@ -159,7 +159,7 @@ $(document).ready(function(){
                     <label for="material">Реактив:</label>
                     <select class="form-control" id="material">
                       {% for m in materials2 %}
-                      <option value="{{ m.id }}">{{ m.get_name }}</option>
+                      <option value="{{ m.id }}">{{ m.get_full_name }}</option>
                       {% endfor %}
                     </select>
                   </div>
