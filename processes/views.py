@@ -38,6 +38,9 @@ def new_tech_comp(request):
     formula = serializers.serialize("json", Formula.objects.filter(composition__isFinal = False))
     reactors = serializers.serialize("json", Reactor.objects.all())
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
+    formula_names = {}
+    for f in Formula.objects.all():
+        formula_names[str(f.pk)] = str(f)
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
@@ -58,6 +61,7 @@ def new_tech_comp(request):
     "model_comps": json.dumps(m_comp),
     "materials2": Material.objects.all,
     "compl_comps": Compl_comp.objects.all,
+    "formula_names": json.dumps(formula_names),
     "compl_comps2": json.dumps(c_comps),
     "compl_comp_comps": json.dumps(compl_comp_comps),
     "f_c": json.dumps(f_comp),

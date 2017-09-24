@@ -227,7 +227,7 @@ function getLoadList(loadList, t_name) {
   for (i in loadList){
       if (loadList[i].min!='-'){
         var min = ((loadList[i].min/100)*amm).toFixed(2);
-        var max = ((loadList[i].min/100)*amm).toFixed(2);
+        var max = ((loadList[i].max/100)*amm).toFixed(2);
       }
       else{
         var min = "-";
