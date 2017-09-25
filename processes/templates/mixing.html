@@ -51,6 +51,7 @@ function addComp(mat_id, amm, mat_code, isCompl){
           obj.parentElement.children[5].innerHTML = "<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + " data-isCompl=" + isCompl + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>";
           getAmmount();
           $("#type").attr("value", "");
+          checkLoadedComponents();
         }
       });
 }
@@ -66,6 +67,7 @@ function getMatAmm(mat_code, add){
 
 $(document).ready(function(){
   getAmmount();
+  checkLoadedComponents();
   $('#addComp').on('show.bs.modal', function (event) {
     // получить кнопку, которая его открыло
     var button = $(event.relatedTarget)[0];
@@ -94,7 +96,7 @@ $(document).ready(function(){
 </ul>
 
 <form action="testing/" id="f" method="POST">{% csrf_token %}<input type="hidden" id="list_amm" name="list_amm" value=""></form>
-<button type="button" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить смешение</button>
+<button type="button" id="endMix" class="btn btn-success" onclick="$('#f').submit();" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить смешение</button>
 <!--<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>-->
 <a href="stop_process/"><button type="button" class="btn btn-danger" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button></a>
 <div class="panel panel-default" style ="margin: auto">
@@ -187,7 +189,7 @@ $(document).ready(function(){
                   {% endif %}
                 {% endif %}
                 {% else %}
-              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat.get_full_name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
+              <tr class="success"><td><span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: white; text-shadow: black 0 0 2px;"></span></td><td>{{c.mat.code}}</td><td>{{c.mat}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}">{{c.ammount}}</td><td><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-isCompl="" data-code="{{c.mat.code}}" data-type="add" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td></tr>
             {% endif %}
           {% else %}
             {% if c.mat == None %}
@@ -201,7 +203,7 @@ $(document).ready(function(){
             {% endif %}
             {% endif %}
             {% else %}
-              <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat.get_full_name}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}" data-isCompl="">Добавить</button></td><td></td></tr>
+              <tr><td></td><td>{{c.mat.code}}</td><td>{{c.mat}}</td><td>{{c.ammount}}</td><td id="{{c.mat.code}}"><button class="btn btn-default" data-toggle="modal" data-target="#addComp" data-code="{{c.mat.code}}" data-amm="{{c.ammount}}" data-mat="{{c.mat.id}}" data-isCompl="">Добавить</button></td><td></td></tr>
             {% endif %}
           {% endif %}
         {% endfor %}

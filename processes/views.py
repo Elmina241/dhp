@@ -22,9 +22,11 @@ def mixing(request, kneading_id = -1):
         kneading = None
     batches = {}
     for k in Kneading.objects.all():
-        name = "П-" + str(int(k.batch_num)) + " " + str(k.list.formula)
-        if name not in batches:
-            batches[name] = name
+        log = State_log.objects.filter(kneading = k).last().state.pk
+        if  log != 7:
+            name = "П-" + str(int(k.batch_num)) + " " + str(k.list.formula)
+            if name not in batches:
+                batches[name] = name
     return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.all, "new_kneading": kneading, "batches": batches})
 
 def new_tech_comp(request):

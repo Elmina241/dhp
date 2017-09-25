@@ -290,6 +290,21 @@ function checkReady(){
     return res;
 }
 
+//Функция для проверки, все ли компоненты загружены
+function checkLoadedComponents(){
+  var rowCount = $('#materials2 tr').length;
+  document.getElementById('endMix').removeAttribute('disabled');
+  var res = false;
+  for (i = 1; i < rowCount; i++) {
+    var tr = $('#materials2 tr').eq(i);
+    temp = tr.attr('class');
+    if (tr.attr('class') != "success"){
+      document.getElementById('endMix').setAttribute('disabled', 'disabled');
+    }
+  }
+  return res;
+}
+
 
 /** Скрипты для страницы планирование **/
 //Формирование таблицы состава в планировании

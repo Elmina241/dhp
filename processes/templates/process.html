@@ -42,7 +42,7 @@ function getState(id){
         },
         success: function onAjaxSuccess(data)
         {
-          if (data!="Завершён"){
+          if (data!="Завершён" && data!="Прерван"){
             $("#"+id).text(data);
           }
           else {
