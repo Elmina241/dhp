@@ -617,10 +617,12 @@ def add_composition(request):
         name = request.POST['name']
         group = get_object_or_404(Composition_group, pk=request.POST['group'])
         sgr = request.POST['sgr']
-        if request.POST['isFinal'] == 'on':
-            isFinal = False
-        else:
-            isFinal = True
+        isFinal = True
+        if 'isFinal' in request.POST:
+            if request.POST['isFinal'] == 'on':
+                isFinal = False
+            else:
+                isFinal = True
         comp = Composition(
             code = code,
             name = name,
