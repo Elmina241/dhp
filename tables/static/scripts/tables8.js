@@ -66,6 +66,13 @@ function checkBounds(){
   return min.valueAsNumber <= max.valueAsNumber;
 }
 
+function checkExisting(){
+  res = false;
+  for (tr in $("components tr")){
+    if tr.find("td").eq(0).text() ==
+  }
+}
+
 function saveRow(){
   var err = document.getElementById("error-message");
   if (err) err.remove();
