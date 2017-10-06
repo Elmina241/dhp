@@ -443,14 +443,22 @@ function changeWaterT() {
 
 //Добавление реактива в загрузочный лист
 function addMaterial(){
+  var err = document.getElementById("error-message");
+  if (err) err.remove();
   var id = document.getElementById("material").selectedOptions[0].value
   var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
   var name = document.getElementById("material").selectedOptions[0].textContent.substring(5);
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td></td><td><input type='number' class='form-control' name=" + code + " onchange='changeMatAmP();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
-  $("#newComp").modal("hide");
+  if (!checkExisting(false)){
+    $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td></td><td><input type='number' class='form-control' name=" + code + " onchange='changeMatAmP();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+    $("#newComp").modal("hide");
+  }
+  else {
+    var material = document.getElementById('material').parentElement;
+    material.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Компонент уже есть в листе." + '</p>');
+  }
 }
 
 //Получение списка технологических композиций
@@ -467,15 +475,22 @@ function getSelectOfComp(id){
 }
 
 function addComplComp(){
+  var err = document.getElementById("error-message");
+  if (err) err.remove();
   var id = document.getElementById("complComp").selectedOptions[0].value
   var code = document.getElementById("complComp").selectedOptions[0].textContent.substring(0,4);
   var name = document.getElementById("complComp").selectedOptions[0].textContent.substring(5);
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td>" + getSelectOfComp(id) + "</td><td><input type='number' class='form-control' name=" + code + " onchange='changeMatAmP();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
-
-  $("#newComp").modal("hide");
+  if (!checkExisting(true)){
+    $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td>" + getSelectOfComp(id) + "</td><td><input type='number' class='form-control' name=" + code + " onchange='changeMatAmP();changeWaterL();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+    $("#newComplComp").modal("hide");
+  }
+  else{
+    var material = document.getElementById('complComp').parentElement;
+    material.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Компонент уже есть в листе." + '</p>');
+  }
 }
 
 function deleteRow(r)
@@ -1005,27 +1020,57 @@ function changeWaterTP() {
   field.value = JSON.stringify(table);
 };
 
+function checkExisting(isCompl){
+  res = false;
+  var size = $("#loadList tr").length;
+  for (var i = 1; i < size; i++){
+    var row = $("#loadList tr").eq(i);
+    if (!isCompl) id = $("#material").prop("value");
+    else id = $("#complComp").prop("value");
+    temp = row.attr('name');
+    temp2 =  row.attr('name') == "compl" ^ isCompl;
+    if (row.prop("id") == id && !(row.attr('name') == "compl" ^ isCompl)) res = true;
+  }
+  return res;
+}
+
 //Добавление реактива в макет
 function addMaterialP(){
+  var err = document.getElementById("error-message");
+  if (err) err.remove();
   var id = document.getElementById("material").selectedOptions[0].value
   var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
   var name = document.getElementById("material").selectedOptions[0].textContent.substring(5);
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterP();changeWaterTP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRowP(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
-  $("#newComp").modal("hide");
+  if (!checkExisting(false)){
+    $("#loadList tbody").append("<tr id=" + id + "><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterP();changeWaterTP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRowP(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+    $("#newComp").modal("hide");
+  }
+  else{
+    var material = document.getElementById('material').parentElement;
+    material.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Компонент уже есть в листе." + '</p>');
+  }
 }
 
 function addComplCompP(){
+  var err = document.getElementById("error-message");
+  if (err) err.remove();
   var id = document.getElementById("complComp").selectedOptions[0].value
   var code = document.getElementById("complComp").selectedOptions[0].textContent.substring(0,4);
   var name = document.getElementById("complComp").selectedOptions[0].textContent.substring(5);
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
-  $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterP();changeWaterTP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRowP(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
-  $("#newComp").modal("hide");
+  if (!checkExisting(true)){
+    $("#loadList tbody").append("<tr id=" + id + " name='compl'><td>" + code + "</td>" + "<td>" + name + "</td>" + "<td><input type='number' class='form-control' name=" + code + " onchange='changeMatAm();changeWaterP();changeWaterTP();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRowP(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'></td>" + "</tr>");
+    $("#newComplComp").modal("hide");
+  }
+  else{
+    var material = document.getElementById('complComp').parentElement;
+    material.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Компонент уже есть в листе." + '</p>');
+  }
 }
 
 function deleteRowP(r)

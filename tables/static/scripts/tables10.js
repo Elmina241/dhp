@@ -68,22 +68,32 @@ function checkBounds(){
 
 function checkExisting(){
   res = false;
-  for (tr in $("components tr")){
-    if tr.find("td").eq(0).text() ==
+  var size = $("#components tr").length;
+  for (var i = 1; i < size; i++){
+    var row = $("#components tr").eq(i);
+    if (row.find("td").eq(0).text() == $("#material").prop("value")) res = true;
   }
+  return res;
 }
 
 function saveRow(){
   var err = document.getElementById("error-message");
   if (err) err.remove();
-  if (checkBounds()) {
-    addRow('components');
-    $("#newComp").modal("hide");
+  if (!checkExisting()){
+    if (checkBounds()) {
+      addRow('components');
+      $("#newComp").modal("hide");
+    }
+    else{
+      var max = document.getElementById('max').parentElement;
+      max.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Минимальное значение должно быть не больше максимального." + '</p>');
+    }
   }
-  else{
+  else {
     var max = document.getElementById('max').parentElement;
-    max.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Минимальное значение должно быть не больше максимального." + '</p>');
+    max.insertAdjacentHTML('afterend', '<p class="error-message" id="error-message" style="color: red">' + "Реактив уже есть в рецепте." + '</p>');
   }
+
 }
 
   function addMat(){
