@@ -44,6 +44,7 @@ class Kneading(models.Model):
     finish_date = models.DateField()
     reactor = models.ForeignKey('tables.Reactor')
     isValid = models.BooleanField(default = False)
+    isFinished = models.BooleanField(default = False)
     def __str__(self):
         return self.list.formula.get_name()
 

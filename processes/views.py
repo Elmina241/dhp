@@ -27,7 +27,7 @@ def mixing(request, kneading_id = -1):
             name = "П-" + str(int(k.batch_num)) + " " + str(k.list.formula)
             if name not in batches:
                 batches[name] = name
-    return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.all, "new_kneading": kneading, "batches": batches})
+    return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.filter(isFinished = False), "new_kneading": kneading, "batches": batches})
 
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
@@ -738,6 +738,8 @@ def finish_process(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=7))
     st.save()
+    kneading.isFinished = True
+    kneading.save()
     return redirect('mixing')
 
 def finish_testing(request, kneading_id):

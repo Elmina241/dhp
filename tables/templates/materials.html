@@ -44,7 +44,7 @@ function addComp(mat_id, amm){
         success: function onAjaxSuccess()
         {
           var obj = $("#"+mat_id);
-          obj.parent().parent().find('td').eq(5).text((parseFloat(amm) + parseFloat($("#compAmm").val())));
+          obj.parent().parent().find('td').eq(5).text((parseFloat(amm) + parseFloat($("#compAmm").val())).toFixed(2));
           }
       });
 }
