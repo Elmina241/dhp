@@ -258,11 +258,13 @@ def save_list(request, list_id):
             for d in data:
                 if d['Код']!='ВД01':
                     ammount=d['%']
+                    id = ammount.split("_")[0]
+                    ammount = ammount.split("_")[1]
                     if Material.objects.filter(code=d['Код']).count() == 0:
-                        mat = Formula.objects.filter(code=d['Код'])[0]
+                        mat = Formula.objects.filter(id=id)[0]
                         cmps = Model_component(list=list, formula=mat, ammount=ammount)
                     else:
-                        mat = Material.objects.filter(code=d['Код'])[0]
+                        mat = Material.objects.filter(id=id)[0]
                         cmps = Model_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
         return redirect('loading_lists')

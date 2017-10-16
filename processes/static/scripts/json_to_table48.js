@@ -512,9 +512,9 @@ function changeMatAm(){
   }
   for (i=2; i<tbody.rows.length; i++){
     var tr = $("#loadList tr").eq(i);
-    tr.find("td").eq(4).text(tr.find("input").val());
     var code = tr.find("td").eq(0).text();
     var id = tr.attr("id");
+    tr.find("td").eq(4).text(id + '_' + tr.find("input").val());
     if (tr.attr("name") == "compl"){
       var newAm = tr.find("input").val();
       if (newAm=="") newAm = 0;
