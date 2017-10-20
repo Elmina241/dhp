@@ -1,0 +1,64 @@
+{% load staticfiles %}
+<head>
+  <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+  <link rel="stylesheet" href="{% static 'css/breadcrumb3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.css' %}">
+  <script src="{% static 'scripts/jquery.tabletojson.js' %}"></script>
+  <script src="{% static 'scripts/validation5.js' %}"></script>
+  <script src="{% static 'scripts/json_to_table48.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepickerrumin.js' %}"></script>
+  <script src="{% static 'scripts/jquery.tablesorter.js' %}"></script>
+  <script type="text/javascript">
+  </script>
+  <style type="text/css">
+    @media print {
+      #printBtn { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="passport">
+    <button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button>
+    <b><div class="h">Паспорт партии</div></b>
+    <div class ="info">
+      <p>Наименование средства:</p>
+      <p>Артикул:</p>
+      <p>Дата:</p>
+      <p>Номер партии:</p>
+      <p>Вес:</p>
+    </div>
+    <div class ="info2">
+      <p>{{p.kneading.list}}</p>
+      <p>{{p.kneading.list.formula.code}}</p>
+      <p>{{p.kneading.start_date|date:"d.m.Y"}} - {{p.kneading.finish_date|date:"d.m.Y"}}</p>
+      <p>{{p.kneading.batch_num|floatformat:"0"}}</p>
+      <p>{{p.kneading.list.ammount}}</p>
+    </div>
+    <b><div style="font-size:14pt;margin-top:150pt;margin-left:40pt"><p>Компоненты: </p></div></b>
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>Код</th><th>Наименование</th><th>Масса, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, values in components.items %}
+        <tr>
+          <td>{{values.code}}</td>
+          <td>{{values.name}}</td>
+          <td>{{values.amount}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</body>

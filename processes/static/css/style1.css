@@ -1,0 +1,52 @@
+.underline {
+  border-bottom: 2px solid currentColor;
+  display: inline-block;
+  line-height: 0.85;
+  text-shadow:
+    2px 2px white,
+    2px -2px white,
+    -2px 2px white,
+    -2px -2px white;
+}
+
+hr {
+ margin-top: 4pt;
+ margin-bottom: 4pt;
+ border: none; /* Убираем границу */
+ background-color: #D3D3D3; /* Цвет линии */
+ color: #D3D3D3; /* Цвет линии для IE6-7 */
+ height: 1px; /* Толщина линии */
+}
+
+.passport {
+  height: 842pt; /* Высота блока */
+  width: 595pt; /* Ширина блока */
+  border: 1px solid black;
+  font: 14pt;
+  font-family: 'Times New Roman', Times, serif;
+  margin: auto;
+}
+
+.h{
+  font-size: 14pt;
+  margin-top: 40pt;
+  text-align: center;
+}
+
+.info{
+  font-size: 12pt;
+  margin-top: 30pt;
+  text-align: left;
+  float: left;
+  width: 150pt;
+  margin-left: 40pt;
+}
+
+.info2{
+  font-size: 12pt;
+  margin-top: 30pt;
+  text-align: left;
+  float: left;
+  width: 300pt;
+  margin-left: 30pt;
+}

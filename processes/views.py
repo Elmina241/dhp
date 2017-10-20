@@ -796,6 +796,54 @@ def finish_testing(request, kneading_id):
         comp.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
 
+def print_passport(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    batch = Batch.objects.filter(kneading = kneading)[0]
+    #Получение состава
+    components = {}
+    for c in Formula_component.objects.filter(formula = kneading.list.formula):
+        components[c.mat.id] = {};
+        components[c.mat.id]['code'] = c.mat.code
+        components[c.mat.id]['name'] = c.mat.name
+        components[c.mat.id]['amount'] = 0
+        water = List_component.objects.filter(list=kneading.list, mat=get_object_or_404(Material, code='ВД01'))[0]
+        components[water.mat.id] = {};
+        components[water.mat.id]['code'] = water.mat.code
+        components[water.mat.id]['name'] = water.mat.name
+        components[water.mat.id]['amount'] = 0
+    comp_amm = 0;
+    for c in List_component.objects.filter(list = kneading.list):
+        if c.compl is None:
+            if c.r_cont is None and c.t_cont is None:
+                if c.mat.id in components:
+                    components[c.mat.id]['amount'] = round(float(components[c.mat.id]['amount']) + c.ammount, 2)
+                    comp_amm = comp_amm + c.ammount
+            else:
+                if c.r_cont is None:
+                    for c2 in Batch_comp.objects.filter(batch = c.t_cont.batch):
+                        if c2.mat.id in components:
+                            components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.t_cont.batch.kneading.list.ammount) * c.ammount, 2)
+                            comp_amm = comp_amm + round((c2.ammount / c.t_cont.batch.kneading.list.ammount) * c.ammount, 2)
+                else:
+                    for c2 in Batch_comp.objects.filter(batch = c.r_cont.batch):
+                        if c2.mat.id in components:
+                            components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.r_cont.batch.kneading.list.ammount) * c.ammount, 2)
+                            comp_amm = comp_amm + round((c2.ammount / c.r_cont.batch.kneading.list.ammount) * c.ammount, 2)
+        else:
+            for c2 in Compl_comp_comp.objects.filter(compl = c.compl):
+                if c2.mat.id in components:
+                    components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.compl.ammount) * c.ammount, 2)
+                    comp_amm = comp_amm + round((c2.ammount / c.compl.ammount) * c.ammount, 2)
+    components[water.mat.id]['amount'] = round(float(components[water.mat.id]['amount']) + (float(kneading.list.ammount) - comp_amm), 2)
+
+    return render(request, 'print.html', {"comps": List_component.objects.filter(list = kneading.list),
+                                            "components": components,
+                                            "reactor": Reactor_content.objects.all(),
+                                            "tank": Tank_content.objects.all(),
+                                            "location": "/processes/process/",
+                                            "reactor_content" : Reactor_content.objects.filter(batch = batch, reactor = kneading.reactor)[0] if Reactor_content.objects.filter(batch = batch, reactor = kneading.reactor).count()!=0 else None,
+                                            "p": batch})
+
 def kneading_detail(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     state_id = State_log.objects.filter(kneading = kneading).last().state.pk
