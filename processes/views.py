@@ -120,6 +120,29 @@ def del_list(request):
         del_obj.delete()
     return redirect('loading_lists')
 
+def print_lists(request, lists):
+    list_ids = json.loads(lists)
+    data = {}
+    list_comps = {}
+    for l in list_ids:
+        k = get_object_or_404(Kneading, pk=l)
+        data[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": k.start_date, "finish_date": k.finish_date, "reactor": k.reactor.pk, "amount": k.list.ammount, "list": k.list.pk, "code": str(k.list.formula.code)}
+        for c in List_component.objects.filter(list = k.list):
+            if c.compl is None:
+                if c.r_cont is None and c.t_cont is None and c.formula is None:
+                    list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.mat), "ammount": c.ammount}
+                else:
+                    if c.t_cont is not None:
+                        list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.t_cont.batch.kneading.list.formula), "ammount": c.ammount}
+                    else:
+                        if c.r_cont is not None:
+                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.r_cont.batch.kneading.list.formula), "ammount": c.ammount}
+                        else:
+                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.formula), "ammount": c.ammount}
+            else:
+                list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.compl.formula), "ammount": c.ammount}
+    return render(request, "print_lists.html", {"kneading": data, "comps": list_comps})
+
 def del_process(request, kneading_id = None):
     del_var = request.POST.getlist('del_list')
     for d in del_var:

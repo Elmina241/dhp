@@ -52,6 +52,35 @@ function getState(id){
       });
 }
 
+function printLists(){
+  var lists = [];
+  $("input:checkbox:checked").each(function() {
+    lists.push($(this).val());
+  });
+  data = JSON.stringify(lists);
+  window.open(document.location.href + "print_lists/"+data);
+  /*var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'print_lists/',
+        data: {
+          'lists': data
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(res)
+        {
+          var myWin = window.open("");
+          myWin.document.open();
+          myWin.document.write(res);
+          myWin.document.close();
+        }
+      });*/
+}
+
 function applyFilters(){
   $("tr").each(function(){
       $(this).show();
@@ -165,7 +194,7 @@ function filterBatch(){
     </div>
     {% endif %}
 
-          <input type="submit" class="btn btn-default" value="Удалить">
+          <input type="submit" class="btn btn-default" value="Удалить"> <button type="button" class="btn btn-success" onclick="printLists();return false;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Загрузочные листы</button>
           <br><br>
           {% if kneading %}
               <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
