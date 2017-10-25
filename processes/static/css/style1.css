@@ -21,7 +21,8 @@ hr {
 .passport {
   /*height: 842pt; /* Высота блока */
   width: 595pt; /* Ширина блока */
-  border: 1px solid black;
+  border-left: : 1px solid black;
+  border-right: 1px solid black;
   font: 14pt;
   font-family: 'Times New Roman', Times, serif;
   margin: auto;
