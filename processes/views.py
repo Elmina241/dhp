@@ -320,34 +320,44 @@ def save_load_list(request, kneading_id):
                 ammount=d['%']
                 t = ammount[0]
                 id = ammount.split("_")[1]
+                min = ammount.split("_")[3]
+                max = ammount.split("_")[4]
                 ammount = ammount.split("_")[2]
+                if min == "":
+                    min = None
+                else:
+                    min = float(min)
+                if max == "":
+                    max = None
+                else:
+                    max = float(max)
                 if t == "1":
                     mat = Reactor_content.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
                     mat.save()
-                    cmps = List_component(list=list, r_cont=mat, ammount=ammount)
+                    cmps = List_component(list=list, r_cont=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "2":
                     mat = Tank_content.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
                     mat.save()
-                    cmps = List_component(list=list, t_cont=mat, ammount=ammount)
+                    cmps = List_component(list=list, t_cont=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "3":
                     mat = Compl_comp.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
                     mat.save()
-                    cmps = List_component(list=list, compl=mat, ammount=ammount)
+                    cmps = List_component(list=list, compl=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "4":
                     mat = Material.objects.filter(id = id)[0]
                     mat.reserved = mat.reserved + float(ammount)
                     mat.save()
-                    cmps = List_component(list=list, mat=mat, ammount=ammount)
+                    cmps = List_component(list=list, mat=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "5":
                     mat = Formula.objects.filter(id = id)[0]
-                    cmps = List_component(list=list, formula=mat, ammount=ammount)
+                    cmps = List_component(list=list, formula=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
         return redirect('kneading_detail', kneading_id = kneading_id)
 
@@ -878,25 +888,33 @@ def kneading_detail(request, kneading_id):
     #Добавить минимум максимум
     comps = {}
     for c in l_comp2:
+        if c.mat is None:
+            if c.min is None:
+                min = "-"
+                max = "-"
+            else:
+                min = c.min / c.list.ammount * 100
+                max = c.max / c.list.ammount * 100
+        else:
+            if c.min is None:
+                min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
+                max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
+            else:
+                min = c.min / c.list.ammount * 100
+                max = c.max / c.list.ammount * 100
         if c.compl is None:
             if c.r_cont is None and c.t_cont is None and c.formula is None:
-                if Components.objects.filter(comp = c.list.formula.composition, mat = c.mat).count() == 0:
-                    min = 0 #костыль!!! добавить проверку на наличие всех компонентов в рецепте
-                    max = 0
-                else:
-                    min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
-                    max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
                 comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
             else:
                 if c.r_cont is None and c.formula is None:
-                    comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 2}
+                    comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 2}
                 else:
                     if c.formula is None:
-                        comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 1}
+                        comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 1}
                     else:
-                        comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 5}
+                        comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 5}
         else:
-            comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': '-', 'max': '-', "type": 3}
+            comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 3}
 
     load_list = json.dumps(comps)
 

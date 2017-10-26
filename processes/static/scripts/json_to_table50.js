@@ -225,7 +225,7 @@ function getLoadList(loadList, t_name) {
   //var list = JSON.parse(loadList);
   var amm = $("#ammount").val();
   for (i in loadList){
-      if (loadList[i].min!='-'){
+      if (loadList[i].min!='-' && loadList[i].max!=0){
         var min = ((loadList[i].min/100)*amm).toFixed(2);
         var max = ((loadList[i].max/100)*amm).toFixed(2);
       }
@@ -234,9 +234,9 @@ function getLoadList(loadList, t_name) {
         var max = "-";
       }
       if (t_name=='materials'){
-        if (loadList[i].type != "5") $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' name=" + loadList[i].mat_code + "_min" + " style='width: 7em'" + " value=" + min + '>' + '</td><td>' + "<input type='number' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td></td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+        if (loadList[i].type != "5") $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' class='min' name=" + loadList[i].mat_code + "_min" + " style='width: 7em'" + " value=" + min + '>' + '</td><td>' + "<input type='number' class='max' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td></td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
         else {
-          $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' name=" + loadList[i].mat_code + "_min"  + " style='width: 7em'" +  " value=" + min + '>' + '</td><td>' + "<input type='number' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td>" + getSelectOfComp(loadList[i].cont_id)  + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+          $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' class='min' name=" + loadList[i].mat_code + "_min"  + " style='width: 7em'" +  " value=" + min + '>' + '</td><td>' + "<input type='number' class='max' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td>" + getSelectOfComp(loadList[i].cont_id)  + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
         }
       }
       else{
@@ -252,6 +252,10 @@ function changeMatTable(){
       var tr = $('#materials tr').eq(i);
       var valEl = document.getElementsByClassName('term')[i-2];
       var val = valEl.value;
+      valEl = document.getElementsByClassName('min')[i-2];
+      var min = valEl.value;
+      valEl = document.getElementsByClassName('max')[i-2];
+      var max = valEl.value;
       if (tr.attr('id')[0] == "5"){
         id = tr.attr('id').substr(2);
         var batch = $("#b"+id + " :selected").val();
@@ -262,13 +266,13 @@ function changeMatTable(){
           bId = batch.substr(2);
         }
         else{
-          t = "4";
+          t = "5";
           bId = id;
         }
-        $('#materials tr').eq(i).find('td').eq(6).text(t + '_' + bId + '_' + val);
+        $('#materials tr').eq(i).find('td').eq(6).text(t + '_' + bId + '_' + val + "_" + min + "_" + max);
       }
       else {
-        $('#materials tr').eq(i).find('td').eq(6).text(tr.attr('id') + '_' + val);
+        $('#materials tr').eq(i).find('td').eq(6).text(tr.attr('id') + '_' + val + "_" + min + "_" + max);
       }
 
     }

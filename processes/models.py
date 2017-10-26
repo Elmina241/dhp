@@ -31,8 +31,8 @@ class List_component(models.Model):
     r_cont = models.ForeignKey('Reactor_content', blank=True, default = None, null=True)
     t_cont = models.ForeignKey('Tank_content', blank=True, default = None, null=True)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
-    min = models.FloatField(blank=True, default = 0, null=True)
-    max = models.FloatField(blank=True, default = 0, null=True)
+    min = models.FloatField(blank=True, default = None, null=True)
+    max = models.FloatField(blank=True, default = None, null=True)
     ammount = models.FloatField()
     loaded = models.BooleanField(default = False)
     def __str__(self):
