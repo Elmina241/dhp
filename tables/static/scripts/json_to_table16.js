@@ -104,3 +104,19 @@ function getAmmount(m_id, f) {
   }
   return amm;
 };
+
+function saveBounds(row){
+  var r = $(row).parent().parent();
+  var temp = $(r.find("input")[1]).val();
+  r.find("td").eq(2).html($(r.find("input")[0]).val());
+  r.find("td").eq(3).html(temp);
+  $(row).parent().html("<button class ='btn btn-default' onclick='editBounds(this)'><i class='glyphicon glyphicon-pencil'></i></button>")
+  saveTable2();
+}
+
+function editBounds(row){
+  var r = $(row).parent().parent();
+  r.find("td").eq(2).html("<input type='number' value='"+ r.find("td").eq(2).text() +"'>");
+  r.find("td").eq(3).html("<input type='number' value='"+ r.find("td").eq(3).text() +"'>");
+  $(row).parent().html("<button class ='btn btn-default' onclick='saveBounds(this)'><i class='glyphicon glyphicon-ok'></i></button>")
+}

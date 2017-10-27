@@ -130,17 +130,17 @@ def print_lists(request, lists):
         for c in List_component.objects.filter(list = k.list):
             if c.compl is None:
                 if c.r_cont is None and c.t_cont is None and c.formula is None:
-                    list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.mat), "ammount": c.ammount}
+                    list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.mat), "ammount": c.ammount, "min": c.min, "max": c.max}
                 else:
                     if c.t_cont is not None:
-                        list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.t_cont.batch.kneading.list.formula), "ammount": c.ammount}
+                        list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.t_cont.batch.kneading.list.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
                     else:
                         if c.r_cont is not None:
-                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.r_cont.batch.kneading.list.formula), "ammount": c.ammount}
+                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.r_cont.batch.kneading.list.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
                         else:
-                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.formula), "ammount": c.ammount}
+                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
             else:
-                list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.compl.formula), "ammount": c.ammount}
+                list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.compl.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
     return render(request, "print_lists.html", {"kneading": data, "comps": list_comps})
 
 def del_process(request, kneading_id = None):

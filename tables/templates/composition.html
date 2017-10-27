@@ -103,7 +103,7 @@ $(document).ready(function(){
       <table class="table table-sm" id="components" style="width:80%; margin: auto">
         <thead>
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум чистого реактива</th><th>Максимум чистого реактива</th><th></th>
+            <th>Код</th><th>Наименование</th><th>Минимум чистого реактива</th><th>Максимум чистого реактива</th><th></th><th></th>
           </tr>
         </thead>
         <tbody>
@@ -114,6 +114,7 @@ $(document).ready(function(){
             <td>{{ c.min }}</td>
             <td>{{ c.max }}</td>
             <td><button class ="btn btn-default" onclick='deleteRow(this)'><i class="glyphicon glyphicon-trash"></i></button></td>
+            <td><button class ="btn btn-default" onclick='editBounds(this)'><i class="glyphicon glyphicon-pencil"></i></button></td>
           </tr>
           {% endfor %}
         </tbody>
