@@ -105,7 +105,11 @@ function getName(m_id, m) {
   var i = 0;
   var name = "0";
   while (i < m.length && name == "0"){
-    if (m[i].pk == m_id) name = m[i].fields.name;
+    if (m[i].pk == m_id) {
+      if (m[i].fields.mark == "-") mark = "";
+      else mark = m[i].fields.mark;
+      name = m[i].fields.name + " " + mark;
+    }
     i++;
   }
   return name;

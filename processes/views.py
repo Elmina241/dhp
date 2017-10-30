@@ -897,14 +897,18 @@ def kneading_detail(request, kneading_id):
                 max = c.max / c.list.ammount * 100
         else:
             if c.min is None:
-                min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
-                max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
+                if c.mat.code == "ВД01":
+                    min = "-"
+                    max = "-"
+                else:
+                    min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
+                    max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
             else:
                 min = c.min / c.list.ammount * 100
                 max = c.max / c.list.ammount * 100
         if c.compl is None:
             if c.r_cont is None and c.t_cont is None and c.formula is None:
-                comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': c.mat.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
+                comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': str(c.mat), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
             else:
                 if c.r_cont is None and c.formula is None:
                     comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 2}
