@@ -188,7 +188,7 @@ $(document).ready(function(){
               <tr>
                 <td id="cr-{{r.reactor.id}}">{{ r.reactor.code }}</td>
                 <td>{{ r.reactor.name }}</td>
-                <td id="r-{{r.id}}">{{ r.amount }}</td>
+                <td id="r-{{r.id}}">{{ r.amount|floatformat:"2" }}</td>
                 {% if r.content_type == 1 %}
                 <td>{{r.batch.id}} {{r.batch.kneading.list.formula}}</td>
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
@@ -210,7 +210,7 @@ $(document).ready(function(){
               <tr>
                 <td id="ct-{{t.tank.id}}">{{ t.tank.code }}</td>
                 <td>{{ t.tank.name }}</td>
-                <td id="t-{{t.id}}">{{ t.amount }}</td>
+                <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }}</td>
                 {% if t.content_type == 1 %}
                 <td>{{t.batch.id}} {{t.batch.kneading.list.formula}}</td>
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>

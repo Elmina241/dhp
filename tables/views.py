@@ -695,7 +695,14 @@ def save_composition(request, composition_id):
                 mat = Material.objects.filter(code=d['Код'])[0]
                 cmps = Components(comp=comp, mat=mat, min=d["Минимум чистого реактива"], max=d["Максимум чистого реактива"])
                 cmps.save()
-
+        for f in Formula.objects.filter(composition = comp):
+            for c in Formula_component.objects.filter(formula = f):
+                if Components.objects.filter(comp=comp, mat = c.mat).count() == 0:
+                    c.delete()
+            for c1 in Components.objects.filter(comp=comp):
+                if Formula_component.objects.filter(formula=f, mat = c.mat).count() == 0:
+                    f_c = Formula_component(formula=f, mat = c.mat, ammount = 0)
+                    f_c.save()
         return redirect('compositions')
 
 def save_container(request, container_id):

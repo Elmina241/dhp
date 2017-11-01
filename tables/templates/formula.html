@@ -6,8 +6,8 @@ $(document).ready(function(){
   $("#b1").click();
   addValidation();
   if ("{{formula}}" != "None"){
-    var inps = $("#materials").find("input").attr('readonly', true);
-    $("#composition").attr('disabled', true);
+    //var inps = $("#materials").find("input").attr('readonly', true);
+    $("#composition").attr('readonly', true);
     $("#b1").attr('disabled', true);
   }
 });
