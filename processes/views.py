@@ -120,7 +120,7 @@ def del_list(request):
         del_obj.delete()
     return redirect('loading_lists')
 
-def print_lists(request, lists):
+def print_lists(request, lists, kneading_id = None):
     list_ids = json.loads(lists)
     data = {}
     list_comps = {}
@@ -147,7 +147,14 @@ def del_process(request, kneading_id = None):
     del_var = request.POST.getlist('del_list')
     for d in del_var:
         del_obj = get_object_or_404(Kneading, pk=d)
-        del_obj.delete()
+        for r in Reactor_content.objects.filter(kneading = del_obj):
+            r.kneading = None
+            r.save()
+        for t in Tank_content.objects.filter(kneading = del_obj):
+            t.kneading = None
+            t.save()
+        del_obj.isFinished = True
+        del_obj.save()
     return redirect('mixing')
 
 

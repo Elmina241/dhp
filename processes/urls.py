@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^loading_lists/$', views.loading_lists, name = 'loading_lists'),
     url(r'^loading_lists/del_list/$', views.del_list, name = 'del_list'),
     url(r'^process/print_lists/(?P<lists>.*)$', views.print_lists, name = 'print_lists'),
+    url(r'^(?P<kneading_id>[0-9]+)/process/print_lists/(?P<lists>.*)$', views.print_lists, name = 'print_lists'),
     url(r'^process/del_process/$', views.del_process, name = 'del_process'),
     url(r'^(?P<kneading_id>[0-9]+)/process/del_process/$', views.del_process, name = 'del_process'),
     url(r'^planning/$', views.planning, name = 'planning'),
