@@ -953,6 +953,7 @@ function changeWaterL() {
   if (w_a != null) w_a.value = (ammount - mat_ammount).toFixed(2);
   if (water2 != null) water2.textContent = (ammount - mat_ammount).toFixed(2);
   /*if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();*/
+  isWaterValid("water1", "send");
   var table = $('#loadList').tableToJSON();
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
@@ -997,6 +998,7 @@ function changeWaterP() {
   if (w_a != null) w_a.value = (100 - mat_ammount).toFixed(2);
   //if (water2 != null) water2.textContent = (100 - mat_ammount).toFixed(2);
   /*if ($('#materials2').length == 0) var table = $('#materials').tableToJSON();*/
+  isWaterValid("water1", "send");
   var table = $('#loadList').tableToJSON();
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);
@@ -1088,4 +1090,18 @@ function deleteRowP(r)
   changeMatAm();
   changeWaterP();
   changeWaterTP();
+}
+
+//Функция проверки воды
+function isWaterValid(water, btn){
+  if ($("#"+water).text() < 0){
+    $("#"+water).attr("bgcolor", "#ffa6a6");
+    $("#"+btn).attr("disabled", true);
+    return false;
+  }
+  else{
+    $("#"+water).attr("bgcolor", "#ffffff");
+    $("#"+btn).attr("disabled", false);
+    return true;
+  }
 }
