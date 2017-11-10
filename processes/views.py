@@ -893,41 +893,42 @@ def kneading_detail(request, kneading_id):
     formula = serializers.serialize("json", Formula.objects.all())
     l_comp2 = List_component.objects.filter(list = kneading.list)
     #Добавить минимум максимум
-    comps = {}
-    for c in l_comp2:
-        if c.mat is None:
-            if c.min is None:
-                min = "-"
-                max = "-"
-            else:
-                min = c.min / c.list.ammount * 100
-                max = c.max / c.list.ammount * 100
-        else:
-            if c.min is None:
-                if c.mat.code == "ВД01":
+    if state_id != 5:
+        comps = {}
+        for c in l_comp2:
+            if c.mat is None:
+                if c.min is None:
                     min = "-"
                     max = "-"
                 else:
-                    min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
-                    max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
+                    min = c.min / c.list.ammount * 100
+                    max = c.max / c.list.ammount * 100
             else:
-                min = c.min / c.list.ammount * 100
-                max = c.max / c.list.ammount * 100
-        if c.compl is None:
-            if c.r_cont is None and c.t_cont is None and c.formula is None:
-                comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': str(c.mat), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
-            else:
-                if c.r_cont is None and c.formula is None:
-                    comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 2}
-                else:
-                    if c.formula is None:
-                        comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 1}
+                if c.min is None:
+                    if c.mat.code == "ВД01":
+                        min = "-"
+                        max = "-"
                     else:
-                        comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 5}
-        else:
-            comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 3}
+                        min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
+                        max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
+                else:
+                    min = c.min / c.list.ammount * 100
+                    max = c.max / c.list.ammount * 100
+            if c.compl is None:
+                if c.r_cont is None and c.t_cont is None and c.formula is None:
+                    comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': str(c.mat), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
+                else:
+                    if c.r_cont is None and c.formula is None:
+                        comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 2}
+                    else:
+                        if c.formula is None:
+                            comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 1}
+                        else:
+                            comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 5}
+            else:
+                comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 3}
 
-    load_list = json.dumps(comps)
+        load_list = json.dumps(comps)
 
     batches = {}
     i=0
@@ -993,41 +994,10 @@ def kneading_detail(request, kneading_id):
     if state_id == 5:
         batch = Batch.objects.filter(kneading = kneading)[0]
         #Получение состава
-        components = {}
-        for c in Formula_component.objects.filter(formula = kneading.list.formula):
-            components[c.mat.id] = {};
-            components[c.mat.id]['code'] = c.mat.code
-            components[c.mat.id]['name'] = c.mat.name
-            components[c.mat.id]['amount'] = 0
-            water = List_component.objects.filter(list=kneading.list, mat=get_object_or_404(Material, code='ВД01'))[0]
-            components[water.mat.id] = {};
-            components[water.mat.id]['code'] = water.mat.code
-            components[water.mat.id]['name'] = water.mat.name
-            components[water.mat.id]['amount'] = 0
-        comp_amm = 0;
-        for c in List_component.objects.filter(list = kneading.list):
-            if c.compl is None:
-                if c.r_cont is None and c.t_cont is None:
-                    if c.mat.id in components:
-                        components[c.mat.id]['amount'] = round(float(components[c.mat.id]['amount']) + c.ammount, 2)
-                        comp_amm = comp_amm + c.ammount
-                else:
-                    if c.r_cont is None:
-                        for c2 in Batch_comp.objects.filter(batch = c.t_cont.batch):
-                            if c2.mat.id in components:
-                                components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.t_cont.batch.kneading.list.ammount) * c.ammount, 2)
-                                comp_amm = comp_amm + round((c2.ammount / c.t_cont.batch.kneading.list.ammount) * c.ammount, 2)
-                    else:
-                        for c2 in Batch_comp.objects.filter(batch = c.r_cont.batch):
-                            if c2.mat.id in components:
-                                components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.r_cont.batch.kneading.list.ammount) * c.ammount, 2)
-                                comp_amm = comp_amm + round((c2.ammount / c.r_cont.batch.kneading.list.ammount) * c.ammount, 2)
-            else:
-                for c2 in Compl_comp_comp.objects.filter(compl = c.compl):
-                    if c2.mat.id in components:
-                        components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.compl.ammount) * c.ammount, 2)
-                        comp_amm = comp_amm + round((c2.ammount / c.compl.ammount) * c.ammount, 2)
-        components[water.mat.id]['amount'] = round(float(components[water.mat.id]['amount']) + (float(kneading.list.ammount) - comp_amm), 2)
+        components = Batch_comp.objects.filter(batch = batch)
+        comps = {}
+        for c in components:
+            comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
         #Получение значений характеристик контроля качества
         chars = {}
         temp_chars = Kneading_char.objects.filter(kneading = kneading)
@@ -1045,7 +1015,7 @@ def kneading_detail(request, kneading_id):
 
         return render(request, 'finished.html', {"comps": List_component.objects.filter(list = kneading.list),
                                                 "chars": chars,
-                                                "components": components,
+                                                "components": comps,
                                                 "reactor": Reactor_content.objects.all(),
                                                 "tank": Tank_content.objects.all(),
                                                 "location": "/processes/process/",
