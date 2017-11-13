@@ -42,12 +42,12 @@ function getState(id){
         },
         success: function onAjaxSuccess(data)
         {
-          if (data!="Завершён" && data!="Прерван"){
+          //if (data!="Завершён" && data!="Прерван"){
             $("#"+id).text(data);
-          }
+          /*}
           else {
             $("#"+id).parent().remove();
-          }
+          }*/
         }
       });
 }

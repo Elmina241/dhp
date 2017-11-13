@@ -215,7 +215,7 @@ def new_associated_process(request):
     formula = serializers.serialize("json", Formula.objects.all())
     reactors = serializers.serialize("json", Reactor.objects.all())
     processes = {}
-    for k in Kneading.objects.all():
+    for k in Kneading.objects.filter(isFinished = False):
         log = State_log.objects.filter(kneading = k).last().state.pk
         if  log == 1 or log == 2:
             processes[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": str(k.start_date), "finish_date": str(k.finish_date), "reactor": k.reactor.pk, "amount": k.list.ammount, "formula": k.list.formula.pk, "list": k.list.pk}
@@ -244,10 +244,11 @@ def new_associated_process(request):
                 if c.t_cont is not None:
                     list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.t_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
                 else:
-                    if c.r_cont is not None:
-                        list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.r_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
-                    else:
+                    if c.r_cont is None:
                         list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.formula.pk, "ammount": c.ammount}
+                    else:
+                        r_id = c.pk
+                        list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.r_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
         else:
             list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.compl.formula.pk, "ammount": c.ammount}
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
@@ -563,20 +564,22 @@ def check_dependencies(storage, t):
     if t == 'r':
         for k in Kneading.objects.all():
             log = State_log.objects.filter(kneading = k).last().state.pk
-            if  log == 1 or log == 2:
+            if  log == 1 or log == 2 or log == 5 or log == 7:
                 if List_component.objects.filter(list = k.list, r_cont = storage).count() != 0:
                     comp = List_component.objects.filter(list = k.list, r_cont = storage)[0]
                     comp.formula = comp.r_cont.batch.kneading.list.formula
                     comp.batch = None
+                    comp.r_cont = None
                     comp.save()
     else:
         for k in Kneading.objects.all():
             log = State_log.objects.filter(kneading = k).last().state.pk
-            if  log == 1 or log == 2:
+            if  log == 1 or log == 2 or log == 5 or log == 7:
                 if List_component.objects.filter(list = k.list, t_cont = storage).count() != 0:
                     comp = List_component.objects.filter(list = k.list, t_cont = storage)[0]
                     comp.formula = comp.t_cont.batch.kneading.list.formula
                     comp.batch = None
+                    comp.t_cont = None
                     comp.save()
 
 
@@ -772,6 +775,8 @@ def start_testing(request, kneading_id):
 
 def stop_process(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
+    kneading.isFinished = True
+    kneading.save()
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=6))
     st.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
