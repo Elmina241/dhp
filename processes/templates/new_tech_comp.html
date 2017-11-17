@@ -69,8 +69,8 @@ $(document).ready(function(){
               <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
               <div class="col-sm-10">
                 <select class="form-control" id="formula" name="formula" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});getListOfModels({{model_lists}});changeWaterL();changeWaterT();return false;">
-                  {% for f in formulas %}
-                    <option value="{{ f.id }}">{{ f }}</option>
+                  {% for c in formulas|dictsort:"get_short_name" %}
+                  <option value="{{ c.id }}">{{c.code}} {{ c.get_short_name }} {{ c.composition.name }}</option>
                   {% endfor %}</select>
               </div>
             </div>
