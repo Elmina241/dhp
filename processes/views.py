@@ -642,7 +642,12 @@ def move_batch(request, kneading_id):
         donor.amount = donor.amount - amm
         accepting.content_type = donor.content_type
         accepting.amount = accepting.amount + amm
+        if donor.reserved > donor.amount:
+            donor.reserved = 0
+            check_dependencies(donor, request.POST['donor'][0])
         if donor.amount == 0:
+            donor.reserved = 0
+            check_dependencies(donor, request.POST['donor'][0])
             donor.batch = None
             donor.kneading = None
             donor.content_type = 3
@@ -771,28 +776,6 @@ def start_testing(request, kneading_id):
          kneading.list.save()
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=4))
     st.save()
-    return redirect('kneading_detail', kneading_id = kneading_id)
-
-def stop_process(request, kneading_id):
-    kneading = get_object_or_404(Kneading, pk=kneading_id)
-    kneading.isFinished = True
-    kneading.save()
-    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=6))
-    st.save()
-    return redirect('kneading_detail', kneading_id = kneading_id)
-
-def finish_process(request, kneading_id):
-    kneading = get_object_or_404(Kneading, pk=kneading_id)
-    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=7))
-    st.save()
-    kneading.isFinished = True
-    kneading.save()
-    return redirect('mixing')
-
-def finish_testing(request, kneading_id):
-    kneading = get_object_or_404(Kneading, pk=kneading_id)
-    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
-    st.save()
     batch = Batch(kneading = kneading)
     batch.save()
     reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
@@ -825,11 +808,23 @@ def finish_testing(request, kneading_id):
                         if c2.mat.id in components:
                             components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.t_cont.batch.kneading.list.ammount) * c.ammount, 2)
                             comp_amm = comp_amm + round((c2.ammount / c.t_cont.batch.kneading.list.ammount) * c.ammount, 2)
+                    if round(c.t_cont.amount, 2) == 0.00:
+                        c.t_cont.batch = None
+                        c.t_cont.kneading = None
+                        c.t_cont.content_type = 3
+                        c.t_cont.amount = 0
+                        c.t_cont.save()
                 else:
                     for c2 in Batch_comp.objects.filter(batch = c.r_cont.batch):
                         if c2.mat.id in components:
                             components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.r_cont.batch.kneading.list.ammount) * c.ammount, 2)
                             comp_amm = comp_amm + round((c2.ammount / c.r_cont.batch.kneading.list.ammount) * c.ammount, 2)
+                    if round(c.r_cont.amount, 2) == 0.00:
+                        c.r_cont.batch = None
+                        c.r_cont.kneading = None
+                        c.r_cont.content_type = 3
+                        c.r_cont.amount = 0
+                        c.r_cont.save()
         else:
             for c2 in Compl_comp_comp.objects.filter(compl = c.compl):
                 if c2.mat.id in components:
@@ -839,6 +834,28 @@ def finish_testing(request, kneading_id):
     for c in components:
         comp = Batch_comp(batch = batch, mat = Material.objects.filter(code = components[c]['code'])[0], ammount = (components[c]['amount']/float(kneading.list.ammount))*100)
         comp.save()
+    return redirect('kneading_detail', kneading_id = kneading_id)
+
+def stop_process(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    kneading.isFinished = True
+    kneading.save()
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=6))
+    st.save()
+    return redirect('kneading_detail', kneading_id = kneading_id)
+
+def finish_process(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=7))
+    st.save()
+    kneading.isFinished = True
+    kneading.save()
+    return redirect('mixing')
+
+def finish_testing(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
+    st.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
 
 def print_passport(request, kneading_id):
@@ -898,7 +915,7 @@ def kneading_detail(request, kneading_id):
     formula = serializers.serialize("json", Formula.objects.all())
     l_comp2 = List_component.objects.filter(list = kneading.list)
     #Добавить минимум максимум
-    if state_id != 5:
+    if state_id != 5 and state_id != 4:
         comps = {}
         for c in l_comp2:
             if c.mat is None:
