@@ -214,11 +214,27 @@ def new_associated_process(request):
     materials = serializers.serialize("json", Material.objects.all())
     formula = serializers.serialize("json", Formula.objects.all())
     reactors = serializers.serialize("json", Reactor.objects.all())
+    list_comps = {}
     processes = {}
     for k in Kneading.objects.filter(isFinished = False):
         log = State_log.objects.filter(kneading = k).last().state.pk
         if  log == 1 or log == 2:
             processes[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": str(k.start_date), "finish_date": str(k.finish_date), "reactor": k.reactor.pk, "amount": k.list.ammount, "formula": k.list.formula.pk, "list": k.list.pk}
+            for c in List_component.objects.filter(list = k.list):
+                if c.compl is None:
+                    if c.r_cont is None and c.t_cont is None and c.formula is None:
+                        list_comps[str(c.pk)] = {"list": c.list.pk, "mat": c.mat.pk, "ammount": c.ammount}
+                    else:
+                        if c.t_cont is not None:
+                            list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.t_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
+                        else:
+                            if c.r_cont is None:
+                                list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.formula.pk, "ammount": c.ammount}
+                            else:
+                                r_id = c.pk
+                                list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.r_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
+                else:
+                    list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.compl.formula.pk, "ammount": c.ammount}
     batch_comps = serializers.serialize("json", Batch_comp.objects.all())
     formula_names = {}
     for f in Formula.objects.all():
@@ -234,23 +250,6 @@ def new_associated_process(request):
     for c in Compl_comp.objects.all():
         batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
         i=i+1
-
-    list_comps = {}
-    for c in List_component.objects.all():
-        if c.compl is None:
-            if c.r_cont is None and c.t_cont is None and c.formula is None:
-                list_comps[str(c.pk)] = {"list": c.list.pk, "mat": c.mat.pk, "ammount": c.ammount}
-            else:
-                if c.t_cont is not None:
-                    list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.t_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
-                else:
-                    if c.r_cont is None:
-                        list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.formula.pk, "ammount": c.ammount}
-                    else:
-                        r_id = c.pk
-                        list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.r_cont.batch.kneading.list.formula.pk, "ammount": c.ammount}
-        else:
-            list_comps[str(c.pk)] = {"list": c.list.pk, "formula": c.compl.formula.pk, "ammount": c.ammount}
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     return render(request, "associated_process.html",
         {"components": json.dumps(components),
