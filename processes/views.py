@@ -29,6 +29,9 @@ def mixing(request, kneading_id = -1):
                 batches[name] = name
     return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.filter(isFinished = False), "new_kneading": kneading, "batches": batches})
 
+def archive(request):
+    return render(request, "process.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": Kneading.objects.filter(isFinished = True)})
+
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
     f_comp = serializers.serialize("json", Formula_component.objects.all())

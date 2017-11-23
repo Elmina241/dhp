@@ -7,6 +7,7 @@ app_name = 'processes'
 
 urlpatterns = [
     url(r'^loading_lists/$', views.loading_lists, name = 'loading_lists'),
+    url(r'^archive/$', views.archive, name = 'archive'),
     url(r'^loading_lists/del_list/$', views.del_list, name = 'del_list'),
     url(r'^process/print_lists/(?P<lists>.*)$', views.print_lists, name = 'print_lists'),
     url(r'^(?P<kneading_id>[0-9]+)/process/print_lists/(?P<lists>.*)$', views.print_lists, name = 'print_lists'),
