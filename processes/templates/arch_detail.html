@@ -1,0 +1,240 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+
+<script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function lookL(t){
+	p = $("#" + t);
+	l = document.getElementById("a-" + t);
+	if(p.css("display") == "none"){
+		l.textContent = "Скрыть компоненты";
+		p.css("display", "block")}
+	else{
+    l.textContent = "Показать компоненты";
+		p.css("display", "none")}
+}
+function lookChar(t){
+	p = $("#" + t);
+	l = document.getElementById("a-" + t);
+	if(p.css("display") == "none"){
+		l.textContent = "Скрыть результаты тестирования";
+		p.css("display", "block")}
+	else{
+    l.textContent = "Показать результаты тестирования";
+		p.css("display", "none")}
+}
+
+function move(){
+  var csrftoken = getCookie('csrftoken');
+	if ("{{reactor_content.to_str}}" != "") var rContId = "{{reactor_content.id}}";
+	else var rContId = "0";
+  $.ajax({
+        type: "POST",
+        url: 'move_batch/',
+        data: {
+          'acc': $('#accepting').val(),
+          'donor': "r-" + rContId,
+          'amm': $('#moveAmm').val()
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          location.reload();
+        }
+      });
+}
+
+function checkMove(){
+  $("#error").hide();
+  accId = $('#accepting').val();
+  amm = $('#moveAmm').val();
+  donorAm = "{{reactor_content.amount}}";
+  if(donorAm < amm){
+    $("#error").text("Недостаточно композиции в доноре");
+    $("#error").show();
+  }
+  else{
+    move();
+  }
+}
+
+
+$(document).ready(function(){
+  if ("{{reactor_content.to_str}}" == "") $("#moveComp").prop('disabled', true);
+});
+</script>
+
+
+<a href="print_passport/" target="_blank"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button></a>
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <!--<h4 class="panel-title"><b> {{p.id}}</b></h4>-->
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+
+<div class="panel-body">
+  <h3>Паспорт партии № {{p.kneading.batch_num|floatformat:"0" }}</h3>
+  <hr style="border: none; background-color: mediumseagreen; color: mediumseagreen; height: 2px">
+  <div class="input-group" style ="margin: left; margin-left:10pt">
+      <div class="col-sm-5">
+        <h5><p><b>Дата завершения: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.finish_date|date:"d.m.Y"}}</p></h5></div>
+          <div class="col-sm-5">
+            <h5><p><b>Реактор: </b></p></h5></div>
+          <div class="col-sm-7">
+            <h5><p>{{p.kneading.reactor}}</p></h5></div>
+      </div>
+      <h4 style="margin-top:20pt">Загрузочный лист</h4>
+      <hr style="border: none; background-color: mediumseagreen; color: mediumseagreen; height: 2px">
+      <div class="input-group" style ="margin: left; margin-left:10pt">
+              <div class="col-sm-3">
+              <h5><p><b>Состав: </b></p></h5></div>
+              <div class="col-sm-7">
+              <h5><p>{{p.kneading.list}}</p></h5>
+              </div>
+              <div class="col-sm-3">
+              <h5><p><b>Объём: </b></p></h5></div>
+              <div class="col-sm-7">
+              <h5><p id="textAmm">{{p.kneading.list.ammount}} кг</p></h5>
+              </div>
+              <button type="button" onclick="lookL('comps')" id="a-comps" class="btn btn-info" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>  Показать компоненты</button>
+
+              <div id = "comps" style="display:none">
+                <table class="table table-hover table-sm">
+                  <thead>
+                    <tr>
+                      <th>Код</th><th>Наименование</th><th>Количество</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+										{% for key, values in components.items %}
+										<tr>
+											<td>{{values.code}}</td>
+											<td>{{values.name}}</td>
+											<td>{{values.ammount|floatformat:"2"}}</td>
+										</tr>
+										{% endfor %}
+                  </tbody>
+                </table>
+              </div>
+          </div>
+          <h4 style="margin-top:20pt">Контроль качества</h4>
+          <hr style="border: none; background-color: mediumseagreen; color: mediumseagreen; height: 2px">
+          <div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Пройден</div>
+          <button type="button" class="btn btn-info" id="a-chars" onclick="lookChar('chars')" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>  Показать результаты тестирования</button>
+          <div id = "chars" style="display:none">
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr>
+                  <th>Группа</th><th>Показатель</th><th>Значение</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for key, values in chars.items %}
+                <tr>
+									<td>{{values.group}}</td>
+									<td>{{values.name}}</td>
+									<td>{{values.value}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          </div>
+        </div>
+				<div class="modal fade" id="pack">
+					<div class="modal-dialog modal-sm" >
+						<div class="modal-content">
+							<div class="modal-header">
+								<button class="close" data-dismiss="modal">x</button>
+								<h4 id="storCode"></h4>
+							</div>
+							<div class="modal-body">
+								<div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
+								<input type="hidden" id="stor_id" value="">
+								<input type="hidden" id="amm" value="">
+								<input type="hidden" id="storType" value="">
+								<div class="modal-footer">
+									<input value="Фасовать" onclick="pack($('#stor_id').val(), $('#amm').val(), $('#compAmm').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="move">
+						<div class="modal-dialog modal-md" >
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" data-dismiss="modal">x</button>
+									<h4>Перемещение</h4>
+								</div>
+								<div class="modal-body">
+									<div id="error" class="alert alert-danger" role="alert" style="display:none">
+									</div>
+									<div class="form-group">
+									<div class="form-group">
+										<label for="accepting" style="margin-top:10pt" class="col-sm-2 control-label" style="font-size: small">Акцептор: </label>
+										<div class="col-sm-10" style="margin-top:10pt">
+											<select class="form-control" id="accepting" name="accepting">
+												{% for r in reactor %}
+												{% if r.batch.kneading.list.formula == p.kneading.list.formula or r.content_type == 3 %}
+													<option value="r-{{ r.id }}">{{ r.reactor }}</option>
+												{% endif %}
+												{% endfor %}
+												{% for t in tank %}
+												{% if t.batch.kneading.list.formula == p.kneading.list.formula or t.content_type == 3 %}
+													<option value="t-{{ t.id }}">{{ t.tank }}</option>
+												{% endif %}
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+									<div class="form-group" >
+										<label for="moveAmm" class="col-sm-2 control-label" style="margin-top:10pt" style="font-size: small">
+											Количество:
+										</label>
+										<div class="col-sm-10" style="margin-top:10pt">
+										<div class="input-group"><input type="number" id="moveAmm" name="moveAmm" value = {{p.kneading.list.ammount}} class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
+										</div>
+									</div>
+									</div>
+									</div>
+									<div class="modal-footer" style="margin-top:100pt">
+										<input value="Применить" onclick="checkMove();return false;" class="btn btn-primary" style="float: right"/>
+									</div>
+								</div>
+							</div>
+						</div>
+</div>
+{% endblock content %}

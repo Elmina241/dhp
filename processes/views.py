@@ -31,7 +31,12 @@ def mixing(request, kneading_id = -1):
     return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.filter(isFinished = False), "new_kneading": kneading, "batches": batches})
 
 def archive(request):
-    return render(request, "process.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": Kneading.objects.filter(isFinished = True)})
+    kneadings = []
+    for k in Kneading.objects.filter(isFinished = True):
+        log = State_log.objects.filter(kneading = k).last().state.pk
+        if  log == 7:
+            kneadings.append(k)
+    return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings})
 
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
@@ -1056,6 +1061,35 @@ def kneading_detail(request, kneading_id):
                                                 "tank": Tank_content.objects.all(),
                                                 "location": "/processes/process/",
                                                 "reactor_content" : Reactor_content.objects.filter(batch = batch, reactor = kneading.reactor)[0] if Reactor_content.objects.filter(batch = batch, reactor = kneading.reactor).count()!=0 else None,
+                                                "p": batch})
+
+def archive_detail(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    components = serializers.serialize("json", Components.objects.all())
+    batch = Batch.objects.filter(kneading = kneading)[0]
+    components = Batch_comp.objects.filter(batch = batch)
+    comps = {}
+    for c in components:
+        comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
+    #Получение значений характеристик контроля качества
+    chars = {}
+    temp_chars = Kneading_char.objects.filter(kneading = kneading)
+    i = 0
+    for c in temp_chars:
+        if c.characteristic.char_type.id != 3:
+            try:
+                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.kneading_char_number.number}
+            except Kneading_char_number.DoesNotExist:
+                chars[i] = {}
+        else:
+            val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
+            chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+        i = i+1
+    return render(request, 'arch_detail.html', {"comps": List_component.objects.filter(list = kneading.list),
+                                                "chars": chars,
+                                                "header": "Архив",
+                                                "components": comps,
+                                                "location": "/processes/archive/",
                                                 "p": batch})
 
 def get_checked_elems(request, composition_id):
