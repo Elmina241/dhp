@@ -71,7 +71,7 @@
         {% if values2.list == values.list %}
           <tr>
             <td>{{values2.name}}</td>
-            <td>{{values2.ammount}}</td>
+            <td>{{values2.ammount|floatformat:"2"}}</td>
             {% if values2.min == None %}
               <td>--</td>
             {% else %}
