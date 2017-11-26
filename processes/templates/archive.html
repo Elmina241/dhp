@@ -78,8 +78,6 @@ function filterDate(){
 <hr>
 <form action="del_process/" method="post">
     {% csrf_token %}
-
-          <input type="submit" class="btn btn-default" value="Удалить">
           <br><br>
           {% if kneading %}
               <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
