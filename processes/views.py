@@ -906,24 +906,12 @@ def kneading_detail(request, kneading_id):
     if state_id != 5 and state_id != 4:
         comps = {}
         for c in l_comp2:
-            if c.mat is None:
-                if c.min is None:
-                    min = "-"
-                    max = "-"
-                else:
-                    min = c.min / c.list.ammount * 100
-                    max = c.max / c.list.ammount * 100
+            if c.min is None:
+                min = "-"
+                max = "-"
             else:
-                if c.min is None:
-                    if c.mat.code == "ВД01":
-                        min = "-"
-                        max = "-"
-                    else:
-                        min = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].min
-                        max = Components.objects.filter(comp = c.list.formula.composition, mat = c.mat)[0].max
-                else:
-                    min = c.min / c.list.ammount * 100
-                    max = c.max / c.list.ammount * 100
+                min = c.min / c.list.ammount * 100
+                max = c.max / c.list.ammount * 100
             if c.compl is None:
                 if c.r_cont is None and c.t_cont is None and c.formula is None:
                     comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': str(c.mat), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
