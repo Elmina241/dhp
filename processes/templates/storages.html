@@ -104,6 +104,37 @@ function move(acc, donor, amm){
       });
 }
 
+function getInf(id){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_stor_inf/',
+        data: {
+          'id': id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          comps = JSON.parse(data);
+          var table = $("#compTable tbody");
+          var rowCount = $('#compTable tr').length;
+          for (i = 1; i < rowCount; i++) $('#compTable tr').eq(1).remove();
+          var matAm = 0;
+          for (c in comps){
+            matAm = matAm + comps[c].amount;
+            $("<tr><td>" + comps[c].code + "</td><td>" + comps[c].name + "</td><td>" + (comps[c].amount).toFixed(2) + "</td></tr>").appendTo(table);
+          }
+          $("<tr><td>ВД01</td><td>Вода</td><td>" + (100 - matAm).toFixed(2) + "</td></tr>").appendTo(table);
+          $("#tableName").text("Компоненты композиции " + name);
+          $('#detail').modal('show');
+        }
+      });
+}
+
 function checkDrop(reserved, id, t){
   if (reserved > 0){
     $("#confirmButton").click(function() {
@@ -169,8 +200,16 @@ $(document).ready(function(){
     $(this).find('#stor_id').attr("value", stor_id);
     $(this).find('#storCode').text(code);
     $(this).find('#storType').attr("value", sType);
-
   });
+  $('#prTable tr').each(function(){
+    if ($(this).find('td').eq(3).text() != "Пусто"){
+      $(this).find('td').eq(1).on('click', function(){
+        var ind = $(this).parent().find('td').eq(2).attr("id");
+        getInf(ind);
+      });
+    }
+  }
+  );
 });
 </script>
     {% csrf_token %}
@@ -250,6 +289,40 @@ $(document).ready(function(){
                 </div>
               </div>
             </div>
+
+            <div class="modal fade" id="detail">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4 id="tableName">Компоненты</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class ="info">
+                      <p>Наименование средства:</p>
+                      <p>Артикул:</p>
+                      <p>Дата:</p>
+                      <p>Номер партии:</p>
+                      <p>Вес:</p>
+                    </div>
+                    <div class ="info2">
+                    </div>
+                    <table class="table table-hover table-sm" id="compTable">
+                      <thead>
+                        <tr>
+                          <th>Код</th><th>Наименование</th><th>Масса, кг</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer"></div>
+                </div>
+              </div>
+            </div>
+
             <div class="modal fade" id="confirm">
               <div class="modal-dialog modal-sm" >
                 <div class="modal-content">

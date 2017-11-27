@@ -787,6 +787,21 @@ def start_mixing(request, kneading_id):
     formula = serializers.serialize("json", Formula.objects.all())
     return redirect('kneading_detail', kneading_id = kneading_id)
 
+def get_stor_inf(request):
+    id = request.POST['id']
+    if (id.split("_")[0] == 'r'):
+        content = Reactor_content.objects.filter(pk = id.split("_")[1])[0]
+    else:
+        content = Tank_content.objects.filter(pk = id.split("_")[1])[0]
+    data = {}
+    data['name'] =
+    data['code'] =
+    data['finish'] =
+    data['batch'] =
+    data['amount'] =
+    data['comps'] = {}
+    return HttpResponse('ok')
+
 
 def start_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
