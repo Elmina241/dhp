@@ -153,7 +153,8 @@ def print_lists(request, lists, kneading_id = None):
             else:
                 list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.compl.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
         water = Material.objects.filter(code = "ВД01")[0]
-        list_comps[str(water.pk) + str(k.id)] = {"list": c.list.pk, "name": str(water), "ammount": math.fabs(k.list.ammount - amm), "min": None, "max": None}
+        if round(k.list.ammount - amm, 2)!=0:
+            list_comps[str(water.pk) + str(k.id)] = {"list": c.list.pk, "name": str(water), "ammount": math.fabs(k.list.ammount - amm), "min": None, "max": None}
 
     return render(request, "print_lists.html", {"kneading": data, "comps": list_comps})
 
@@ -793,12 +794,22 @@ def get_stor_inf(request):
         content = Reactor_content.objects.filter(pk = id.split("_")[1])[0]
     else:
         content = Tank_content.objects.filter(pk = id.split("_")[1])[0]
+    if content.content_type == 1:
+        name = str(content.batch.kneading.list.formula)
+        code = content.batch.kneading.list.formula.code
+        finish = content.batch.finish_date
+        batch = content.batch.kneading.batch_num
+    else:
+        name = str(content.kneading.list.formula)
+        code = content.kneading.list.formula.code
+        finish = content.kneading.finish_date
+        batch = content.kneading.batch_num
     data = {}
-    data['name'] =
-    data['code'] =
-    data['finish'] =
-    data['batch'] =
-    data['amount'] =
+    data['name'] = name
+    data['code'] = code
+    data['finish'] = finish
+    data['batch'] = batch
+    data['amount'] = content.amount
     data['comps'] = {}
     return HttpResponse('ok')
 
