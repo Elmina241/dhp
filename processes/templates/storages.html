@@ -124,12 +124,12 @@ function getInf(id){
           var rowCount = $('#compTable tr').length;
           for (i = 1; i < rowCount; i++) $('#compTable tr').eq(1).remove();
           var matAm = 0;
-          for (c in comps){
-            matAm = matAm + comps[c].amount;
-            $("<tr><td>" + comps[c].code + "</td><td>" + comps[c].name + "</td><td>" + (comps[c].amount).toFixed(2) + "</td></tr>").appendTo(table);
+          $("#info3").html("<p>"+comps['name']+"</p><p>"+comps['code']+"</p><p>"+comps['finish']+"</p><p>"+"П-" +comps['batch']+"</p><p>"+comps['amount']+"</p>");
+          for (c in comps['comps']){
+            //matAm = matAm + comps[c].amount;
+            $("<tr><td>" + comps['comps'][c].code + "</td><td>" + comps['comps'][c].name + "</td><td>" + (comps['comps'][c].amount).toFixed(2) + "</td></tr>").appendTo(table);
           }
-          $("<tr><td>ВД01</td><td>Вода</td><td>" + (100 - matAm).toFixed(2) + "</td></tr>").appendTo(table);
-          $("#tableName").text("Компоненты композиции " + name);
+          //$("#tableName").text("Компоненты композиции " + comps[c].name);
           $('#detail').modal('show');
         }
       });
@@ -291,21 +291,21 @@ $(document).ready(function(){
             </div>
 
             <div class="modal fade" id="detail">
-              <div class="modal-dialog">
+              <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button class="close" data-dismiss="modal">x</button>
                     <h4 id="tableName">Компоненты</h4>
                   </div>
                   <div class="modal-body">
-                    <div class ="info">
+                    <div class ="info" style="margin-top:10pt;margin-left:5pt">
                       <p>Наименование средства:</p>
                       <p>Артикул:</p>
                       <p>Дата:</p>
                       <p>Номер партии:</p>
                       <p>Вес:</p>
                     </div>
-                    <div class ="info2">
+                    <div class ="info2" id="info3" style="margin-top:10pt">
                     </div>
                     <table class="table table-hover table-sm" id="compTable">
                       <thead>

@@ -790,20 +790,22 @@ def start_mixing(request, kneading_id):
 
 def get_stor_inf(request):
     id = request.POST['id']
-    if (id.split("_")[0] == 'r'):
-        content = Reactor_content.objects.filter(pk = id.split("_")[1])[0]
+    if (id.split("-")[0] == 'r'):
+        content = Reactor_content.objects.filter(pk = id.split("-")[1])[0]
     else:
-        content = Tank_content.objects.filter(pk = id.split("_")[1])[0]
+        content = Tank_content.objects.filter(pk = id.split("-")[1])[0]
     if content.content_type == 1:
         name = str(content.batch.kneading.list.formula)
         code = content.batch.kneading.list.formula.code
-        finish = content.batch.finish_date
+        finish = str(content.batch.finish_date)
         batch = content.batch.kneading.batch_num
+        comps = Batch_comp.objects.filter(batch = content.batch)
     else:
         name = str(content.kneading.list.formula)
         code = content.kneading.list.formula.code
-        finish = content.kneading.finish_date
+        finish = str(content.kneading.finish_date)
         batch = content.kneading.batch_num
+        comps = None
     data = {}
     data['name'] = name
     data['code'] = code
@@ -811,7 +813,11 @@ def get_stor_inf(request):
     data['batch'] = batch
     data['amount'] = content.amount
     data['comps'] = {}
-    return HttpResponse('ok')
+    if comps is not None:
+        for c in comps:
+            data['comps'][str(c.pk)]={"code": c.mat.code, "name": str(c.mat), "amount": c.ammount/100*content.amount}
+    json_data = json.dumps(data)
+    return HttpResponse(json_data)
 
 
 def start_testing(request, kneading_id):
