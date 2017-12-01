@@ -850,6 +850,19 @@ function checkIsEmpty(id){
       });
 }
 
+//проверка наличия формулы в компонентах загрузочного листа
+function checkFormula(id){
+  var loadList = $("#load_list").attr("value");
+  loadList = JSON.parse(loadList);
+  var res = false;
+  for (c in loadList){
+    if (loadList[c].cont_id == id && loadList[c].type == 5){
+      return true;
+    }
+  }
+  return false;
+}
+
 function checkIsEmpty2(id){
   $("#reactorIsNotEmpty").hide();
   var csrftoken = getCookie('csrftoken');
@@ -867,8 +880,16 @@ function checkIsEmpty2(id){
         success: function onAjaxSuccess(data)
         {
           if (data!="empty") {
-            $("#reactorIsNotEmpty").show();
-            $("#startMix").prop('disabled', true);
+            if (checkFormula(data)) {
+              $("#reactorIsNotEmpty").text("Реактор не пуст. Необходимо пересчитать загрузочный лист.");
+              $("#reactorIsNotEmpty").show();
+              $("#startMix").prop('disabled', true);
+            }
+            else {
+              $("#reactorIsNotEmpty").text("Реактор занят");
+              $("#reactorIsNotEmpty").show();
+              $("#startMix").prop('disabled', true);
+            }
           }
           else {
             $("#startMix").prop('disabled', false);

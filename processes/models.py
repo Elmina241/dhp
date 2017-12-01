@@ -114,6 +114,14 @@ class Reactor_content(models.Model):
         return self.reactor.code + ' ' + self.reactor.name + ' ' + self.content_type
     def to_str(self):
         return str(self.reactor.code + ' ' + self.reactor.name + ' ' + str(self.content_type))
+    def get_formula_id(self):
+        if self.content_type == 3:
+            return None
+        else:
+            if self.content_type == 1:
+                return self.batch.kneading.list.formula.pk
+            else:
+                return self.kneading.list.formula.pk
 
 class Tank_content(models.Model):
     tank = models.ForeignKey('tables.Tank')

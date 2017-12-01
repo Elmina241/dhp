@@ -91,6 +91,7 @@ $(document).ready(function(){
         <input hidden class="form-control" id="formula2" name="formula2" onchange="getComponents2({{components}}, {{materials}}, {{l_c}}, {{c_id}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">-->
         <input hidden class="form-control" id="formula" name="formula" onchange="getLoadList({{load_list}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
         <input hidden class="form-control" id="formula2" name="formula2" onchange="getLoadList({{load_list}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">
+        <input hidden class="form-control" id="load_list" name="load_list" value="{{load_list}}">
       </div>
       <br><br>
       <table class="table table-sm" id="materials" style="width:100%; margin: auto">
