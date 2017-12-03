@@ -863,6 +863,21 @@ function checkFormula(id){
   return false;
 }
 
+function recountList(id){
+  var table = $("#materials tbody");
+  var rowCount = $('#materials tr').length;
+  res = $("#5_"+id.split("_")[0]).find("input").eq(2).attr("value");
+  newAmm = id.split("_")[1];
+  coeff = newAmm/res;
+  for (i = 2; i < rowCount; i++) {
+    old = $('#materials tr').eq(i).find("input").eq(2).attr("value");
+    $('#materials tr').eq(i).find("input").eq(2).attr("value", (old * coeff).toFixed(2));
+  }
+  $("#ammount").attr("value", ($("#ammount").attr("value") * coeff).toFixed(2));
+  $("#5_"+id.split("_")[0]).find("input").eq(2).prop("disabled", true);
+  changeWater();
+}
+
 function checkIsEmpty2(id){
   $("#reactorIsNotEmpty").hide();
   var csrftoken = getCookie('csrftoken');
@@ -880,19 +895,26 @@ function checkIsEmpty2(id){
         success: function onAjaxSuccess(data)
         {
           if (data!="empty") {
-            if (checkFormula(data)) {
+            id = data.split("_")[0];
+            if (checkFormula(id)) {
               $("#reactorIsNotEmpty").text("Реактор не пуст. Необходимо пересчитать загрузочный лист.");
               $("#reactorIsNotEmpty").show();
               $("#startMix").prop('disabled', true);
+              $("#changeList").show();
+              $("#changeList").click(function() {
+                recountList(data);
+              });
             }
             else {
               $("#reactorIsNotEmpty").text("Реактор занят");
               $("#reactorIsNotEmpty").show();
               $("#startMix").prop('disabled', true);
+              $("#changeList").hide();
             }
           }
           else {
             $("#startMix").prop('disabled', false);
+            $("#changeList").hide();
             checkReady();
           }
         }

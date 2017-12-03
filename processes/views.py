@@ -709,7 +709,7 @@ def check_is_empty2(request, kneading_id):
             if reactor.content_type == 3:
                 res = "empty"
             else:
-                res = str(reactor.get_formula_id())
+                res = str(reactor.get_formula_id()) + "_" + str(reactor.amount)
             return HttpResponse(res)
 
 def add_comp(request, kneading_id):
