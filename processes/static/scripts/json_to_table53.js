@@ -863,6 +863,18 @@ function checkFormula(id){
   return false;
 }
 
+function checkLoaded(id){
+  var loadList = $("#load_list").attr("value");
+  loadList = JSON.parse(loadList);
+  var res = false;
+  for (c in loadList){
+    if (loadList[c].formula == id && loadList[c].type == 1){
+      return true;
+    }
+  }
+  return false;
+}
+
 function recountList(id){
   var table = $("#materials tbody");
   var rowCount = $('#materials tr').length;
@@ -874,7 +886,7 @@ function recountList(id){
     $('#materials tr').eq(i).find("input").eq(2).attr("value", (old * coeff).toFixed(2));
   }
   $("#ammount").attr("value", ($("#ammount").attr("value") * coeff).toFixed(2));
-  $("#5_"+id.split("_")[0]).find("input").eq(2).prop("disabled", true);
+  $("#5_"+id.split("_")[0]).find("input").eq(2).prop("readonly", true);
   changeWater();
 }
 
@@ -906,10 +918,17 @@ function checkIsEmpty2(id){
               });
             }
             else {
-              $("#reactorIsNotEmpty").text("Реактор занят");
-              $("#reactorIsNotEmpty").show();
-              $("#startMix").prop('disabled', true);
-              $("#changeList").hide();
+              if (checkLoaded(id)){
+                $("#startMix").prop('disabled', false);
+                $("#changeList").hide();
+                checkReady();
+              }
+              else{
+                $("#reactorIsNotEmpty").text("Реактор занят");
+                $("#reactorIsNotEmpty").show();
+                $("#startMix").prop('disabled', true);
+                $("#changeList").hide();
+              }
             }
           }
           else {

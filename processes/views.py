@@ -22,9 +22,9 @@ def mixing(request, kneading_id = -1):
     else:
         kneading = None
     batches = {}
-    for k in Kneading.objects.all():
+    for k in Kneading.objects.filter(isFinished = False):
         log = State_log.objects.filter(kneading = k).last().state.pk
-        if  log != 7:
+        if  log != 7 and log!=6:
             name = "П-" + str(int(k.batch_num)) + " " + str(k.list.formula)
             if name not in batches:
                 batches[name] = name
@@ -779,9 +779,13 @@ def start_mixing(request, kneading_id):
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=3))
     st.save()
     reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
-    reactor_content.content_type = 2
-    reactor_content.kneading = kneading
-    reactor_content.save()
+    if reactor_content.content_type != 3:
+        el = List_component.objects.filter(list = kneading.list, r_cont = reactor_content)[0]
+        el.loaded = True
+        el.save()
+    #reactor_content.content_type = 2
+    #reactor_content.kneading = kneading
+    #reactor_content.save()
     components = serializers.serialize("json", Components.objects.all())
     l_comp = serializers.serialize("json", List_component.objects.filter(list = kneading.list))
     materials = serializers.serialize("json", Material.objects.all())
@@ -829,11 +833,6 @@ def start_testing(request, kneading_id):
     st.save()
     batch = Batch(kneading = kneading)
     batch.save()
-    reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
-    reactor_content.content_type = 1
-    reactor_content.amount = kneading.list.ammount
-    reactor_content.batch = batch
-    reactor_content.save()
     #Получение состава
     components = {}
     for c in Formula_component.objects.filter(formula = kneading.list.formula):
@@ -882,6 +881,11 @@ def start_testing(request, kneading_id):
                     components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / c.compl.ammount) * c.ammount, 2)
                     comp_amm = comp_amm + round((c2.ammount / c.compl.ammount) * c.ammount, 2)
     components[water.mat.id]['amount'] = round(float(components[water.mat.id]['amount']) + (float(kneading.list.ammount) - comp_amm), 2)
+    reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
+    reactor_content.content_type = 1
+    reactor_content.amount = kneading.list.ammount
+    reactor_content.batch = batch
+    reactor_content.save()
     for c in components:
         comp = Batch_comp(batch = batch, mat = Material.objects.filter(code = components[c]['code'])[0], ammount = (components[c]['amount']/float(kneading.list.ammount))*100)
         comp.save()
@@ -946,17 +950,17 @@ def kneading_detail(request, kneading_id):
                 max = c.max / c.list.ammount * 100
             if c.compl is None:
                 if c.r_cont is None and c.t_cont is None and c.formula is None:
-                    comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': str(c.mat), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4}
+                    comps[str(c.id)]={'mat_code': c.mat.code, 'cont_id': c.mat.id, 'mat_name': str(c.mat), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 4, 'formula': "None"}
                 else:
                     if c.r_cont is None and c.formula is None:
-                        comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 2}
+                        comps[str(c.id)]={'mat_code': c.t_cont.batch.id, 'cont_id': c.t_cont.id, 'mat_name': str(c.t_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 2, 'formula': str(c.t_cont.batch.kneading.list.formula.pk)}
                     else:
                         if c.formula is None:
-                            comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 1}
+                            comps[str(c.id)]={'mat_code': c.r_cont.batch.id, 'cont_id': c.r_cont.id, 'mat_name': str(c.r_cont.batch.kneading.list.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 1, 'formula': str(c.r_cont.batch.kneading.list.formula.pk)}
                         else:
-                            comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 5}
+                            comps[str(c.id)]={'mat_code': c.formula.code, 'cont_id': c.formula.id, 'mat_name': str(c.formula), 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 5, 'formula': c.formula.pk}
             else:
-                comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 3}
+                comps[str(c.id)]={'mat_code': c.compl.code, 'cont_id': c.compl.id, 'mat_name': c.compl.name, 'amount': str(c.ammount), 'loaded': int(c.loaded), 'min': min, 'max': max, "type": 3, 'formula': c.compl.formula.pk}
 
         load_list = json.dumps(comps)
 
