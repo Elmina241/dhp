@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^process/(?P<kneading_id>[0-9]+)/$', views.kneading_detail, name='kneading_detail'),
     url(r'^archive/(?P<kneading_id>[0-9]+)/$', views.archive_detail, name='archive_detail'),
     url(r'^process/(?P<kneading_id>[0-9]+)/start_process/$', views.start_kneading, name='start_kneading'),
+    url(r'^process/(?P<kneading_id>[0-9]+)/save_reactor/$', views.save_reactor, name='save_reactor'),
     url(r'^process/(?P<kneading_id>[0-9]+)/print_passport/$', views.print_passport, name='print_passport'),
     url(r'^archive/(?P<kneading_id>[0-9]+)/print_passport/$', views.print_passport, name='print_passport'),
     url(r'^process/(?P<kneading_id>[0-9]+)/stop_process/$', views.stop_process, name='stop_process'),

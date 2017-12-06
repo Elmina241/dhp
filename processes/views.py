@@ -612,6 +612,9 @@ def move(request):
             if accepting.content_type == 3:
                 accepting.batch = donor.batch
             else:
+                if amm > accepting.amount:
+                    accepting.batch.kneading.batch_num = donor.batch.kneading.batch_num
+                    accepting.batch.kneading.save()
                 for m in Batch_comp.objects.filter(batch = accepting.batch):
                     comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
                     m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
@@ -625,7 +628,8 @@ def move(request):
         if donor.reserved > donor.amount:
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
-        if donor.amount == 0:
+        if donor.amount <= 0.01:
+            donor.amount = 0
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
             donor.batch = None
@@ -649,6 +653,9 @@ def move_batch(request, kneading_id):
         if accepting.content_type == 3:
             accepting.batch = donor.batch
         else:
+            if amm > accepting.amount:
+                accepting.batch.kneading.batch_num = donor.batch.kneading.batch_num
+                accepting.batch.kneading.save()
             for m in Batch_comp.objects.filter(batch = accepting.batch):
                 comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
                 m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
@@ -659,7 +666,8 @@ def move_batch(request, kneading_id):
         if donor.reserved > donor.amount:
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
-        if donor.amount == 0:
+        if donor.amount <= 0.01:
+            donor.amount = 0
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
             donor.batch = None
@@ -907,6 +915,13 @@ def finish_process(request, kneading_id):
     kneading.save()
     return redirect('mixing')
 
+def save_reactor(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    reactor = Reactor.objects.filter(pk = request.POST['reactor'])[0]
+    kneading.reactor = reactor
+    kneading.save()
+    return redirect('kneading_detail', kneading_id = kneading_id)
+
 def finish_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
@@ -982,6 +997,7 @@ def kneading_detail(request, kneading_id):
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
                                                 "load_list": load_list,
+                                                "reactors": Reactor.objects.all(),
                                                 "batches": json.dumps(batches),
                                                 "location": "/processes/process/",
                                                 "p": kneading})
@@ -991,6 +1007,7 @@ def kneading_detail(request, kneading_id):
                                                 "l_c": json.dumps(l_comp),
                                                 "c_id": kneading.list.formula.composition.id,
                                                 "load_list": load_list,
+                                                "reactors": Reactor.objects.all(),
                                                 "batches": json.dumps(batches),
                                                 "location": "/processes/process/",
                                                 "p": kneading})

@@ -61,7 +61,7 @@ $(document).ready(function(){
           <div class="col-sm-3">
           <h5><p><b>Реактор: </b></p></h5></div>
           <div class="col-sm-7">
-          <h5><p>{{p.reactor}}</p></h5>
+          <h5><p>{{p.reactor}} <button type="button" data-toggle="modal" data-target="#editReactor" class ="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></button></p></h5>
           </div>
           <div class="col-sm-3">
           <h5><p><b>Состав: </b></p></h5></div>
@@ -139,5 +139,26 @@ $(document).ready(function(){
   </div>
   </form>
 </div>
+<form action="save_reactor/" id="formReactor" method="post" class="form-horizontal">
+  {% csrf_token %}
+<div class="modal fade" id="editReactor">
+  <div class="modal-dialog modal-sm" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">x</button>
+        <h4>Редактирование реактора</h4>
+      </div>
+      <div class="modal-body">
+        <select class="form-control" id="reactor" name="reactor">
+          {% for r in reactors %}
+            <option value="{{ r.id }}">{{ r }}</option>
+          {% endfor %}</select>
+      </div>
+      <div class="modal-footer">
+        <input type="button" onclick="$('#formReactor').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+      </div>
+    </div>
+  </div>
+</form>
 </div>
 {% endblock content %}
