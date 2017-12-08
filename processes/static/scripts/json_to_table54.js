@@ -946,6 +946,8 @@ function checkMatAm(){
   var length = $("#loadList").find('tr').length;
   compl_comp = JSON.parse(JSON.parse($("#compl_comp").attr("value")));
   materials = JSON.parse(JSON.parse($("#reagents").attr("value")));
+  compl_comp_comps = $("#f_c").attr("value");
+  var comps = JSON.parse(JSON.parse(compl_comp_comps));
   batches = JSON.parse($("#batches").attr("value"));
   var errors = {'length': 0};
   for (i=2; i < length; i++){
@@ -968,6 +970,23 @@ function checkMatAm(){
           if (am > curAm){
             errors[batches[j].name] = curAm;
             errors['length'] = errors['length'] +1;
+          }
+        }
+      }
+
+      if (batch == undefined){
+        for (j=0; j < comps.length; j++){
+          if (comps[j].fields.formula == id){
+            matId = comps[j].fields.mat;
+            for (k=0; k < materials.length; k++){
+              if (materials[k].pk == matId){
+                curAm = parseFloat(materials[k].fields.ammount);
+                if (am > curAm){
+                  errors[materials[k].fields.code] = curAm;
+                  errors['length'] = errors['length'] +1;
+                }
+              }
+            }
           }
         }
       }
