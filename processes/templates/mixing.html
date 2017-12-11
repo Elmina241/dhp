@@ -42,16 +42,23 @@ function addComp(mat_id, amm, mat_code, isCompl){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
-        success: function onAjaxSuccess()
+        success: function onAjaxSuccess(data)
         {
-          var obj = document.getElementById(mat_code);
-          obj.parentElement.children[4].textContent = amm;
-          obj.parentElement.classList.add("success");
-          obj.parentElement.children[0].innerHTML = "<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>";
-          obj.parentElement.children[5].innerHTML = "<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + " data-isCompl=" + isCompl + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>";
-          getAmmount();
-          $("#type").attr("value", "");
-          checkLoadedComponents();
+          if (data == "ok"){
+            $("#addComp").modal("hide");
+            var obj = document.getElementById(mat_code);
+            obj.parentElement.children[4].textContent = amm;
+            obj.parentElement.classList.add("success");
+            obj.parentElement.children[0].innerHTML = "<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color: white; text-shadow: black 0 0 2px;'></span>";
+            obj.parentElement.children[5].innerHTML = "<button class='btn btn-default' data-toggle='modal' data-target='#addComp' data-code="+ mat_code +" data-type='add' data-amm=" + amm + " data-mat=" + mat_id + " data-isCompl=" + isCompl + "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>";
+            getAmmount();
+            $("#type").attr("value", "");
+            checkLoadedComponents();
+          }
+          else{
+            $("#addError").text("Доступное количество: " + parseFloat(data).toFixed(2) + "кг");
+            $("#addError").show();
+          }
         }
       });
 }
@@ -70,6 +77,7 @@ $(document).ready(function(){
   checkLoadedComponents();
   $('#addComp').on('show.bs.modal', function (event) {
     // получить кнопку, которая его открыло
+    $("#addError").hide();
     var button = $(event.relatedTarget)[0];
     var code = button.dataset.code;
     var mat = button.dataset.mat;
@@ -153,13 +161,14 @@ $(document).ready(function(){
               <h4 id="matCode"></h4>
             </div>
             <div class="modal-body">
+              <div id = "addError" class="alert alert-warning alert-dismissable" role="alert"></div>
               <input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" hidden>
               <div class="form-group">Количество: <input type="number" id="compAmm" step="0.01"> кг</div>
               <input type="hidden" id="mat_id" value="">
               <input type="hidden" id="type" value="">
               <input type="hidden" id="isCompl" value="">
               <div class="modal-footer">
-                <input value="Добавить" onclick="addComp($('#mat_id').val(), getMatAmm($('#matCode').text(), $('#compAmm').val()), $('#matCode').text(), $('#isCompl').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                <input value="Добавить" onclick="addComp($('#mat_id').val(), getMatAmm($('#matCode').text(), $('#compAmm').val()), $('#matCode').text(), $('#isCompl').val());return false;" class="btn btn-primary" style="float: right"/> </div>
               </div>
             </div>
     </div>

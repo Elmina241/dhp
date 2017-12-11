@@ -608,6 +608,7 @@ def move(request):
         else:
             accepting = get_object_or_404(Tank_content, tank=request.POST['acc'][2:])
         amm = float(request.POST['amm'])
+
         if donor.content_type == 1:
             if accepting.content_type == 3:
                 accepting.batch = donor.batch
@@ -621,10 +622,15 @@ def move(request):
                     m.save()
         else:
             accepting.kneading = donor.kneading
-
-        donor.amount = donor.amount - amm
-        accepting.content_type = donor.content_type
-        accepting.amount = accepting.amount + amm
+        if amm / 0.98 > donor.amount:
+            temp_amm = donor.amount
+            donor.amount = 0
+            accepting.content_type = donor.content_type
+            accepting.amount = accepting.amount + temp_amm*0.98
+        else:
+            donor.amount = donor.amount - amm / 0.98
+            accepting.content_type = donor.content_type
+            accepting.amount = accepting.amount + amm
         if donor.reserved > donor.amount:
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
@@ -660,9 +666,15 @@ def move_batch(request, kneading_id):
                 comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
                 m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
                 m.save()
-        donor.amount = donor.amount - amm
-        accepting.content_type = donor.content_type
-        accepting.amount = accepting.amount + amm
+        if amm / 0.98 > donor.amount:
+            temp_amm = donor.amount
+            donor.amount = 0
+            accepting.content_type = donor.content_type
+            accepting.amount = accepting.amount + temp_amm*0.98
+        else:
+            donor.amount = donor.amount - amm / 0.98
+            accepting.content_type = donor.content_type
+            accepting.amount = accepting.amount + amm
         if donor.reserved > donor.amount:
             donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
@@ -721,52 +733,66 @@ def check_is_empty2(request, kneading_id):
             return HttpResponse(res)
 
 def add_comp(request, kneading_id):
+    res = "ok"
     if request.method == 'POST':
         if 'mat_id' in request.POST:
             if request.POST['type'] == 'compl':
                 mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])[0]
-                mat.store_amount = mat.store_amount - float(request.POST['amm'])
-                mat.reserved = mat.reserved - float(request.POST['amm'])
-                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
-                mat.save()
+                if mat.store_amount < float(request.POST['amm']):
+                    res = str(mat.store_amount)
+                else:
+                    mat.store_amount = mat.store_amount - float(request.POST['amm'])
+                    mat.reserved = mat.reserved - float(request.POST['amm'])
+                    comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
+                    mat.save()
             else:
                 if request.POST['type'] == 'tank':
                         content = Tank_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        content.amount = content.amount - float(request.POST['amm'])
-                        content.reserved = content.reserved - float(request.POST['amm'])
-                        if content.reserved > content.amount:
-                            content.reserved = 0
-                            check_dependencies(content, 't')
-                        comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
-                        content.save()
+                        if content.amount < float(request.POST['amm'])/0.98:
+                            res = str(content.amount)
+                        else:
+                            content.amount = content.amount - float(request.POST['amm'])/0.98
+                            content.reserved = content.reserved - float(request.POST['amm'])/0.98
+                            if content.reserved > content.amount:
+                                content.reserved = 0
+                                check_dependencies(content, 't')
+                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
+                            content.save()
                 else:
                     if request.POST['type'] == 'reactor':
                         content = Reactor_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        content.amount = content.amount - float(request.POST['amm'])
-                        content.reserved = content.reserved - float(request.POST['amm'])
-                        if content.reserved > content.amount:
-                            content.reserved = 0
-                            check_dependencies(content, 'r')
-                        comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
-                        content.save()
+                        if content.amount < float(request.POST['amm'])/0.98:
+                            res = str(content.amount)
+                        else:
+                            content.amount = content.amount - float(request.POST['amm'])/0.98
+                            content.reserved = content.reserved - float(request.POST['amm'])/0.98
+                            if content.reserved > content.amount:
+                                content.reserved = 0
+                                check_dependencies(content, 'r')
+                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
+                            content.save()
                     else:
                         mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
-                        mat.ammount = mat.ammount - float(request.POST['amm'])
-                        mat.reserved = mat.reserved - float(request.POST['amm'])
-                        comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                        mat.save()
+                        if mat.ammount < float(request.POST['amm']):
+                            res = str(mat.ammount)
+                        else:
+                            mat.ammount = mat.ammount - float(request.POST['amm'])
+                            mat.reserved = mat.reserved - float(request.POST['amm'])
+                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+                            mat.save()
             #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
-            if comp.loaded == True:
-                comp.ammount = comp.ammount + float(request.POST['amm'])
-            else:
-                comp.ammount = request.POST['amm']
-            kneading = get_object_or_404(Kneading, pk=kneading_id)
-            reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
-            reactor_content.amount = kneading.list.ammount
-            reactor_content.save()
-            comp.loaded = True
-            comp.save()
-            return HttpResponse("ok")
+            if res == "ok":
+                if comp.loaded == True:
+                    comp.ammount = comp.ammount + float(request.POST['amm'])
+                else:
+                    comp.ammount = request.POST['amm']
+                kneading = get_object_or_404(Kneading, pk=kneading_id)
+                reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
+                reactor_content.amount = kneading.list.ammount
+                reactor_content.save()
+                comp.loaded = True
+                comp.save()
+            return HttpResponse(res)
 
 def start_kneading(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
