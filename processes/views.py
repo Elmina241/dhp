@@ -38,6 +38,14 @@ def archive(request):
             kneadings.append(k)
     return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings})
 
+def plan(request):
+
+    return render(request, "plan.html", {"header": "План на месяц", "location": "/processes/plan/"})
+
+def task(request):
+
+    return render(request, "task.html", {"header": "Задание на неделю", "location": "/processes/task/"})
+
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
     f_comp = serializers.serialize("json", Formula_component.objects.all())

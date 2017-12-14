@@ -472,7 +472,7 @@ function addMaterial(){
 //Получение списка технологических композиций
 function getSelectOfComp(id){
   var batches = JSON.parse($("#batches").attr("value"));
-  res = "<select class='form-control' id='b"+id+"' name='b'"+id+">";
+  res = "<select class='form-control' id='b"+id+"' name='b'"+id+"><option value="+4+"t"+ id +"></option>";
   for (b in batches){
     if (batches[b].formula == id){
       res = res + "<option value="+batches[b].type+"t"+batches[b].id+">"+ batches[b].name + "</option>";
