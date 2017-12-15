@@ -78,7 +78,9 @@ class Product(models.Model):
     def get_short_code(self):
         return self.code[9:]
     def get_short_name(self):
-        return self.form.name + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail)
+        return ('' if self.production is None or self.production.composition.form is None else self.production.composition.form.name) + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail)
+    def get_name_for_table(self):
+        return self.name + ' ' + self.mark.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' '))
 
 #Модели для рецептов
 

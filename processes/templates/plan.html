@@ -11,6 +11,24 @@
    }
   </style>
 <script type="text/javascript">
+function getNowDate(){
+  var now = new Date();
+  text = now.getDate() + "." + (now.getMonth()+1) + "." + now.getFullYear();
+  return text;
+}
+function countUnits(){
+  count = 0;
+  allAmm = 0;
+  var length = $("#prod").find('tr').length;
+  for (i=0; i < length-2; i++){
+    unit = $("#prod").find('tr').eq(i).find('input').attr('value');
+    amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
+    count = count + unit;
+    allAmm = allAmm + unit * amm;
+  }
+  $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
+  $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm);
+}
 $(document).ready(function(){
   var dp = $('#datepicker');
   dp.datepicker({
@@ -19,28 +37,62 @@ $(document).ready(function(){
     viewMode: "months",
     minViewMode: "months"
   });
-  $('#formula').trigger("change");
-  addValidation();
-  document.getElementById('closeButton').onclick=function(){
-    if ($('#materialsPanel').css('display') == 'none'){
-      $('#materialsPanel').css('display', 'block');
-      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-up'></i>");
-    }
-    else {
-      $('#materialsPanel').css('display', 'none');
-      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-down'></i>");
-    }
-  }
+  $("#nowDate").text(getNowDate());
 
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
-
+<form>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
-      <h4 class="panel-title">Добавление процесса</h4>
+      <h4 class="panel-title">План на месяц</h4>
   </div>
-  <div id="datepicker" data-date="12/03/2012"></div>
-  <input type="hidden" id="my_hidden_input">
+  <div class="input-group col-sm-10"  style ="margin: auto;margin-left:40pt">
+  <label for="datepicker" class="col-sm-1 control-label" style="font-size: medium; margin-top:10pt">Дата: </label>
+  <div class="input-group date col-sm-2" style="margin-top:5pt">
+  <input type="text" id="datepicker"  class="form-control" >
+  <div class="input-group-addon">
+      <span class="glyphicon glyphicon-th"></span>
   </div>
+</div>
+</div>
+<div class="panel panel-default" style ="margin: auto; margin-top: 5pt">
+  <div class="panel-heading">
+
+  </div>
+  <div class="panel-body">
+    <h4  style ="margin: auto;margin-left:40pt">Производственный план на период с </h2>
+    <div class="sign">
+    <br>
+    <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Утверждено</div>
+    <div style="margin-top:10pt;margin-left:440pt;font-size:12pt;">Гулай О.С.</div>
+    <br>
+    <div style="margin-top:5pt;margin-left:40pt;font-size:12pt;float:left;">Дата</div>
+    <div id="nowDate" style="margin-top:5pt;margin-left:440pt;font-size:12pt;"></div>
+    </div>
+
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt" class="prod">
+    <table class="table table-hover table-sm  table-condensed" id="prod">
+      <thead>
+        <tr>
+          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>План на месяц, шт</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" step="1" onchange="countUnits();"></td></tr>
+        {% endfor %}
+        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <hr>
+    <button class="btn btn-success" id = "submit" style="float: right; margin-right:40pt; margin-top:5pt">Сохранить</button>
+  </div>
+
+</div>
+
+  </div>
+</form>
 {% endblock content %}
