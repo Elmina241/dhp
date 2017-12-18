@@ -16,15 +16,26 @@ function getNowDate(){
   text = now.getDate() + "." + (now.getMonth()+1) + "." + now.getFullYear();
   return text;
 }
+function changeMonth(){
+  date = $("#datepicker").prop("value");
+  year = date.split("/")[1];
+  month = date.split("/")[0];
+  newDate = new Date(parseInt(year), parseInt(month)-1, 1);
+  daysInMonth = 32 - new Date(newDate.getFullYear(), newDate.getMonth(), 32).getDate();
+  $("#period").text("Производственный план на период с 1." + month + "." + year + " по " + daysInMonth + "." + month + "." + year);
+}
 function countUnits(){
   count = 0;
   allAmm = 0;
   var length = $("#prod").find('tr').length;
-  for (i=0; i < length-2; i++){
-    unit = $("#prod").find('tr').eq(i).find('input').attr('value');
+  for (i=1; i < length-2; i++){
+    unit = $("#prod").find('tr').eq(i).find('input').prop('value');
+    if (unit == undefined || unit == ""){
+      unit = 0;
+    }
     amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
-    count = count + unit;
-    allAmm = allAmm + unit * amm;
+    count = count + parseInt(unit);
+    allAmm = allAmm + parseInt(unit) * parseFloat(amm);
   }
   $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
   $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm);
@@ -50,7 +61,7 @@ $(document).ready(function(){
   <div class="input-group col-sm-10"  style ="margin: auto;margin-left:40pt">
   <label for="datepicker" class="col-sm-1 control-label" style="font-size: medium; margin-top:10pt">Дата: </label>
   <div class="input-group date col-sm-2" style="margin-top:5pt">
-  <input type="text" id="datepicker"  class="form-control" >
+  <input type="text" id="datepicker" onchange="changeMonth();" class="form-control" >
   <div class="input-group-addon">
       <span class="glyphicon glyphicon-th"></span>
   </div>
@@ -61,7 +72,7 @@ $(document).ready(function(){
 
   </div>
   <div class="panel-body">
-    <h4  style ="margin: auto;margin-left:40pt">Производственный план на период с </h2>
+    <h4 id="period" style ="margin: auto;margin-left:40pt">Производственный план на период с </h2>
     <div class="sign">
     <br>
     <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Утверждено</div>

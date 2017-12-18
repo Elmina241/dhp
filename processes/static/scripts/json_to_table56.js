@@ -265,11 +265,9 @@ function changeMatTable(){
         var batch = $("#b"+id + " :selected").val();
         var t = "";
         var bId = "";
-        if (batch != undefined) {
-          t = batch[0];
-          bId = batch.substr(2);
-        }
-        else{
+        t = batch[0];
+        bId = batch.substr(2);
+        if (t == "4"){
           t = "5";
           bId = id;
         }
