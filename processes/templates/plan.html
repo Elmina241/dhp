@@ -16,6 +16,17 @@ function getNowDate(){
   text = now.getDate() + "." + (now.getMonth()+1) + "." + now.getFullYear();
   return text;
 }
+
+function getPlan(){
+  plans = $("#plans").prop("value");
+  jsPlan = JSON.parse(JSON.parse(plans));
+  for (obj in jsPlan){
+    if ($("#datepicker").prop("value") == jsPlan[obj].fields.month) $("#" + jsPlan[obj].fields.prod).prop("value", jsPlan[obj].fields.num);
+    else $("#" + jsPlan[obj].fields.prod).prop("value", "");
+  }
+  countUnits();
+}
+
 function changeMonth(){
   date = $("#datepicker").prop("value");
   year = date.split("/")[1];
@@ -24,6 +35,12 @@ function changeMonth(){
   daysInMonth = 32 - new Date(newDate.getFullYear(), newDate.getMonth(), 32).getDate();
   $("#period").text("Производственный план на период с 1." + month + "." + year + " по " + daysInMonth + "." + month + "." + year);
 }
+
+function printList(){
+  date = "[" + $("#datepicker").prop("value") + "]";
+  window.open(document.location.href + "print_list/"+date);
+}
+
 function countUnits(){
   count = 0;
   allAmm = 0;
@@ -38,7 +55,7 @@ function countUnits(){
     allAmm = allAmm + parseInt(unit) * parseFloat(amm);
   }
   $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
-  $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm);
+  $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm.toFixed(2));
 }
 $(document).ready(function(){
   var dp = $('#datepicker');
@@ -48,20 +65,28 @@ $(document).ready(function(){
     viewMode: "months",
     minViewMode: "months"
   });
+  var now = new Date();
+  text = (now.getMonth()+1) + "/" + now.getFullYear() ;
+  $("#datepicker").prop("value", text);
+  changeMonth();
   $("#nowDate").text(getNowDate());
-
+  getPlan();
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
-<form>
+<form action="save_month_plan/" method="post">
+  {% csrf_token %}
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
-      <h4 class="panel-title">План на месяц</h4>
+      <h4 class="panel-title">План на месяц </h4>
+      <hr>
+      <button type="button" class="btn btn-success" onclick="printList();return false;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button>
   </div>
+  <div id = "test"></div>
   <div class="input-group col-sm-10"  style ="margin: auto;margin-left:40pt">
   <label for="datepicker" class="col-sm-1 control-label" style="font-size: medium; margin-top:10pt">Дата: </label>
   <div class="input-group date col-sm-2" style="margin-top:5pt">
-  <input type="text" id="datepicker" onchange="changeMonth();" class="form-control" >
+  <input type="text" id="datepicker" name="month" onchange="changeMonth();getPlan();" class="form-control" >
   <div class="input-group-addon">
       <span class="glyphicon glyphicon-th"></span>
   </div>
@@ -69,6 +94,7 @@ $(document).ready(function(){
 </div>
 <div class="panel panel-default" style ="margin: auto; margin-top: 5pt">
   <div class="panel-heading">
+      <input type="hidden" id="plans" name="plans" value="{{plans}}">
 
   </div>
   <div class="panel-body">
@@ -91,7 +117,7 @@ $(document).ready(function(){
       </thead>
       <tbody>
         {% for p in products %}
-        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" step="1" onchange="countUnits();"></td></tr>
+        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
         {% endfor %}
         <tr><td><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
         <tr><td><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>

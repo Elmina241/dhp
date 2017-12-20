@@ -1,0 +1,122 @@
+{% load staticfiles %}
+<head>
+  <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+  <link rel="stylesheet" href="{% static 'css/breadcrumb3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.css' %}">
+  <script src="{% static 'scripts/jquery.tabletojson.js' %}"></script>
+  <script src="{% static 'scripts/validation5.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepickerrumin.js' %}"></script>
+  <script src="{% static 'scripts/jquery.tablesorter.js' %}"></script>
+  <script type="text/javascript">
+  </script>
+  <style type="text/css">
+    @media print {
+      #printBtn {
+        display:none;
+      }
+      .info {
+        page-break-inside: avoid;
+      }
+      .info2 {
+        page-break-inside: avoid;
+      }
+      .comps {
+        page-break-inside: avoid;
+      }
+      .compsHeader {
+        page-break-after: avoid;
+      }
+      .sign {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+  <script type="text/javascript">
+  function getNowDate(){
+    var now = new Date();
+    text = now.getDate() + "." + (now.getMonth()+1) + "." + now.getFullYear();
+    return text;
+  }
+
+  function getPlan(){
+    plans = $("#plans").prop("value");
+    jsPlan = JSON.parse(JSON.parse(plans));
+    for (obj in jsPlan){
+      if ("{{date}}" == jsPlan[obj].fields.month) $("#" + jsPlan[obj].fields.prod).prop("value", jsPlan[obj].fields.num);
+      else $("#" + jsPlan[obj].fields.prod).prop("value", "");
+    }
+    countUnits();
+  }
+
+  function changeMonth(){
+    date = "{{date}}";
+    year = date.split("/")[1];
+    month = date.split("/")[0];
+    newDate = new Date(parseInt(year), parseInt(month)-1, 1);
+    daysInMonth = 32 - new Date(newDate.getFullYear(), newDate.getMonth(), 32).getDate();
+    $("#period").text("Производственный план на период с 1." + month + "." + year + " по " + daysInMonth + "." + month + "." + year);
+  }
+
+  function countUnits(){
+    count = 0;
+    allAmm = 0;
+    var length = $("#prod").find('tr').length;
+    for (i=1; i < length-2; i++){
+      unit = $("#prod").find('tr').eq(i).find('td').eq(3).text();
+      if (unit == undefined || unit == ""){
+        unit = 0;
+      }
+      amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
+      count = count + parseInt(unit);
+      allAmm = allAmm + parseInt(unit) * parseFloat(amm);
+    }
+    $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
+    $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm.toFixed(2));
+  }
+  $(document).ready(function(){
+    changeMonth();
+    $("#nowDate").text(getNowDate());
+    countUnits();
+  //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
+  });</script>
+</head>
+<body>
+  <div class="passport">
+    <h4 id="period" style ="margin: auto;margin-left:40pt;margin-top:40pt;">Производственный план на период с </h2>
+    <div class="sign">
+    <br>
+    <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Утверждено</div>
+    <div style="margin-top:10pt;margin-left:440pt;font-size:12pt;">Гулай О.С.</div>
+    <br>
+    <div style="margin-top:5pt;margin-left:40pt;font-size:12pt;float:left;">Дата</div>
+    <div id="nowDate" style="margin-top:5pt;margin-left:440pt;font-size:12pt;"></div>
+    </div>
+
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt" class="prod">
+    <table class="table table-hover table-sm  table-condensed" id="prod">
+      <thead>
+        <tr>
+          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>План на месяц, шт</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in plans %}
+        <tr><td>{{p.prod.code}}</td><td>{{p.prod.get_name_for_table}}</td><td>{{p.prod.production.compAmount}}</td><td>{{p.num}}</td></tr>
+        {% endfor %}
+        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <button id="printBtn" type="button" style="margin-top:10pt;margin-left:40pt;float:right;" class="btn btn-info" onclick="window.print();">Печать</button>
+  </div>
+
+</body>

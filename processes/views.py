@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
-from .models import Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
+from .models import Month_plan, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 import json
 import math
 from django.core import serializers
@@ -40,7 +40,19 @@ def archive(request):
 
 def plan(request):
 
-    return render(request, "plan.html", {"header": "План на месяц", "location": "/processes/plan/", "products": Product.objects.all()})
+    return render(request, "plan.html", {"header": "План на месяц", "location": "/processes/plan/", "products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all()))})
+
+def save_month_plan(request):
+    for p in Product.objects.all():
+        if str(p.pk) in request.POST and request.POST[str(p.pk)]!='':
+            if (Month_plan.objects.filter(month = request.POST["month"], prod = p).count()==0):
+                plan_obj= Month_plan(month = request.POST["month"], prod = p, num = request.POST[str(p.pk)])
+                plan_obj.save()
+            else:
+                plan_obj = Month_plan.objects.filter(month = request.POST["month"], prod = p)[0]
+                plan_obj.num = request.POST[str(p.pk)]
+                plan_obj.save()
+    return redirect('plan')
 
 def task(request):
 
@@ -136,6 +148,10 @@ def del_list(request):
         del_obj = get_object_or_404(Model_list, pk=d)
         del_obj.delete()
     return redirect('loading_lists')
+
+def print_month_plan(request, month):
+    text_month = month[1:8]
+    return render(request, "print_month_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
 
 def print_lists(request, lists, kneading_id = None):
     list_ids = json.loads(lists)

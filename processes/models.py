@@ -101,6 +101,13 @@ class Kneading_char_var(models.Model):
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
 
+class Month_plan(models.Model):
+    month = models.CharField(max_length=7)
+    prod = models.ForeignKey('tables.Product')
+    num = models.FloatField()
+    def __str__(self):
+        return self.month + ' ' + str(self.prod)
+
 #Модели для содержимого хранилищ
 class Reactor_content(models.Model):
     reactor = models.ForeignKey('tables.Reactor')
