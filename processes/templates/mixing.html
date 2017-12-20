@@ -58,6 +58,9 @@ function addComp(mat_id, amm, mat_code, isCompl){
           else{
             $("#addError").text("Доступное количество: " + parseFloat(data).toFixed(2) + "кг");
             $("#addError").show();
+            getAmmount();
+            $("#type").attr("value", "");
+            checkLoadedComponents();
           }
         }
       });
