@@ -17,6 +17,14 @@
   <script type="text/javascript">
   </script>
   <style type="text/css">
+
+  @page :left {
+    margin: 3cm 3cm 3cm 1.5cm; /* Отступы для всех левых страниц */
+   }
+   @page :right {
+    margin: 3cm 3cm 3cm 1.5cm; /* Отступы для всех правых страниц */
+   }
+
     @media print {
       #printBtn {
         display:none;
@@ -35,6 +43,12 @@
       }
       .sign {
         page-break-inside: avoid;
+      }
+      .pagebreak {
+        page-break-after: auto;
+      }
+      .headerTr {
+        margin-top: 40pt;
       }
     }
   </style>
@@ -77,8 +91,8 @@
       count = count + parseInt(unit);
       allAmm = allAmm + parseInt(unit) * parseFloat(amm);
     }
-    $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
-    $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm.toFixed(2));
+    $("#prod").find('tr').eq(length-2).find('td').eq(1).text(count);
+    $("#prod").find('tr').eq(length-1).find('td').eq(1).text(allAmm.toFixed(2));
   }
   $(document).ready(function(){
     changeMonth();
@@ -100,8 +114,8 @@
     </div>
 
     <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt" class="prod">
-    <table class="table table-hover table-sm  table-condensed" id="prod">
-      <thead>
+    <table class="table table-hover table-sm table-bordered pagebreak table-condensed" id="prod">
+      <thead class="headerTr">
         <tr>
           <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>План на месяц, шт</th>
         </tr>
@@ -110,8 +124,8 @@
         {% for p in plans %}
         <tr><td>{{p.prod.code}}</td><td>{{p.prod.get_name_for_table}}</td><td>{{p.prod.production.compAmount}}</td><td>{{p.num}}</td></tr>
         {% endfor %}
-        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
-        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td colspan="3"><b>Итого, штуки</b></td><td><b>0</b></td></tr>
+        <tr><td colspan="3"><b>Итого, тонны</b></td><td><b>0</b></td></tr>
       </tbody>
     </table>
     </div>

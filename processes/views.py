@@ -43,6 +43,7 @@ def plan(request):
     return render(request, "plan.html", {"header": "План на месяц", "location": "/processes/plan/", "products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all()))})
 
 def save_month_plan(request):
+    Month_plan.objects.filter(month = request.POST["month"]).delete()
     for p in Product.objects.all():
         if str(p.pk) in request.POST and request.POST[str(p.pk)]!='':
             if (Month_plan.objects.filter(month = request.POST["month"], prod = p).count()==0):
@@ -622,6 +623,7 @@ def check_dependencies(storage, t):
 
 
 def move(request):
+    loses = 1
     if request.method == 'POST':
         if request.POST['donor'][0] == 'r':
             donor = get_object_or_404(Reactor_content, reactor=request.POST['donor'][2:])
@@ -646,13 +648,13 @@ def move(request):
                     m.save()
         else:
             accepting.kneading = donor.kneading
-        if amm / 0.995 > donor.amount:
+        if amm / loses > donor.amount:
             temp_amm = donor.amount
             donor.amount = 0
             accepting.content_type = donor.content_type
-            accepting.amount = accepting.amount + temp_amm*0.995
+            accepting.amount = accepting.amount + temp_amm*loses
         else:
-            donor.amount = donor.amount - amm / 0.995
+            donor.amount = donor.amount - amm / loses
             accepting.content_type = donor.content_type
             accepting.amount = accepting.amount + amm
         if donor.reserved > donor.amount:
@@ -670,6 +672,7 @@ def move(request):
         return HttpResponse('ok')
 
 def move_batch(request, kneading_id):
+    loses = 1
     if request.method == 'POST':
         if request.POST['donor'][0] == 'r':
             donor = get_object_or_404(Reactor_content, pk=request.POST['donor'][2:])
@@ -690,13 +693,13 @@ def move_batch(request, kneading_id):
                 comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
                 m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
                 m.save()
-        if amm / 0.995 > donor.amount:
+        if amm / loses > donor.amount:
             temp_amm = donor.amount
             donor.amount = 0
             accepting.content_type = donor.content_type
-            accepting.amount = accepting.amount + temp_amm*0.995
+            accepting.amount = accepting.amount + temp_amm*loses
         else:
-            donor.amount = donor.amount - amm / 0.995
+            donor.amount = donor.amount - amm / loses
             accepting.content_type = donor.content_type
             accepting.amount = accepting.amount + amm
         if donor.reserved > donor.amount:
@@ -758,6 +761,7 @@ def check_is_empty2(request, kneading_id):
 
 def add_comp(request, kneading_id):
     res = "ok"
+    loses = 1
     if request.method == 'POST':
         if 'mat_id' in request.POST:
             if request.POST['type'] == 'compl':
@@ -772,11 +776,11 @@ def add_comp(request, kneading_id):
             else:
                 if request.POST['type'] == 'tank':
                         content = Tank_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        if content.amount < float(request.POST['amm'])/0.995:
+                        if content.amount+1 < float(request.POST['amm']):
                             res = str(content.amount)
                         else:
-                            content.amount = content.amount - float(request.POST['amm'])/0.995
-                            content.reserved = content.reserved - float(request.POST['amm'])/0.995
+                            content.amount = content.amount - float(request.POST['amm'])/loses
+                            content.reserved = content.reserved - float(request.POST['amm'])/loses
                             if content.reserved > content.amount:
                                 content.reserved = 0
                                 check_dependencies(content, 't')
@@ -785,11 +789,11 @@ def add_comp(request, kneading_id):
                 else:
                     if request.POST['type'] == 'reactor':
                         content = Reactor_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        if content.amount < float(request.POST['amm'])/0.995:
+                        if content.amount+1 < float(request.POST['amm']):
                             res = str(content.amount)
                         else:
-                            content.amount = content.amount - float(request.POST['amm'])/0.995
-                            content.reserved = content.reserved - float(request.POST['amm'])/0.995
+                            content.amount = content.amount - float(request.POST['amm'])/loses
+                            content.reserved = content.reserved - float(request.POST['amm'])/loses
                             if content.reserved > content.amount:
                                 content.reserved = 0
                                 check_dependencies(content, 'r')
