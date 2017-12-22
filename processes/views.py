@@ -53,11 +53,14 @@ def save_month_plan(request):
                 plan_obj = Month_plan.objects.filter(month = request.POST["month"], prod = p)[0]
                 plan_obj.num = request.POST[str(p.pk)]
                 plan_obj.save()
-    return redirect('plan')
+    if len(request.POST["month"]) == 7:
+        return redirect('plan')
+    else:
+        return redirect('task')
 
 def task(request):
 
-    return render(request, "task.html", {"header": "Задание на неделю", "location": "/processes/task/"})
+    return render(request, "week_plan.html", {"header": "Задание на неделю", "location": "/processes/task/", "products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all()))})
 
 def new_tech_comp(request):
     components = serializers.serialize("json", Components.objects.all())
@@ -153,6 +156,10 @@ def del_list(request):
 def print_month_plan(request, month):
     text_month = month[1:8]
     return render(request, "print_month_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
+
+def print_month_plan(request, month):
+    text_month = month[1:11]
+    return render(request, "print_week_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
 
 def print_lists(request, lists, kneading_id = None):
     list_ids = json.loads(lists)
@@ -758,6 +765,17 @@ def check_is_empty2(request, kneading_id):
             else:
                 res = str(reactor.get_formula_id()) + "_" + str(reactor.amount)
             return HttpResponse(res)
+
+def save_date(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    if request.method == 'POST':
+        if 't' in request.POST:
+            if request.POST['t'] == "start":
+                kneading.start_date = datetime.datetime.strptime(request.POST['date'], "%d/%m/%Y").date()
+            else:
+                kneading.finish_date = datetime.datetime.strptime(request.POST['date'], "%d/%m/%Y").date()
+    kneading.save()
+    return HttpResponse("ok")
 
 def add_comp(request, kneading_id):
     res = "ok"

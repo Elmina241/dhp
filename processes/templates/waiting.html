@@ -1,7 +1,52 @@
 {% extends 'processes/base.html' %}
 {% block content %}
 <script type="text/javascript">
-
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function changeDate(t){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'save_date/',
+        data: {
+          't': t,
+          'date': $("#datepicker").prop("value")
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+           window.location.reload();
+        }
+      });
+}
 $(document).ready(function(){
   $('#formula').trigger("change");
   $('#formula2').trigger("change");
@@ -11,6 +56,29 @@ $(document).ready(function(){
     changeMatTable();
     return false;
   });
+  var dp = $('#datepicker');
+  dp.datepicker({
+    format: "dd/mm/yyyy",
+    language: "ru",
+    todayHighlight: true
+  });
+  $('#editDate').on('show.bs.modal', function (event) {
+    // получить кнопку, которая его открыло
+    var button = $(event.relatedTarget)[0];
+    var t = button.dataset.type;
+    if (t == "start"){
+      $("#editHeader").text("Редактирование начальной даты");
+      $("#saveDate").click(function() {
+        changeDate("start");
+      });
+    }
+    else {
+      $("#editHeader").text("Редактирование конечной даты");
+      $("#saveDate").click(function() {
+        changeDate("end");
+      });
+    }
+  })
 });</script>
 
 <ul class="steps steps-5" style="margin-left: 0">
@@ -39,11 +107,11 @@ $(document).ready(function(){
       <div class="col-sm-3">
         <h5><p><b>Дата начала: </b></p></div></h5>
           <div class="col-sm-7">
-          <h5><p>{{p.start_date|date:"d.m.Y"}}</p></div>
+          <h5><p>{{p.start_date|date:"d.m.Y"}} <button type="button" data-toggle="modal" data-target="#editDate" data-type="start" class ="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></button></p></div>
           <div class="col-sm-3">
           <h5><p><b>Дата конца: </b></p></div>
           <div class="col-sm-7">
-          <h5><p>{{p.finish_date|date:"d.m.Y"}}</p>
+          <h5><p>{{p.finish_date|date:"d.m.Y"}} <button type="button" data-toggle="modal" data-target="#editDate" data-type="end" class ="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></button></p>
           </div>
           <div class="col-sm-3">
           <h5><p><b>Партия: </b></p></h5></div>
@@ -148,6 +216,23 @@ $(document).ready(function(){
       </div>
     </div>
   </div>
-</form>
+  </form>
+  <div class="modal fade" id="editDate">
+    <div class="modal-dialog modal-sm" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">x</button>
+          <h4 id="editHeader">Редактирование даты</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom:25pt"><label for="start" class="col-sm-3 control-label" style="font-size: medium">Дата:   </label>
+            <div class="col-sm-9"><input type="text" required data-provide="datepicker" class="input-sm form-control" id="datepicker" /></div></div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" id="saveDate" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+        </div>
+      </div>
+    </div>
+
 </div>
 {% endblock content %}

@@ -9,6 +9,10 @@
     -2px -2px white;
 }
 
+.bootstrap-datetimepicker-widget tr:hover {
+    background-color: #808080;
+}
+
 hr {
  margin-top: 4pt;
  margin-bottom: 4pt;

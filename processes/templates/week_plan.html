@@ -20,23 +20,25 @@ function getNowDate(){
 function getPlan(){
   plans = $("#plans").prop("value");
   jsPlan = JSON.parse(JSON.parse(plans));
+  temp = $("#datepicker").prop("value");
   var length = $("#prod").find('tr').length;
   for (i=1; i < length-2; i++){
     $("#prod").find('tr').eq(i).find('input').prop("value", "");
   }
   for (obj in jsPlan){
     if ($("#datepicker").prop("value") == jsPlan[obj].fields.month) $("#" + jsPlan[obj].fields.prod).prop("value", jsPlan[obj].fields.num);
+    //else $("#" + jsPlan[obj].fields.prod).prop("value", "");
   }
   countUnits();
 }
 
-function changeMonth(){
+function changeWeek(){
   date = $("#datepicker").prop("value");
-  year = date.split("/")[1];
-  month = date.split("/")[0];
-  newDate = new Date(parseInt(year), parseInt(month)-1, 1);
-  daysInMonth = 32 - new Date(newDate.getFullYear(), newDate.getMonth(), 32).getDate();
-  $("#period").text("Производственный план на период с 1." + month + "." + year + " по " + daysInMonth + "." + month + "." + year);
+  day = date.split("/")[0];
+  year = date.split("/")[2];
+  month = date.split("/")[1];
+  newDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+  $("#period").text("Производственный план на период с " + day + "."+ month + "." + year + " по " + (parseInt(day)+6) + "." + month + "." + year);
 }
 
 function printList(){
@@ -63,15 +65,14 @@ function countUnits(){
 $(document).ready(function(){
   var dp = $('#datepicker');
   dp.datepicker({
-    format: "mm/yyyy",
+    format: "dd/mm/yyyy",
     language: "ru",
-    viewMode: "months",
-    minViewMode: "months"
+    todayHighlight: true
   });
   var now = new Date();
-  text = (now.getMonth()+1) + "/" + now.getFullYear() ;
+  text = (now.getDate() - now.getDay()+1) + "/" + (now.getMonth()+1) + "/" + now.getFullYear() ;
   $("#datepicker").prop("value", text);
-  changeMonth();
+  changeWeek();
   $("#nowDate").text(getNowDate());
   getPlan();
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
@@ -89,7 +90,7 @@ $(document).ready(function(){
   <div class="input-group col-sm-10"  style ="margin: auto;margin-left:40pt">
   <label for="datepicker" class="col-sm-1 control-label" style="font-size: medium; margin-top:10pt">Дата: </label>
   <div class="input-group date col-sm-2" style="margin-top:5pt">
-  <input type="text" id="datepicker" name="month" onchange="changeMonth();getPlan();" class="form-control" >
+  <input type="text" id="datepicker" name="month" onchange="changeWeek();getPlan();" class="form-control" >
   <div class="input-group-addon">
       <span class="glyphicon glyphicon-th"></span>
   </div>

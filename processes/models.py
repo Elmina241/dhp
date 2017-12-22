@@ -102,7 +102,7 @@ class Kneading_char_var(models.Model):
         return self.comp_char.get_name() + ' ' + self.char_var.name
 
 class Month_plan(models.Model):
-    month = models.CharField(max_length=7)
+    month = models.CharField(max_length=10)
     prod = models.ForeignKey('tables.Product')
     num = models.FloatField()
     def __str__(self):
