@@ -10,3 +10,6 @@ from tables.models import Composition, Compl_comp, Compl_comp_comp, Characterist
 
 def materials(request):
     return render(request, "materials.html", {"header": "Контроль входного сырья", "location": "/log/materials/", "lists": Model_list.objects.all})
+
+def movement(request):
+    return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/"})

@@ -157,7 +157,7 @@ def print_month_plan(request, month):
     text_month = month[1:8]
     return render(request, "print_month_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
 
-def print_month_plan(request, month):
+def print_week_plan(request, month):
     text_month = month[1:11]
     return render(request, "print_week_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
 

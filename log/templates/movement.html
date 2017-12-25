@@ -1,0 +1,32 @@
+{% extends 'log/base.html' %}
+{% block content %}
+<script type="text/javascript">
+
+});
+</script>
+  {% csrf_token %}
+
+          {% if material_logs %}
+          <table class="table table-hover table-sm" id="materials">
+            <thead>
+              <tr>
+                <th></th><th>Дата</th><th>Код</th><th>Группа</th><th>Наименование</th><th>Количество, кг</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in material_logs %}
+              <tr>
+                <td><input type="checkbox" value="{{ m.id }}" name="del_list1"></td>
+                <td>{{ m.date }}</td>
+                <td>{{ m.code }}</td>
+                <td>{{ m.mat.group.name }}</td>
+                <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
+                <td>{{ m.amount }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No materials are available right now.</p>
+          {% endif %}
+  {% endblock content %}

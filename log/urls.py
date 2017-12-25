@@ -6,4 +6,5 @@ app_name = 'log'
 
 urlpatterns = [
     url(r'^materials/$', views.materials, name = 'materials'),
+    url(r'^movement/$', views.movement, name = 'movement'),
 ]
