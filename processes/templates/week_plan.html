@@ -38,7 +38,11 @@ function changeWeek(){
   year = date.split("/")[2];
   month = date.split("/")[1];
   newDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
-  $("#period").text("Производственный план на период с " + day + "."+ month + "." + year + " по " + (parseInt(day)+6) + "." + month + "." + year);
+  endD = newDate;
+  endD.setDate(endD.getDate() + 4);
+  var mm = endD.getMonth() + 1; // месяц 1-12
+  if (mm < 10) mm = '0' + mm;
+  $("#period").text("Производственный план на период с " + day + "."+ month + "." + year + " по " + endD.getDate() + "." + mm + "." + endD.getFullYear());
 }
 
 function printList(){
