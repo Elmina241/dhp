@@ -92,7 +92,7 @@
       allAmm = allAmm + parseInt(unit) * parseFloat(amm);
     }
     $("#prod").find('tr').eq(length-2).find('td').eq(1).text(count);
-    $("#prod").find('tr').eq(length-1).find('td').eq(1).text(allAmm.toFixed(2));
+    $("#prod").find('tr').eq(length-1).find('td').eq(1).text((allAmm * 0.001).toFixed(2));
   }
   $(document).ready(function(){
     changeMonth();

@@ -53,12 +53,12 @@ function countUnits(){
     if (unit == undefined || unit == ""){
       unit = 0;
     }
-    amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
+    amm = $("#prod").find('tr').eq(i).find('td').eq(3).text();
     count = count + parseInt(unit);
     allAmm = allAmm + parseInt(unit) * parseFloat(amm);
   }
-  $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
-  $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm.toFixed(2));
+  $("#prod").find('tr').eq(length-2).find('td').eq(4).text(count);
+  $("#prod").find('tr').eq(length-1).find('td').eq(4).text((allAmm * 0.001).toFixed(2));
 }
 $(document).ready(function(){
   var dp = $('#datepicker');
@@ -115,15 +115,15 @@ $(document).ready(function(){
     <table class="table table-hover table-sm  table-condensed" id="prod">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>План на месяц, шт</th>
+          <th>Код</th><th>Наименование товара</th><th>Кол-во в упаковке, шт</th><th>Вес, кг</th><th>План на месяц, шт</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
-        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
+        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.get_boxing_amm}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
         {% endfor %}
-        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
-        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td></td><td><b>0</b></td></tr>
       </tbody>
     </table>
     </div>

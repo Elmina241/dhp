@@ -206,6 +206,12 @@ class Production(models.Model):
     boxingUnit = models.ForeignKey('Unit', null = True, related_name="boxing_unit")
     def __str__(self):
         return self.product.name
+    def get_boxing_amm(self):
+        if self.boxingAmount == 0:
+            res = 0
+        else:
+            res = 1 / self.boxingAmount
+        return res
 
 #Модели для хранилищ
 

@@ -42,7 +42,7 @@ function changeWeek(){
   endD.setDate(endD.getDate() + 4);
   var mm = endD.getMonth() + 1; // месяц 1-12
   if (mm < 10) mm = '0' + mm;
-  $("#period").text("Производственный план на период с " + day + "."+ month + "." + year + " по " + endD.getDate() + "." + mm + "." + endD.getFullYear());
+  $("#period").text("Производственное задание на период с " + day + "."+ month + "." + year + " по " + endD.getDate() + "." + mm + "." + endD.getFullYear());
 }
 
 function printList(){
@@ -64,7 +64,7 @@ function countUnits(){
     allAmm = allAmm + parseInt(unit) * parseFloat(amm);
   }
   $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
-  $("#prod").find('tr').eq(length-1).find('td').eq(3).text(allAmm.toFixed(2));
+  $("#prod").find('tr').eq(length-1).find('td').eq(3).text((allAmm * 0.001).toFixed(2));
 }
 $(document).ready(function(){
   var dp = $('#datepicker');
@@ -86,7 +86,7 @@ $(document).ready(function(){
   {% csrf_token %}
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
-      <h4 class="panel-title">План на месяц </h4>
+      <h4 class="panel-title">Задание на неделю </h4>
       <hr>
       <button type="button" class="btn btn-success" onclick="printList();return false;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button>
   </div>
@@ -106,7 +106,7 @@ $(document).ready(function(){
 
   </div>
   <div class="panel-body">
-    <h4 id="period" style ="margin: auto;margin-left:40pt">Производственный план на период с </h2>
+    <h4 id="period" style ="margin: auto;margin-left:40pt">Производственное задание на период с </h2>
     <div class="sign">
     <br>
     <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Утверждено</div>
@@ -120,7 +120,7 @@ $(document).ready(function(){
     <table class="table table-hover table-sm  table-condensed" id="prod">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>План на месяц, шт</th>
+          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>Задание на неделю, шт</th>
         </tr>
       </thead>
       <tbody>
