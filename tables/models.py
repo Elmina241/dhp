@@ -210,7 +210,7 @@ class Production(models.Model):
         if self.boxingAmount == 0:
             res = 0
         else:
-            res = 1 / self.boxingAmount
+            res = int(1 / self.boxingAmount)
         return res
 
 #Модели для хранилищ
