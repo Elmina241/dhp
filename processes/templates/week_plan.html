@@ -39,7 +39,7 @@ function changeWeek(){
   month = date.split("/")[1];
   newDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
   endD = newDate;
-  endD.setDate(endD.getDate() + 4);
+  endD.setDate(endD.getDate() + 6);
   var mm = endD.getMonth() + 1; // месяц 1-12
   if (mm < 10) mm = '0' + mm;
   $("#period").text("Производственное задание на период с " + day + "."+ month + "." + year + " по " + endD.getDate() + "." + mm + "." + endD.getFullYear());
@@ -120,7 +120,7 @@ $(document).ready(function(){
     <table class="table table-hover table-sm  table-condensed" id="prod">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>Задание на неделю, шт</th>
+          <th>Код</th><th>Наименование продукции</th><th>Вес ед, кг</th><th>Кол-во единиц</th>
         </tr>
       </thead>
       <tbody>

@@ -19,7 +19,7 @@
   <style type="text/css">
 
   @page :left {
-    margin: 3cm 3cm 3cm 1.5cm; /* Отступы для всех левых страниц */
+    margin: 1.5cm 3cm 3cm 1.5cm; /* Отступы для всех левых страниц */
    }
    @page :right {
     margin: 3cm 3cm 3cm 1.5cm; /* Отступы для всех правых страниц */
@@ -74,8 +74,9 @@
     year = date.split("/")[1];
     month = date.split("/")[0];
     newDate = new Date(parseInt(year), parseInt(month)-1, 1);
-    daysInMonth = 32 - new Date(newDate.getFullYear(), newDate.getMonth(), 32).getDate();
-    $("#period").text("Производственный план на период с 1." + month + "." + year + " по " + daysInMonth + "." + month + "." + year);
+    //daysInMonth = 32 - new Date(newDate.getFullYear(), newDate.getMonth(), 32).getDate();
+    monthes = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+    $("#period").text("Производственный план на " + monthes[month-1] + " " + year + " г.");
   }
 
   function countUnits(){
@@ -83,13 +84,14 @@
     allAmm = 0;
     var length = $("#prod").find('tr').length;
     for (i=1; i < length-2; i++){
-      unit = $("#prod").find('tr').eq(i).find('td').eq(3).text();
+      unit = $("#prod").find('tr').eq(i).find('td').eq(2).text();
       if (unit == undefined || unit == ""){
         unit = 0;
       }
-      amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
+      amm = $("#prod").find('tr').eq(i).find('td').eq(4).text();
       count = count + parseInt(unit);
       allAmm = allAmm + parseInt(unit) * parseFloat(amm);
+      $("#prod").find('tr').eq(i).find('td').eq(5).text((unit * amm).toFixed(2));
     }
     $("#prod").find('tr').eq(length-2).find('td').eq(1).text(count);
     $("#prod").find('tr').eq(length-1).find('td').eq(1).text((allAmm * 0.001).toFixed(2));
@@ -117,15 +119,15 @@
     <table class="table table-hover table-sm table-bordered pagebreak table-condensed" id="prod">
       <thead class="headerTr">
         <tr>
-          <th>Код</th><th>Наименование товара</th><th>Вес, кг</th><th>План на месяц, шт</th>
+          <th>Код</th><th>Наименование продукции</th><th>Кол-во единиц</th><th>Кол-во в упаковке, шт</th><th>Вес ед., кг</th><th>Общий вес, кг</th>
         </tr>
       </thead>
       <tbody>
         {% for p in plans %}
-        <tr><td>{{p.prod.code}}</td><td>{{p.prod.get_name_for_table}}</td><td>{{p.prod.production.compAmount}}</td><td>{{p.num}}</td></tr>
+        <tr><td>{{p.prod.code}}</td><td>{{p.prod.get_name_for_table}}</td><td>{{p.num}}</td><td>{{p.prod.production.get_boxing_amm}}</td><td>{{p.prod.production.compAmount}}</td><td>0</td></tr>
         {% endfor %}
-        <tr><td colspan="3"><b>Итого, штуки</b></td><td><b>0</b></td></tr>
-        <tr><td colspan="3"><b>Итого, тонны</b></td><td><b>0</b></td></tr>
+        <tr><td colspan="5"><b>Итого, штуки</b></td><td><b>0</b></td></tr>
+        <tr><td colspan="5"><b>Итого, тонны</b></td><td><b>0</b></td></tr>
       </tbody>
     </table>
     </div>
