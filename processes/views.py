@@ -39,7 +39,6 @@ def archive(request):
     return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings})
 
 def plan(request):
-
     return render(request, "plan.html", {"header": "План на месяц", "location": "/processes/plan/", "products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all()))})
 
 def save_month_plan(request):
@@ -59,7 +58,6 @@ def save_month_plan(request):
         return redirect('task')
 
 def task(request):
-
     return render(request, "week_plan.html", {"header": "Задание на неделю", "location": "/processes/task/", "products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all()))})
 
 def new_tech_comp(request):
@@ -155,11 +153,11 @@ def del_list(request):
 
 def print_month_plan(request, month):
     text_month = month[1:8]
-    return render(request, "print_month_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
+    return render(request, "print_month_plan.html", {"products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all())), "plans2": Month_plan.objects.filter(month = text_month), "date": text_month})
 
 def print_week_plan(request, month):
     text_month = month[1:11]
-    return render(request, "print_week_plan.html", {"plans": Month_plan.objects.filter(month = text_month), "date": text_month})
+    return render(request, "print_week_plan.html", {"products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all())), "plans2": Month_plan.objects.filter(month = text_month), "date": text_month})
 
 def print_lists(request, lists, kneading_id = None):
     list_ids = json.loads(lists)

@@ -17,12 +17,11 @@
   <script type="text/javascript">
   </script>
   <style type="text/css">
-
   @page :left {
-    margin: 1.5cm 3cm 3cm 1.5cm; /* Отступы для всех левых страниц */
+    margin: 1cm 1cm 1cm 1cm; /* Отступы для всех левых страниц */
    }
    @page :right {
-    margin: 3cm 3cm 3cm 1.5cm; /* Отступы для всех правых страниц */
+    margin: 1cm 1cm 1cm 1cm; /* Отступы для всех правых страниц */
    }
 
     @media print {
@@ -48,14 +47,22 @@
         page-break-after: auto;
       }
       .headerTr {
-        margin-top: 40pt;
+        margin-top: 5pt;
       }
     }
   </style>
   <script type="text/javascript">
   function getNowDate(){
     var now = new Date();
-    text = now.getDate() + "." + (now.getMonth()+1) + "." + now.getFullYear();
+    month = now.getMonth()+1;
+    if (month < 10){
+      month = '0' + month;
+    }
+    day = now.getDate();
+    if (day < 10){
+      day = '0' + day;
+    }
+    text = day + "." + month + "." + now.getFullYear();
     return text;
   }
 
@@ -63,8 +70,7 @@
     plans = $("#plans").prop("value");
     jsPlan = JSON.parse(JSON.parse(plans));
     for (obj in jsPlan){
-      if ("{{date}}" == jsPlan[obj].fields.month) $("#" + jsPlan[obj].fields.prod).prop("value", jsPlan[obj].fields.num);
-      else $("#" + jsPlan[obj].fields.prod).prop("value", "");
+      if ("{{date}}" == jsPlan[obj].fields.month) $("#" + jsPlan[obj].fields.prod).text(jsPlan[obj].fields.num);
     }
     countUnits();
   }
@@ -100,34 +106,35 @@
     changeMonth();
     $("#nowDate").text(getNowDate());
     countUnits();
+    getPlan();
   //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
   });</script>
 </head>
 <body>
   <div class="passport">
-    <h4 id="period" style ="margin: auto;margin-left:40pt;">Производственный план на период с </h2>
+    <h4 id="period" style ="margin: auto;margin-left:0pt;">Производственный план на период с </h2>
     <div class="sign">
     <br>
-    <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Утверждено</div>
-    <div style="margin-top:10pt;margin-left:440pt;font-size:12pt;">Гулай О.С.</div>
+    <div style="margin-top:0pt;margin-left:0pt;font-size:12pt;float:left">Утверждено</div>
+    <div style="margin-top:0pt;margin-left:440pt;font-size:12pt;">Гулай О.С.</div>
     <br>
-    <div style="margin-top:5pt;margin-left:40pt;font-size:12pt;float:left;">Дата</div>
-    <div id="nowDate" style="margin-top:5pt;margin-left:440pt;font-size:12pt;"></div>
+    <div style="margin-top:0pt;margin-left:0pt;font-size:12pt;float:left;">Дата</div>
+    <div id="nowDate" style="margin-top:0pt;margin-left:440pt;font-size:12pt;"></div>
     </div>
-
-    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt" class="prod">
-    <table class="table table-hover table-sm table-bordered pagebreak table-condensed" id="prod">
+    <input type="hidden" id="plans" name="plans" value="{{plans}}">
+    <div style="margin-top:0pt;margin-left:0pt;margin-right:0pt;font-size:11pt;" class="prod">
+    <table class="table table-hover table-sm table-bordered pagebreak table-condensed table-striped" style="font-size:10pt;" id="prod">
       <thead class="headerTr">
         <tr>
           <th>Код</th><th>Наименование продукции</th><th>Кол-во единиц</th><th>Кол-во в упаковке, шт</th><th>Вес ед., кг</th><th>Общий вес, кг</th>
         </tr>
       </thead>
       <tbody>
-        {% for p in plans %}
-        <tr><td>{{p.prod.code}}</td><td>{{p.prod.get_name_for_table}}</td><td>{{p.num}}</td><td>{{p.prod.production.get_boxing_amm}}</td><td>{{p.prod.production.compAmount}}</td><td>0</td></tr>
+        {% for p in products %}
+        <tr><td style="padding: 1px;">{{p.code}}</td><td style="padding: 1px;">{{p.get_name_for_table}}</td><td style="padding: 1px;" id="{{p.id}}"></td><td style="padding: 1px;">{{p.production.get_boxing_amm}}</td><td style="padding: 1px;">{{p.production.compAmount}}</td><td style="padding: 1px;">0</td></tr>
         {% endfor %}
-        <tr><td colspan="5"><b>Итого, штуки</b></td><td><b>0</b></td></tr>
-        <tr><td colspan="5"><b>Итого, тонны</b></td><td><b>0</b></td></tr>
+        <tr><td style="padding: 1px;" colspan="5"><b>Итого, штуки</b></td><td style="padding: 1px;"><b>0</b></td></tr>
+        <tr><td style="padding: 1px;" colspan="5"><b>Итого, тонны</b></td><td style="padding: 1px;"><b>0</b></td></tr>
       </tbody>
     </table>
     </div>
