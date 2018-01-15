@@ -24,6 +24,9 @@
       .info {
         page-break-inside: avoid;
       }
+      .proc {
+        page-break-inside: avoid;
+      }
       .info2 {
         page-break-inside: avoid;
       }
@@ -37,19 +40,51 @@
         page-break-inside: avoid;
       }
     }
+    .h{
+      font-size: 14pt;
+      margin-top: 10pt;
+      margin-bottom: 10pt;
+      text-align: center;
+    }
+
+    .info{
+      font-size: 12pt;
+      margin-top: 5pt;
+      text-align: left;
+      float: left;
+      width: 150pt;
+      margin-left: 40pt;
+    }
+
+    .info2{
+      font-size: 12pt;
+      margin-top: 5pt;
+      text-align: left;
+      float: left;
+      width: 300pt;
+      margin-left: 30pt;
+    }
+    .info p {
+      line-height: 0.5;
+    }
+    .info2 p {
+      line-height: 0.5;
+    }
+
   </style>
 </head>
 <body>
   <div class="passport">
-
     <b><div class="h">Загрузочный лист</div></b>
     {% for key, values in kneading.items %}
+    <div class = "proc">
     <div class ="info">
       <p>Наименование средства:</p>
       <p>Артикул:</p>
       <p>Дата:</p>
       <p>Номер партии:</p>
       <p>Вес:</p>
+      <b><p>Компоненты:</p></b>
     </div>
     <div class ="info2">
       <p>{{values.name}}</p>
@@ -58,9 +93,8 @@
       <p>{{values.batch_num|floatformat:"0"}}</p>
       <p>{{values.amount}}</p>
     </div>
-    <b><div style="font-size:14pt;margin-top:150pt;margin-left:40pt" class = "compsHeader"><p>Компоненты: </p></div></b>
-    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt" class="comps">
-    <table class="table table-hover table-sm  table-condensed">
+    <div style="margin-top:5pt;margin-left:40pt;margin-right:40pt" class="comps">
+    <table class="table table-hover table-sm  table-bordered table-condensedtable">
       <thead>
         <tr>
           <th>Наименование</th><th>Масса, кг</th><th>Допустимый вес, кг</th>
@@ -70,12 +104,12 @@
         {% for key2, values2 in comps.items %}
         {% if values2.list == values.list %}
           <tr>
-            <td>{{values2.name}}</td>
-            <td>{{values2.ammount|floatformat:"2"}}</td>
+            <td style="padding: 2px;">{{values2.name}}</td>
+            <td style="padding: 2px;">{{values2.ammount|floatformat:"2"}}</td>
             {% if values2.min == None %}
-              <td>--</td>
+              <td style="padding: 2px;">--</td>
             {% else %}
-              <td>{{values2.min}} - {{values2.max}}</td>
+              <td style="padding: 2px;">{{values2.min}} - {{values2.max}}</td>
             {% endif %}
           </tr>
         {% endif %}
@@ -83,6 +117,7 @@
       </tbody>
     </table>
     </div>
+  </div>
     {% endfor %}
 
     <div class="sign">

@@ -35,13 +35,13 @@ hr {
 
 .h{
   font-size: 14pt;
-  margin-top: 40pt;
+  margin-top: 10pt;
   text-align: center;
 }
 
 .info{
   font-size: 12pt;
-  margin-top: 30pt;
+  margin-top: 10pt;
   text-align: left;
   float: left;
   width: 150pt;
@@ -50,7 +50,7 @@ hr {
 
 .info2{
   font-size: 12pt;
-  margin-top: 30pt;
+  margin-top: 10pt;
   text-align: left;
   float: left;
   width: 300pt;

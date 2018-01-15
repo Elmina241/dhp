@@ -14,7 +14,10 @@ def loading_lists(request):
     return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Model_list.objects.all})
 
 def storages(request):
-    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all})
+    prods = {}
+    for p in Product.objects.all():
+        prods[str(p.pk)] = {'name': str(p), 'composition': p.production.composition.id, 'amount': p.production.get_boxing_amm()}
+    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all, "products": json.dumps(prods)})
 
 def mixing(request, kneading_id = -1):
     if kneading_id != -1:
