@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
+from log.models import Movement_rec
 import json
 import math
 from django.core import serializers
@@ -585,6 +586,8 @@ def pack(request):
         else:
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
         storage.amount = storage.amount - float(request.POST['amm'])
+        prod = get_object_or_404(Product, pk=request.POST['pr_id'])
+        rec = Movement_rec(batch = storage.batch, product = prod, amount =  
         if storage.amount == 0:
             storage.content_type = 3
             storage.batch = None

@@ -27,7 +27,7 @@ $.ajaxSetup({
         }
     }
 });
-function pack(id, amm, newAm, t){
+function pack(id, amm, newAm, t, pr_id){
   var csrftoken = getCookie('csrftoken');
   $.ajax({
         type: "POST",
@@ -35,7 +35,8 @@ function pack(id, amm, newAm, t){
         data: {
           'id': id,
           'amm': newAm,
-          'type': t
+          'type': t,
+          'pr_id' : pr_id
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -102,6 +103,17 @@ function move(acc, donor, amm){
           location.reload();
         }
       });
+}
+
+function checkPack(id, amm, newAm, t){
+  prods = $("#products").prop("value");
+  prods = JSON.parse(prods);
+  pr_id = $("#prod").prop("value");
+  box_amm = prods[pr_id].amount;
+  pack_amm = box_amm * newAm;
+  if (pack_amm <= amm){
+    pack(id, amm, pack_amm, t, pr_id);
+  }
 }
 
 function getInf(id){
@@ -242,7 +254,11 @@ $(document).ready(function(){
                 <td id="r-{{r.id}}">{{ r.amount|floatformat:"2" }}</td>
                 {% if r.content_type == 1 %}
                 <td>{{r.batch.id}} {{r.batch.kneading.list.formula}}</td>
-                <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-composition="{{r.batch.kneading.list.formula.composition.id}}" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
+                {% if r.batch.kneading.list.formula.composition.isFinal %}
+                  <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-composition="{{r.batch.kneading.list.formula.composition.id}}" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
+                {% else %}
+                  <td></td>
+                {% endif %}
                 <td><button class="btn btn-danger btn-sm" type="button" data-res="{{r.reserved}}" id="{{r.id}}" onclick="checkDrop({{r.reserved}}, {{r.id}}, 'r');return false;">Сброс</button></td>
                 {% else %}
                 {% if r.content_type == 2 %}
@@ -264,7 +280,11 @@ $(document).ready(function(){
                 <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }}</td>
                 {% if t.content_type == 1 %}
                 <td>{{t.batch.id}} {{t.batch.kneading.list.formula}}</td>
+                {% if t.batch.kneading.list.formula.composition.isFinal %}
                 <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-composition="{{t.batch.kneading.list.formula.composition.id}}" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
+                {% else %}
+                <td></td>
+                {% endif %}
                 <td><button class="btn btn-danger btn-sm" type="button"  id="{{t.id}}" data-formula="{{t.batch.kneading.list.formula.id}}" onclick="checkDrop({{t.reserved}}, {{t.id}}, 't');return false;">Сброс</button></td>
                 {% else %}
                 {% if t.content_type == 2 %}
