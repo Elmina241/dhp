@@ -77,6 +77,7 @@
   <div class="passport">
     <b><div class="h">Загрузочный лист</div></b>
     {% for key, values in kneading.items %}
+    {% if values.isFinal == True %}
     <div class = "proc">
     <div class ="info">
       <p>Наименование средства:</p>
@@ -118,8 +119,53 @@
     </table>
     </div>
   </div>
+  {% endif %}
     {% endfor %}
-
+    {% for key, values in kneading.items %}
+    {% if values.isFinal == False %}
+    <div class = "proc">
+    <div class ="info">
+      <p>Наименование средства:</p>
+      <p>Артикул:</p>
+      <p>Дата:</p>
+      <p>Номер партии:</p>
+      <p>Вес:</p>
+      <b><p>Компоненты:</p></b>
+    </div>
+    <div class ="info2">
+      <p>{{values.name}}</p>
+      <p>{{values.code}}</p>
+      <p>{{values.start_date|date:"d.m.Y"}} - {{values.finish_date|date:"d.m.Y"}}</p>
+      <p>{{values.batch_num|floatformat:"0"}}</p>
+      <p>{{values.amount}}</p>
+    </div>
+    <div style="margin-top:5pt;margin-left:40pt;margin-right:40pt" class="comps">
+    <table class="table table-hover table-sm  table-bordered table-condensedtable">
+      <thead>
+        <tr>
+          <th>Наименование</th><th>Масса, кг</th><th>Допустимый вес, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key2, values2 in comps.items %}
+        {% if values2.list == values.list %}
+          <tr>
+            <td style="padding: 2px;">{{values2.name}}</td>
+            <td style="padding: 2px;">{{values2.ammount|floatformat:"2"}}</td>
+            {% if values2.min == None %}
+              <td style="padding: 2px;">--</td>
+            {% else %}
+              <td style="padding: 2px;">{{values2.min}} - {{values2.max}}</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  {% endif %}
+    {% endfor %}
     <div class="sign">
     <br>
     <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Зам. ген. директора по производству</div>

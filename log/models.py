@@ -17,7 +17,7 @@ class Movement_rec(models.Model):
     batch = models.ForeignKey('processes.Batch', null=True)
     product = models.ForeignKey('tables.Product', null=True)
     amount = models.FloatField(null=True)
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
     operation = models.ForeignKey('Operation')
     def __str__(self):
         return str(date) + ' ' + str(self.batch)

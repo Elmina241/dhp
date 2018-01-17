@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
-from log.models import Movement_rec
+from log.models import Movement_rec, Operation
 import json
 import math
 from django.core import serializers
@@ -170,7 +170,7 @@ def print_lists(request, lists, kneading_id = None):
     for l in list_ids:
         amm = 0
         k = get_object_or_404(Kneading, pk=l)
-        data[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": k.start_date, "finish_date": k.finish_date, "reactor": k.reactor.pk, "amount": k.list.ammount, "list": k.list.pk, "code": str(k.list.formula.code)}
+        data[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": k.start_date, "finish_date": k.finish_date, "reactor": k.reactor.pk, "amount": k.list.ammount, "list": k.list.pk, "code": str(k.list.formula.code), "isFinal": k.list.formula.composition.isFinal}
         for c in List_component.objects.filter(list = k.list):
             amm = amm + c.ammount
             if c.compl is None:
@@ -587,7 +587,7 @@ def pack(request):
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
         storage.amount = storage.amount - float(request.POST['amm'])
         prod = get_object_or_404(Product, pk=request.POST['pr_id'])
-        rec = Movement_rec(batch = storage.batch, product = prod, amount =  
+        rec = Movement_rec(batch = storage.batch, product = prod, amount = (float(request.POST['amm'])/prod.production.get_boxing_amm), operation = Operation.objects.filter(id = 1)[0])
         if storage.amount == 0:
             storage.content_type = 3
             storage.batch = None
