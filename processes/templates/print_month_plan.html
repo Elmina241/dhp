@@ -18,10 +18,10 @@
   </script>
   <style type="text/css">
   @page :left {
-    margin: 1cm 1cm 1cm 1cm; /* Отступы для всех левых страниц */
+    margin: 0.2cm 1cm 0cm 1cm; /* Отступы для всех левых страниц */
    }
    @page :right {
-    margin: 1cm 1cm 1cm 1cm; /* Отступы для всех правых страниц */
+    margin: 0.2cm 1cm 0cm 1cm; /* Отступы для всех правых страниц */
    }
 
     @media print {
@@ -47,7 +47,7 @@
         page-break-after: auto;
       }
       .headerTr {
-        margin-top: 5pt;
+        margin-top: 0pt;
       }
     }
   </style>
@@ -112,21 +112,19 @@
 </head>
 <body>
   <div class="passport">
-    <h4 id="period" style ="margin: auto;margin-left:0pt;">Производственный план на период с </h2>
+    <h4 id="period" style ="text-align: center; margin-bottom: 0">Производственный план на период с </h2>
     <div class="sign">
-    <br>
     <div style="margin-top:0pt;margin-left:0pt;font-size:12pt;float:left">Утверждено</div>
-    <div style="margin-top:0pt;margin-left:440pt;font-size:12pt;">Гулай О.С.</div>
-    <br>
+    <div style="margin-top:0pt;margin-left:538pt;font-size:12pt;">Гулай О.С.</div>
     <div style="margin-top:0pt;margin-left:0pt;font-size:12pt;float:left;">Дата</div>
-    <div id="nowDate" style="margin-top:0pt;margin-left:440pt;font-size:12pt;"></div>
+    <div id="nowDate" style="margin-top:0pt;margin-left:538pt;font-size:12pt;"></div>
     </div>
     <input type="hidden" id="plans" name="plans" value="{{plans}}">
     <div style="margin-top:0pt;margin-left:0pt;margin-right:0pt;font-size:11pt;" class="prod">
     <table class="table table-hover table-sm table-bordered pagebreak table-condensed table-striped" style="font-size:10pt;" id="prod">
       <thead class="headerTr">
         <tr>
-          <th>Код</th><th>Наименование продукции</th><th>Кол-во единиц</th><th>Кол-во в упаковке, шт</th><th>Вес ед., кг</th><th>Общий вес, кг</th>
+          <th style="padding: 1px;">Код</th><th style="padding: 1px;">Наименование продукции</th><th style="padding: 1px;">Кол-во единиц</th><th style="padding: 1px;">Кол-во в упаковке, шт</th><th style="padding: 1px;">Вес ед., кг</th><th style="padding: 1px;">Общий вес, кг</th>
         </tr>
       </thead>
       <tbody>
