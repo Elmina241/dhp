@@ -20,14 +20,26 @@
 
   @page :left {
     margin: 0.15cm 1cm 0cm 1cm; /* Отступы для всех левых страниц */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
    }
    @page :right {
     margin: 0.15cm 1cm 0cm 1cm; /* Отступы для всех правых страниц */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
    }
 
     @media print {
+      body{
+        -webkit-print-color-adjust:exact;
+      }
+
       #printBtn {
         display:none;
+      }
+
+      .num {
+        display: none;
       }
 
       .info {
@@ -51,11 +63,18 @@
       .headerTr {
         margin-top: 0pt;
       }
-
+      th {
+        background-color: grey;
+        text-align: center;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
     }
     th {
       background-color: grey;
       text-align: center;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
   </style>
   <script type="text/javascript">
@@ -100,22 +119,29 @@
     allAmm = 0;
     var length = $("#prod").find('tr').length;
     for (i=1; i < length-2; i++){
-      unit = $("#prod").find('tr').eq(i).find('td').eq(3).text();
+      unit = $("#prod").find('tr').eq(i).find('td').eq(4).text();
       if (unit == undefined || unit == ""){
         unit = 0;
       }
-      amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
+      amm = $("#prod").find('tr').eq(i).find('td').eq(3).text();
       count = count + parseInt(unit);
       allAmm = allAmm + parseInt(unit) * parseFloat(amm);
     }
-    $("#prod").find('tr').eq(length-2).find('td').eq(1).text(count);
-    $("#prod").find('tr').eq(length-1).find('td').eq(1).text((allAmm * 0.001).toFixed(2));
+    $("#prod").find('tr').eq(length-2).find('td').eq(2).text(count);
+    $("#prod").find('tr').eq(length-1).find('td').eq(2).text((allAmm * 0.001).toFixed(2));
   }
   $(document).ready(function(){
     changeWeek();
     $("#nowDate").text(getNowDate());
     countUnits();
     getPlan();
+    $('.table tbody tr').each(function(i) {
+      length = $("#prod").find('tr').length;
+      if (i < length-3){
+        var number = i + 1;
+        $(this).find('td:first').text(number);
+      }
+    });
   //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
   });</script>
 </head>
@@ -131,17 +157,17 @@
     <input type="hidden" id="plans" name="plans" value="{{plans}}">
     <div style="margin-top:0pt;margin-left:0pt;margin-right:0pt" class="prod">
     <table class="table table-hover table-sm table-bordered pagebreak table-condensedtable-striped" style="font-size:11pt;" id="prod">
-      <thead class="headerTr thead-default" style="background-color: grey;text-align: center;">
+      <thead class="headerTr" style="background-color: grey;text-align: center;">
         <tr>
-          <th style="padding: 1px;font-weight:bold;color:black">Код</th><th style="padding: 1px;">Наименование продукции</th><th style="padding: 1px;">Вес ед, кг</th><th style="padding: 1px;">Кол-во единиц</th>
+          <th style="padding: 1px;font-weight:bold;color:black">№</th><th style="padding: 1px;font-weight:bold;color:black">Код</th><th style="padding: 1px;">Наименование продукции</th><th style="padding: 1px;" class="num">Вес ед, кг</th><th style="padding: 1px;">Кол-во единиц</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
-        <tr><td style="padding: 1px;">{{p.code}}</td><td style="padding: 1px;">{{p.get_name_for_table}}</td><td style="padding: 1px;">{{p.production.compAmount}}</td><td style="padding: 1px;" id="{{p.id}}"></td></tr>
+        <tr><td style="padding: 1px;"></td><td style="padding: 1px;">{{p.code}}</td><td style="padding: 1px;">{{p.get_name_for_table}}</td><td style="padding: 1px;text-align: right;" class="num">{{p.production.compAmount}}</td><td style="padding: 1px;text-align: right;" id="{{p.id}}"></td></tr>
         {% endfor %}
-        <tr><td colspan="3" style="padding: 0px;"><b>Итого, штуки</b></td><td style="padding: 0px;"><b>0</b></td></tr>
-        <tr><td colspan="3" style="padding: 0px;"><b>Итого, тонны</b></td><td style="padding: 0px;"><b>0</b></td></tr>
+        <tr><td colspan="3" style="padding: 0px;"><b>Итого, штуки</b></td><td class="num"></td><td style="padding: 0px;text-align: right;"><b>0</b></td></tr>
+        <tr><td colspan="3" style="padding: 0px;"><b>Итого, тонны</b></td><td class="num"></td><td style="padding: 0px;text-align: right;"><b>0</b></td></tr>
       </tbody>
     </table>
     </div>

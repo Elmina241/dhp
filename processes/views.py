@@ -587,7 +587,8 @@ def pack(request):
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
         storage.amount = storage.amount - float(request.POST['amm'])
         prod = get_object_or_404(Product, pk=request.POST['pr_id'])
-        rec = Movement_rec(batch = storage.batch, product = prod, amount = (float(request.POST['amm'])/prod.production.get_boxing_amm), operation = Operation.objects.filter(id = 1)[0])
+        rec = Movement_rec(batch = storage.batch, product = prod, amount = (float(request.POST['amm'])/prod.production.get_boxing_amm()), operation = Operation.objects.filter(id = 1)[0])
+        rec.save()
         if storage.amount == 0:
             storage.content_type = 3
             storage.batch = None

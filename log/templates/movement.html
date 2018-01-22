@@ -2,11 +2,10 @@
 {% block content %}
 <script type="text/javascript">
 
-});
 </script>
   {% csrf_token %}
 
-          {% if material_logs %}
+          {% if movements %}
           <table class="table table-hover table-sm" id="materials">
             <thead>
               <tr>
@@ -14,7 +13,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for m in material_logs %}
+              {% for m in movements %}
               <tr>
                 <td><input type="checkbox" value="{{ m.id }}" name="del_list1"></td>
                 <td>{{ m.date }}</td>

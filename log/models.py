@@ -20,4 +20,4 @@ class Movement_rec(models.Model):
     date = models.DateField(auto_now_add=True)
     operation = models.ForeignKey('Operation')
     def __str__(self):
-        return str(date) + ' ' + str(self.batch)
+        return "test"
