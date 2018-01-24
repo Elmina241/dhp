@@ -21,3 +21,6 @@ class Movement_rec(models.Model):
     operation = models.ForeignKey('Operation')
     def __str__(self):
         return "test"
+    def get_batch(self):
+        num = 'П-' + str(round(self.batch.kneading.batch_num))
+        return num

@@ -46,7 +46,7 @@ function pack(id, amm, newAm, t, pr_id){
         success: function onAjaxSuccess()
         {
           var obj = $("#"+t+"-"+id);
-          res = parseFloat(amm) - parseFloat(newAm);
+          res = (parseFloat(amm) - parseFloat(newAm)).toFixed(2);
           obj.text(res);
           obj.parent().find('td').eq(4).find('button').attr('data-amm', res)
           if (res == 0){

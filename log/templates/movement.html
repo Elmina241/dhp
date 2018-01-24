@@ -9,18 +9,18 @@
           <table class="table table-hover table-sm" id="materials">
             <thead>
               <tr>
-                <th></th><th>Дата</th><th>Код</th><th>Группа</th><th>Наименование</th><th>Количество, кг</th>
+                <th>Дата</th><th>Код</th><th>Продукт</th><th>Партия</th><th>Операция</th><th>Количество, шт</th>
               </tr>
             </thead>
             <tbody>
               {% for m in movements %}
               <tr>
-                <td><input type="checkbox" value="{{ m.id }}" name="del_list1"></td>
-                <td>{{ m.date }}</td>
-                <td>{{ m.code }}</td>
-                <td>{{ m.mat.group.name }}</td>
-                <td onClick="window.location.href='/tables/materials/{{ m.id }}/'">{{ m }}</td>
-                <td>{{ m.amount }}</td>
+                <td>{{ m.date|date:"d.m.Y" }}</td>
+                <td>{{ m.product.code }}</td>
+                <td>{{ m.product }}</td>
+                <td>{{ m.get_batch }}</td>
+                <td>{{ m.operation }}</td>
+                <td>{{ m.amount|floatformat:"0" }}</td>
               </tr>
               {% endfor %}
             </tbody>
