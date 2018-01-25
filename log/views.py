@@ -13,4 +13,10 @@ def materials(request):
     return render(request, "materials.html", {"header": "Контроль входного сырья", "location": "/log/materials/", "lists": Model_list.objects.all})
 
 def movement(request):
+    batches = {}
+    for r in Movement_rec.objects.all():
+        if r.operation.id == 0 or r.operation.id == 1:
+            name = r.batch.id + "_" + r.product.id
+            if name not in batches:
+                Movement_rec.objects.filter(operation = r.operation, batch = r.batch)
     return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": Movement_rec.objects.all})

@@ -151,7 +151,7 @@ function getKneading(){
   kneadingId = document.getElementById("kneading").value;
   var processes = JSON.parse($("#processes").attr("value"));
   for (p in processes){
-    if (p == kneadingId){
+    if (processes[p].id == kneadingId){
       $("#ammount").attr("value", processes[p].amount);
       start = processes[p].start_date.substr(8) + '/' + processes[p].start_date.substr(5,2) + '/' + processes[p].start_date.substr(0, 4);
       end = processes[p].finish_date.substr(8) + '/' + processes[p].finish_date.substr(5,2) + '/' + processes[p].finish_date.substr(0, 4);
@@ -385,7 +385,7 @@ function getBatchList(m, m_c, compl) {
   var sel_id = sel.value;
   var processes = JSON.parse($("#processes").attr("value"));
   for (p in processes){
-    if (p == sel_id){
+    if (processes[p].id == sel_id){
       b_amm = processes[p].amount;
       list_id = processes[p].list;
     }
