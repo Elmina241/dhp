@@ -103,7 +103,7 @@
       if (unit == undefined || unit == ""){
         unit = 0;
       }
-      amm = $("#prod").find('tr').eq(i).find('td').eq(4).text();
+      amm = $("#prod").find('tr').eq(i).find('td').eq(5).text();
       count = count + parseInt(unit);
       allAmm = allAmm + parseInt(unit) * parseFloat(amm);
       $("#prod").find('tr').eq(i).find('td').eq(6).text((unit * amm).toFixed(2));

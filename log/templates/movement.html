@@ -1,7 +1,45 @@
 {% extends 'log/base.html' %}
 {% block content %}
 <script type="text/javascript">
-
+  function release(id, amm){
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'release/',
+        data: {
+          'id': id,
+          'amm': amm
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          location.reload();
+        }
+      });
+    }
+    function checkRelease(){
+      $("#error").hide();
+      id = document.getElementById("batch").value;
+      var batches = JSON.parse($("#batches").attr("value"));
+      var rAmm = document.getElementById("relAmm").value;
+      var amm = 0;
+      for (b in batches){
+        if (b == id){
+          amm = batches[b].amount;
+        }
+      }
+      if (rAmm > amm){
+        $("#error").text("Доступно " + amm + " шт.");
+        $("#error").show();
+      }
+      else {
+        release(id, rAmm);
+      }
+    }
 </script>
   {% csrf_token %}
   <div class="panel panel-default" style ="margin: auto">
@@ -35,6 +73,7 @@
           <p>No materials are available right now.</p>
           {% endif %}
     </div>
+    <input type="hidden" id="batches" name="batches" value="{{batches2}}">
     <div class="modal fade" id="release">
       <div class="modal-dialog modal-md" >
         <div class="modal-content">
@@ -45,17 +84,18 @@
           <div class="modal-body">
               <p style="font-size: medium">Продукт: </p>
                 <select class="form-control" id="batch" name="batch">
-                  {% for r in reactors %}
-                    <option value=""></option>
+                  {% for key, values in batches.items %}
+                    <option value="{{key}}">{{values.name}} {{values.batch}}</option>
                   {% endfor %}
                 </select>
               <p style="font-size: medium; margin-top:10pt">
                 Количество:
               </p>
-              <div class="input-group"><input type="number" id="moveAmm" name="moveAmm" class="form-control" step="1"><span class="input-group-addon">шт</span></div>
-
+              <div class="input-group"><input type="number" id="relAmm" name="relAmm" class="form-control" step="1"><span class="input-group-addon">шт</span></div>
+              <div id="error" class="alert alert-danger" role="alert" style="display:none;margin-top:10pt">
+              </div>
             <div class="modal-footer" style="margin-top:5pt">
-              <input value="Выпуск" id = "confirmButton" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+              <input value="Выпуск" id = "confirmButton" onclick="checkRelease()" class="btn btn-primary" style="float: right"/> </div>
             </div>
           </div>
         </div>
