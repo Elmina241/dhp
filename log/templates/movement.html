@@ -1,14 +1,15 @@
 {% extends 'log/base.html' %}
 {% block content %}
 <script type="text/javascript">
-  function release(id, amm){
+  function release(id, amm, op){
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
         url: 'release/',
         data: {
           'id': id,
-          'amm': amm
+          'amm': amm,
+          'op': op
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -21,11 +22,19 @@
         }
       });
     }
-    function checkRelease(){
+    function check(op){
       $("#error").hide();
-      id = document.getElementById("batch").value;
+      if (op == 1){
+        id = document.getElementById("batch").value;
+        var rAmm = document.getElementById("relAmm").value;
+        err = $("#error");
+      }
+      else{
+        id = document.getElementById("batch2").value;
+        var rAmm = document.getElementById("relAmm2").value;
+        err = $("#error2");
+      }
       var batches = JSON.parse($("#batches").attr("value"));
-      var rAmm = document.getElementById("relAmm").value;
       var amm = 0;
       for (b in batches){
         if (b == id){
@@ -33,11 +42,11 @@
         }
       }
       if (rAmm > amm){
-        $("#error").text("Доступно " + amm + " шт.");
-        $("#error").show();
+        $(err).text("Доступно " + amm + " шт.");
+        $(err).show();
       }
       else {
-        release(id, rAmm);
+        release(id, rAmm, op);
       }
     }
 </script>
@@ -46,7 +55,7 @@
     <div class="panel-heading">
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#release"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Выпуск товара</button>
           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#discard"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Брак</button>
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#inventory"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>  Инвентаризационная запись</button>
+          <!--<button type="button" class="btn btn-info" data-toggle="modal" data-target="#inventory"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>  Инвентаризационная запись</button>-->
     </div>
     <div class="panel-body">
           {% if movements %}
@@ -95,27 +104,39 @@
               <div id="error" class="alert alert-danger" role="alert" style="display:none;margin-top:10pt">
               </div>
             <div class="modal-footer" style="margin-top:5pt">
-              <input value="Выпуск" id = "confirmButton" onclick="checkRelease()" class="btn btn-primary" style="float: right"/> </div>
+              <input value="Выпуск" id = "confirmButton" onclick="check(1)" class="btn btn-primary" style="float: right"/> </div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="modal fade" id="discard">
-        <div class="modal-dialog modal-sm" >
+        <div class="modal-dialog modal-md" >
           <div class="modal-content">
             <div class="modal-header">
               <button class="close" data-dismiss="modal">x</button>
-              <h4 id="storCode">Предупреждение</h4>
+              <h4 id="storCode">Брак</h4>
             </div>
             <div class="modal-body">
-              <p>Сбросить композицию?</p>
-              <div class="modal-footer">
-                <input value="Сброс" id = "confirmButton" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                <p style="font-size: medium">Продукт: </p>
+                  <select class="form-control" id="batch2" name="batch">
+                    {% for key, values in batches.items %}
+                      <option value="{{key}}">{{values.name}} {{values.batch}}</option>
+                    {% endfor %}
+                  </select>
+                <p style="font-size: medium; margin-top:10pt">
+                  Количество:
+                </p>
+                <div class="input-group"><input type="number" id="relAmm2" name="relAmm" class="form-control" step="1"><span class="input-group-addon">шт</span></div>
+                <div id="error2" class="alert alert-danger" role="alert" style="display:none;margin-top:10pt">
+                </div>
+              <div class="modal-footer" style="margin-top:5pt">
+                <input value="Брак" id = "confirmButton" onclick="check(2)" class="btn btn-primary" style="float: right"/> </div>
               </div>
             </div>
           </div>
         </div>
+
 
         <div class="modal fade" id="inventory">
           <div class="modal-dialog modal-sm" >
