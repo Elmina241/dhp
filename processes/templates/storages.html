@@ -36,7 +36,9 @@ function pack(id, amm, newAm, t, pr_id){
           'id': id,
           'amm': newAm,
           'type': t,
-          'pr_id' : pr_id
+          'pr_id' : pr_id,
+          'num' : $("#compAmm").prop("value"),
+          'at' : $('input[name=ammType]:checked').val()
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -110,7 +112,13 @@ function checkPack(id, amm, newAm, t){
   prods = JSON.parse(prods);
   pr_id = $("#prod").prop("value");
   box_amm = prods[pr_id].amount;
-  pack_amm = box_amm * newAm;
+  at = $('input[name=ammType]:checked').val()
+  if (at == "left"){
+    pack_amm = amm - newAm;
+  }
+  else {
+    pack_amm = parseFloat(newAm);
+  }
   if (pack_amm <= amm){
     pack(id, amm, pack_amm, t, pr_id);
   }
@@ -310,11 +318,24 @@ $(document).ready(function(){
                   <input type="number" class="form-control" id="compAmm" step="1" style="margin-bottom:5pt">
                   <p>Продукт:</p>
                   <select id="prod" class="form-control" style="margin-bottom:5pt"></select>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="ammType" id="ammType1" value="all" checked>
+                      <label class="form-check-label" for="ammType1">
+                        Количество композиции
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="ammType" id="ammType2" value="left">
+                      <label class="form-check-label" for="ammType2">
+                        Остаток
+                      </label>
+                    </div>
+                    <input type="number" class="form-control" id="ammTypeNum" step="0.01" style="margin-bottom:5pt">
                   <input type="hidden" id="stor_id" value="">
                   <input type="hidden" id="amm" value="">
                   <input type="hidden" id="storType" value="">
                   <div class="modal-footer">
-                    <input value="Фасовать" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#compAmm').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                    <input value="Фасовать" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#ammTypeNum').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
                   </div>
                 </div>
               </div>
@@ -413,6 +434,7 @@ $(document).ready(function(){
                       <div class="input-group"><input type="number" id="moveAmm" name="moveAmm" class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
                       </div>
                     </div>
+
                     </div>
                     </div>
                     <div class="modal-footer" style="margin-top:100pt">
