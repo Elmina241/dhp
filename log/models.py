@@ -24,3 +24,15 @@ class Movement_rec(models.Model):
     def get_batch(self):
         num = 'П-' + str(round(self.batch.kneading.batch_num))
         return num
+
+class Packing_divergence(models.Model):
+    reactor = models.ForeignKey('tables.Reactor', null=True)
+    tank = models.ForeignKey('tables.Tank', null=True)
+    batch = models.ForeignKey('processes.Batch')
+    start_amm = models.FloatField()
+    pack_amm = models.FloatField()
+    date = models.DateField(auto_now_add=True, null=True)
+    product = models.ForeignKey('tables.Product')
+    prod_num = models.FloatField()
+    def __str__(self):
+        return "test"

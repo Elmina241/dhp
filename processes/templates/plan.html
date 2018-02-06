@@ -62,10 +62,10 @@ function countUnits(){
     if (unit == undefined || unit == ""){
       unit = 0;
     }
-    amm = $("#prod").find('tr').eq(i).find('td').eq(4).text();
+    amm = $("#prod").find('tr').eq(i).find('td').eq(5).text();
     count = count + parseInt(unit);
     allAmm = allAmm + parseInt(unit) * parseFloat(amm);
-    $("#prod").find('tr').eq(i).find('td').eq(5).text((unit * amm).toFixed(2));
+    $("#prod").find('tr').eq(i).find('td').eq(6).text((unit * amm).toFixed(2));
   }
   $("#prod").find('tr').eq(length-2).find('td').eq(5).text(count);
   $("#prod").find('tr').eq(length-1).find('td').eq(5).text((allAmm * 0.001).toFixed(2));
@@ -88,6 +88,13 @@ $(document).ready(function(){
   changeMonth();
   $("#nowDate").text(getNowDate());
   getPlan();
+  $('.table tbody tr').each(function(i) {
+    length = $("#prod").find('tr').length;
+    if (i < length-3){
+      var number = i + 1;
+      $(this).find('td:first').text(number);
+    }
+    });
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
@@ -129,15 +136,15 @@ $(document).ready(function(){
     <table class="table table-hover table-sm  table-condensed" id="prod">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование продукции</th><th>Кол-во единиц</th><th>Кол-во в упаковке, шт</th><th>Вес ед., кг</th><th>Общий вес, кг</th>
+          <th>№</th><th>Код</th><th>Наименование продукции</th><th>Кол-во единиц</th><th>Кол-во в упаковке, шт</th><th>Вес ед., кг</th><th>Общий вес, кг</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
-        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="{{p.production.get_boxing_amm}}" onchange="countUnits();"></td><td>{{p.production.get_boxing_amm}}</td><td>{{p.production.compAmount}}</td><td>0</td></tr>
+        <tr><td></td><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="{{p.production.get_boxing_amm}}" onchange="countUnits();"></td><td>{{p.production.get_boxing_amm}}</td><td>{{p.production.compAmount}}</td><td>0</td></tr>
         {% endfor %}
-        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td></td><td></td><td><b>0</b></td></tr>
-        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td colspan="2"><b>Итого, штуки</b></td><td></td><td></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td colspan="2"><b>Итого, тонны</b></td><td></td><td></td><td></td><td></td><td><b>0</b></td></tr>
       </tbody>
     </table>
     </div>

@@ -93,7 +93,7 @@ class Composition(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     sgr = models.CharField(max_length=80)
-    cur_batch = models.FloatField(default = 0)
+    cur_batch = models.FloatField(default = 1)
     group = models.ForeignKey('Composition_group')
     form = models.ForeignKey('Product_form', null=True)
     isFinal = models.BooleanField(default = True)
@@ -245,6 +245,7 @@ class Formula(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80, null=True)
     composition = models.ForeignKey('Composition')
+    cur_batch = models.FloatField(default = 1)
     def __str__(self):
         return self.composition.name + (' ' if self.name is None else (' ' + self.name))
     def get_name(self):

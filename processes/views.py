@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
-from log.models import Movement_rec, Operation
+from log.models import Movement_rec, Operation, Packing_divergence
 import json
 import math
 from django.core import serializers
@@ -477,9 +477,9 @@ def save_process(request):
                 k = get_object_or_404(Kneading, pk=request.POST['kneading'])
                 kneading.batch_num = k.batch_num
             else:
-                kneading.batch_num = formula.composition.cur_batch
-                formula.composition.cur_batch = formula.composition.cur_batch + 1
-                formula.composition.save()
+                kneading.batch_num = formula.cur_batch
+                formula.cur_batch = formula.cur_batch + 1
+                formula.save()
             kneading.reactor = reactor
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))
@@ -526,9 +526,9 @@ def save_tech_comp(request):
             kneading.finish_date = datetime.date.today()
             kneading.list = list
             kneading.reactor = reactor
-            kneading.batch_num = formula.composition.cur_batch
-            formula.composition.cur_batch = formula.composition.cur_batch + 1
-            formula.composition.save()
+            kneading.batch_num = formula.cur_batch
+            formula.cur_batch = formula.cur_batch + 1
+            formula.save()
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
             st.save()
@@ -583,14 +583,23 @@ def get_processes(request):
 
 def pack(request):
     if request.method == 'POST':
+        div = Packing_divergence()
         if request.POST['type'] == 'r':
             storage = get_object_or_404(Reactor_content, pk=request.POST['id'])
+            div.reactor = storage.reactor
         else:
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
+            div.tank = storage.tank
+        div.prod_num = request.POST['num']
+        div.start_amm = storage.amount
+        div.pack_amm = request.POST['amm']
         storage.amount = storage.amount - float(request.POST['amm'])
         prod = get_object_or_404(Product, pk=request.POST['pr_id'])
+        div.product = prod
+        div.batch = storage.batch
         rec = Movement_rec(batch = storage.batch, product = prod, amount = float(request.POST['num']), operation = Operation.objects.filter(id = 1)[0])
         rec.save()
+        div.save()
         if storage.amount == 0:
             storage.content_type = 3
             storage.batch = None

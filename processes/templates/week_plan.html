@@ -67,7 +67,7 @@ function countUnits(){
     if (unit == undefined || unit == ""){
       unit = 0;
     }
-    amm = $("#prod").find('tr').eq(i).find('td').eq(2).text();
+    amm = $("#prod").find('tr').eq(i).find('td').eq(3).text();
     count = count + parseInt(unit);
     allAmm = allAmm + parseInt(unit) * parseFloat(amm);
   }
@@ -95,6 +95,13 @@ $(document).ready(function(){
   changeWeek();
   $("#nowDate").text(getNowDate());
   getPlan();
+  $('.table tbody tr').each(function(i) {
+    length = $("#prod").find('tr').length;
+    if (i < length-3){
+      var number = i + 1;
+      $(this).find('td:first').text(number);
+    }
+  });
 //  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
 });</script>
 
@@ -136,15 +143,15 @@ $(document).ready(function(){
     <table class="table table-hover table-sm  table-condensed" id="prod">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование продукции</th><th>Вес ед, кг</th><th>Кол-во единиц</th>
+          <th>№</th><th>Код</th><th>Наименование продукции</th><th>Вес ед, кг</th><th>Кол-во единиц</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
-        <tr><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
+        <tr><td></td><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
         {% endfor %}
-        <tr><td><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
-        <tr><td><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td colspan="2"><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td colspan="2"><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
       </tbody>
     </table>
     </div>
