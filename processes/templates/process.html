@@ -212,7 +212,7 @@ function filterBatch(){
                     <td  onClick="window.location.href='/processes/process/{{ k.id }}/'">{{ k.list.formula }}</td>
                     <td>{{ k.start_date|date:"d.m.Y" }}</td>
                     <td>{{ k.finish_date|date:"d.m.Y" }}</td>
-                    <td id="{{k.id}}"><script>getState({{k.id}})</script></td>
+                    <td id="{{k.id}}">{{ k.get_state }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

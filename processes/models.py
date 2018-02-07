@@ -49,6 +49,10 @@ class Kneading(models.Model):
     isFinished = models.BooleanField(default = False)
     def __str__(self):
         return self.list.formula.get_name()
+    def get_state(self):
+        log = State_log.objects.filter(kneading = self).last()
+        name = log.get_state()
+        return name
 
 #Партия
 class Batch(models.Model):
