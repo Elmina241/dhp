@@ -1024,9 +1024,22 @@ def print_passport(request, kneading_id):
     comps = {}
     for c in components:
         comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
-
+    chars = {}
+    temp_chars = Kneading_char.objects.filter(kneading = kneading)
+    i = 0
+    for c in temp_chars:
+        if c.characteristic.char_type.id != 3:
+            try:
+                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.kneading_char_number.number}
+            except Kneading_char_number.DoesNotExist:
+                chars[i] = {}
+        else:
+            val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
+            chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+        i = i+1
     return render(request, 'print.html', {"comps": List_component.objects.filter(list = kneading.list),
                                             "components": comps,
+                                            "chars": chars,
                                             "reactor": Reactor_content.objects.all(),
                                             "tank": Tank_content.objects.all(),
                                             "location": "/processes/process/",
