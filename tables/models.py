@@ -95,6 +95,7 @@ class Composition(models.Model):
     sgr = models.CharField(max_length=80)
     sh_life = models.IntegerField(default = 24)
     date = models.DateField(null = True)
+    package = models.CharField(max_length=80, null = True)
     standard = models.CharField(max_length=80, null = True)
     cur_batch = models.FloatField(default = 1)
     group = models.ForeignKey('Composition_group')
@@ -104,6 +105,22 @@ class Composition(models.Model):
         return self.name
     def get_name(self):
         return self.code + " " + self.name
+    def get_package(self):
+        res = self.package + " по "
+        prods = Production.objects.filter(composition = self)
+        amms = set()
+        for p in prods:
+            if p.compAmount != 0:
+                amms.add(str(int(p.compAmount * 1000)))
+        length = len(amms)
+        for i in range(length):
+            res = res + amms.pop()
+            if len(amms) != 0:
+                res = res + " или "
+            else:
+                res = res + " г"
+        return res
+
 
 class Components(models.Model):
     comp = models.ForeignKey('Composition')

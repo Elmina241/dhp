@@ -70,7 +70,7 @@
               <tr>
                 <td>{{ m.date|date:"d.m.Y" }}</td>
                 <td>{{ m.product.code }}</td>
-                <td>{{ m.product }}</td>
+                <td>{{ m.product.get_name_for_table }}</td>
                 <td>{{ m.get_batch }}</td>
                 <td>{{ m.operation }}</td>
                 <td>{{ m.amount|floatformat:"0" }}</td>

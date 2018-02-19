@@ -40,7 +40,7 @@
     <div class="text14">ОАО «Дальхимпром»</div>
     <div class="text12" style="text-align: center;margin-bottom:15pt">690074, г. Владивосток, ул. Снеговая, д.64</div>
     <div class="text14">
-      <p>ПАСПОРТ КАЧЕСТВА № _________</p>
+      <p>ПАСПОРТ КАЧЕСТВА № {{p.kneading.id}}</p>
       <p>{{p.kneading.list}}</p>
     </div>
     <div class="text12" style="text-align: center;margin-bottom:15pt">{{p.kneading.list.formula.composition.standard}}</div>
@@ -48,8 +48,8 @@
       <p>Партия № {{p.kneading.batch_num|floatformat:"0"}}</p>
       <p>Вес партии, кг: {{p.kneading.list.ammount}}</p>
       <p>Дата изготовления: {{p.finish_date|date:"d.m.Y"}}</p>
-      <p>Упаковка: </p>
-      <p>Срок годности: {{p.kneading.list.formula.composition.date}} месяца с даты производства при соблюдении условий транспортировки и хранения</p>
+      <p>Упаковка: {{p.kneading.list.formula.composition.get_package}}</p>
+      <p>Срок годности: {{p.kneading.list.formula.composition.sh_life}} месяца с даты производства при соблюдении условий транспортировки и хранения</p>
       <p>Состав средства: </p>
       <!--<p>{{p.kneading.list}}</p>
       <p>{{p.kneading.list.formula.code}}</p>

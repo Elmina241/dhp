@@ -82,6 +82,7 @@ $(document).ready(function(){
     // получить кнопку, которая его открыло
     $("#addError").hide();
     var button = $(event.relatedTarget)[0];
+    $("#submComp").prop('disabled', false);
     var code = button.dataset.code;
     var mat = button.dataset.mat;
     var amm = button.dataset.amm;
@@ -171,7 +172,7 @@ $(document).ready(function(){
               <input type="hidden" id="type" value="">
               <input type="hidden" id="isCompl" value="">
               <div class="modal-footer">
-                <input value="Добавить" onclick="addComp($('#mat_id').val(), getMatAmm($('#matCode').text(), $('#compAmm').val()), $('#matCode').text(), $('#isCompl').val());return false;" class="btn btn-primary" style="float: right"/> </div>
+                <input id="submComp" value="Добавить" onclick="addComp($('#mat_id').val(), getMatAmm($('#matCode').text(), $('#compAmm').val()), $('#matCode').text(), $('#isCompl').val());this.disabled = true;return false;" class="btn btn-primary" style="float: right"/> </div>
               </div>
             </div>
     </div>
