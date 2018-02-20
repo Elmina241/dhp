@@ -796,56 +796,103 @@ def save_date(request, kneading_id):
 def add_comp(request, kneading_id):
     res = "ok"
     loses = 1
+    op = request.POST['op']
     if request.method == 'POST':
         if 'mat_id' in request.POST:
             if request.POST['type'] == 'compl':
                 mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])[0]
-                if mat.store_amount < float(request.POST['amm']):
-                    res = str(mat.store_amount)
-                else:
-                    mat.store_amount = mat.store_amount - float(request.POST['amm'])
-                    mat.reserved = mat.reserved - float(request.POST['amm'])
+                if op == "edit":
                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
-                    mat.save()
+                    if mat.store_amount + comp.ammount < float(request.POST['amm']):
+                        res = str(mat.store_amount + comp.ammount)
+                    else:
+                        mat.store_amount = mat.store_amount + comp.ammount - float(request.POST['amm'])
+                        mat.reserved = mat.reserved - float(request.POST['amm'])
+                        mat.save()
+                else:
+                    if mat.store_amount < float(request.POST['amm']):
+                        res = str(mat.store_amount)
+                    else:
+                        mat.store_amount = mat.store_amount - float(request.POST['amm'])
+                        mat.reserved = mat.reserved - float(request.POST['amm'])
+                        comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
+                        mat.save()
             else:
                 if request.POST['type'] == 'tank':
                         content = Tank_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        if content.amount+1 < float(request.POST['amm']):
-                            res = str(content.amount)
-                        else:
-                            content.amount = content.amount - float(request.POST['amm'])/loses
-                            content.reserved = content.reserved - float(request.POST['amm'])/loses
-                            if content.reserved > content.amount:
-                                content.reserved = 0
-                                check_dependencies(content, 't')
+                        if op == "edit":
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
-                            content.save()
+                            if content.amount + 1 + comp.ammount < float(request.POST['amm']):
+                                res = str(content.amount + comp.ammount)
+                            else:
+                                content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
+                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                if content.reserved > content.amount:
+                                    content.reserved = 0
+                                    check_dependencies(content, 't')
+                                content.save()
+                        else:
+                            if content.amount+1 < float(request.POST['amm']):
+                                res = str(content.amount)
+                            else:
+                                content.amount = content.amount - float(request.POST['amm'])/loses
+                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                if content.reserved > content.amount:
+                                    content.reserved = 0
+                                    check_dependencies(content, 't')
+                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
+                                content.save()
                 else:
                     if request.POST['type'] == 'reactor':
                         content = Reactor_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        if content.amount+1 < float(request.POST['amm']):
-                            res = str(content.amount)
-                        else:
-                            content.amount = content.amount - float(request.POST['amm'])/loses
-                            content.reserved = content.reserved - float(request.POST['amm'])/loses
-                            if content.reserved > content.amount:
-                                content.reserved = 0
-                                check_dependencies(content, 'r')
+                        if op == "edit":
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
-                            content.save()
+                            if content.amount + 1 + comp.ammount < float(request.POST['amm']):
+                                res = str(content.amount + comp.ammount)
+                            else:
+                                content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
+                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                if content.reserved > content.amount:
+                                    content.reserved = 0
+                                    check_dependencies(content, 'r')
+                                content.save()
+                        else:
+                            if content.amount+1 < float(request.POST['amm']):
+                                res = str(content.amount)
+                            else:
+                                content.amount = content.amount - float(request.POST['amm'])/loses
+                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                if content.reserved > content.amount:
+                                    content.reserved = 0
+                                    check_dependencies(content, 'r')
+                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
+                                content.save()
                     else:
                         mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
-                        if mat.ammount < float(request.POST['amm']):
-                            res = str(mat.ammount)
-                        else:
-                            mat.ammount = mat.ammount - float(request.POST['amm'])
-                            mat.reserved = mat.reserved - float(request.POST['amm'])
+                        if op == "edit":
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                            mat.save()
-            #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
+                            if mat.ammount + comp.ammount < float(request.POST['amm']):
+                                res = str(mat.ammount + comp.ammount)
+                            else:
+                                mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
+                                mat.reserved = mat.reserved - float(request.POST['amm'])
+                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+                                mat.save()
+                        else:
+                            if mat.ammount < float(request.POST['amm']):
+                                res = str(mat.ammount)
+                            else:
+                                mat.ammount = mat.ammount - float(request.POST['amm'])
+                                mat.reserved = mat.reserved - float(request.POST['amm'])
+                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+                                mat.save()
+                #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             if res == "ok":
                 if comp.loaded == True:
-                    comp.ammount = comp.ammount + float(request.POST['amm'])
+                    if request.POST['op'] == 'edit':
+                         comp.ammount = float(request.POST['amm'])
+                    else:
+                        comp.ammount = comp.ammount + float(request.POST['amm'])
                 else:
                     comp.ammount = request.POST['amm']
                 kneading = get_object_or_404(Kneading, pk=kneading_id)
