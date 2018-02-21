@@ -84,14 +84,33 @@
     </div>
     <input type="hidden" id="batches" name="batches" value="{{batches2}}">
     <div class="modal fade" id="release">
-      <div class="modal-dialog modal-md" >
+      <div class="modal-dialog modal-lg" >
         <div class="modal-content">
           <div class="modal-header">
             <button class="close" data-dismiss="modal">x</button>
             <h4 id="storCode">Выпуск товара</h4>
           </div>
           <div class="modal-body">
-              <p style="font-size: medium">Продукт: </p>
+            <table class="table table-hover table-sm table-condensed" style="font-size: medium" id="materials">
+              <thead>
+                <tr>
+                  <th></th><th>Код</th><th>Продукт</th><th>Партия</th><th>Кол-во в наличии, шт</th><th>Количество, шт</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for key, values in batches.items %}
+                <tr>
+                  <td><input type="checkbox" value="{{ values.pr_id }}" name="rel_list"></td>
+                  <td>{{ values.code }}</td>
+                  <td>{{ values.name }}</td>
+                  <td>{{ values.batch }}</td>
+                  <td>{{ values.amount }}</td>
+                  <td><input type="number" id="{{ values.pr_id }}" name="relAmm" class="form-control" step="1"></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+              <!--<p style="font-size: medium">Продукт: </p>
                 <select class="form-control" id="batch" name="batch">
                   {% for key, values in batches.items %}
                     <option value="{{key}}">{{values.name}} {{values.batch}}</option>
@@ -102,7 +121,7 @@
               </p>
               <div class="input-group"><input type="number" id="relAmm" name="relAmm" class="form-control" step="1"><span class="input-group-addon">шт</span></div>
               <div id="error" class="alert alert-danger" role="alert" style="display:none;margin-top:10pt">
-              </div>
+              </div>-->
             <div class="modal-footer" style="margin-top:5pt">
               <input value="Выпуск" id = "confirmButton" onclick="check(1)" class="btn btn-primary" style="float: right"/> </div>
             </div>
@@ -118,6 +137,7 @@
               <h4 id="storCode">Выбытие</h4>
             </div>
             <div class="modal-body">
+
                 <p style="font-size: medium">Продукт: </p>
                   <select class="form-control" id="batch2" name="batch">
                     {% for key, values in batches.items %}

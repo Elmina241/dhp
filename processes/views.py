@@ -801,7 +801,7 @@ def add_comp(request, kneading_id):
         if 'mat_id' in request.POST:
             if request.POST['type'] == 'compl':
                 mat = Compl_comp.objects.filter(pk=request.POST['mat_id'])[0]
-                if op == "edit":
+                if op == "edit" or op == "add":
                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
                     if mat.store_amount + comp.ammount < float(request.POST['amm']):
                         res = str(mat.store_amount + comp.ammount)
@@ -820,7 +820,7 @@ def add_comp(request, kneading_id):
             else:
                 if request.POST['type'] == 'tank':
                         content = Tank_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        if op == "edit":
+                        if op == "edit" or op == "add":
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
                             if content.amount + 1 + comp.ammount < float(request.POST['amm']):
                                 res = str(content.amount + comp.ammount)
@@ -845,7 +845,7 @@ def add_comp(request, kneading_id):
                 else:
                     if request.POST['type'] == 'reactor':
                         content = Reactor_content.objects.filter(pk = request.POST['mat_id'])[0]
-                        if op == "edit":
+                        if op == "edit" or op == "add":
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
                             if content.amount + 1 + comp.ammount < float(request.POST['amm']):
                                 res = str(content.amount + comp.ammount)
@@ -869,7 +869,7 @@ def add_comp(request, kneading_id):
                                 content.save()
                     else:
                         mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
-                        if op == "edit":
+                        if op == "edit" or op == "add":
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
                             if mat.ammount + comp.ammount < float(request.POST['amm']):
                                 res = str(mat.ammount + comp.ammount)
@@ -888,13 +888,7 @@ def add_comp(request, kneading_id):
                                 mat.save()
                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             if res == "ok":
-                if comp.loaded == True:
-                    if request.POST['op'] == 'edit':
-                         comp.ammount = float(request.POST['amm'])
-                    else:
-                        comp.ammount = comp.ammount + float(request.POST['amm'])
-                else:
-                    comp.ammount = request.POST['amm']
+                comp.ammount = request.POST['amm']
                 kneading = get_object_or_404(Kneading, pk=kneading_id)
                 reactor_content = Reactor_content.objects.filter(reactor = kneading.reactor)[0]
                 reactor_content.amount = kneading.list.ammount

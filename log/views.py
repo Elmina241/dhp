@@ -26,7 +26,7 @@ def movement(request):
                         if m.operation.id == 2 or m.operation.id == 3:
                             amm = amm - m.amount
                 if amm > 0:
-                    batches[name] = {"pr_id": r.product.id, "name": str(r.product), "batch": r.get_batch(), "amount": amm}
+                    batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
     return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": Movement_rec.objects.all, "batches": batches, "batches2": json.dumps(batches)})
 
 def release(request):
