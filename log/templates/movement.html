@@ -1,5 +1,14 @@
 {% extends 'log/base.html' %}
 {% block content %}
+<style>
+  input:valid {
+    border-color: green;
+  }
+
+  input:invalid {
+    border-color: red;
+  }
+</style>
 <script type="text/javascript">
   function release(id, amm, op){
     var csrftoken = getCookie('csrftoken');
@@ -25,28 +34,39 @@
     function check(op){
       $("#error").hide();
       if (op == 1){
-        id = document.getElementById("batch").value;
-        var rAmm = document.getElementById("relAmm").value;
-        err = $("#error");
+        err = false;
+        $("input").each(function() {
+          if ($(this).css("border-color") == "rgb(255, 0, 0)") err = true;
+        });
+        if (!err){
+          var size = $("#release_prod tr").size();
+          for (var i = 1; i < size; i++){
+            var row = $("#release_prod tr").eq(i);
+            var id = $(row).find("input:checkbox:checked").prop("value");
+            if (id != undefined){
+              release(id, $(row).find(".relAmm").prop("value"), op);
+            }
+          }
+        }
       }
       else{
         id = document.getElementById("batch2").value;
         var rAmm = document.getElementById("relAmm2").value;
         err = $("#error2");
-      }
-      var batches = JSON.parse($("#batches").attr("value"));
-      var amm = 0;
-      for (b in batches){
-        if (b == id){
-          amm = batches[b].amount;
+        var batches = JSON.parse($("#batches").attr("value"));
+        var amm = 0;
+        for (b in batches){
+          if (b == id){
+            amm = batches[b].amount;
+          }
         }
-      }
-      if (rAmm > amm){
-        $(err).text("Доступно " + amm + " шт.");
-        $(err).show();
-      }
-      else {
-        release(id, rAmm, op);
+        if (rAmm > amm){
+          $(err).text("Доступно " + amm + " шт.");
+          $(err).show();
+        }
+        else {
+          release(id, rAmm, op);
+        }
       }
     }
 </script>
@@ -91,7 +111,7 @@
             <h4 id="storCode">Выпуск товара</h4>
           </div>
           <div class="modal-body">
-            <table class="table table-hover table-sm table-condensed" style="font-size: medium" id="materials">
+            <table class="table table-hover table-sm table-condensed" style="font-size: medium" id="release_prod">
               <thead>
                 <tr>
                   <th></th><th>Код</th><th>Продукт</th><th>Партия</th><th>Кол-во в наличии, шт</th><th>Количество, шт</th>
@@ -100,12 +120,12 @@
               <tbody>
                 {% for key, values in batches.items %}
                 <tr>
-                  <td><input type="checkbox" value="{{ values.pr_id }}" name="rel_list"></td>
+                  <td><input type="checkbox" value="{{ key }}" name="rel_list"></td>
                   <td>{{ values.code }}</td>
                   <td>{{ values.name }}</td>
                   <td>{{ values.batch }}</td>
                   <td>{{ values.amount }}</td>
-                  <td><input type="number" id="{{ values.pr_id }}" name="relAmm" class="form-control" step="1"></td>
+                  <td><input type="number" id="{{ values.pr_id }}" name="relAmm" min='1' max = '{{values.amount}}' class="form-control relAmm" step="1"></td>
                 </tr>
                 {% endfor %}
               </tbody>
