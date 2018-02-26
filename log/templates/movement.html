@@ -18,7 +18,8 @@
         data: {
           'id': id,
           'amm': amm,
-          'op': op
+          'op': op,
+          'code': {{last_acc}}
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

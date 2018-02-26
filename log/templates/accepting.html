@@ -1,0 +1,32 @@
+{% extends 'log/base.html' %}
+{% block content %}
+<script type="text/javascript">
+
+</script>
+  {% csrf_token %}
+  <div class="panel panel-default" style ="margin: auto">
+    <div class="panel-heading">
+          <!--<button type="button" class="btn btn-info" data-toggle="modal" data-target="#inventory"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>  Инвентаризационная запись</button>-->
+    </div>
+    <div class="panel-body">
+          {% if acts %}
+          <table class="table table-hover table-sm" id="acts">
+            <thead>
+              <tr>
+                <th>№</th><th>Дата</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for key, values in acts.items %}
+              <tr>
+                <td>{{ key }}</td>
+                <td>{{ values.date }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No materials are available right now.</p>
+          {% endif %}
+    </div>
+  {% endblock content %}

@@ -36,3 +36,10 @@ class Packing_divergence(models.Model):
     prod_num = models.FloatField()
     def __str__(self):
         return "test"
+
+class Acceptance(models.Model):
+    code = models.IntegerField()
+    prod = models.ForeignKey('Movement_rec')
+    date = models.DateField(auto_now_add=True)
+    def __str__(self):
+        return str(self.code)
