@@ -30,7 +30,7 @@
         </ul>
       </nav>
       <div class="row">
-        <div class="col-xs-2" id="gmenu">
+        <div class="col-xs-2 pg" id="gmenu">
           <ul class="nav nav-pills nav-stacked">
             <li><a href="/log/movement/">Журнал прихода и расхода</a></li>
           </ul>
@@ -39,11 +39,11 @@
           </ul>
         </div>
         <div class="col-xs-10">
-          <ol class="breadcrumb">
+          <ol class="breadcrumb pg">
             <li><a href="#">Журналы</a></li>
             <li class="active">{{ header }}<!--Реактивы--></li>
           </ol>
-          <h3 class="page-header">{{ header }}</h3>
+          <h3 class="page-header pg">{{ header }}</h3>
           {% block content %}
           {% endblock %}
       </div>

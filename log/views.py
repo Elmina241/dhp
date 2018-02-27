@@ -57,3 +57,14 @@ def release(request):
             rec = Movement_rec(product = product, batch = batch, amount = request.POST['amm'], operation = Operation.objects.filter(id = 2)[0])
         rec.save()
         return HttpResponse('ok')
+
+def get_act(request):
+    if request.method == 'POST':
+        code = request.POST['code']
+        inf_a = {}
+        for a in Acceptance.objects.filter(code = code):
+            date = a.date
+            inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(), "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
+        inf_a['date'] = date.strftime('%d.%m.%Y')
+        data = json.dumps(inf_a)
+        return HttpResponse(data)
