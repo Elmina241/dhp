@@ -68,3 +68,17 @@ def get_act(request):
         inf_a['date'] = date.strftime('%d.%m.%Y')
         data = json.dumps(inf_a)
         return HttpResponse(data)
+
+def get_act_by_prod(request):
+    if request.method == 'POST':
+        prod = request.POST['prod']
+        product = Movement_rec.objects.filter(pk = prod)[0]
+        code = Acceptance.objects.filter(prod = product)[0].code
+        inf_a = {}
+        for a in Acceptance.objects.filter(code = code):
+            date = a.date
+            inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(), "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
+        inf_a['date'] = date.strftime('%d.%m.%Y')
+        inf_a['code'] = code
+        data = json.dumps(inf_a)
+        return HttpResponse(data)
