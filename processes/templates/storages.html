@@ -202,6 +202,32 @@ function checkMove(){
   }
 }
 
+function saveBounds(row){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'edit_amm/',
+        data: {
+          'id': $(row).parent().prop("id"),
+          'amm': $(row).parent().find("input").eq(0).prop("value")
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          $(row).parent().html(data + " <button class ='btn btn-default' onclick='editBounds(this," + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>")
+        }
+      });
+}
+
+function editBounds(row, amm){
+  var r = $(row).parent().parent();
+  r.find("td").eq(2).html("<input type='number' value='"+ amm +"'> <button class ='btn btn-default' onclick='saveBounds(this)'><i class='glyphicon glyphicon-ok'></i></button>");
+}
+
 function getSelOfProd(composition){
   prods = $("#products").prop("value");
   prods = JSON.parse(prods);
@@ -254,7 +280,11 @@ $(document).ready(function(){
               <tr>
                 <td id="cr-{{r.reactor.id}}">{{ r.reactor.code }}</td>
                 <td>{{ r.reactor.name }}</td>
+                {% if r.content_type == 1 %}
+                <td id="r-{{r.id}}">{{ r.amount|floatformat:"2" }} <button class ="btn btn-default" onclick='editBounds(this, {{ r.amount|floatformat:"2" }})'><i class="glyphicon glyphicon-pencil"></i></td>
+                {% else %}
                 <td id="r-{{r.id}}">{{ r.amount|floatformat:"2" }}</td>
+                {% endif %}
                 {% if r.content_type == 1 %}
                 <td>{{r.batch.id}} {{r.batch.kneading.list.formula}}</td>
                 {% if r.batch.kneading.list.formula.composition.isFinal %}
@@ -280,7 +310,11 @@ $(document).ready(function(){
               <tr>
                 <td id="ct-{{t.tank.id}}">{{ t.tank.code }}</td>
                 <td>{{ t.tank.name }}</td>
+                {% if t.content_type == 1 %}
+                <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }} <button class ="btn btn-default" onclick='editBounds(this, {{ t.amount|floatformat:"2" }})'><i class="glyphicon glyphicon-pencil"></i></td>
+                {% else %}
                 <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }}</td>
+                {% endif %}
                 {% if t.content_type == 1 %}
                 <td>{{t.batch.id}} {{t.batch.kneading.list.formula}}</td>
                 {% if t.batch.kneading.list.formula.composition.isFinal %}

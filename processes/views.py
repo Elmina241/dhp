@@ -622,6 +622,18 @@ def drop(request):
         storage.save()
         return HttpResponse('ok')
 
+def edit_amm(request):
+    if request.method == 'POST':
+        id = request.POST['id'].split("-")[1]
+        if request.POST['id'][0] == 'r':
+            storage = get_object_or_404(Reactor_content, pk=id)
+        else:
+            storage = get_object_or_404(Tank_content, pk=id)
+        amm = request.POST['amm']
+        storage.amount = amm
+        storage.save()
+        return HttpResponse(amm)
+
 def check_dependencies(storage, t):
     if t == 'r':
         for k in Kneading.objects.all():
