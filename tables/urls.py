@@ -66,7 +66,7 @@ urlpatterns = [
     url(r'^materials/get_group/$', views.mat_group, name='mat_group'),
     url(r'^compositions/get_group_comp/$', views.comp_group, name='comp_group'),
     # сохранение изменений
-
+    url(r'^characteristics/(?P<characteristic_id>[0-9]+)/save_characteristic/$', views.save_characteristic, name='save_characteristic'),
     url(r'^materials/(?P<material_id>[0-9]+)/save_material/$', views.save_material, name='save_material'),
     url(r'^products/(?P<product_id>[0-9]+)/save_product/$', views.save_product, name='save_product'),
     url(r'^caps/(?P<cap_id>[0-9]+)/save_cap/$', views.save_cap, name='save_cap'),

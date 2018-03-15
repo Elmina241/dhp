@@ -649,21 +649,77 @@ def add_characteristic(request):
         name = request.POST['name']
         group = get_object_or_404(Char_group, pk=request.POST['group'])
         type = get_object_or_404(Characteristic_type, pk=request.POST['type'])
+        is_general = False
+        if 'is_general' in request.POST:
+            if request.POST['is_general'] == 'on':
+                is_general = True
+            else:
+                is_general = False
     except (KeyError, Char_group.DoesNotExist):
         return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         if type.id == 1:
-            char = Characteristic_range(name = name, group = group, char_type = type, inf = request.POST['from'], sup=request.POST['to'])
+            char = Characteristic_range(name = name, group = group, char_type = type, inf = request.POST['from'], sup=request.POST['to'], is_general = is_general)
             char.save()
         if type.id == 2:
-            char = Characteristic_number(name = name, group = group, char_type = type, inf= request.POST['from'], sup=request.POST['to'])
+            char = Characteristic_number(name = name, group = group, char_type = type, inf= request.POST['from'], sup=request.POST['to'], is_general = is_general)
             char.save()
         if type.id == 3:
-            char = Characteristic(name = name, group = group, char_type = type)
+            char = Characteristic(name = name, group = group, char_type = type, is_general = is_general)
             char.save()
             #if 'json' in request.POST:
             table = request.POST['json']
             data = json.loads(table)
+            for d in data:
+                set_var = Set_var(name=d['Значение'])
+                set_var.save()
+                characteristic_set_var = Characteristic_set_var(char_set = char, char_var = set_var)
+                characteristic_set_var.save()
+        return redirect('characteristics')
+
+def save_characteristic(request, characteristic_id):
+    try:
+        name = request.POST['name']
+        group = get_object_or_404(Char_group, pk=request.POST['group'])
+        type = get_object_or_404(Characteristic_type, pk=request.POST['type'])
+        is_general = False
+        if 'is_general' in request.POST:
+            if request.POST['is_general'] == 'on':
+                is_general = True
+            else:
+                is_general = False
+    except (KeyError, Char_group.DoesNotExist):
+        return render(request, 'index.html', {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
+    else:
+        if type.id == 1:
+            char = get_object_or_404(Characteristic_range, pk = characteristic_id)
+            char.name = name
+            char.group = group
+            char.char_type = type
+            char.is_general = is_general
+            char.inf = request.POST['from']
+            char.sup = request.POST['to']
+            char.save()
+        if type.id == 2:
+            char = get_object_or_404(Characteristic_number, pk = characteristic_id)
+            char.name = name
+            char.group = group
+            char.char_type = type
+            char.is_general = is_general
+            char.inf = request.POST['from']
+            char.sup = request.POST['to']
+            char.save()
+        if type.id == 3:
+            char = get_object_or_404(Characteristic, pk = characteristic_id)
+            char.name = name
+            char.group = group
+            char.char_type = type
+            char.is_general = is_general
+            char.save()
+            #if 'json' in request.POST:
+            table = request.POST['json']
+            data = json.loads(table)
+            Characteristic_set_var.objects.filter(char_set = char).delete()
             for d in data:
                 set_var = Set_var(name=d['Значение'])
                 set_var.save()

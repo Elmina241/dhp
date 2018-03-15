@@ -316,6 +316,7 @@ class Characteristic_type(models.Model):
 class Characteristic(models.Model):
     name = models.CharField(max_length=80)
     char_type = models.ForeignKey('Characteristic_type', default=1)
+    is_general = models.BooleanField(default = True)
     group = models.ForeignKey('Char_group')
     def __str__(self):
         return ('' if self.group.name == 'отсутствует' else self.group.name + ': ') + self.name
