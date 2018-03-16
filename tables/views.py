@@ -65,6 +65,9 @@ def compositions(request):
 def comp_chars(request):
     return render(request, "comp_chars.html", {"compositions": Composition.objects.all, "groups": Composition_group.objects.all, "header": "Характеристики", "location": "/tables/characteristics/"})
 
+def comp_props(request):
+    return render(request, "comp_props.html", {"compositions": Composition.objects.all, "header": "Видовые свойства", "location": "/tables/comp_props/"})
+
 def mat_chars(request):
     return render(request, "mat_chars.html", {"materials": Material.objects.all, "groups": Material_group.objects.all, "header": "Характеристики", "location": "/tables/characteristics/"})
 

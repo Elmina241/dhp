@@ -1,0 +1,27 @@
+{% extends 'tables/base.html' %}
+{% block content %}
+<script>
+$(document).ready(function(){
+});
+</script>
+          {% if compositions %}
+              <table class="table table-sm" style="font-size: 110%;">
+                <thead>
+                  <tr>
+                    <th>Код</th><th>Наименование</th><th>Группа</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in compositions %}
+                  <tr>
+                    <td>{{ c.code }}</td>
+                    <td onClick="window.location.href='/tables/comp_props/{{ c.id }}/'">{{ c.name }}</td>
+                    <td>{{ c.group }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+  {% endblock content %}

@@ -7,6 +7,7 @@ app_name = 'tables'
 urlpatterns = [
     # таблицы
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/save_comp_char/$', views.save_comp_char, name='save_comp_char'),
+    #url(r'^comp_chars/(?P<composition_id>[0-9]+)/save_comp_char/$', views.save_comp_char, name='save_comp_char'),
     url(r'^mat_chars/(?P<mat_id>[0-9]+)/save_mat_char/$', views.save_mat_char, name='save_mat_char'),
     url(r'^materials/$', views.index, name = 'index'),
     url(r'^products/$', views.products, name = 'products'),
@@ -20,6 +21,7 @@ urlpatterns = [
     url(r'^formulas/$', views.formulas, name = 'formulas'),
     url(r'^characteristics/$', views.characteristics, name = 'characteristics'),
     url(r'^comp_chars/$', views.comp_chars, name = 'comp_chars'),
+    url(r'^comp_props/$', views.comp_props, name = 'comp_props'),
     url(r'^mat_chars/$', views.mat_chars, name = 'mat_chars'),
     url(r'^complex_comps/$', views.complex_comps, name = 'complex_comps'),
     # добавление записей
@@ -60,6 +62,7 @@ urlpatterns = [
     url(r'^formulas/(?P<formula_id>[0-9]+)/$', views.formula_detail, name='formula_detail'),
     url(r'^characteristics/(?P<characteristic_id>[0-9]+)/$', views.characteristic_detail, name='characteristic_detail'),
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/$', views.comp_char_detail, name='comp_char_detail'),
+    url(r'^comp_props/(?P<composition_id>[0-9]+)/$', views.comp_prop_detail, name='comp_prop_detail'),
     url(r'^mat_chars/(?P<mat_id>[0-9]+)/$', views.mat_char_detail, name='mat_char_detail'),
     # фильтры
     url(r'^products/get_group/$', views.pr_group, name='pr_group'),
