@@ -1276,6 +1276,8 @@ def get_checked_elems(request, composition_id):
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 
+
+
 def save_kneading_char(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     Kneading_char.objects.filter(kneading = kneading).delete()

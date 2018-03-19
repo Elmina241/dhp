@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Cap_group, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
+from .models import Characteristic_range, Comp_prop, Comp_prop_number, Comp_prop_var, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 from processes.models import Reactor_content, Tank_content
 import json
@@ -209,6 +209,16 @@ def comp_char_detail(request, composition_id):
                 "characteristics": Characteristic.objects.all(),
                 "chars": Composition_char.objects.filter(comp = get_object_or_404(Composition, pk=composition_id)),
                 "location": "/tables/characteristics/"
+                })
+
+def comp_prop_detail(request, composition_id):
+        return render(request, "comp_prop.html",
+                {"chars": Composition_char.objects.filter(characteristic__is_general = True, comp = get_object_or_404(Composition, pk=composition_id)),
+                #"isTested": isTested,
+                #"isValid": kneading.isValid,
+                #"kneading_chars": Kneading_char.objects.filter(kneading = kneading),
+                "location": "/tables/comp_props/",
+                "comp": get_object_or_404(Composition, pk=composition_id)
                 })
 
 def mat_char_detail(request, mat_id):
@@ -1057,6 +1067,26 @@ def save_comp_char(request, composition_id):
                         сomp_char_var = Comp_char_var(comp_char = char, char_var = set_var)
                         сomp_char_var.save()
         return redirect('characteristics')
+
+def get_checked_elems(request, composition_id):
+    if request.method == 'POST':
+        if 'char_id' in request.POST:
+            char = get_object_or_404(Comp_prop, pk=request.POST['char_id'])
+            data = {}
+            vars = {}
+            checked = {}
+            all_var = Characteristic_set_var.objects.filter(char_set = char.characteristic)
+            length = Characteristic_set_var.objects.filter(char_set = char.characteristic).count()
+            for i in range(0, length):
+                vars[str(all_var[i].char_var.id)] = all_var[i].char_var.name
+            checked_var = Comp_prop_var.objects.filter(characteristic = char)
+            #length = Comp_char_var.objects.filter(comp_char = char).count()
+            #for i in range(0, length):
+            checked[str(checked_var[0].char_var.id)] = checked_var[0].char_var.name
+            data['vars'] =  vars
+            data['checked'] = checked
+            json_data = json.dumps(data)
+            return HttpResponse(json_data)
 
 def add_matAm(request):
     if request.method == 'POST':
