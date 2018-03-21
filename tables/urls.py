@@ -7,7 +7,7 @@ app_name = 'tables'
 urlpatterns = [
     # таблицы
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/save_comp_char/$', views.save_comp_char, name='save_comp_char'),
-    #url(r'^comp_chars/(?P<composition_id>[0-9]+)/save_comp_char/$', views.save_comp_char, name='save_comp_char'),
+    url(r'^comp_props/(?P<composition_id>[0-9]+)/save_comp_prop/$', views.save_comp_prop, name='save_comp_prop'),
     url(r'^mat_chars/(?P<mat_id>[0-9]+)/save_mat_char/$', views.save_mat_char, name='save_mat_char'),
     url(r'^materials/$', views.index, name = 'index'),
     url(r'^products/$', views.products, name = 'products'),
