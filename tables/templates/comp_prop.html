@@ -70,10 +70,10 @@ function getCheckedElems(char_id, li_id){
           elems = ""
           for (id in vars){
             if (arrayObjectIndexOf(checked, vars[id]) == -1){
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'>" + vars[id] + "</label></div>";
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'> " + vars[id] + "</label></div>";
             }
             else {
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " checked" + " name=" + li_id + "'checked'>" + vars[id] + "</label></div>";
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " checked" + " name=" + li_id + "'checked'> " + vars[id] + "</label></div>";
             }
           }
           $("#" + li_id).append(elems);
@@ -117,9 +117,6 @@ function arrayObjectIndexOf(myArray, searchTerm) {
                   <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                     <script>getCheckedElems({{c.id}}, {{c.characteristic.id}})</script>
                 </li>
-
-
-
               {% endif %}
             {% endfor %}
           </ul>

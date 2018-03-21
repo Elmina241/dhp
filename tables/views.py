@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Cap_group, Sticker_part, Formula_component, Formula
-from .models import Characteristic_range, Comp_prop, Comp_prop_number, Comp_prop_var, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
+from .models import Characteristic_range, Comp_prop_number, Comp_prop_var, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
 from .forms import Delete_form
 from processes.models import Reactor_content, Tank_content
 import json
@@ -1071,7 +1071,7 @@ def save_comp_char(request, composition_id):
 def get_checked_elems(request, composition_id):
     if request.method == 'POST':
         if 'char_id' in request.POST:
-            char = get_object_or_404(Comp_prop, pk=request.POST['char_id'])
+            char = get_object_or_404(Composition_char, pk=request.POST['char_id'])
             data = {}
             vars = {}
             checked = {}
@@ -1079,12 +1079,13 @@ def get_checked_elems(request, composition_id):
             length = Characteristic_set_var.objects.filter(char_set = char.characteristic).count()
             for i in range(0, length):
                 vars[str(all_var[i].char_var.id)] = all_var[i].char_var.name
-            checked_var = Comp_prop_var.objects.filter(characteristic = char)
+            checked_var = Comp_prop_var.objects.filter(comp_prop = char)
             #length = Comp_char_var.objects.filter(comp_char = char).count()
             #for i in range(0, length):
-            checked[str(checked_var[0].char_var.id)] = checked_var[0].char_var.name
+            if Comp_prop_var.objects.filter(comp_prop = char).count() != 0:
+                checked[str(checked_var[0].char_var.id)] = checked_var[0].char_var.name
+                data['checked'] = checked
             data['vars'] =  vars
-            data['checked'] = checked
             json_data = json.dumps(data)
             return HttpResponse(json_data)
 

@@ -399,18 +399,13 @@ class Mat_char_var(models.Model):
 
 # Модели для видовых характеристик
 
-class Comp_prop(models.Model):
-    characteristic = models.ForeignKey('tables.Characteristic')
-    def __str__(self):
-        return self.characteristic.name
-
-class Comp_prop_number(Comp_prop):
+class Comp_prop_number(Composition_char):
     number = models.FloatField()
     def __str__(self):
         return self.get_name()
 
 class Comp_prop_var(models.Model):
-    comp_prop = models.ForeignKey('Comp_prop')
+    comp_prop = models.ForeignKey('Composition_char')
     char_var = models.ForeignKey('Set_var')
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
