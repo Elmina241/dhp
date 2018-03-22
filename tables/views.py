@@ -1077,8 +1077,10 @@ def save_comp_prop(request, composition_id):
     for char in chars:
         if (char.characteristic.char_type.id != 3):
             if str(char.characteristic.id) in request.POST:
-                comp_char = Comp_prop_number(comp = comp, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
-                comp_char.save()
+                char.comp_prop_number = Comp_prop_number(comp = char.comp, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
+                char.comp_prop_number.save()
+                #comp_char = Comp_prop_number(char, number = request.POST[str(char.characteristic.id)])
+                #comp_char.save()
                 #Проверка на соответсвие показателям
                 #comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
                 #if (char.characteristic.char_type.id == 1):
@@ -1098,7 +1100,7 @@ def save_comp_prop(request, composition_id):
     #kneading.isTested = True
     #kneading.isValid = isValid
     #kneading.save()
-    return redirect('characteristics')
+    return redirect('comp_props')
 
 def get_checked_elems(request, composition_id):
     if request.method == 'POST':

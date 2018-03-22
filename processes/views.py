@@ -2,7 +2,7 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
+from tables.models import Product, Composition, Comp_prop_var, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 from log.models import Movement_rec, Operation, Packing_divergence
 import json
@@ -1090,6 +1090,17 @@ def print_passport(request, kneading_id):
             val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
             chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
         i = i+1
+    temp_chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = True)
+    for c in temp_chars:
+        if c.characteristic.char_type.id != 3:
+            try:
+                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
+            except Kneading_char_number.DoesNotExist:
+                chars[i] = {}
+        else:
+            val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
+            chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+        i = i+1
     return render(request, 'print.html', {"comps": List_component.objects.filter(list = kneading.list),
                                             "components": comps,
                                             "chars": chars,
@@ -1188,7 +1199,7 @@ def kneading_detail(request, kneading_id):
         if isTested:
             chars = Kneading_char.objects.filter(kneading = kneading)
         else:
-            chars = Composition_char.objects.filter(comp = kneading.list.formula.composition)
+            chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = False)
         return render(request, 'testing.html', {
                                                 "chars": chars,
                                                 "isTested": isTested,
@@ -1215,6 +1226,17 @@ def kneading_detail(request, kneading_id):
                     chars[i] = {}
             else:
                 val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
+                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+            i = i+1
+        temp_chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = True)
+        for c in temp_chars:
+            if c.characteristic.char_type.id != 3:
+                try:
+                    chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
+                except Kneading_char_number.DoesNotExist:
+                    chars[i] = {}
+            else:
+                val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
                 chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
             i = i+1
 
