@@ -17,7 +17,7 @@ def loading_lists(request):
 def storages(request):
     prods = {}
     for p in Product.objects.all():
-        prods[str(p.pk)] = {'name': str(p), 'composition': p.production.composition.id, 'amount': p.production.get_boxing_amm()}
+        prods[str(p.pk)] = {'name': p.code + " " + p.get_name_for_table(), 'composition': p.production.composition.id, 'amount': p.production.get_boxing_amm()}
     return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all, "products": json.dumps(prods)})
 
 def mixing(request, kneading_id = -1):
@@ -1081,25 +1081,37 @@ def print_passport(request, kneading_id):
     temp_chars = Kneading_char.objects.filter(kneading = kneading)
     i = 0
     for c in temp_chars:
+        comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = c.characteristic)[0]
         if c.characteristic.char_type.id != 3:
             try:
-                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.kneading_char_number.number}
+                chars[i] = {'group' : c.characteristic.group.name, 'norm': str(comp_char.comp_char_range.inf) + "-" + str(comp_char.comp_char_range.sup),'name': c.characteristic.name, 'value': c.kneading_char_number.number}
             except Kneading_char_number.DoesNotExist:
                 chars[i] = {}
         else:
+            vars = Comp_char_var.objects.filter(comp_char = comp_char)
+            vars_str = ""
+            for v in vars:
+                vars_str = vars_str + str(v.char_var) + ", "
+            vars_str = vars_str[:(len(vars_str) -2)]
             val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
-            chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+            chars[i] = {'group' : c.characteristic.group.name, 'norm': vars_str,'name': c.characteristic.name, 'value': val}
         i = i+1
     temp_chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = True)
     for c in temp_chars:
+        comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = c.characteristic)[0]
         if c.characteristic.char_type.id != 3:
             try:
-                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
+                chars[i] = {'group' : c.characteristic.group.name, 'norm': str(c.comp_char_range.inf) + "-" + str(c.comp_char_range.sup), 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
             except Kneading_char_number.DoesNotExist:
                 chars[i] = {}
         else:
+            vars = Comp_char_var.objects.filter(comp_char = c)
+            vars_str = ""
+            for v in vars:
+                vars_str = vars_str + str(v.char_var) + ", "
+            vars_str = vars_str[:(len(vars_str) -2)]
             val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
-            chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+            chars[i] = {'group' : c.characteristic.group.name, 'norm': vars_str, 'name': c.characteristic.name, 'value': val}
         i = i+1
     return render(request, 'print.html', {"comps": List_component.objects.filter(list = kneading.list),
                                             "components": comps,
