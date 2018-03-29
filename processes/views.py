@@ -1245,11 +1245,12 @@ def kneading_detail(request, kneading_id):
             if c.characteristic.char_type.id != 3:
                 try:
                     chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
-                except Kneading_char_number.DoesNotExist:
+                except:
                     chars[i] = {}
             else:
-                val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
-                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+                if  Comp_prop_var.objects.filter(comp_prop = c).count() != 0:
+                    val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
+                    chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
             i = i+1
 
         return render(request, 'finished.html', {"comps": List_component.objects.filter(list = kneading.list),

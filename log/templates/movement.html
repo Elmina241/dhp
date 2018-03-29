@@ -101,7 +101,7 @@
           });
     }
     $(document).ready(function(){
-      $("#materials").tablesorter({sortList: [[0,1]]});
+      $("#materials").tablesorter();
     });
 </script>
 <style type="text/css">
@@ -145,7 +145,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for m in movements %}
+              {% for m in movements|dictsortreversed:"date" %}
               <tr>
                 <td>{{ m.date|date:"d.m.Y" }}</td>
                 <td>{{ m.product.code }}</td>
