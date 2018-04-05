@@ -97,6 +97,8 @@ class Composition(models.Model):
     date = models.DateField(null = True)
     package = models.CharField(max_length=80, null = True)
     standard = models.CharField(max_length=80, null = True)
+    certificate = models.CharField(max_length=80, null = True)
+    declaration = models.CharField(max_length=80, null = True)
     cur_batch = models.FloatField(default = 1)
     group = models.ForeignKey('Composition_group')
     form = models.ForeignKey('Product_form', null=True)

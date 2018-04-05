@@ -101,6 +101,10 @@
     </div>
     <div class ="text12">
       <p>Свидетельство о государственной регистрации {{p.kneading.list.formula.composition.sgr}} от {{p.kneading.list.formula.composition.date|date:"d.m.Y"}} г.</p>
+      {% if p.kneading.list.formula.composition.certificate != None %}
+      <p>Сертификат соответствия {{p.kneading.list.formula.composition.certificate}}</p>
+      <p>Декларация о соответствии {{p.kneading.list.formula.composition.declaration}}</p>
+      {% endif %}
       <br>
       <p>Заключение: качество продукции соответствует требованиям {{p.kneading.list.formula.composition.standard}}</p>
       <br>

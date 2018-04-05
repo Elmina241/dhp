@@ -90,6 +90,7 @@ function checkMove(){
 
 $(document).ready(function(){
   if ("{{reactor_content.to_str}}" == "") $("#moveComp").prop('disabled', true);
+  if ("{{p.kneading.list.formula.composition.isFinal}}" == "False") $("#print").prop('disabled', true);
 });
 </script>
 
@@ -101,7 +102,7 @@ $(document).ready(function(){
   <li  class="current"><a href="#" title=""><em>Перемещение</em></a></li>
 </ul>
 
-<a href="print_passport/" target="_blank"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button></a>
+<a href="print_passport/" target="_blank"><button type="button" id = "print" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button></a>
 <button type="button" class="btn btn-primary" id="moveComp" data-toggle="modal" data-target="#move"  style="margin-bottom: 5pt"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>  Переместить партию</button>
 <a href="finish_process/"><button type="button" class="btn btn-danger" id="closeProcess"  style="margin-bottom: 5pt"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>  Завершить процесс</button></a>
 <div class="panel panel-default" style ="margin: auto">
