@@ -67,16 +67,22 @@ function getCheckedElems(char_id, li_id){
           var d = JSON.parse(data)
           var vars = d.vars;
           var checked = d.checked;
-          elems = ""
+          elems = "";
           for (id in vars){
             if (arrayObjectIndexOf(checked, vars[id]) == -1){
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'> " + vars[id] + "</label></div>";
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "> " + vars[id] + "</label></div>";
             }
             else {
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " checked" + " name=" + li_id + "'checked'> " + vars[id] + "</label></div>";
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + " checked> " + vars[id] + "</label></div>";
             }
           }
+          var err = true;
           $("#" + li_id).append(elems);
+          var inputs = $("#" + li_id).find('input');
+          for (inp in inputs){
+            if ($(inp).prop("checked") == true) err = false;
+          }
+          if (err) $(inputs[0]).prop("checked", true);
         }
       });
 }
@@ -121,7 +127,7 @@ function arrayObjectIndexOf(myArray, searchTerm) {
             {% endfor %}
           </ul>
           <input type="hidden" id="json" name="json" value="">
-          <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
+          <input type="submit" value="Сохранить" onclick="" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
       </form>
     </div>
   </div>

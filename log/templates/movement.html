@@ -37,6 +37,7 @@
       if (op == 1){
         err = false;
         $("input").each(function() {
+          $(this).blur();
           if ($(this).css("border-color") == "rgb(255, 0, 0)") err = true;
         });
         if (!err){
