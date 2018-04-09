@@ -86,6 +86,7 @@
       </thead>
       <tbody>
         {% for key, values in chars.items %}
+        {% if values.type == 1 %}
         <tr>
           {% if values.group != 'отсутствует' %}
           <td>{{values.group}}: {{values.name}}</td>
@@ -95,6 +96,34 @@
           <td>{{values.norm}}</td>
           <td>{{values.value}}</td>
         </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <div class ="text12">
+      Справочные данные периодических испытаний средства:
+    </div>
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt">
+    <table class="table table-hover table-sm table-bordered table-condensed" style = "margin-left: -45pt">
+      <thead>
+        <tr>
+          <th>Наименование показателей</th><th>Нормы НД на продукцию</th><th>Фактические данные</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, values in chars.items %}
+        {% if values.type == 2 %}
+        <tr>
+          {% if values.group != 'отсутствует' %}
+          <td>{{values.group}}: {{values.name}}</td>
+          {% else %}
+          <td>{{values.name}}</td>
+          {% endif %}
+          <td>{{values.norm}}</td>
+          <td>{{values.value}}</td>
+        </tr>
+        {% endif %}
         {% endfor %}
       </tbody>
     </table>

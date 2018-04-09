@@ -70,10 +70,10 @@ function getCheckedElems(char_id, li_id){
           elems = "";
           for (id in vars){
             if (arrayObjectIndexOf(checked, vars[id]) == -1){
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "> " + vars[id] + "</label></div>";
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'> " + vars[id] + "</label></div>";
             }
             else {
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + " checked> " + vars[id] + "</label></div>";
+              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'" + " checked> " + vars[id] + "</label></div>";
             }
           }
           var err = true;

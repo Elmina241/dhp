@@ -1084,7 +1084,7 @@ def print_passport(request, kneading_id):
         comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = c.characteristic)[0]
         if c.characteristic.char_type.id != 3:
             try:
-                chars[i] = {'group' : c.characteristic.group.name, 'norm': str(comp_char.comp_char_range.inf) + "-" + str(comp_char.comp_char_range.sup),'name': c.characteristic.name, 'value': c.kneading_char_number.number}
+                chars[i] = {'group' : c.characteristic.group.name, 'type': 1, 'norm': str(comp_char.comp_char_range.inf) + "-" + str(comp_char.comp_char_range.sup),'name': c.characteristic.name, 'value': c.kneading_char_number.number}
             except Kneading_char_number.DoesNotExist:
                 chars[i] = {}
         else:
@@ -1094,14 +1094,14 @@ def print_passport(request, kneading_id):
                 vars_str = vars_str + str(v.char_var) + ", "
             vars_str = vars_str[:(len(vars_str) -2)]
             val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
-            chars[i] = {'group' : c.characteristic.group.name, 'norm': vars_str,'name': c.characteristic.name, 'value': val}
+            chars[i] = {'group' : c.characteristic.group.name, 'type': 1, 'norm': vars_str,'name': c.characteristic.name, 'value': val}
         i = i+1
     temp_chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = True)
     for c in temp_chars:
         comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = c.characteristic)[0]
         if c.characteristic.char_type.id != 3:
             try:
-                chars[i] = {'group' : c.characteristic.group.name, 'norm': str(c.comp_char_range.inf) + "-" + str(c.comp_char_range.sup), 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
+                chars[i] = {'group' : c.characteristic.group.name, 'type': 2, 'norm': str(c.comp_char_range.inf) + "-" + str(c.comp_char_range.sup), 'name': c.characteristic.name, 'value': c.comp_prop_number.number}
             except Kneading_char_number.DoesNotExist:
                 chars[i] = {}
         else:
@@ -1111,7 +1111,7 @@ def print_passport(request, kneading_id):
                 vars_str = vars_str + str(v.char_var) + ", "
             vars_str = vars_str[:(len(vars_str) -2)]
             val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
-            chars[i] = {'group' : c.characteristic.group.name, 'norm': vars_str, 'name': c.characteristic.name, 'value': val}
+            chars[i] = {'group' : c.characteristic.group.name, 'type': 2, 'norm': vars_str, 'name': c.characteristic.name, 'value': val}
         i = i+1
     return render(request, 'print.html', {"comps": List_component.objects.filter(list = kneading.list),
                                             "components": comps,
