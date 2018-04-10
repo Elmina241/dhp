@@ -114,7 +114,7 @@ function arrayObjectIndexOf(myArray, searchTerm) {
                 <li class="list-group-item list-group-item active">{{c.characteristic.get_group }}</li>
                 <li class='list-group-item' id="{{c.characteristic.id}}">
                   <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                  <div class='form-group' style='margin-bottom: 50pt'><input id='number' type='number' value="{{c.comp_prop_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
+                  <div class='form-group' style='margin-bottom: 50pt'><input id='number' type='number' value="{{c.comp_prop_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' step = '0.0001' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                 </li>
               {% else %}
 
