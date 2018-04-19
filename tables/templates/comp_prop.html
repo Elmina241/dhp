@@ -70,18 +70,21 @@ function getCheckedElems(char_id, li_id){
           elems = "";
           for (id in vars){
             if (arrayObjectIndexOf(checked, vars[id]) == -1){
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'> " + vars[id] + "</label></div>";
+              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='" + li_id + "checked'> " + vars[id] + "</label></div>";
             }
             else {
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'" + " checked> " + vars[id] + "</label></div>";
+              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='" + li_id + "checked'" + " checked> " + vars[id] + "</label></div>";
             }
           }
           var err = true;
           $("#" + li_id).append(elems);
-          var inputs = $("#" + li_id).find('input');
-          for (inp in inputs){
-            if ($(inp).prop("checked") == true) err = false;
-          }
+          var inputs = $("#" + li_id).find('input').each(function(){
+            if ($(this).prop("checked") == true) err = false;
+          });
+          /*for (inp in inputs){
+            temp = $(inputs[inp]).prop("checked");
+            if ($(inputs[inp]).prop("checked") == true) err = false;
+          }*/
           if (err) $(inputs[0]).prop("checked", true);
         }
       });

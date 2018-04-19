@@ -41,6 +41,7 @@
           if ($(this).css("border-color") == "rgb(255, 0, 0)") err = true;
         });
         if (!err){
+          $("#confirmButton").prop('disabled', true);
           var size = $("#release_prod tr").size();
           for (var i = 1; i < size; i++){
             var row = $("#release_prod tr").eq(i);
@@ -49,6 +50,9 @@
               release(id, $(row).find(".relAmm").prop("value"), op);
             }
           }
+        }
+        else {
+          $("#confirmButton").prop('disabled', false);
         }
       }
       else{
@@ -103,6 +107,7 @@
     }
     $(document).ready(function(){
       $("#materials").tablesorter();
+      $("#confirmButton").prop('disabled', false);
     });
 </script>
 <style type="text/css">
@@ -209,7 +214,7 @@
               <div id="error" class="alert alert-danger" role="alert" style="display:none;margin-top:10pt">
               </div>-->
             <div class="modal-footer" style="margin-top:5pt">
-              <input value="Выпуск" id = "confirmButton" onclick="check(1)" class="btn btn-primary" style="float: right"/> </div>
+              <input value="Выпуск" id = "confirmButton" onclick="check(1);" class="btn btn-primary" style="float: right"/> </div>
             </div>
           </div>
         </div>

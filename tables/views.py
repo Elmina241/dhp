@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import deletion
 
 from .models import Set_var, Characteristic_set_var, Characteristic, Char_group, Characteristic_type, Material_group, Prefix, Unit, Material, Product_group, Product_form, Product_use, Product_mark, Product, Composition, Composition_group, Components, Container, Cap, Boxing, Sticker, Production, Reactor, Tank, Container_group, Container_mat, Colour, Cap_group, Sticker_part, Formula_component, Formula
 from .models import Characteristic_range, Comp_prop_number, Comp_prop_var, Box_group, Boxing_mat, Material_char, Compl_comp, Compl_comp_comp, Characteristic_number, Composition_char, Comp_char_var, Comp_char_range, Comp_char_number
@@ -1071,7 +1072,13 @@ def save_comp_char(request, composition_id):
 def save_comp_prop(request, composition_id):
     comp = get_object_or_404(Composition, pk=composition_id)
     Comp_prop_var.objects.filter(comp_prop__comp = comp).delete()
-    Comp_prop_number.objects.filter(comp = comp).delete()
+    numbers = Comp_prop_number.objects.filter(comp = comp)
+    temp = Composition_char(comp = comp, characteristic = Characteristic.objects.all()[0])
+    temp.save()
+    for n in numbers:
+        n.composition_char = temp
+        n.save()
+    temp.delete()
     chars = Composition_char.objects.filter(comp = comp)
     isValid = True
     for char in chars:
@@ -1089,11 +1096,12 @@ def save_comp_prop(request, composition_id):
                 #if (char.characteristic.char_type.id == 2):
                     #isValid = isValid & (kneading_char.number == comp_char.сomp_char_number.number)
         else:
-            if (str(char.characteristic.id) + "'checked'") in request.POST:
-                char_var = request.POST[str(char.characteristic.id) + "'checked'"]
-                set_var = get_object_or_404(Set_var, pk=char_var)
-                prop_var = Comp_prop_var(comp_prop = char, char_var = set_var)
-                prop_var.save()
+            if (str(char.characteristic.id) + "checked") in request.POST:
+                char_var = request.POST.getlist(str(char.characteristic.id) + "checked")
+                for v in char_var:
+                    set_var = get_object_or_404(Set_var, pk=v)
+                    prop_var = Comp_prop_var(comp_prop = char, char_var = set_var)
+                    prop_var.save()
                 #Проверка на соответсвие показателям
                 #comp_char = Composition_char.objects.filter(comp_prop = char, char_var = char)[0]
                 #isValid = isValid & (Comp_char_var.objects.filter(comp_char = comp_char, char_var = set_var).count() != 0)
