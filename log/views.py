@@ -49,9 +49,9 @@ def release(request):
         batch = Batch.objects.filter(id = b_id)[0]
         if request.POST['op']=='1':
             rec = Movement_rec(product = product, batch = batch, amount = request.POST['amm'], operation = Operation.objects.filter(id = 3)[0])
-            code = request.POST['code']
+            #code = request.POST['code']
             try:
-                code = Acceptance.objects.latest('date').code + 1
+                code = Acceptance.objects.latest('code').code + 1
             except:
                 code = 1
             rec.save()

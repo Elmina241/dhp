@@ -479,7 +479,7 @@ def save_process(request):
             else:
                 kneading.batch_num = formula.composition.cur_batch
                 formula.composition.cur_batch = formula.composition.cur_batch + 1
-                formula.save()
+                formula.composition.save()
             kneading.reactor = reactor
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))
@@ -528,7 +528,7 @@ def save_tech_comp(request):
             kneading.reactor = reactor
             kneading.batch_num = formula.composition.cur_batch
             formula.composition.cur_batch = formula.composition.cur_batch + 1
-            formula.save()
+            formula.composition.save()
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
             st.save()
