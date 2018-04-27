@@ -998,9 +998,15 @@ def start_testing(request, kneading_id):
     for c in List_component.objects.filter(list = kneading.list):
         if c.compl is None:
             if c.r_cont is None and c.t_cont is None:
-                if c.mat.id in components:
-                    components[c.mat.id]['amount'] = round(float(components[c.mat.id]['amount']) + c.ammount, 2)
-                    comp_amm = comp_amm + c.ammount
+                if c.mat is None:
+                    for c2 in Formula_component.objects.filter(formula = c.formula):
+                        if c2.mat.id in components:
+                            components[c2.mat.id]['amount'] = round(float(components[c2.mat.id]['amount']) + (c2.ammount / 1020) * c.ammount, 2)
+                            comp_amm = comp_amm + round((c2.ammount / 1020) * c.ammount, 2)
+                else:
+                    if c.mat.id in components:
+                        components[c.mat.id]['amount'] = round(float(components[c.mat.id]['amount']) + c.ammount, 2)
+                        comp_amm = comp_amm + c.ammount
             else:
                 if c.r_cont is None:
                     for c2 in Batch_comp.objects.filter(batch = c.t_cont.batch):
