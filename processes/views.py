@@ -1078,11 +1078,22 @@ def finish_testing(request, kneading_id):
 def print_passport(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     batch = Batch.objects.filter(kneading = kneading)[0]
-    #Получение состава
-    components = Batch_comp.objects.filter(batch = batch)
+    amount = 0
     comps = {}
-    for c in components:
-        comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
+    processes = Kneading.objects.filter(list__formula = kneading.list.formula, batch_num = kneading.batch_num, start_date__year = kneading.start_date.year)
+    for p in processes:
+        amount = amount + p.list.ammount
+        batch_t = Batch.objects.filter(kneading = p)[0]
+        components = Batch_comp.objects.filter(batch = batch_t)
+        for c in components:
+            if c.mat.id in comps:
+                comps[c.mat.id]["ammount"] = comps[c.mat.id]["ammount"] + (c.ammount / 100 * kneading.list.ammount)
+            else:
+                comps[c.mat.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
+    #Получение состава
+    #components = Batch_comp.objects.filter(batch = batch)
+    #for c in components:
+        #comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
     chars = {}
     temp_chars = Kneading_char.objects.filter(kneading = kneading)
     i = 0
@@ -1099,8 +1110,9 @@ def print_passport(request, kneading_id):
             for v in vars:
                 vars_str = vars_str + str(v.char_var) + ", "
             vars_str = vars_str[:(len(vars_str) -2)]
-            val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
-            chars[i] = {'group' : c.characteristic.group.name, 'type': 1, 'norm': vars_str,'name': c.characteristic.name, 'value': val}
+            if Kneading_char_var.objects.filter(kneading_char = c).count() > 0:
+                val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
+                chars[i] = {'group' : c.characteristic.group.name, 'type': 1, 'norm': vars_str,'name': c.characteristic.name, 'value': val}
         i = i+1
     temp_chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = True)
     for c in temp_chars:
@@ -1116,12 +1128,14 @@ def print_passport(request, kneading_id):
             for v in vars:
                 vars_str = vars_str + str(v.char_var) + ", "
             vars_str = vars_str[:(len(vars_str) -2)]
-            val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
-            chars[i] = {'group' : c.characteristic.group.name, 'type': 2, 'norm': vars_str, 'name': c.characteristic.name, 'value': val}
+            if Comp_prop_var.objects.filter(comp_prop = c).count() > 0:
+                val = Comp_prop_var.objects.filter(comp_prop = c)[0].char_var.name
+                chars[i] = {'group' : c.characteristic.group.name, 'type': 2, 'norm': vars_str, 'name': c.characteristic.name, 'value': val}
         i = i+1
     return render(request, 'print.html', {"comps": List_component.objects.filter(list = kneading.list),
                                             "components": comps,
                                             "chars": chars,
+                                            "amount": amount,
                                             "reactor": Reactor_content.objects.all(),
                                             "tank": Tank_content.objects.all(),
                                             "location": "/processes/process/",
