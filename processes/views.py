@@ -1087,9 +1087,9 @@ def print_passport(request, kneading_id):
         components = Batch_comp.objects.filter(batch = batch_t)
         for c in components:
             if c.mat.id in comps:
-                comps[c.mat.id]["ammount"] = comps[c.mat.id]["ammount"] + (c.ammount / 100 * kneading.list.ammount)
+                comps[c.mat.id]["ammount"] = comps[c.mat.id]["ammount"] + (c.ammount / 100 * batch_t.kneading.list.ammount)
             else:
-                comps[c.mat.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
+                comps[c.mat.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * batch_t.kneading.list.ammount}
     #Получение состава
     #components = Batch_comp.objects.filter(batch = batch)
     #for c in components:
@@ -1335,14 +1335,18 @@ def get_checked_elems(request, composition_id):
 
 def save_kneading_char(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
+    processes = Kneading.objects.filter(list__formula = kneading.list.formula, batch_num = kneading.batch_num, start_date__year = kneading.start_date.year)
     Kneading_char.objects.filter(kneading = kneading).delete()
+    for p in processes:
+        Kneading_char.objects.filter(kneading = p).delete()
     chars = Composition_char.objects.filter(comp = kneading.list.formula.composition)
     isValid = True
     for char in chars:
         if (char.characteristic.char_type.id != 3):
             if str(char.characteristic.id) in request.POST:
-                kneading_char = Kneading_char_number(kneading = kneading, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
-                kneading_char.save()
+                for p in processes:
+                    kneading_char = Kneading_char_number(kneading = p, characteristic = char.characteristic, number = request.POST[str(char.characteristic.id)])
+                    kneading_char.save()
                 #Проверка на соответсвие показателям
                 comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
                 if (char.characteristic.char_type.id == 1):
@@ -1353,15 +1357,17 @@ def save_kneading_char(request, kneading_id):
         else:
             if (str(char.characteristic.id) + "'checked'") in request.POST:
                 char_var = request.POST[str(char.characteristic.id) + "'checked'"]
-                kneading_char = Kneading_char(kneading = kneading, characteristic = char.characteristic)
-                kneading_char.save()
-                set_var = get_object_or_404(Set_var, pk=char_var)
-                kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
-                kneading_char_var.save()
+                for p in processes:
+                    kneading_char = kneading_char = Kneading_char(kneading = p, characteristic = char.characteristic)
+                    kneading_char.save()
+                    set_var = get_object_or_404(Set_var, pk=char_var)
+                    kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
+                    kneading_char_var.save()
                 #Проверка на соответсвие показателям
                 comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
                 isValid = isValid & (Comp_char_var.objects.filter(comp_char = comp_char, char_var = set_var).count() != 0)
-    kneading.isTested = True
-    kneading.isValid = isValid
-    kneading.save()
+    for p in processes:
+        p.isTested = True
+        p.isValid = isValid
+        p.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
