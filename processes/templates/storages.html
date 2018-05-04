@@ -29,6 +29,7 @@ $.ajaxSetup({
 });
 function pack(id, amm, newAm, t, pr_id){
   var csrftoken = getCookie('csrftoken');
+  $("#packBtn").prop('disabled', true);
   $.ajax({
         type: "POST",
         url: 'pack/',
@@ -56,12 +57,15 @@ function pack(id, amm, newAm, t, pr_id){
             obj.parent().find('td').eq(4).html("");
             obj.parent().find('td').eq(5).html("");
           }
+          $("#packBtn").prop('disabled', false);
+          $("#pack").modal('hide');
         }
       });
 }
 
 function drop(id, t){
   var csrftoken = getCookie('csrftoken');
+  $("#dropBtn").prop('disabled', true);
   $.ajax({
         type: "POST",
         url: 'drop/',
@@ -81,12 +85,15 @@ function drop(id, t){
           obj.parent().find('td').eq(3).text("Пусто");
           obj.parent().find('td').eq(4).html("");
           obj.parent().find('td').eq(5).html("");
+          $("#dropBtn").prop('disabled', false);
+          $("#confirm").modal('hide');
         }
       });
 }
 
 function move(acc, donor, amm){
   var csrftoken = getCookie('csrftoken');
+  $("#moveBtn").prop('disabled', true);
   $.ajax({
         type: "POST",
         url: 'move/',
@@ -156,7 +163,7 @@ function getInf(id){
 }
 
 function checkDrop(reserved, id, t){
-    $("#confirmButton").click(function() {
+    $("#dropBtn").click(function() {
       drop(id, t);
     });
     $("#confirm").modal('show');
@@ -239,6 +246,9 @@ function getSelOfProd(composition){
 }
 
 $(document).ready(function(){
+  $("#moveBtn").prop('disabled', false);
+  $("#packBtn").prop('disabled', false);
+  $("#dropBtn").prop('disabled', false);
   $("#prTable").tablesorter({sortList: [[3,0]]});
   $('#pack').on('show.bs.modal', function (event) {
     // получить кнопку, которая его открыло
@@ -369,7 +379,7 @@ $(document).ready(function(){
                   <input type="hidden" id="amm" value="">
                   <input type="hidden" id="storType" value="">
                   <div class="modal-footer">
-                    <input value="Фасовать" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#ammTypeNum').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                    <input value="Фасовать" id = "packBtn" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#ammTypeNum').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
                   </div>
                 </div>
               </div>
@@ -418,7 +428,7 @@ $(document).ready(function(){
                   <div class="modal-body">
                     <p>Сбросить композицию?</p>
                     <div class="modal-footer">
-                      <input value="Сброс" id = "confirmButton" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                      <input value="Сброс" id = "dropBtn" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
                     </div>
                   </div>
                 </div>
@@ -472,7 +482,7 @@ $(document).ready(function(){
                     </div>
                     </div>
                     <div class="modal-footer" style="margin-top:100pt">
-                      <input value="Применить" onclick="checkMove();return false;" class="btn btn-primary" style="float: right"/>
+                      <input value="Применить" id = "moveBtn" onclick="checkMove();return false;" class="btn btn-primary" style="float: right"/>
                     </div>
                   </div>
                 </div>
