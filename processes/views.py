@@ -1095,7 +1095,7 @@ def print_passport(request, kneading_id):
     #for c in components:
         #comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
     chars = {}
-    temp_chars = Kneading_char.objects.filter(kneading = kneading)
+    temp_chars = Kneading_char.objects.filter(kneading = kneading).order_by('-characteristic__group')
     i = 0
     for c in temp_chars:
         comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = c.characteristic)[0]
