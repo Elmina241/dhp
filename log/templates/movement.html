@@ -107,6 +107,7 @@
     }
     $(document).ready(function(){
       //$("#materials").tablesorter();
+      var num = 20;
       $("#confirmButton").prop('disabled', false);
     });
 </script>
@@ -151,16 +152,16 @@
               </tr>
             </thead>
             <tbody>
-              {% for m in movements|dictsortreversed:"date" %}
+              {% for key, values in movements.items %}
               <tr>
-                <td>{{ m.date|date:"d.m.Y" }}</td>
-                <td>{{ m.product.code }}</td>
-                <td>{{ m.product.get_name_for_table }}</td>
-                <td>{{ m.get_batch }}</td>
-                <td>{{ m.operation }}</td>
-                <td>{{ m.amount|floatformat:"0" }}</td>
-                {% if m.operation.name == 'Выпуск товара' %}
-                  <td><button class="btn btn-default btn-sm" type="button" onclick="getInf({{m.pk}})">Акт</button></td>
+                <td>{{ values.date}}</td>
+                <td>{{ values.code }}</td>
+                <td>{{ values.name }}</td>
+                <td>{{ values.batch }}</td>
+                <td>{{ values.operation }}</td>
+                <td>{{ values.amount|floatformat:"0" }}</td>
+                {% if values.operation == 'Выпуск товара' %}
+                  <td><button class="btn btn-default btn-sm" type="button" onclick="getInf({{key}})">Акт</button></td>
                 {% else %}
                   <td></td>
                 {% endif %}

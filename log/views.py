@@ -17,6 +17,9 @@ def movement(request):
         last_acc = Acceptance.objects.latest('date').code + 1
     except:
         last_acc = 1
+    records = {}
+    for r in Movement_rec.objects.order_by("-id")[:20]:
+        records[str(r.id)] = {"date": r.date.strftime('%d.%m.%Y'), "code": r.product.code, "name": r.product.get_name_for_table, "batch": r.get_batch, "operation": r.operation.name, "amount": r.amount}
     batches = {}
     for r in Movement_rec.objects.all():
         if r.operation.id == 1 or r.operation.id == 2 or r.operation.id == 3:
@@ -31,7 +34,7 @@ def movement(request):
                             amm = amm - m.amount
                 if amm > 0:
                     batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
-    return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": Movement_rec.objects.all, "batches": batches, "last_acc": last_acc, "batches2": json.dumps(batches)})
+    return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": records, "batches": batches, "last_acc": last_acc, "batches2": json.dumps(batches)})
 
 def accepting(request):
     acts = {}
