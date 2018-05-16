@@ -609,18 +609,24 @@ def pack(request):
 
 def drop(request):
     if request.method == 'POST':
+        err = False
         if request.POST['type'] == 'r':
             storage = get_object_or_404(Reactor_content, pk=request.POST['id'])
+            err = List_component.objects.filter(r_cont = storage).count() != 0
         else:
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
-        check_dependencies(storage, request.POST['type'])
-        storage.amount = 0
-        storage.reserved = 0
-        storage.content_type = 3
-        storage.batch = None
-        storage.kneading = None
-        storage.save()
-        return HttpResponse('ok')
+            err = List_component.objects.filter(t_cont = storage).count() != 0
+        if err:
+            return HttpResponse('fail')
+        else:
+            check_dependencies(storage, request.POST['type'])
+            storage.amount = 0
+            storage.reserved = 0
+            storage.content_type = 3
+            storage.batch = None
+            storage.kneading = None
+            storage.save()
+            return HttpResponse('ok')
 
 def edit_amm(request):
     if request.method == 'POST':

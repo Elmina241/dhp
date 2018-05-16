@@ -97,7 +97,7 @@ $(document).ready(function(){
     language: "ru",
     todayHighlight: true
   });
-  $("#prTable").tablesorter({sortList: [[2,0]]});
+  $("#prTable").tablesorter({});
   $("[name='groupState']").change(applyFilters);
   $("[name='groupBatch']").change(applyFilters);
   $("[name='start']").change(applyFilters);
@@ -204,7 +204,7 @@ function filterBatch(){
                   </tr>
                 </thead>
                 <tbody>
-                  {% for k in kneading %}
+                  {% for k in kneading|dictsortreversed:"id" %}
                   <tr>
                     <td><input type="checkbox" value="{{ k.id }}" name="del_list"></td>
                     <td>{{ k.id }}</td>

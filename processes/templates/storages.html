@@ -78,15 +78,17 @@ function drop(id, t){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
-        success: function onAjaxSuccess()
+        success: function onAjaxSuccess(data)
         {
-          var obj = $("#"+t+"-"+id);
-          obj.text(0);
-          obj.parent().find('td').eq(3).text("Пусто");
-          obj.parent().find('td').eq(4).html("");
-          obj.parent().find('td').eq(5).html("");
-          $("#dropBtn").prop('disabled', false);
-          $("#confirm").modal('hide');
+          if (data == "ok"){
+            var obj = $("#"+t+"-"+id);
+            obj.text(0);
+            obj.parent().find('td').eq(3).text("Пусто");
+            obj.parent().find('td').eq(4).html("");
+            obj.parent().find('td').eq(5).html("");
+            $("#dropBtn").prop('disabled', false);
+            $("#confirm").modal('hide');
+          }
         }
       });
 }
