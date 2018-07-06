@@ -71,9 +71,9 @@ $(document).ready(function(){
           </div>
           <div class="input-daterange input-group" id="datepicker">
             <div class="form-group"><label for="start" class="col-sm-2 control-label" style="font-size: medium">Дата начала: </label>
-              <div class="col-sm-10"><input type="text" required data-provide="datepicker" class="input-sm form-control" name="start" /></div></div>
+              <div class="col-sm-10"><input type="text" required data-provide="datepicker" class="input-sm form-control" name="start" autocomplete="off" /></div></div>
               <div class="form-group"><label for="end" class="col-sm-2 control-label" style="font-size: medium">Дата конца: </label>
-                <div class="col-sm-10"><input type="text" required data-provide="datepicker" class="input-sm form-control" name="end" /></div>
+                <div class="col-sm-10"><input type="text" required data-provide="datepicker" class="input-sm form-control" name="end" autocomplete="off"  /></div>
               </div>
             </div>
             <div class="form-group"><label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="0" min="0" class="form-control" onchange="getCompositionT({{components}}, {{materials}}, {{f_c}}, {{f}});getListOfModels({{model_lists}});changeWaterL();changeWaterT();return false;" value="{{list.ammount}}"><span class="input-group-addon">кг</span></div></div>

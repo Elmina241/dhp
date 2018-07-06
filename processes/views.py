@@ -42,6 +42,14 @@ def archive(request):
             kneadings.append(k)
     return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings})
 
+def stoped(request):
+    kneadings = []
+    for k in Kneading.objects.filter(isFinished = True):
+        log = State_log.objects.filter(kneading = k).last().state.pk
+        if  log == 6:
+            kneadings.append(k)
+    return render(request, "stoped_list.html", {"header": "Прерванные процессы", "states": State.objects.all(), "location": "/processes/stoped/", "kneading": kneadings})
+
 def plan(request):
     return render(request, "plan.html", {"header": "План на месяц", "location": "/processes/plan/", "products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all()))})
 
@@ -612,10 +620,10 @@ def drop(request):
         err = False
         if request.POST['type'] == 'r':
             storage = get_object_or_404(Reactor_content, pk=request.POST['id'])
-            err = List_component.objects.filter(r_cont = storage).count() != 0
+            err = List_component.objects.filter(r_cont = storage, loaded=False).count() != 0
         else:
             storage = get_object_or_404(Tank_content, pk=request.POST['id'])
-            err = List_component.objects.filter(t_cont = storage).count() != 0
+            err = List_component.objects.filter(t_cont = storage, loaded=False).count() != 0
         if err:
             return HttpResponse('fail')
         else:
@@ -666,10 +674,15 @@ def check_dependencies(storage, t):
 def move(request):
     loses = 1
     if request.method == 'POST':
+        err = False
         if request.POST['donor'][0] == 'r':
             donor = get_object_or_404(Reactor_content, reactor=request.POST['donor'][2:])
+            err = List_component.objects.filter(r_cont = donor, loaded=False).count() != 0
         else:
             donor = get_object_or_404(Tank_content, tank=request.POST['donor'][2:])
+            err = List_component.objects.filter(t_cont = donor, loaded=False).count() != 0
+        if err:
+            return HttpResponse('fail')
         if request.POST['acc'][0] == 'r':
             accepting = get_object_or_404(Reactor_content, reactor=request.POST['acc'][2:])
         else:
@@ -813,6 +826,7 @@ def save_date(request, kneading_id):
 
 def add_comp(request, kneading_id):
     res = "ok"
+    f_id = ""
     loses = 1
     op = request.POST['op']
     if request.method == 'POST':
@@ -845,20 +859,36 @@ def add_comp(request, kneading_id):
                             else:
                                 content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
                                 content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                comp.formula = content.batch.kneading.list.formula
+                                if int(content.amount) == 0:
+                                    content.content_type = 3
+                                    check_dependencies(content, 't')
+                                    content.save()
+                                comp.t_cont = None
                                 if content.reserved > content.amount:
                                     content.reserved = 0
                                     check_dependencies(content, 't')
                                 content.save()
+                                f_id = str(comp.formula.id)
                         else:
+                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
                             if content.amount+1 < float(request.POST['amm']):
                                 res = str(content.amount)
                             else:
                                 content.amount = content.amount - float(request.POST['amm'])/loses
                                 content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                comp.formula = content.batch.kneading.list.formula
+                                if int(content.amount) == 0:
+                                    content.content_type = 3
+                                    check_dependencies(content, 't')
+                                    content.save()
+                                comp.t_cont = None
+                                comp.save()
+                                f_id = str(comp.formula.id)
                                 if content.reserved > content.amount:
                                     content.reserved = 0
                                     check_dependencies(content, 't')
-                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
+                                #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
                                 content.save()
                 else:
                     if request.POST['type'] == 'reactor':
@@ -870,40 +900,60 @@ def add_comp(request, kneading_id):
                             else:
                                 content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
                                 content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                comp.formula = content.batch.kneading.list.formula
+                                comp.r_cont = None
+                                if int(content.amount) == 0:
+                                    content.content_type = 3
+                                    check_dependencies(content, 'r')
+                                    content.save()
+                                f_id = str(content.batch.kneading.list.formula.id)
                                 if content.reserved > content.amount:
                                     content.reserved = 0
                                     check_dependencies(content, 'r')
                                 content.save()
                         else:
+                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
                             if content.amount+1 < float(request.POST['amm']):
                                 res = str(content.amount)
                             else:
                                 content.amount = content.amount - float(request.POST['amm'])/loses
                                 content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                comp.formula = content.batch.kneading.list.formula
+                                comp.r_cont = None
+                                comp.save()
+                                if int(content.amount) == 0:
+                                    content.content_type = 3
+                                    check_dependencies(content, 'r')
+                                    content.save()
+                                f_id = str(comp.formula.id)
                                 if content.reserved > content.amount:
                                     content.reserved = 0
                                     check_dependencies(content, 'r')
-                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
+                                #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
                                 content.save()
                     else:
-                        mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
-                        if op == "edit" or op == "add":
-                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                            if mat.ammount + comp.ammount < float(request.POST['amm']):
-                                res = str(mat.ammount + comp.ammount)
-                            else:
-                                mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
-                                mat.reserved = mat.reserved - float(request.POST['amm'])
-                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                mat.save()
+                        if request.POST['type'] == 'formula':
+                            formula = Formula.objects.filter(pk=request.POST['mat_id'])[0]
+                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, formula=formula)[0]
                         else:
-                            if mat.ammount < float(request.POST['amm']):
-                                res = str(mat.ammount)
-                            else:
-                                mat.ammount = mat.ammount - float(request.POST['amm'])
-                                mat.reserved = mat.reserved - float(request.POST['amm'])
+                            mat = Material.objects.filter(pk=request.POST['mat_id'])[0]
+                            if op == "edit" or op == "add":
                                 comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                mat.save()
+                                if mat.ammount + comp.ammount < float(request.POST['amm']):
+                                    res = str(mat.ammount + comp.ammount)
+                                else:
+                                    mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
+                                    mat.reserved = mat.reserved - float(request.POST['amm'])
+                                    comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+                                    mat.save()
+                            else:
+                                if mat.ammount < float(request.POST['amm']):
+                                    res = str(mat.ammount)
+                                else:
+                                    mat.ammount = mat.ammount - float(request.POST['amm'])
+                                    mat.reserved = mat.reserved - float(request.POST['amm'])
+                                    comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
+                                    mat.save()
                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             if res == "ok":
                 comp.ammount = request.POST['amm']
@@ -913,6 +963,7 @@ def add_comp(request, kneading_id):
                 reactor_content.save()
                 comp.loaded = True
                 comp.save()
+                res = res + f_id
             return HttpResponse(res)
 
 def start_kneading(request, kneading_id):
@@ -1316,6 +1367,14 @@ def archive_detail(request, kneading_id):
                                                 "components": comps,
                                                 "location": "/processes/archive/",
                                                 "p": batch})
+
+def restore_process(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    kneading.isFinished = False
+    kneading.save()
+    State_log.objects.filter(kneading = kneading).last().delete()
+    return redirect('mixing')
+
 
 def get_checked_elems(request, composition_id):
     if request.method == 'POST':

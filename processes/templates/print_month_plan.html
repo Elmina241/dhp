@@ -144,7 +144,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for p in products %}
+        {% for p in products|dictsort:"get_name_for_table" %}
         <tr><td style="padding: 1px;"></td><td style="padding: 1px;">{{p.code}}</td><td style="padding: 1px;">{{p.get_name_for_table}}</td><td style="padding: 1px;text-align: right;" id="{{p.id}}"></td><td style="padding: 1px;text-align: right;"  class="num">{{p.production.get_boxing_amm}}</td><td style="padding: 1px;text-align: right;"  class="num">{{p.production.compAmount}}</td><td style="padding: 1px;text-align: right;">0</td></tr>
         {% endfor %}
         <tr><td style="padding: 1px;" colspan="4"><b>Итого, штуки</b></td><td class="num"></td><td class="num"></td><td style="padding: 1px;text-align: right;"><b>0</b></td></tr>

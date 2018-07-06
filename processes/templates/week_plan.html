@@ -147,7 +147,7 @@ $(document).ready(function(){
         </tr>
       </thead>
       <tbody>
-        {% for p in products %}
+        {% for p in products|dictsort:"get_name_for_table" %}
         <tr><td></td><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
         {% endfor %}
         <tr><td colspan="2"><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>

@@ -89,12 +89,19 @@ function drop(id, t){
             $("#dropBtn").prop('disabled', false);
             $("#confirm").modal('hide');
           }
+          else {
+            $("#error_d").text("Композиция зарезервирована.");
+            $("#error_d").show();
+            $("#dropBtn").prop('disabled', false);
+          }
         }
+
       });
 }
 
 function move(acc, donor, amm){
   var csrftoken = getCookie('csrftoken');
+  $("#error").hide();
   $("#moveBtn").prop('disabled', true);
   $.ajax({
         type: "POST",
@@ -109,9 +116,16 @@ function move(acc, donor, amm){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         },
-        success: function onAjaxSuccess()
+        success: function onAjaxSuccess(data)
         {
-          location.reload();
+          if (data=="fail") {
+            $("#error").text("Композиция зарезервирована.");
+            $("#error").show();
+            $("#moveBtn").prop('disabled', false);
+          }
+          else{
+            location.reload();
+          }
         }
       });
 }
@@ -165,6 +179,8 @@ function getInf(id){
 }
 
 function checkDrop(reserved, id, t){
+    $("#error_d").hide();
+    $("#dropBtn").unbind();
     $("#dropBtn").click(function() {
       drop(id, t);
     });
@@ -428,6 +444,8 @@ $(document).ready(function(){
                     <h4 id="storCode">Предупреждение</h4>
                   </div>
                   <div class="modal-body">
+                    <div id="error_d" class="alert alert-danger" role="alert" style="display:none">
+                    </div>
                     <p>Сбросить композицию?</p>
                     <div class="modal-footer">
                       <input value="Сброс" id = "dropBtn" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
