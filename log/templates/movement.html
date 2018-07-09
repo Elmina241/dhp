@@ -10,6 +10,43 @@
   }
 </style>
 <script type="text/javascript">
+  var count = 1;
+  function addRows(){
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'add_rows/',
+        data: {
+          'count': count
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+            var rows = JSON.parse(data);
+            row = ""
+            for (d in rows){
+              row = row + "<tr><td>" + rows[d]["date"] + "</td><td>" + rows[d]["code"] + "</td><td>" + rows[d]["name"] + "</td><td>" + rows[d].batch + "</td><td>" + rows[d]["operation"] + "</td><td>" + rows[d]["amount"] + "</td>";
+              if (rows[d]["operation"] == 'Выпуск товара'){
+                row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getInf(" + d + ")'>Акт</button></td>";
+              }
+              else{
+                row = row + "<td></td>";
+              }
+              row = row + "</tr>";
+            }
+            var table = $("#tableBody");
+            var rowCount = $('#tableBody tr').length;
+            $('#tableBody tr').eq(rowCount-1).remove();
+            row = row + "<tr><td colspan='7' align='center'><a href='#' onclick='addRows()'>Показать ещё</a></td></tr>";
+            $(row).appendTo(table);
+            count = count + 1;
+        }
+      });
+    }
   function release(id, amm, op){
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -151,7 +188,7 @@
                 <th>Дата</th><th>Код</th><th>Продукт</th><th>Партия</th><th>Операция</th><th>Количество, шт</th><th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
               {% for key, values in movements.items %}
               <tr>
                 <td>{{ values.date}}</td>
@@ -167,7 +204,7 @@
                 {% endif %}
               </tr>
               {% endfor %}
-              <tr><td colspan="7" align="center"><a href="#">Показать ещё</a></td></tr>
+              <tr><td colspan="7" align="center"><a href="#" onclick="addRows()">Показать ещё</a></td></tr>
             </tbody>
           </table>
           {% else %}

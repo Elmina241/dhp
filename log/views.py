@@ -65,6 +65,19 @@ def release(request):
         rec.save()
         return HttpResponse('ok')
 
+def add_rows(request):
+    if request.method == 'POST':
+        count = request.POST['count']
+        count = int(count) + 1
+        records = {}
+        for r in Movement_rec.objects.order_by("-id")[20*(int(count)-1):20*int(count)]:
+            date = r.date.strftime('%d.%m.%Y')
+            name = r.product.get_name_for_table()
+            batch = r.get_batch()
+            records[str(r.id)] = {"date": date, "code": r.product.code, "name": name, "batch": batch, "operation": r.operation.name, "amount": r.amount}
+        res = json.dumps(records)
+        return HttpResponse(res)
+
 def get_act(request):
     if request.method == 'POST':
         code = request.POST['code']
