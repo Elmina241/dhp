@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from tables.models import Product, Composition, Comp_prop_var, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
-from .models import Month_plan, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
+from .models import Month_plan, Pack_process, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 from log.models import Movement_rec, Operation, Packing_divergence
 import json
 import math
@@ -13,6 +13,9 @@ import datetime
 
 def loading_lists(request):
     return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Model_list.objects.all})
+
+def packing(request):
+    return render(request, "packing.html", {"header": "Фасовка", "location": "/processes/packing/", "processes": Pack_process.objects.all})
 
 def storages(request):
     prods = {}

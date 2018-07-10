@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^archive/$', views.archive, name = 'archive'),
     url(r'^stoped/$', views.stoped, name = 'stoped'),
     url(r'^plan/$', views.plan, name = 'plan'),
+    url(r'^packing/$', views.packing, name = 'packing'),
     url(r'^plan/save_month_plan/$', views.save_month_plan, name = 'save_month_plan'),
     url(r'^task/save_month_plan/$', views.save_month_plan, name = 'save_month_plan'),
     url(r'^plan/print_list/(?P<month>.*)$', views.print_month_plan, name = 'print_month_plan'),

@@ -1,0 +1,194 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function getState(id){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_state/',
+        data: {
+          'id': id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          //if (data!="Завершён" && data!="Прерван"){
+            $("#"+id).text(data);
+          /*}
+          else {
+            $("#"+id).parent().remove();
+          }*/
+        }
+      });
+}
+
+function printLists(){
+  var lists = [];
+  $("input:checkbox:checked").each(function() {
+    lists.push($(this).val());
+  });
+  data = JSON.stringify(lists);
+  window.open(document.location.href + "print_lists/"+data);
+  /*var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'print_lists/',
+        data: {
+          'lists': data
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(res)
+        {
+          var myWin = window.open("");
+          myWin.document.open();
+          myWin.document.write(res);
+          myWin.document.close();
+        }
+      });*/
+}
+
+function applyFilters(){
+  $("tr").each(function(){
+      $(this).show();
+  });
+  filterState();
+  filterDate();
+  filterBatch();
+}
+
+$(document).ready(function(){
+  var dp = $('#datepicker');
+  dp.datepicker({
+    format: "dd/mm/yyyy",
+    language: "ru",
+    todayHighlight: true
+  });
+  $("#prTable").tablesorter({});
+  $("[name='groupState']").change(applyFilters);
+  $("[name='groupBatch']").change(applyFilters);
+  $("[name='start']").change(applyFilters);
+  $("[name='end']").change(applyFilters);
+});
+function filterDate(){
+  var start = $("#groupDateStart").prop("value");
+  var startD = new Date(parseInt(start.substr(6)), (parseInt(start.substr(3,2)) - 1), parseInt(start.substr(0,2)));
+  var end = $("#groupDateEnd").prop("value");
+  var endD = new Date(parseInt(end.substr(6)), (parseInt(end.substr(3,2)) - 1), parseInt(end.substr(0,2)));
+    $("tr").filter(function() {
+        startText = $(this).find("td").eq(4).text();
+        startDate = new Date(parseInt(startText.substr(6)), (parseInt(startText.substr(3,2)) - 1), parseInt(startText.substr(0,2)));
+        return (startDate > endD || startDate < startD) || $(this).is(':hidden');
+      }).each(function(){
+        $(this).hide();
+      });
+    $("tr").eq(0).show();
+}
+function filterState(){
+  var sel = $("[name='groupState']");
+  var group = sel.find(":selected").text();
+  if (group == "Все"){
+    /*$("tr").each(function(){
+      $(this).show();
+    });*/
+  }
+  else {
+    $("tr").filter(function() {
+        return $(this).find("td").eq(6).text() != group;
+      }).each(function(){
+        $(this).hide();
+      });
+    }
+    $("tr").eq(0).show();
+}
+function filterBatch(){
+  var sel = $("[name='groupBatch']");
+  var group = sel.find(":selected").text();
+  if (group == "Все"){
+  /*  $("tr").each(function(){
+      $(this).show();
+    });*/
+  }
+  else {
+    $("tr").filter(function() {
+        return ($(this).find("td").eq(2).text() + " " + $(this).find("td").eq(3).text()) != group || $(this).is(':hidden');
+      }).each(function(){
+        $(this).hide();
+      });
+    }
+    $("tr").eq(0).show();
+}
+</script>
+<form action="del_process/" method="post">
+    {% csrf_token %}
+    {% if new_kneading %}
+    <div id="alert" class="alert alert-success alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      Создан процесс {{new_kneading}}. Номер партии П-{{new_kneading.batch_num|floatformat:"0"}}.
+    </div>
+    {% endif %}
+
+          <button type="button" class="btn btn-success" onclick=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Добавить процесс</button>
+          <button type="button" class="btn btn-danger" onclick=""><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Удалить</button>
+          <br><br>
+          {% if processes %}
+              <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
+                <thead>
+                  <tr>
+                    <th></th><th>№</th><th>Дата</th><th>Продукт</th><th>Количество</th><th>Реактор</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for p in processes|dictsortreversed:"id" %}
+                  <tr>
+                    <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.date|date:"d.m.Y" }}</td>
+                    <td  onClick="window.location.href='/processes/packing/{{ p.id }}/'">{{ p.product }}</td>
+                    <td>{{ p.amount }}</td>
+                    {% if p.tank == None %}
+                      <td>{{ p.reactor.code }}</td>
+                    {% else %}
+                      <td>{{ p.tank.code}}</td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+  {% endblock content %}

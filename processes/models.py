@@ -146,3 +146,12 @@ class Tank_content(models.Model):
         return self.tank.code + ' ' + self.tank.name + ' ' + self.content_type
     def to_str(self):
         return str(self.tank.code + ' ' + self.tank.name + ' ' + str(self.content_type))
+
+class Pack_process(models.Model):
+    date = models.DateField()
+    product = models.ForeignKey('tables.Product')
+    amount = models.IntegerField()
+    reactor = models.ForeignKey('tables.Reactor')
+    tank = models.ForeignKey('tables.Tank')
+    def __str__(self):
+        return str(date) + " " + str(product)
