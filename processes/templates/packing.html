@@ -161,7 +161,7 @@ function filterBatch(){
     </div>
     {% endif %}
 
-          <button type="button" class="btn btn-success" onclick=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Добавить процесс</button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addProcess" onclick=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Добавить процесс</button>
           <button type="button" class="btn btn-danger" onclick=""><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Удалить</button>
           <br><br>
           {% if processes %}
@@ -191,4 +191,47 @@ function filterBatch(){
               {% else %}
               <p>No materials are available right now.</p>
               {% endif %}
+            </form>
+              <div class="modal fade" id="addProcess">
+                <div class="modal-dialog modal-md" >
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button class="close" data-dismiss="modal">x</button>
+                      <h4>Создание процесса фасовки</h4>
+                    </div>
+                    <div class="modal-body">
+                      <form action="make_pack_process/" method="post">
+                        {% csrf_token %}
+                      <h5>Дата</h5>
+                      <div class="input-group date" data-provide="datepicker" id = "datepicker">
+                        <input type="text" class="form-control" name="date">
+                        <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                      </div>
+                      <h5>Продукт</h5>
+                      <select id="prod" class="form-control" style="margin-bottom:5pt" name="prod">
+                        {% for p in products|dictsort:"get_name_for_table" %}
+                         <option value={{p.id}}>{{p.code}} {{p.get_name_for_table}}</option>
+                        {% endfor %}
+                      </select>
+                      <h5>Количество</h5>
+                      <input type="number" class="form-control" name="amount">
+                      <h5>Реактор</h5>
+                      <select id="reactor" class="form-control" style="margin-bottom:5pt" name="storage">
+                        {% for r in reactors|dictsort:"code" %}
+                         <option value="r-{{r.id}}">{{r.code}} {{r.name}}</option>
+                        {% endfor %}
+                        {% for t in tanks|dictsort:"code" %}
+                         <option value="t-{{t.id}}">{{t.code}} {{t.name}}</option>
+                        {% endfor %}
+                      </select>
+
+                    </div>
+                    <div class="modal-footer">
+                    <button id="send" class="btn btn-primary" style="float: right"/>Сохранить</button></div>
+                  </form>
+                  </div>
+                  </div>
+                  </div>
   {% endblock content %}

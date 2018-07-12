@@ -151,7 +151,7 @@ class Pack_process(models.Model):
     date = models.DateField()
     product = models.ForeignKey('tables.Product')
     amount = models.IntegerField()
-    reactor = models.ForeignKey('tables.Reactor')
-    tank = models.ForeignKey('tables.Tank')
+    reactor = models.ForeignKey('tables.Reactor', null=True)
+    tank = models.ForeignKey('tables.Tank', null=True)
     def __str__(self):
         return str(date) + " " + str(product)

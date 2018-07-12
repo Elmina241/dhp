@@ -15,7 +15,7 @@ def loading_lists(request):
     return render(request, "loading_lists.html", {"header": "Загрузочные листы", "location": "/processes/loading_lists/", "lists": Model_list.objects.all})
 
 def packing(request):
-    return render(request, "packing.html", {"header": "Фасовка", "location": "/processes/packing/", "processes": Pack_process.objects.all})
+    return render(request, "packing.html", {"header": "Фасовка", "location": "/processes/packing/", "processes": Pack_process.objects.all, "products": Product.objects.all, "reactors": Reactor.objects.all, "tanks": Tank.objects.all})
 
 def storages(request):
     prods = {}
@@ -429,6 +429,22 @@ def save_load_list(request, kneading_id):
                     cmps = List_component(list=list, formula=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
         return redirect('kneading_detail', kneading_id = kneading_id)
+
+def make_pack_process(request):
+    if 'amount' in request.POST:
+        amount = request.POST['amount']
+        product = get_object_or_404(Product, pk=request.POST['prod'])
+        date =  datetime.datetime.strptime(request.POST['date'], "%d/%m/%Y").date()
+        storage = request.POST['storage']
+        if storage[0] == 'r':
+            reactor = get_object_or_404(Reactor, pk=storage[2:])
+            tank = None
+        else:
+            tank = get_object_or_404(Tank, pk=storage[2:])
+            reactor = None
+        pack = Pack_process(amount = amount, date=date, product = product, reactor = reactor, tank = tank)
+        pack.save()
+    return redirect('packing')
 
 def save_process(request):
     list = Loading_list()
