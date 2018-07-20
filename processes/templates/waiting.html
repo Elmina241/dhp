@@ -176,7 +176,7 @@ $(document).ready(function(){
       <input type="hidden" id="json" name="json" value="">
       <input type="hidden" id="batches" name="batches" value="{{batches}}">
       <div class="modal-footer">
-      <input type="button" id="send" onclick="changeMatTable();$('#form').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+      <input type="button" id="send" onclick="$(this).prop('disabled', true);changeMatTable();$('#form').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
     </div>
     </div>
     </div>

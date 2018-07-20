@@ -217,6 +217,14 @@ def del_process(request, kneading_id = None):
         del_obj.save()
     return redirect('mixing')
 
+def packing_rel(request, pack_id):
+    pack = get_object_or_404(Pack_process, pk=pack_id)
+    reactors = {}
+    for r in Reactor_content.objects.filter(content_type = 1, batch__kneading__list__formula__composition = pack.product.production.composition):
+        reactors['r'+str(r.id)] = {'name': str(r.reactor), 'amount': r.amount}
+    for t in Tank_content.objects.filter(content_type = 1, batch__kneading__list__formula__composition = pack.product.production.composition):
+        reactors['t'+str(t.id)] = {'name': str(t.tank), 'amount': t.amount}
+    return render(request, "packing_rel.html", {"p": pack, "location": "/processes/packing/", "header": "Фасовка", "reactore": reactors})
 
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())

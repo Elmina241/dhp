@@ -80,6 +80,7 @@ def detail(request, material_id):
         {"material": get_object_or_404(Material, pk=material_id),
         "location": "/tables/materials/",
         "groups": Material_group.objects.all,
+        "header": "Редактирование реактива",
         "units": Unit.objects.all})
 
 def pr_detail(request, product_id):

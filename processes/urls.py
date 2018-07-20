@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^process/(?P<kneading_id>[0-9]+)/$', views.kneading_detail, name='kneading_detail'),
     url(r'^archive/(?P<kneading_id>[0-9]+)/$', views.archive_detail, name='archive_detail'),
     url(r'^stoped/(?P<kneading_id>[0-9]+)/$', views.restore_process, name='restore_process'),
+    url(r'^packing/(?P<pack_id>[0-9]+)/$', views.packing_rel, name='packing_rel'),
     url(r'^process/(?P<kneading_id>[0-9]+)/start_process/$', views.start_kneading, name='start_kneading'),
     url(r'^process/(?P<kneading_id>[0-9]+)/save_reactor/$', views.save_reactor, name='save_reactor'),
     url(r'^process/(?P<kneading_id>[0-9]+)/save_date/$', views.save_date, name='save_date'),
