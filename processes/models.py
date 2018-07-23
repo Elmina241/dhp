@@ -153,5 +153,6 @@ class Pack_process(models.Model):
     amount = models.IntegerField()
     reactor = models.ForeignKey('tables.Reactor', null=True)
     tank = models.ForeignKey('tables.Tank', null=True)
+    finished = models.BooleanField(default = False)
     def __str__(self):
         return str(date) + " " + str(product)

@@ -152,7 +152,7 @@ function filterBatch(){
     $("tr").eq(0).show();
 }
 </script>
-<form action="del_process/" method="post">
+<form action="del_packing/" method="post">
     {% csrf_token %}
     {% if new_kneading %}
     <div id="alert" class="alert alert-success alert-dismissable" role="alert">
@@ -162,13 +162,13 @@ function filterBatch(){
     {% endif %}
 
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addProcess" onclick=""><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>  Добавить процесс</button>
-          <button type="button" class="btn btn-danger" onclick=""><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Удалить</button>
+          <input type="submit" class="btn btn-danger" value="Удалить">
           <br><br>
           {% if processes %}
               <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>№</th><th>Дата</th><th>Продукт</th><th>Количество</th><th>Реактор</th>
+                    <th></th><th>№</th><th>Дата</th><th>Продукт</th><th>Количество</th><th>Реактор</th><th>Завершён</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,12 +177,21 @@ function filterBatch(){
                     <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
                     <td>{{ p.id }}</td>
                     <td>{{ p.date|date:"d.m.Y" }}</td>
+                    {% if p.finished %}
+                    <td>{{ p.product }}</td>
+                    {% else %}
                     <td  onClick="window.location.href='/processes/packing/{{ p.id }}/'">{{ p.product }}</td>
+                    {% endif %}
                     <td>{{ p.amount }}</td>
                     {% if p.tank == None %}
                       <td>{{ p.reactor.code }}</td>
                     {% else %}
                       <td>{{ p.tank.code}}</td>
+                    {% endif %}
+                    {% if p.finished %}
+                      <td><input type="checkbox" checked disabled></td>
+                    {% else %}
+                      <td><input type="checkbox" disabled></td>
                     {% endif %}
                   </tr>
                   {% endfor %}

@@ -29,9 +29,47 @@ $.ajaxSetup({
 });
 
 
+function setAmount(){
+  reactors =  JSON.parse($("#reactors").prop('value'));
+  id = $("#reactor").prop('value');
+  for (r in reactors) {
+    if (r == id) {
+      $("#amount").prop('max', reactors[r].amount);
+    }
+  }
+}
 
+function pack(pr_id, f_id){
+  var csrftoken = getCookie('csrftoken');
+  r_id = $("#reactor").prop('value');
+  t = r_id[0];
+  id = r_id.substr(1);
+  $("#packBtn").prop('disabled', true);
+  $.ajax({
+        type: "POST",
+        url: 'pack/',
+        data: {
+          'id': id,
+          'amm': $("#amount").prop("value"),
+          'type': t,
+          'pr_id' : pr_id,
+          'num' : $("#num").prop("value"),
+          'f_id': f_id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          window.location.href='/processes/packing/';
+        }
+      });
+}
 
 $(document).ready(function(){
+  setAmount();
 });</script>
 
 
@@ -57,10 +95,10 @@ $(document).ready(function(){
           </div>
           <div class="col-sm-3">
           <h5><p><b>Реактор: </b></p></h5></div>
-          <div class="col-sm-8">
-            <select id="reactor" class="form-control" name="storage" style="font-size:13px;height: 20px;width:  300px;">
-              {% for key, values in reactors %}
-                <option value={{key}}>values.name</option>
+          <div class="col-sm-7 form-group">
+            <select id="reactor" class="form-control" name="storage" onchange="setAmount();" style="font-size:12px;height: 28px;width:  300px;">
+              {% for key, values in reactors.items %}
+                <option value='{{key}}' style="font-size:12px;">{{values.name}}</option>
               {% endfor %}
             </select>
           <!--<h5><p>{{p.reactor}}</p></h5>-->
@@ -68,16 +106,17 @@ $(document).ready(function(){
           <div class="col-sm-3">
           <h5><p><b>Количество, шт: </b></p></h5></div>
           <div class="col-sm-7">
-          <h5><p><input type="number" style="font-size:13px;height: 25px;width:  200px;" class="form-control" value="{{p.amount}}" step="1"></p></h5>
+          <h5><p><input type="number" id="num" name="num" style="font-size:13px;height: 25px;width:  200px; margin-top: 0px" class="form-control col-sm-7" value="{{p.amount}}" step="1"></p></h5>
           </div>
           <div class="col-sm-3">
           <h5><p><b>Объём, кг: </b></p></h5></div>
           <div class="col-sm-7">
-          <h5><p><input type="number" style="font-size:13px;height: 25px;width:  200px;" class="form-control"></p></h5>
+          <h5><p><input type="number" id="amount" name="amount" style="font-size:13px;height: 25px;width:  200px; margin-top: 0px" class="form-control"></p></h5>
           </div>
+          <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
       </div>
       <hr>
-        <input type="button" onclick="" value="Сохранить" class="btn btn-primary" style="float: right"/>
+        <input type="button" id="packBtn" onclick="pack({{p.product.id}}, {{p.id}})" value="Сохранить" class="btn btn-primary" style="float: right"/>
       </div>
     </div>
 {% endblock content %}

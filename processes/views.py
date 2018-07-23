@@ -166,6 +166,13 @@ def del_list(request):
         del_obj.delete()
     return redirect('loading_lists')
 
+def del_packing(request):
+    del_var = request.POST.getlist('del_list')
+    for d in del_var:
+        del_obj = get_object_or_404(Pack_process, pk=d)
+        del_obj.delete()
+    return redirect('packing')
+
 def print_month_plan(request, month):
     text_month = month[1:8]
     return render(request, "print_month_plan.html", {"products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all())), "plans2": Month_plan.objects.filter(month = text_month), "date": text_month})
@@ -224,7 +231,7 @@ def packing_rel(request, pack_id):
         reactors['r'+str(r.id)] = {'name': str(r.reactor), 'amount': r.amount}
     for t in Tank_content.objects.filter(content_type = 1, batch__kneading__list__formula__composition = pack.product.production.composition):
         reactors['t'+str(t.id)] = {'name': str(t.tank), 'amount': t.amount}
-    return render(request, "packing_rel.html", {"p": pack, "location": "/processes/packing/", "header": "Фасовка", "reactore": reactors})
+    return render(request, "packing_rel.html", {"p": pack, "location": "/processes/packing/", "header": "Фасовка", "reactors": reactors, "reactors2": json.dumps(reactors)})
 
 def planning(request):
     components = serializers.serialize("json", Components.objects.all())
@@ -616,7 +623,7 @@ def get_processes(request):
         #processes = serializers.serialize("json", p)
         return HttpResponse(json_data)
 
-def pack(request):
+def pack(request, pack_id = None):
     if request.method == 'POST':
         div = Packing_divergence()
         if request.POST['type'] == 'r':
@@ -640,6 +647,10 @@ def pack(request):
             storage.batch = None
             storage.kneading = None
         storage.save()
+        if 'f_id' in request.POST:
+            process =  get_object_or_404(Pack_process, pk=request.POST['f_id'])
+            process.finished = True
+            process.save()
         return HttpResponse('ok')
 
 def drop(request):
