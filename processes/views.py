@@ -92,13 +92,13 @@ def new_tech_comp(request):
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": r.amount}
         i=i+1
     for t in Tank_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": t.amount}
         i=i+1
     for c in Compl_comp.objects.all():
-        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": c.store_amount}
         i=i+1
     return render(request, "new_tech_comp.html", {
     "header": "Формирование технологической композиции",
@@ -249,13 +249,13 @@ def planning(request):
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": r.amount}
         i=i+1
     for t in Tank_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": t.amount}
         i=i+1
     for c in Compl_comp.objects.all():
-        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": c.store_amount}
         i=i+1
 
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
@@ -319,13 +319,13 @@ def new_associated_process(request):
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": r.amount}
         i=i+1
     for t in Tank_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": t.amount}
         i=i+1
     for c in Compl_comp.objects.all():
-        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": c.store_amount}
         i=i+1
     compl_comp_comps = serializers.serialize("json", Compl_comp_comp.objects.all())
     return render(request, "associated_process.html",
@@ -384,18 +384,6 @@ def save_load_list(request, kneading_id):
         list.ammount = ammount
     list.save()
     if 'json' in request.POST:
-        for c in List_component.objects.filter(list = list):
-            if c.compl is None:
-                if c.r_cont is None and c.t_cont is None and c.formula is None:
-                    c.mat.reserved = c.mat.reserved - c.ammount
-                else:
-                    if c.r_cont is None and c.formula is None:
-                        c.t_cont.reserved = c.t_cont.reserved - c.ammount
-                    else:
-                        if c.formula is None:
-                            c.r_cont.reserved = c.r_cont.reserved - c.ammount
-            else:
-                c.compl.reserved = c.compl.reserved - c.ammount
         List_component.objects.filter(list = list).delete()
         table = request.POST['json']
         data = json.loads(table)
@@ -417,25 +405,25 @@ def save_load_list(request, kneading_id):
                     max = float(max)
                 if t == "1":
                     mat = Reactor_content.objects.filter(id = id)[0]
-                    mat.reserved = mat.reserved + float(ammount)
+                    #mat.reserved = mat.reserved + float(ammount)
                     mat.save()
                     cmps = List_component(list=list, r_cont=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "2":
                     mat = Tank_content.objects.filter(id = id)[0]
-                    mat.reserved = mat.reserved + float(ammount)
+                    #mat.reserved = mat.reserved + float(ammount)
                     mat.save()
                     cmps = List_component(list=list, t_cont=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "3":
                     mat = Compl_comp.objects.filter(id = id)[0]
-                    mat.reserved = mat.reserved + float(ammount)
+                    #mat.reserved = mat.reserved + float(ammount)
                     mat.save()
                     cmps = List_component(list=list, compl=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
                 if t == "4":
                     mat = Material.objects.filter(id = id)[0]
-                    mat.reserved = mat.reserved + float(ammount)
+                    #mat.reserved = mat.reserved + float(ammount)
                     mat.save()
                     cmps = List_component(list=list, mat=mat, min = min, max = max, ammount=ammount)
                     cmps.save()
@@ -482,19 +470,19 @@ def save_process(request):
                         ammount = ammount.split("_")[2]
                         if t == "1":
                             mat = get_object_or_404(Reactor_content, pk = id)
-                            mat.reserved = mat.reserved + float(ammount)
+                            #mat.reserved = mat.reserved + float(ammount)
                             mat.save()
                             cmps = List_component(list=list, r_cont=mat, ammount=ammount)
                         else:
                             if t == "2":
                                 mat = get_object_or_404(Tank_content, pk = id)
-                                mat.reserved = mat.reserved + float(ammount)
+                                #mat.reserved = mat.reserved + float(ammount)
                                 mat.save()
                                 cmps = List_component(list=list, t_cont=mat, ammount=ammount)
                             else:
                                 if t == "3":
                                     mat = get_object_or_404(Compl_comp, pk = id)
-                                    mat.reserved = mat.reserved + float(ammount)
+                                    #mat.reserved = mat.reserved + float(ammount)
                                     mat.save()
                                     cmps = List_component(list=list, compl=mat, ammount=ammount)
                                 else:
@@ -502,7 +490,7 @@ def save_process(request):
                                     cmps = List_component(list=list, formula=mat, ammount=ammount)
                     else:
                         mat = Material.objects.filter(code=d['Код'])[0]
-                        mat.reserved = mat.reserved + float(ammount)
+                        #mat.reserved = mat.reserved + float(ammount)
                         mat.save()
                         cmps = List_component(list=list, mat=mat, ammount=ammount)
                     cmps.save()
@@ -667,7 +655,7 @@ def drop(request):
         else:
             check_dependencies(storage, request.POST['type'])
             storage.amount = 0
-            storage.reserved = 0
+            #storage.reserved = 0
             storage.content_type = 3
             storage.batch = None
             storage.kneading = None
@@ -749,12 +737,12 @@ def move(request):
             donor.amount = donor.amount - amm / loses
             accepting.content_type = donor.content_type
             accepting.amount = accepting.amount + amm
-        if donor.reserved > donor.amount:
-            donor.reserved = 0
-            check_dependencies(donor, request.POST['donor'][0])
+        #if donor.reserved > donor.amount:
+            #donor.reserved = 0
+            #check_dependencies(donor, request.POST['donor'][0])
         if donor.amount <= 0.01:
             donor.amount = 0
-            donor.reserved = 0
+            #donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
             donor.batch = None
             donor.kneading = None
@@ -794,12 +782,12 @@ def move_batch(request, kneading_id):
             donor.amount = donor.amount - amm / loses
             accepting.content_type = donor.content_type
             accepting.amount = accepting.amount + amm
-        if donor.reserved > donor.amount:
-            donor.reserved = 0
-            check_dependencies(donor, request.POST['donor'][0])
+        #if donor.reserved > donor.amount:
+            #donor.reserved = 0
+            #check_dependencies(donor, request.POST['donor'][0])
         if donor.amount <= 0.01:
             donor.amount = 0
-            donor.reserved = 0
+            #donor.reserved = 0
             check_dependencies(donor, request.POST['donor'][0])
             donor.batch = None
             donor.kneading = None
@@ -877,14 +865,14 @@ def add_comp(request, kneading_id):
                         res = str(mat.store_amount + comp.ammount)
                     else:
                         mat.store_amount = mat.store_amount + comp.ammount - float(request.POST['amm'])
-                        mat.reserved = mat.reserved - float(request.POST['amm'])
+                        #mat.reserved = mat.reserved - float(request.POST['amm'])
                         mat.save()
                 else:
                     if mat.store_amount < float(request.POST['amm']):
                         res = str(mat.store_amount)
                     else:
                         mat.store_amount = mat.store_amount - float(request.POST['amm'])
-                        mat.reserved = mat.reserved - float(request.POST['amm'])
+                        #mat.reserved = mat.reserved - float(request.POST['amm'])
                         comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
                         mat.save()
             else:
@@ -896,16 +884,16 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount + comp.ammount)
                             else:
                                 content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
-                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 if int(content.amount) == 0:
                                     content.content_type = 3
                                     check_dependencies(content, 't')
                                     content.save()
                                 comp.t_cont = None
-                                if content.reserved > content.amount:
-                                    content.reserved = 0
-                                    check_dependencies(content, 't')
+                                #if content.reserved > content.amount:
+                                    #content.reserved = 0
+                                    #check_dependencies(content, 't')
                                 content.save()
                                 f_id = str(comp.formula.id)
                         else:
@@ -914,7 +902,7 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount)
                             else:
                                 content.amount = content.amount - float(request.POST['amm'])/loses
-                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 if int(content.amount) == 0:
                                     content.content_type = 3
@@ -923,9 +911,9 @@ def add_comp(request, kneading_id):
                                 comp.t_cont = None
                                 comp.save()
                                 f_id = str(comp.formula.id)
-                                if content.reserved > content.amount:
-                                    content.reserved = 0
-                                    check_dependencies(content, 't')
+                                #if content.reserved > content.amount:
+                                    #content.reserved = 0
+                                    #check_dependencies(content, 't')
                                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
                                 content.save()
                 else:
@@ -937,7 +925,7 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount + comp.ammount)
                             else:
                                 content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
-                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 comp.r_cont = None
                                 if int(content.amount) == 0:
@@ -945,9 +933,9 @@ def add_comp(request, kneading_id):
                                     check_dependencies(content, 'r')
                                     content.save()
                                 f_id = str(content.batch.kneading.list.formula.id)
-                                if content.reserved > content.amount:
-                                    content.reserved = 0
-                                    check_dependencies(content, 'r')
+                                #if content.reserved > content.amount:
+                                    #content.reserved = 0
+                                    #check_dependencies(content, 'r')
                                 content.save()
                         else:
                             comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
@@ -955,7 +943,7 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount)
                             else:
                                 content.amount = content.amount - float(request.POST['amm'])/loses
-                                content.reserved = content.reserved - float(request.POST['amm'])/loses
+                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 comp.r_cont = None
                                 comp.save()
@@ -964,9 +952,9 @@ def add_comp(request, kneading_id):
                                     check_dependencies(content, 'r')
                                     content.save()
                                 f_id = str(comp.formula.id)
-                                if content.reserved > content.amount:
-                                    content.reserved = 0
-                                    check_dependencies(content, 'r')
+                                #if content.reserved > content.amount:
+                                    #content.reserved = 0
+                                    #check_dependencies(content, 'r')
                                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
                                 content.save()
                     else:
@@ -981,7 +969,7 @@ def add_comp(request, kneading_id):
                                     res = str(mat.ammount + comp.ammount)
                                 else:
                                     mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
-                                    mat.reserved = mat.reserved - float(request.POST['amm'])
+                                    #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
                                     mat.save()
                             else:
@@ -989,7 +977,7 @@ def add_comp(request, kneading_id):
                                     res = str(mat.ammount)
                                 else:
                                     mat.ammount = mat.ammount - float(request.POST['amm'])
-                                    mat.reserved = mat.reserved - float(request.POST['amm'])
+                                    #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
                                     mat.save()
                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
@@ -1274,13 +1262,13 @@ def kneading_detail(request, kneading_id):
     batches = {}
     i=0
     for r in Reactor_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": (r.amount - r.reserved)}
+        batches[str(i)] = {"id": r.pk, "formula": str(r.batch.kneading.list.formula.pk), "batch": r.batch.pk, "name": ("Партия №" + str(r.batch.pk) + " " + str(r.reactor)), "type": "1", "amount": r.amount}
         i=i+1
     for t in Tank_content.objects.filter(content_type = "1"):
-        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": (t.amount - t.reserved)}
+        batches[str(i)] = {"id": t.pk, "formula": str(t.batch.kneading.list.formula.pk), "batch": t.batch.pk, "name": ("Партия №" + str(t.batch.pk) + " " + str(t.tank)), "type": "2", "amount": t.amount}
         i=i+1
     for c in Compl_comp.objects.all():
-        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": (c.store_amount - c.reserved)}
+        batches[str(i)] = {"id": c.pk, "formula": str(c.formula.pk), "name": c.name, "type": "3", "amount": c.store_amount}
         i=i+1
 
     if state_id == 1:
