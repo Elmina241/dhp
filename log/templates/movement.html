@@ -142,6 +142,36 @@
             }
           });
     }
+    function getPass(prod){
+      var csrftoken = getCookie('csrftoken');
+      $.ajax({
+            type: "POST",
+            url: 'get_pass_by_prod/',
+            data: {
+              'prod': prod
+            },
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data)
+            {
+              prods = JSON.parse(data);
+              $("#tableName").text("Паспорт фасовки");
+              $("#date").text("Дата: " + prods['date']);
+              var table = $("#prods tbody");
+              var rowCount = $('#prods tr').length;
+              for (i = 1; i < rowCount; i++) $('#prods tr').eq(1).remove();
+              for (p in prods){
+                //matAm = matAm + comps[c].amount;
+                if (p!="date" && p!="code") $("<tr><td>" + prods[p].code + "</td><td>" + prods[p].name + "</td><td>" + prods[p].batch + "</td><td>" + prods[p].amount + "</td></tr>").appendTo(table);
+              }
+              //$("#tableName").text("Компоненты композиции " + comps[c].name);
+              $('#act').modal('show');
+            }
+          });
+    }
     $(document).ready(function(){
       //$("#materials").tablesorter();
       var num = 20;
@@ -200,7 +230,7 @@
                 {% if values.operation == 'Выпуск товара' %}
                   <td><button class="btn btn-default btn-sm" type="button" onclick="getInf({{key}})">Акт</button></td>
                 {% else %}
-                  <td></td>
+                  <td><button class="btn btn-default btn-sm" type="button" onclick="getPass({{key}})">Паспорт</button></td>
                 {% endif %}
               </tr>
               {% endfor %}
