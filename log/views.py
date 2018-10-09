@@ -102,3 +102,11 @@ def get_act_by_prod(request):
         inf_a['code'] = code
         data = json.dumps(inf_a)
         return HttpResponse(data)
+
+def get_pass(request):
+    if request.method == 'POST':
+        prod = request.POST['prod']
+        product = Movement_rec.objects.filter(pk = prod)[0]
+        inf_a = {"id": prod, "code": product.product.code, "name": product.product.get_name_for_table(), "batch": product.get_batch(), "amount": str(product.amount), "date": product.date.strftime('%d.%m.%Y'), "amount2": product.product.production.compAmount * product.amount}
+        data = json.dumps(inf_a)
+        return HttpResponse(data)

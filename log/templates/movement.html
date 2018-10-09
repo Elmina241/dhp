@@ -116,7 +116,7 @@
       var csrftoken = getCookie('csrftoken');
       $.ajax({
             type: "POST",
-            url: 'get_act_by_prod/',
+            url: 'get_pass/',
             data: {
               'prod': prod
             },
@@ -146,7 +146,7 @@
       var csrftoken = getCookie('csrftoken');
       $.ajax({
             type: "POST",
-            url: 'get_pass_by_prod/',
+            url: 'get_pass/',
             data: {
               'prod': prod
             },
@@ -157,18 +157,14 @@
             },
             success: function onAjaxSuccess(data)
             {
-              prods = JSON.parse(data);
-              $("#tableName").text("Паспорт фасовки");
-              $("#date").text("Дата: " + prods['date']);
-              var table = $("#prods tbody");
-              var rowCount = $('#prods tr').length;
-              for (i = 1; i < rowCount; i++) $('#prods tr').eq(1).remove();
-              for (p in prods){
-                //matAm = matAm + comps[c].amount;
-                if (p!="date" && p!="code") $("<tr><td>" + prods[p].code + "</td><td>" + prods[p].name + "</td><td>" + prods[p].batch + "</td><td>" + prods[p].amount + "</td></tr>").appendTo(table);
-              }
-              //$("#tableName").text("Компоненты композиции " + comps[c].name);
-              $('#act').modal('show');
+              prod = JSON.parse(data);
+              $("#tableName").text("Паспорт фасовки № " + prod['id']);
+              $("#prod").text("Продукт: " + prod['code'] + " " + prod['name']);
+              $("#date").text("Дата: " + prod['date']);
+              $("#amount").text("Количество, ед: " + prod['amount']);
+              $("#batch").text("Партия: " + prod['batch']);
+              $("#amount2").text("Вес партии, кг: " + prod['amount2']);
+              $('#pass').modal('show');
             }
           });
     }
@@ -313,6 +309,29 @@
               <div class="modal-footer" style="margin-top:5pt">
                 <input value="Выбытие" id = "confirmButton" onclick="check(2)" class="btn btn-primary" style="float: right"/> </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="pass" class="pg">
+          <div class="modal-dialog modal-lg pg1">
+            <div class="modal-content pg1">
+              <div class="modal-header pg">
+                <button class="close pg" data-dismiss="modal">x</button>
+                <h4  class = "pg">Паспорт фасовки</h4>
+              </div>
+              <div class="modal-body">
+                <p class="text14" id="tableName"><b>Паспорт фасовки</b></p>
+                <div id="prod" class="text12">Дата: 01.01.1999</div>
+                <div id="date" class="text12">Дата: 01.01.1999</div>
+                <div id="amount" class="text12">Дата: 01.01.1999</div>
+                <div id="batch" class="text12">Дата: 01.01.1999</div>
+                <div id="amount2" class="text12">Дата: 01.01.1999</div>
+
+                <p class="text12" style="margin-top: 50px">Химик-технолог ________________________________</p>
+                <p class="text12">Заведующий производством ______________________</p>
+              </div>
+              <div class="modal-footer pg"><button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button></div>
             </div>
           </div>
         </div>

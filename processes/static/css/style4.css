@@ -1,0 +1,590 @@
+@font-face {
+font-family: "SFUI";
+src: url("../fonts/SF-UI-Display-Light.ttf") format("truetype");
+font-style: normal;
+font-weight: normal;
+}
+
+@font-face {
+font-family: "SFUIRegular";
+src: url("../fonts/SF-UI-Display-Regular.ttf") format("truetype");
+font-style: normal;
+font-weight: normal;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  position: relative;
+  font-family: "SFUI";
+  background-color: #f3f4f9;
+  list-style: none;
+}
+
+.header {
+  width: 100%;
+  height: 72px;
+  background-color: #182128;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.75);
+  position: absolute;
+}
+
+.user {
+  padding-top: 17px;
+  padding-bottom: 23px;
+  float: right;
+  padding-right: 46px;
+}
+
+.name {
+  font-size: 25px;
+  font-weight: 300;
+  float: left;
+  color: #ffffff;
+}
+
+.door {
+  float: left;
+  padding-left: 18px;
+}
+
+.door img{
+  width: 21px;
+  height: 32px;
+}
+
+.sidebar {
+  width: 284px;
+  height: 100vh;
+  position: absolute;
+  background-color: #131b21;
+}
+
+.content {
+  /*float: left;*/
+  position: relative;
+  margin-left: 284px;
+  top: 72px;
+  left: 0px;
+}
+
+.navbar {
+  margin-top: 70px;
+}
+
+.nav-group {
+  padding-bottom: 60px;
+  list-style: none;
+  color: #5d6c77;
+  font-size: 25px;
+  width: 284px;
+}
+
+
+.nav-group:hover {
+  color: #ffffff;
+}
+
+.nav-text {
+  display: block;
+  float:left;
+  margin-left: 12px;
+}
+
+.nav-text:after {
+  content: url(../img/next.svg);
+  margin-left: 10px;
+  width: 10px;
+  height: 16px;
+}
+
+.nav-group.active {
+  color: #ffffff;
+}
+
+.nav-group.active .nav-text:after {
+  content: url(../img/down-arrow.svg);
+  width: 10px;
+  height: 16px;
+}
+
+.nav-icon {
+  padding-left: 22px;
+  float:left;
+  fill: #5d6c77;
+  width: 27px;
+  height: 25px;
+}
+
+.nav-icon.active {
+  fill: #ffffff;
+}
+
+.under-menu {
+  font-size: 25px;
+  display: block;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  margin-left: -42px;
+  margin-top: -20px;
+}
+
+.under-menu li{
+  display: block;
+  width: 220px;
+  height: 43px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  padding-top: 10px;
+  color: #5d6c77;
+  list-style: none;
+  padding-left:63px;
+  margin-left: 0;
+}
+
+.under-menu .active:after {
+  content: '';
+  position: absolute;
+  margin-top: -10px;
+  right: 0;
+  width: 6px;
+  height: 53px;
+  background-color: #0e6fc1;
+}
+
+.under-menu .active {
+  background-color: #0f1419;
+  color: #ffffff;
+}
+
+.top-panel {
+  display: block;
+  width: inherit;
+  height: 63px;
+  background-color: #1f2a32;
+  /*position: absolute;*/
+}
+
+.table-panel {
+  font-family: "SFUIRegular";
+  display: block;
+  border-radius: 5px 5px 0 0;
+  /*margin-left: 1%;
+  margin-top: 15px;
+  width: 98%;*/
+  padding-top: 18px;
+  height: 39px;
+  background-color: #e2e6ef;
+  border: solid 2px #d8dce7;
+  font-size: 18.5px;
+  color: #6f7a96;
+}
+
+.table-name {
+  margin-left: 26px;
+  float: left;
+}
+
+.buttons {
+  margin-right: 10px;
+  margin-top: -8px;
+  float: right;
+  color: #ffffff;
+}
+
+.add-button {
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+  width: 112px;
+  height: 38px;
+  border-radius: 5px;
+  background-color: #89c331;
+  border: solid 2px #79ba14;
+}
+
+.delete-button {
+  font-size: 16px;
+  text-align: center;
+  margin-left: 10px;
+  color: #ffffff;
+  width: 112px;
+  height: 38px;
+  border-radius: 5px;
+  background-color: #fe6601;
+  border: solid 2px #ec5e00;
+}
+
+.table-container {
+  margin-left: 1%;
+  margin-top: 15px;
+  width: 98%;
+  background-color: #f3f4f9;
+}
+
+.table-wrapper {
+  margin-left: 1%;
+  margin-top: 15px;
+  padding: 3%;
+  width: 92%;
+  height: 450px;
+  border: solid 2px #d8dce7;
+  background: #fdfeff;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.day {
+  display: block;
+  width: 18%;
+  text-align: center;
+  font-size: 17.5px;
+  color: #182128;
+}
+
+.card {
+  /*border: solid 1px #d8dce7;*/
+  font-size: 17.5px;
+  margin-top: 15px;
+  color: #182128;
+  display: block;
+  padding: 15px;
+  text-align: left;
+  width: 90%;
+  height: 70%;
+  background-color: #edffe2;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.75);
+}
+
+.card li:before{
+  content: '::';
+  margin-right: 10px;
+}
+
+.table td {
+  border-top: 1px solid #eeeff4;
+  text-align: center;
+  color: #818ba3;
+  padding: 5px;
+}
+
+.table th {
+  font-family: "SFUIRegular";
+  font-size: 16px;
+  color: #818ba3;
+  padding: 10px;
+}
+
+
+.table {
+  margin-top: 0;
+  width: 100%;
+  font-size: 16px;
+  border-collapse: collapse;
+  border: solid 2px #d8dce7;
+  background: #fdfeff;
+}
+
+.table td:nth-child(even) {
+  background: #f6f7fb;
+}
+.table th:nth-child(even) {
+  background: #f6f7fb;
+}
+
+.filter {
+  float: left;
+  font-size: 11px;
+  color: #bec5d7;
+  height: 40px;
+  margin-left: 38px;
+  padding-top: 14px;
+  position: relative;
+}
+
+.filter:before {
+  content: '';
+  position: absolute;
+  margin-left: -19px;
+  width: 1px;
+  height: 38px;
+  background-color: #35444f;
+}
+
+.filter:first-child:before {
+  display: none;
+}
+
+.sel {
+  font-size: 17.5px;
+  color: #89c331;
+}
+
+.header-select{
+  margin-left: -5px;
+  background-color: #1f2a32;
+  font-size: 22px;
+  padding-left: 0;
+  border:0px;
+  color: #89c331;
+  outline:0px;
+  font-family: "SFUI";
+}
+
+.modalDialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 99999;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+    display: none;
+    pointer-events: none;
+}
+
+.modalDialog:target {
+    display: block;
+    pointer-events: auto;
+}
+
+.modalDialog > div {
+    width: 500px;
+    position: relative;
+    margin: 10% auto;
+    /*padding: 10px 20px 13px 20px;*/
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 2px rgba(0, 0, 0, 0.75);
+}
+
+.modalDialog p {
+  margin-left: 15px;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.modalDialog select {
+  width: 470px;
+  margin-left: 15px;
+  border-radius: 3px;
+  font-size: 16px;
+  padding: 6px 6px 6px 6px;
+
+}
+
+.modalDialog input {
+  width: 455px;
+  margin-left: 15px;
+  border-radius: 3px;
+  font-size: 16px;
+  padding: 6px 6px 6px 6px;
+  border: 1px solid rgba(0, 0, 0, 0.40);;
+}
+
+.modal-header {
+  height: 40px;
+  padding: 16px 0 0 17px;
+  background-color: #182128;
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  font-family: "SFUI";
+}
+
+.modalDialog h2{
+  font-family: "SFUI";
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 100;
+}
+
+.close {
+    /*background: #606061;*/
+    color: #FFFFFF;
+    font-family: "SFUI";
+    font-size: 16px;
+    position: absolute;
+    right: 15px;
+    text-align: center;
+    top: 15px;
+    width: 24px;
+    text-decoration: none;
+    /*-webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    box-shadow: 1px 1px 3px #000;*/
+}
+
+.close:hover { color: #00d2ff; }
+
+.save-button {
+  width: 470px;
+  margin-left: 15px;
+  background-color: #00d2ff;
+  border-radius: 3px;
+  text-align: center;
+  color: #ffffff;
+  font-family: "SFUIRegular";
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  height: 42px;
+  border: none;
+  border-bottom: 3px solid #00afda;
+}
+
+.make-btn {
+  float: right;
+  margin-top: 15px;
+  color: #ffffff;
+  font-family: "SFUIRegular";
+  font-size: 16px;
+  padding-top: 14px;
+  text-align: center;
+  background: url(../img/save_btn.png) right no-repeat;
+  background-size: cover;
+  height: 34px;
+  width: 272.5px;
+}
+
+.make-btn2 {
+  float: right;
+  margin-top: 15px;
+  position: absolute;
+  right: 35px;
+  bottom: 15px;
+  color: #ffffff;
+  background: url(../img/save_plan.png) right no-repeat;
+  background-size: cover;
+  height: 50px;
+  width: 220px;
+}
+
+.cancel-btn {
+  float: right;
+  margin-top: 15px;
+  position: absolute;
+  left: 35px;
+  bottom: 15px;
+  color: #ffffff;
+  background: url(../img/cancel.png) right no-repeat;
+  background-size: cover;
+  height: 50px;
+  width: 220px;
+}
+
+.frag {
+  font-size: 18.5px;
+  padding: 10px;
+  color: #0f1419;
+}
+
+.frag-wrapper {
+  width: 100%;
+  border: solid 2px #d8dce7;
+  background-color: #f3f4f9;
+}
+
+.top-proc {
+  width: 370px;
+  height: 15px;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 5px 10px 10px 15px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: #1f2a32;
+  border: solid 2px #ff971d;
+}
+
+.add-btn{
+  text-decoration: none;
+  color: #ff971d;
+  font-size: 35px;
+  margin-top: -12px;
+  float: right;
+  font-family: "SFUIRegular";
+}
+
+.action {
+  width: 370px;
+  height: 15px;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 5px 10px 10px 15px;
+  margin-top: 13px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: #1f2a32;
+  border: solid 2px #ff971d;
+}
+
+.option {
+  width: 370px;
+  height: 32px;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 4px 15px 15px 15px;
+  border-radius: 3px;
+  margin-top: 13px;
+  margin-left: 15px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  background-color: #1f2a32;
+  border: solid 2px #ff971d;
+}
+
+.option select{
+  margin-top: 5px;
+  background-color: #1f2a32;
+  color: #ffffff;
+  border-radius: 5px;
+  border: solid 1.4px #ff971d;
+}
+
+.option input{
+  margin-top: 5px;
+  padding-left: 5px;
+  background-color: #1f2a32;
+  color: #ffffff;
+  border-radius: 5px;
+  border: solid 1.4px #ff971d;
+}
+
+.top-proc:after {
+  content: '';
+  width: 9px;
+  margin-top: 10px;
+  border-radius: 9px;
+  height: 9px;
+  display: block;
+  background-color: #ff971d;
+}
+
+.action:after {
+  content: '';
+  width: 9px;
+  margin-top: 13px;
+  margin-left: 14px;
+  border-radius: 9px;
+  height: 9px;
+  display: block;
+  background-color: #ff971d;
+}
+
+.option:after {
+  content: '';
+  width: 9px;
+  margin-top: 10px;
+  margin-left: 0px;
+  border-radius: 9px;
+  height: 9px;
+  display: block;
+  background-color: #ff971d;
+}
