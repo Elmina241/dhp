@@ -116,7 +116,7 @@
       var csrftoken = getCookie('csrftoken');
       $.ajax({
             type: "POST",
-            url: 'get_pass/',
+            url: 'get_act_by_prod/',
             data: {
               'prod': prod
             },
@@ -135,15 +135,16 @@
               for (i = 1; i < rowCount; i++) $('#prods tr').eq(1).remove();
               for (p in prods){
                 //matAm = matAm + comps[c].amount;
-                if (p!="date" && p!="code") $("<tr><td>" + prods[p].code + "</td><td>" + prods[p].name + "</td><td>" + prods[p].batch + "</td><td>" + prods[p].amount + "</td></tr>").appendTo(table);
+                if (p!="date" && p!="code"  && p!="check") $("<tr><td>" + prods[p].code + "</td><td>" + prods[p].name + "</td><td>" + prods[p].batch + "</td><td>" + prods[p].amount + "</td></tr>").appendTo(table);
               }
               //$("#tableName").text("Компоненты композиции " + comps[c].name);
-              $('#act').modal('show');
+              if (prods['check']) $('#act').modal('show');
             }
           });
     }
     function getPass(prod){
       var csrftoken = getCookie('csrftoken');
+      var id = prod;
       $.ajax({
             type: "POST",
             url: 'get_pass/',
@@ -158,13 +159,29 @@
             success: function onAjaxSuccess(data)
             {
               prod = JSON.parse(data);
-              $("#tableName").text("Паспорт фасовки № " + prod['id']);
+              $("#passName").text("Паспорт фасовки № " + prod['id']);
               $("#prod").text("Продукт: " + prod['code'] + " " + prod['name']);
-              $("#date").text("Дата: " + prod['date']);
+              $("#passDate").text("Дата: " + prod['date']);
               $("#amount").text("Количество, ед: " + prod['amount']);
               $("#batch").text("Партия: " + prod['batch']);
               $("#amount2").text("Вес партии, кг: " + prod['amount2']);
               $('#pass').modal('show');
+              $('#prodId').prop("value", id);
+            }
+          });
+    }
+    function print_pass(){
+      var csrftoken = getCookie('csrftoken');
+      $.ajax({
+            type: "POST",
+            url: 'print_pass/',
+            data: {
+              'prod': $('#prodId').prop("value")
+            },
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             }
           });
     }
@@ -321,17 +338,17 @@
                 <h4  class = "pg">Паспорт фасовки</h4>
               </div>
               <div class="modal-body">
-                <p class="text14" id="tableName"><b>Паспорт фасовки</b></p>
-                <div id="prod" class="text12">Дата: 01.01.1999</div>
-                <div id="date" class="text12">Дата: 01.01.1999</div>
+                <p class="text14" id="passName"><b>Паспорт фасовки</b></p>
+                <div id="prod" class="text12" style="margin-top: 50px">Дата: 01.01.1999</div>
+                <div id="passDate" class="text12">Дата: 01.01.1999</div>
                 <div id="amount" class="text12">Дата: 01.01.1999</div>
                 <div id="batch" class="text12">Дата: 01.01.1999</div>
                 <div id="amount2" class="text12">Дата: 01.01.1999</div>
-
+                <input id="prodId" value="" hidden />
                 <p class="text12" style="margin-top: 50px">Химик-технолог ________________________________</p>
                 <p class="text12">Заведующий производством ______________________</p>
               </div>
-              <div class="modal-footer pg"><button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button></div>
+              <div class="modal-footer pg"><button id="printBtn" type="button" class="btn btn-info" onclick="window.print();print_pass();">Печать</button></div>
             </div>
           </div>
         </div>

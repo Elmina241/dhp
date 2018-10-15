@@ -5,7 +5,7 @@ import json
 from django.core import serializers
 from django.utils import timezone
 import datetime
-from .models import  Movement_rec, Operation, Acceptance
+from .models import  Movement_rec, Operation, Acceptance, Packing_divergence
 from processes.models import Batch
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 
@@ -95,11 +95,14 @@ def get_act_by_prod(request):
         product = Movement_rec.objects.filter(pk = prod)[0]
         code = Acceptance.objects.filter(prod = product)[0].code
         inf_a = {}
+        err = True
         for a in Acceptance.objects.filter(code = code):
             date = a.date
+            err = err or a.prod.is_printed
             inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(), "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
         inf_a['date'] = date.strftime('%d.%m.%Y')
         inf_a['code'] = code
+        inf_a['check'] = err
         data = json.dumps(inf_a)
         return HttpResponse(data)
 
@@ -107,6 +110,16 @@ def get_pass(request):
     if request.method == 'POST':
         prod = request.POST['prod']
         product = Movement_rec.objects.filter(pk = prod)[0]
-        inf_a = {"id": prod, "code": product.product.code, "name": product.product.get_name_for_table(), "batch": product.get_batch(), "amount": str(product.amount), "date": product.date.strftime('%d.%m.%Y'), "amount2": product.product.production.compAmount * product.amount}
+        amount2 = Packing_divergence.objects.filter(batch = product.batch, date = product.date)[0].pack_amm
+        pass_num = Movement_rec.objects.filter(operation__id = 1, pk__lte = prod).count()
+        inf_a = {"id": pass_num, "code": product.product.code, "name": product.product.get_name_for_table(), "batch": product.get_batch(), "amount": str(int(product.amount)), "date": product.date.strftime('%d.%m.%Y'), "amount2": amount2}
         data = json.dumps(inf_a)
         return HttpResponse(data)
+
+def print_pass(request):
+    if request.method == 'POST':
+        if "prod" in request.POST:
+            product = Movement_rec.objects.filter(pk = request.POST['prod'])[0]
+            product.is_printed = True
+            product.save()
+            return HttpResponse("ok")

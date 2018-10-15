@@ -19,6 +19,7 @@ class Movement_rec(models.Model):
     amount = models.FloatField(null=True)
     date = models.DateField(auto_now_add=True)
     operation = models.ForeignKey('Operation')
+    is_printed = models.BooleanField(default = False)
     def __str__(self):
         return "test"
     def get_batch(self):
