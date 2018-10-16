@@ -98,7 +98,7 @@ def get_act_by_prod(request):
         err = True
         for a in Acceptance.objects.filter(code = code):
             date = a.date
-            err = err or a.prod.is_printed
+            err = err and Movement_rec.objects.filter(batch = a.prod.batch)[0].is_printed
             inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(), "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
         inf_a['date'] = date.strftime('%d.%m.%Y')
         inf_a['code'] = code
