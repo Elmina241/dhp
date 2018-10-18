@@ -98,7 +98,7 @@
     <table class="table table-hover table-sm  table-bordered table-condensedtable">
       <thead>
         <tr>
-          <th>Наименование</th><th>Масса, кг</th><th>Допустимый вес, кг</th>
+          <th>Наименование</th><th>Масса, кг</th>
         </tr>
       </thead>
       <tbody>
@@ -107,11 +107,6 @@
           <tr>
             <td style="padding: 2px;">{{values2.name}}</td>
             <td style="padding: 2px;">{{values2.ammount|floatformat:"2"}}</td>
-            {% if values2.min == None %}
-              <td style="padding: 2px;">--</td>
-            {% else %}
-              <td style="padding: 2px;">{{values2.min}} - {{values2.max}}</td>
-            {% endif %}
           </tr>
         {% endif %}
         {% endfor %}
@@ -143,7 +138,7 @@
     <table class="table table-hover table-sm  table-bordered table-condensedtable">
       <thead>
         <tr>
-          <th>Наименование</th><th>Масса, кг</th><th>Допустимый вес, кг</th>
+          <th>Наименование</th><th>Масса, кг</th>
         </tr>
       </thead>
       <tbody>
@@ -152,11 +147,6 @@
           <tr>
             <td style="padding: 2px;">{{values2.name}}</td>
             <td style="padding: 2px;">{{values2.ammount|floatformat:"2"}}</td>
-            {% if values2.min == None %}
-              <td style="padding: 2px;">--</td>
-            {% else %}
-              <td style="padding: 2px;">{{values2.min}} - {{values2.max}}</td>
-            {% endif %}
           </tr>
         {% endif %}
         {% endfor %}
