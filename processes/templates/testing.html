@@ -87,7 +87,25 @@ function arrayObjectIndexOf(myArray, searchTerm) {
     return -1;
 }
 
+function checkTest(){
+  ok = true;
+  inputs = $(":input[type=number]")
+  for (inp in inputs){
+    ok = ok && $(inputs[inp]).prop("value") == "";
+  }
+  res = ok;
+}
+
 $(document).ready(function(){
+  $(":input").change(function (){
+    ok = true;
+    inputs = $(':input[type="number"]')
+    for (inp in inputs){
+      ok = ok && $(inputs[inp]).prop("value") != "";
+    }
+    res = ok;
+  });
+  $(":radio").change(checkTest());
   $("#send").prop('disabled', false);
 });
 
@@ -185,14 +203,14 @@ $(document).ready(function(){
               {% for c in chars %}
                 {% if c.characteristic.char_type.id != 3 %}
                   <li class="list-group-item list-group-item active">{{c.characteristic.get_group }}</li>
-                  <li class='list-group-item' id="{{c.characteristic.id}}">
+                  <li class='list-group-item char' id="{{c.characteristic.id}}">
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                     <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' value="{{c.kneading_char_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                   </li>
                 {% else %}
 
                   <li class="list-group-item list-group-item active">{{ c.characteristic.get_group }}</li>
-                  <li class='list-group-item' id={{c.characteristic.id}}>
+                  <li class='list-group-item char' id={{c.characteristic.id}}>
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                     {% if isTested %}
                       <script>getCheckedElems({{c.id}}, {{c.characteristic.id}})</script>
