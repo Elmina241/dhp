@@ -89,24 +89,28 @@ function arrayObjectIndexOf(myArray, searchTerm) {
 
 function checkTest(){
   ok = true;
-  inputs = $(":input[type=number]")
-  for (inp in inputs){
-    ok = ok && $(inputs[inp]).prop("value") == "";
+  inputs = $(':input[type="number"]')
+  for (i=0; i < inputs.length; i++){
+    ok = ok && $(inputs[i]).prop("value") != "";
   }
-  res = ok;
+  inputs = $('.char');
+  for (i=0; i < inputs.length; i++){
+    radios = inputs[i].getElementsByTagName('input');
+    isChecked = false;
+    for (j=0; j < radios.length; j++){
+      isChecked = isChecked || radios[j].checked;
+    }
+    ok = ok && isChecked;
+  }
+  $("#send").prop('disabled', !ok);
 }
 
 $(document).ready(function(){
-  $(":input").change(function (){
-    ok = true;
-    inputs = $(':input[type="number"]')
-    for (inp in inputs){
-      ok = ok && $(inputs[inp]).prop("value") != "";
-    }
-    res = ok;
-  });
-  $(":radio").change(checkTest());
-  $("#send").prop('disabled', false);
+  chars = document.getElementById('chars');
+  chars.onchange = function(event){
+    checkTest();
+  };
+  checkTest();
 });
 
 </script>
@@ -118,8 +122,11 @@ $(document).ready(function(){
   <li  class="current"><a href="#" title=""><em>Тестирование</em></a></li>
   <li><a href="#" title=""><em>Перемещение</em></a></li>
 </ul>
-
+{% if isTested %}
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
+{% else %}
+<button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'" disabled><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
+{% endif %}
 <button type="button" class="btn btn-danger" onclick="$('#confirm').modal('show');" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
@@ -203,7 +210,7 @@ $(document).ready(function(){
               {% for c in chars %}
                 {% if c.characteristic.char_type.id != 3 %}
                   <li class="list-group-item list-group-item active">{{c.characteristic.get_group }}</li>
-                  <li class='list-group-item char' id="{{c.characteristic.id}}">
+                  <li class='list-group-item' id="{{c.characteristic.id}}">
                     <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
                     <div class='form-group' style='margin-bottom: 20pt'><input id='number' type='number' value="{{c.kneading_char_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
                   </li>
