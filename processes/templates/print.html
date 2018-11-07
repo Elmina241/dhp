@@ -135,8 +135,13 @@
       <p>Декларация о соответствии {{p.kneading.list.formula.composition.declaration}}</p>
       {% endif %}
       <br>
+      {% if p.kneading.isValid %}
       <p>Заключение: качество продукции соответствует требованиям {{p.kneading.list.formula.composition.standard}}</p>
+      {% else %}
+      <p>Заключение: качество продукции не соответствует требованиям {{p.kneading.list.formula.composition.standard}}</p>
+      {% endif %}
       <br>
+      {{ temp }}
       <p>Химик-технолог ______________________________________________</p>
       <p>Заведующий производством ____________________________________</p>
 

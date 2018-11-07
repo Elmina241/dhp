@@ -1430,8 +1430,9 @@ def save_kneading_char(request, kneading_id):
     Kneading_char.objects.filter(kneading = kneading).delete()
     for p in processes:
         Kneading_char.objects.filter(kneading = p).delete()
-    chars = Composition_char.objects.filter(comp = kneading.list.formula.composition)
+    chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = False)
     isValid = True
+    temp = "True"
     for char in chars:
         if (char.characteristic.char_type.id != 3):
             if str(char.characteristic.id) in request.POST:
@@ -1449,14 +1450,14 @@ def save_kneading_char(request, kneading_id):
             if (str(char.characteristic.id) + "'checked'") in request.POST:
                 char_var = request.POST[str(char.characteristic.id) + "'checked'"]
                 for p in processes:
-                    kneading_char = kneading_char = Kneading_char(kneading = p, characteristic = char.characteristic)
+                    kneading_char = Kneading_char(kneading = p, characteristic = char.characteristic)
                     kneading_char.save()
                     set_var = get_object_or_404(Set_var, pk=char_var)
                     kneading_char_var = Kneading_char_var(kneading_char = kneading_char, char_var = set_var)
                     kneading_char_var.save()
                 #Проверка на соответсвие показателям
                 comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = char.characteristic)[0]
-                isValid = isValid & (Comp_char_var.objects.filter(comp_char = comp_char, char_var = set_var).count() != 0)
+                isValid = isValid & (Comp_char_var.objects.filter(comp_char = comp_char, char_var__name = set_var.name).count() != 0)
     for p in processes:
         p.isTested = True
         p.isValid = isValid
