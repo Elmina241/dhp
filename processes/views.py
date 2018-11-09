@@ -1055,6 +1055,12 @@ def get_stor_inf(request):
     json_data = json.dumps(data)
     return HttpResponse(json_data)
 
+def return_to_testing(request, kneading_id):
+    kneading = get_object_or_404(Kneading, pk=kneading_id)
+    st = State_log(kneading = kneading, state = get_object_or_404(State, pk=4))
+    st.save()
+    return redirect('kneading_detail', kneading_id = kneading_id)
+
 
 def start_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
@@ -1340,8 +1346,9 @@ def kneading_detail(request, kneading_id):
                 except Kneading_char_number.DoesNotExist:
                     chars[i] = {}
             else:
-                val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
-                chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+                if  Kneading_char_var.objects.filter(kneading_char = c).count() != 0:
+                    val = Kneading_char_var.objects.filter(kneading_char = c)[0].char_var.name
+                    chars[i] = {'group' : c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
             i = i+1
         temp_chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = True)
         for c in temp_chars:

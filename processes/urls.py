@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^process/(?P<kneading_id>[0-9]+)/stop_process/$', views.stop_process, name='stop_process'),
     url(r'^process/(?P<kneading_id>[0-9]+)/finish_testing/$', views.finish_testing, name='finish_testing'),
     url(r'^process/(?P<kneading_id>[0-9]+)/finish_process/$', views.finish_process, name='finish_process'),
+    url(r'^process/(?P<kneading_id>[0-9]+)/return_to_testing/$', views.return_to_testing, name='return_to_testing'),
     url(r'^process/(?P<kneading_id>[0-9]+)/mixing/$', views.start_mixing, name='start_mixing'),
     url(r'^process/(?P<composition_id>[0-9]+)/get_elems/$', tables.views.get_elems, name='get_elems'),
     url(r'^process/(?P<composition_id>[0-9]+)/get_checked_elems/$', views.get_checked_elems, name='get_checked_elems'),
