@@ -1321,6 +1321,8 @@ def kneading_detail(request, kneading_id):
             chars = Kneading_char.objects.filter(kneading = kneading)
         else:
             chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = False)
+        if kneading.list.formula.composition.isFinal == False:
+            isTested = True
         return render(request, 'testing.html', {
                                                 "chars": chars,
                                                 "isTested": isTested,

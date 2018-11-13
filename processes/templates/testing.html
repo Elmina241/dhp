@@ -122,7 +122,11 @@ $(document).ready(function(){
   <li  class="current"><a href="#" title=""><em>Тестирование</em></a></li>
   <li><a href="#" title=""><em>Перемещение</em></a></li>
 </ul>
+{% if isTested %}
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
+{% else %}
+<button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'" disabled><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
+{% endif %}
 <button type="button" class="btn btn-danger" onclick="$('#confirm').modal('show');" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
 <div class="panel panel-default" style ="margin: auto">
   <div class="panel-heading">
