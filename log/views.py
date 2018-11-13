@@ -6,7 +6,7 @@ from django.core import serializers
 from django.utils import timezone
 import datetime
 from .models import  Movement_rec, Operation, Acceptance, Packing_divergence
-from processes.models import Batch
+from processes.models import Batch, Kneading_char, Kneading_char_number, Kneading_char_var
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 
 def materials(request):
@@ -112,7 +112,33 @@ def get_pass(request):
         product = Movement_rec.objects.filter(pk = prod)[0]
         amount2 = Packing_divergence.objects.filter(batch = product.batch, date = product.date)[0].pack_amm
         pass_num = Movement_rec.objects.filter(operation__id = 1, pk__lte = prod).count()
-        inf_a = {"id": pass_num, "code": product.product.code, "name": product.product.get_name_for_table(), "batch": product.get_batch(), "amount": str(int(product.amount)), "date": product.date.strftime('%d.%m.%Y'), "amount2": amount2}
+        inf_a = {
+            "id": pass_num,
+            "code": product.product.code,
+            "name": product.product.get_name_for_table(),
+            "batch": product.get_batch(),
+            "amount": str(amount2),
+            "date": product.batch.kneading.finish_date.strftime('%d.%m.%Y'),
+            "standard": product.batch.kneading.list.formula.composition.standard,
+            "pack": product.batch.kneading.list.formula.composition.get_package,
+            "sh_life": product.batch.kneading.list.formula.composition.sh_life
+        }
+        kneading = product.batch.kneading
+        chars = {}
+        temp_chars = Kneading_char.objects.filter(kneading=kneading)
+        i = 0
+        for c in temp_chars:
+            if c.characteristic.char_type.id != 3:
+                try:
+                    chars[i] = {'group': c.characteristic.group.name, 'name': c.characteristic.name,
+                                'value': c.kneading_char_number.number}
+                except Kneading_char_number.DoesNotExist:
+                    chars[i] = {}
+            else:
+                if Kneading_char_var.objects.filter(kneading_char=c).count() != 0:
+                    val = Kneading_char_var.objects.filter(kneading_char=c)[0].char_var.name
+                    chars[i] = {'group': c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+            i = i + 1
         data = json.dumps(inf_a)
         return HttpResponse(data)
 
