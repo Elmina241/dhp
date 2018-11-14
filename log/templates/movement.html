@@ -8,6 +8,30 @@
         input:invalid {
             border-color: red;
         }
+    .text14{
+      font-size:14pt;
+      text-align: center;
+      line-height: 12pt;
+      margin-bottom: 5pt;
+    }
+    .text12{
+      line-height: 12pt;
+      font-size:12pt;
+      margin-bottom: 5pt;
+    }
+    .passport {
+  /*height: 842pt; /* Высота блока */
+  width: 595pt; /* Ширина блока */
+  /*border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;*/
+  font: 14pt;
+  font-family: 'Times New Roman', Times, serif;
+  margin: auto;
+}
+    .line {
+        display:inline-block;
+    }
     </style>
     <script type="text/javascript">
         var count = 1;
@@ -161,14 +185,21 @@
                 },
                 success: function onAjaxSuccess(data) {
                     prod = JSON.parse(data);
-                    $("#passName").text(prod['id']);
-                    $("#prod").text("Продукт: " + prod['code'] + " " + prod['name']);
-                    $("#passDate").text("Дата: " + prod['date']);
-                    $("#amount").text("Количество, ед: " + prod['amount']);
-                    $("#batch").text(prod['batch']);
-                    $("#amount2").text("Израсходовано материалов, кг: " + prod['amount2']);
+                    $("#passName").text(prod["inf_a"]['id']);
+                    $("#prod").text(prod["inf_a"]['name']);
+                    $("#passDate").text(prod["inf_a"]['date']);
+                    $("#amount").text(prod["inf_a"]['amount']);
+                    $("#batch").text(prod["inf_a"]['batch']);
+                    $("#standard").text(prod["inf_a"]['standard']);
+                    $("#standard2").text(prod["inf_a"]['standard']);
+                    $("#pack").text(prod["inf_a"]['pack']);
+                    $("#shLife").text(prod["inf_a"]['sh_life']);
+                    for (i in prod['chars']){
+                        $("<tr><td>" + prod['chars'][i].name + "</td><td>" + prod['chars'][i].norm + "</td><td>" + prod['chars'][i].value + "</td></tr>").appendTo("#testing");
+                    }
                     $('#pass').modal('show');
                     $('#prodId').prop("value", id);
+
                 }
             });
         }
@@ -384,17 +415,17 @@
                             Снеговая, д.64
                         </div>
                         <div class="text14">
-                            <p>ПАСПОРТ ПРОДУКЦИИ № {{ p.kneading.id }}<div id=""</p>
-                            <p>{{ p.kneading.list }}</p>
+                            <p class="line">ПАСПОРТ ПРОДУКЦИИ № </p><div id="passName" class="line"></div>
+                            <p><div id="prod"></div></p>
                         </div>
-                        <div class="text12"
-                             style="text-align: center;margin-bottom:15pt">{{ p.kneading.list.formula.composition.standard }}</div>
+                        <div class="text12" id="standard"
+                             style="text-align: center;margin-bottom:15pt"></div>
                         <div class="text12">
-                            <p>Номер партии: {{ p.kneading.batch_num|floatformat:"0" }}</p>
-                            <p>Вес партии, кг: {{ amount|floatformat:"2" }}</p>
-                            <p>Дата изготовления: {{ p.finish_date|date:"d.m.Y" }}</p>
-                            <p>Упаковка: {{ p.kneading.list.formula.composition.get_package }}</p>
-                            <p>Гарантийный срок хранения: {{ p.kneading.list.formula.composition.sh_life }} месяца с даты
+                            <p class="line">Номер партии: &nbsp;</p><div id="batch" class="line"></div> <br>
+                            <p class="line">Вес партии, кг: &nbsp;</p><div id="amount" class="line"></div><br>
+                            <p class="line">Дата изготовления: &nbsp;</p><div id="passDate" class="line"></div><br>
+                            <p class="line">Упаковка: &nbsp;</p><div id="pack" class="line"></div><br>
+                            <p class="line">Гарантийный срок хранения: &nbsp;<div id="shLife" class="line"></div>&nbsp; месяца с даты
                                 производства при соблюдении условий транспортировки и хранения</p>
 
                         <div class="text12">
@@ -410,31 +441,13 @@
                                     <th>Фактические данные</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                {% for key, values in chars.items %}
-                                    {% if values.type == 1 %}
-                                        <tr>
-                                            {% if values.group != 'отсутствует' %}
-                                                <td>{{ values.group }}: {{ values.name }}</td>
-                                            {% else %}
-                                                <td>{{ values.name }}</td>
-                                            {% endif %}
-                                            <td>{{ values.norm }}</td>
-                                            <td>{{ values.value }}</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
+                                <tbody id="testing">
                                 </tbody>
                             </table>
                         </div>
                         <div class="text12">
-                            {% if p.kneading.isValid %}
-                                <p>Заключение: качество продукции соответствует
-                                    требованиям {{ p.kneading.list.formula.composition.standard }}</p>
-                            {% else %}
-                                <p>Заключение: качество продукции не соответствует
-                                    требованиям {{ p.kneading.list.formula.composition.standard }}</p>
-                            {% endif %}
+                                <p class="line">Заключение: качество продукции соответствует
+                                    требованиям &nbsp;</p><div id="standard2" class="line"></div>
                             <br>
                             <p>Представитель ОТК ___________________________________________</p>
                         </div>

@@ -2,6 +2,8 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
+from typing import Any
+
 from tables.models import Product, Composition, Comp_prop_var, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Pack_process, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 from log.models import Movement_rec, Operation, Packing_divergence
@@ -1184,7 +1186,7 @@ def print_passport(request, kneading_id):
     #for c in components:
         #comps[c.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * kneading.list.ammount}
     chars = {}
-    temp_chars = Kneading_char.objects.filter(kneading = kneading).order_by('-characteristic__group')
+    temp_chars = Kneading_char.objects.filter(kneading = kneading).order_by('-characteristic__group')  # type: Any
     i = 0
     for c in temp_chars:
         comp_char = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic = c.characteristic)[0]

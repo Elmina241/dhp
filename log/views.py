@@ -120,26 +120,37 @@ def get_pass(request):
             "amount": str(amount2),
             "date": product.batch.kneading.finish_date.strftime('%d.%m.%Y'),
             "standard": product.batch.kneading.list.formula.composition.standard,
-            "pack": product.batch.kneading.list.formula.composition.get_package,
+            "pack": product.batch.kneading.list.formula.composition.get_package(),
             "sh_life": product.batch.kneading.list.formula.composition.sh_life
         }
         kneading = product.batch.kneading
         chars = {}
-        temp_chars = Kneading_char.objects.filter(kneading=kneading)
+        temp_chars = Kneading_char.objects.filter(kneading=kneading).order_by('-characteristic__group')  # type: Any
         i = 0
         for c in temp_chars:
+            comp_char = Composition_char.objects.filter(comp=kneading.list.formula.composition, characteristic=c.characteristic)[0]
             if c.characteristic.char_type.id != 3:
                 try:
-                    chars[i] = {'group': c.characteristic.group.name, 'name': c.characteristic.name,
-                                'value': c.kneading_char_number.number}
+                    chars[i] = {'group': c.characteristic.group.name, 'type': 1,
+                                'norm': str(comp_char.comp_char_range.inf) + "-" + str(comp_char.comp_char_range.sup),
+                                'name': c.characteristic.name, 'value': c.kneading_char_number.number}
                 except Kneading_char_number.DoesNotExist:
                     chars[i] = {}
             else:
-                if Kneading_char_var.objects.filter(kneading_char=c).count() != 0:
+                vars = Comp_char_var.objects.filter(comp_char=comp_char)
+                vars_str = ""
+                for v in vars:
+                    vars_str = vars_str + str(v.char_var) + ", "
+                vars_str = vars_str[:(len(vars_str) - 2)]
+                if Kneading_char_var.objects.filter(kneading_char=c).count() > 0:
                     val = Kneading_char_var.objects.filter(kneading_char=c)[0].char_var.name
-                    chars[i] = {'group': c.characteristic.group.name, 'name': c.characteristic.name, 'value': val}
+                    chars[i] = {'group': c.characteristic.group.name, 'type': 1, 'norm': vars_str,
+                                'name': c.characteristic.name, 'value': val}
             i = i + 1
-        data = json.dumps(inf_a)
+        data = {}
+        data["inf_a"] = inf_a
+        data["chars"] = chars
+        data = json.dumps(data)
         return HttpResponse(data)
 
 def print_pass(request):
