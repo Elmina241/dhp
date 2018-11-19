@@ -122,6 +122,21 @@ class Composition(models.Model):
             else:
                 res = res + " г"
         return res
+    def get_package_pass(self):
+        res = self.package + " по "
+        prods = Production.objects.filter(composition = self)
+        amms = set()
+        for p in prods:
+            if p.compAmount != 0 and p.compAmount != 5:
+                amms.add(str(int(p.compAmount * 1000)))
+        length = len(amms)
+        for i in range(length):
+            res = res + amms.pop()
+            if len(amms) != 0:
+                res = res + " или "
+            else:
+                res = res + " г"
+        return res
 
 
 class Components(models.Model):

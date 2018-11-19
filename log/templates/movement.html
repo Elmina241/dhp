@@ -194,6 +194,8 @@
                     $("#standard2").text(prod["inf_a"]['standard']);
                     $("#pack").text(prod["inf_a"]['pack']);
                     $("#shLife").text(prod["inf_a"]['sh_life']);
+                    var rowCount = $('#testing tr').length;
+                    for (i = 0; i < rowCount; i++) $('#testing tr').eq(0).remove();
                     for (i in prod['chars']){
                         $("<tr><td>" + prod['chars'][i].name + "</td><td>" + prod['chars'][i].norm + "</td><td>" + prod['chars'][i].value + "</td></tr>").appendTo("#testing");
                     }

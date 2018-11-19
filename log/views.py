@@ -110,17 +110,17 @@ def get_pass(request):
     if request.method == 'POST':
         prod = request.POST['prod']
         product = Movement_rec.objects.filter(pk = prod)[0]
-        amount2 = Packing_divergence.objects.filter(batch = product.batch, date = product.date)[0].pack_amm
+        #amount2 = Packing_divergence.objects.filter(batch = product.batch, date = product.date)[0].pack_amm
         pass_num = Movement_rec.objects.filter(operation__id = 1, pk__lte = prod).count()
         inf_a = {
             "id": pass_num,
             "code": product.product.code,
             "name": product.product.get_name_for_table(),
             "batch": product.get_batch(),
-            "amount": str(amount2),
+            "amount": product.batch.kneading.list.ammount,
             "date": product.batch.kneading.finish_date.strftime('%d.%m.%Y'),
             "standard": product.batch.kneading.list.formula.composition.standard,
-            "pack": product.batch.kneading.list.formula.composition.get_package(),
+            "pack": product.batch.kneading.list.formula.composition.get_package_pass(),
             "sh_life": product.batch.kneading.list.formula.composition.sh_life
         }
         kneading = product.batch.kneading
