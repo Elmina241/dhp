@@ -23,7 +23,7 @@ function getComponents(c, m, f_c, f) {
       input.type = "number";
       input.name = getCode(f_comp[i].fields.mat, materials);
       input.setAttribute('onchange', "changeWater();return false;");
-      input.setAttribute('step', "0.01");
+      input.setAttribute('step', "0.001");
       input.value = (f_comp[i].fields.ammount/1020*amm).toFixed(2);
       var bounds = getMinMax(components, getComp(formulas, f_comp[i].fields.formula), f_comp[i].fields.mat);
       td1.appendChild(document.createTextNode(getCode(f_comp[i].fields.mat, materials)));
@@ -215,7 +215,7 @@ function getComponents2(c, m, l_c, l_id, t_name) {
       var min = ((bounds.min/100)*amm).toFixed(2);
       var max = ((bounds.max/100)*amm).toFixed(2);
       if (t_name=='materials'){
-        $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' min=" + min + " max=" + max + " step='0.01' value=" + mat_amm + '>').appendTo(tbody);
+        $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td><input type='number' name=" + mat_code + " onchange='changeWater();return false;' min=" + min + " max=" + max + " step='0.001' value=" + mat_amm + '>').appendTo(tbody);
       }
       else{
         $('<tr id='+ l_comp[i].fields.mat + '><td>' + mat_code + '</td><td>' + mat_name + '</td><td>' + min + '</td><td>' + max + "</td><td>" + mat_amm + '</td>').appendTo(tbody);
@@ -238,9 +238,9 @@ function getLoadList(loadList, t_name) {
         var max = "-";
       }
       if (t_name=='materials'){
-        if (loadList[i].type != "5") $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' class='min' name=" + loadList[i].mat_code + "_min" + " style='width: 7em'" + " value=" + min + '>' + '</td><td>' + "<input type='number' class='max' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td></td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+        if (loadList[i].type != "5") $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' class='min' name=" + loadList[i].mat_code + "_min" + " style='width: 7em'" + " value=" + min + '>' + '</td><td>' + "<input type='number' class='max' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td></td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.001' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
         else {
-          $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' class='min' name=" + loadList[i].mat_code + "_min"  + " style='width: 7em'" +  " value=" + min + '>' + '</td><td>' + "<input type='number' class='max' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td>" + getSelectOfComp(loadList[i].cont_id)  + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.01' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
+          $('<tr id='+ loadList[i].type + '_' + loadList[i].cont_id + '><td>' + loadList[i].mat_code + '</td><td>' + loadList[i].mat_name + '</td><td>' + "<input type='number' class='min' name=" + loadList[i].mat_code + "_min"  + " style='width: 7em'" +  " value=" + min + '>' + '</td><td>' + "<input type='number' class='max' name=" + loadList[i].mat_code + "_max"  + " style='width: 7em'" +  " value=" + max + '>' + "</td><td>" + getSelectOfComp(loadList[i].cont_id)  + "</td><td><input type='number' class='term' name=" + loadList[i].mat_code + "  min=" + min + " max=" + max + " step='0.001' value=" + loadList[i].amount + '>'+ '</td>' + '<td style="visibility:collapse;width:1px">' + loadList[i].type + '_' + loadList[i].cont_id + '_' + loadList[i].amount + '</td></tr>').appendTo(tbody);
         }
       }
       else{
@@ -248,6 +248,7 @@ function getLoadList(loadList, t_name) {
       }
   }
 };
+
 
 //Функция для передачи изменений в загрузочном листе в таблицу materials2
 function changeMatTable(){
@@ -363,7 +364,7 @@ function getModelList(m, m_c, compl) {
   for (i = 0; i < m_comp.length; i++){
     if (m_comp[i].fields.list == sel_id){
       var row = document.createElement("TR");
-      var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
+      var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(3) ;
       if (m_comp[i].fields.formula == null){
         $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td></td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
