@@ -3,10 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="25317915-4a66-47a2-81b7-518c2ac33d7c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TEST5.FDB" beforeDir="false" afterPath="$PROJECT_DIR$/TEST5.FDB" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processes/static/scripts/json_to_table57.js" beforeDir="false" afterPath="$PROJECT_DIR$/processes/static/scripts/json_to_table57.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processes/templates/loading_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/processes/templates/loading_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processes/templates/print_lists.html" beforeDir="false" afterPath="$PROJECT_DIR$/processes/templates/print_lists.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/templates/arch_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/processes/templates/arch_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/processes/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/tables/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/tables/base.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -55,7 +54,7 @@
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="391">
+                <state relative-caret-position="408">
                   <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
                   <folding>
                     <element signature="e#695#736#0" expanded="true" />
@@ -65,8 +64,12 @@
             </entry>
           </file>
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/tables/urls.py">
-              <provider selected="true" editor-type-id="text-editor" />
+            <entry file="file://$PROJECT_DIR$/processes/urls.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1003">
+                  <caret line="61" column="49" selection-start-line="61" selection-start-column="49" selection-end-line="61" selection-end-column="49" />
+                </state>
+              </provider>
             </entry>
           </file>
           <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
@@ -85,71 +88,47 @@
           <file leaf-file-name="movement.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="459">
+                <state relative-caret-position="7242">
                   <caret line="426" column="50" selection-start-line="426" selection-start-column="50" selection-end-line="426" selection-end-column="50" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+          <file leaf-file-name="base.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/tables/templates/tables/base.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="442">
-                  <caret line="26" column="60" selection-start-line="26" selection-start-column="60" selection-end-line="26" selection-end-column="60" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="custom_tags.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/log/templatetags/custom_tags.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
+                <state relative-caret-position="369">
+                  <caret line="40" column="19" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="19" />
                   <folding>
-                    <element signature="e#0#27#0" expanded="true" />
+                    <element signature="n#style#0;n#img#0;n#body#0;n#!!top" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="print.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/print.html">
+          <file leaf-file-name="finished.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/templates/finished.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="77" column="33" selection-start-line="77" selection-start-column="33" selection-end-line="77" selection-end-column="33" />
+                <state relative-caret-position="364">
+                  <caret line="101" column="51" selection-start-line="101" selection-start-column="51" selection-end-line="101" selection-end-column="51" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="print_lists.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/print_lists.html">
+          <file leaf-file-name="arch_detail.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/templates/arch_detail.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="485">
-                  <caret line="113" column="23" selection-start-line="113" selection-start-column="23" selection-end-line="113" selection-end-column="23" />
-                  <folding>
-                    <element signature="n#style#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#1;n#div#0;n#body#0;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#1;n#div#0;n#body#0;n#!!top" expanded="true" />
-                  </folding>
+                <state relative-caret-position="476">
+                  <caret line="97" column="225" selection-start-line="97" selection-start-column="225" selection-end-line="97" selection-end-column="225" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="planning.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/planning.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="437">
-                  <caret line="101" column="89" selection-start-line="101" selection-start-column="77" selection-end-line="101" selection-end-column="89" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="json_to_table57.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="json_to_table57.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="449">
-                  <caret line="363" column="38" lean-forward="true" selection-start-line="363" selection-start-column="38" selection-end-line="363" selection-end-column="38" />
+                <state relative-caret-position="534">
+                  <caret line="368" column="38" selection-start-line="368" selection-start-column="38" selection-end-line="368" selection-end-column="38" />
                   <folding>
                     <element signature="n#style#0;n#input#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#input#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
@@ -204,6 +183,7 @@
       <find>step=0.001</find>
       <find>addMaterialP</find>
       <find>addComplCompP</find>
+      <find>goBack</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -220,6 +200,9 @@
         <option value="$PROJECT_DIR$/processes/templates/print_lists.html" />
         <option value="$PROJECT_DIR$/processes/templates/loading_list.html" />
         <option value="$PROJECT_DIR$/processes/static/scripts/json_to_table57.js" />
+        <option value="$PROJECT_DIR$/processes/templates/arch_detail.html" />
+        <option value="$PROJECT_DIR$/processes/urls.py" />
+        <option value="$PROJECT_DIR$/tables/templates/tables/base.html" />
       </list>
     </option>
   </component>
@@ -233,10 +216,9 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="10" />
-    <option name="y" value="20" />
-    <option name="width" value="1346" />
-    <option name="height" value="688" />
+    <option name="x" value="953" />
+    <option name="width" value="974" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -244,6 +226,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -321,12 +304,11 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Новая папка/stock" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Задачи/node/chat/-" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
@@ -417,30 +399,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tables/templates/formula.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="35" column="93" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="93" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2363">
-          <caret line="148" column="21" selection-start-line="148" selection-start-column="21" selection-end-line="148" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23035">
-          <caret line="1355" column="19" selection-start-line="1342" selection-start-column="8" selection-end-line="1355" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -703,19 +661,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
-          <folding>
-            <element signature="e#695#736#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tables/urls.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/django_example/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -730,34 +675,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log/templatetags/custom_tags.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tables/templates/tables/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="60" selection-start-line="26" selection-start-column="60" selection-end-line="26" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
+        <state relative-caret-position="7242">
           <caret line="426" column="50" selection-start-line="426" selection-start-column="50" selection-end-line="426" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/print.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="77" column="33" selection-start-line="77" selection-start-column="33" selection-end-line="77" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -771,49 +692,108 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/print_lists.html">
+    <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="113" column="23" selection-start-line="113" selection-start-column="23" selection-end-line="113" selection-end-column="23" />
+        <state relative-caret-position="534">
+          <caret line="368" column="38" selection-start-line="368" selection-start-column="38" selection-end-line="368" selection-end-column="38" />
           <folding>
-            <element signature="n#style#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#0;n#div#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#2;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#1;n#div#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#2;n#div#1;n#div#0;n#body#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#6;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#6;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#4;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#4;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/processes/templates/planning.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="101" column="89" selection-start-line="101" selection-start-column="77" selection-end-line="101" selection-end-column="89" />
+        <state relative-caret-position="1559">
+          <caret line="98" column="36" lean-forward="true" selection-start-line="98" selection-start-column="36" selection-end-line="98" selection-end-column="36" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
+    <entry file="file://$PROJECT_DIR$/processes/templates/print_lists.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="363" column="38" lean-forward="true" selection-start-line="363" selection-start-column="38" selection-end-line="363" selection-end-column="38" />
+        <state relative-caret-position="17">
+          <caret line="113" column="23" selection-start-line="113" selection-start-column="23" selection-end-line="113" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/print.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="77" column="33" selection-start-line="77" selection-start-column="33" selection-end-line="77" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/templatetags/custom_tags.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="9" lean-forward="true" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
           <folding>
-            <element signature="n#style#0;n#input#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#6;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#6;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#5;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#4;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#4;n#tr#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/arch_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="97" column="225" selection-start-line="97" selection-start-column="225" selection-end-line="97" selection-end-column="225" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/finished.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="101" column="51" selection-start-line="101" selection-start-column="51" selection-end-line="101" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="26" column="24" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+          <folding>
+            <element signature="e#695#736#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="61" column="49" selection-start-line="61" selection-start-column="49" selection-end-line="61" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/tables/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="40" column="19" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="19" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#body#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
