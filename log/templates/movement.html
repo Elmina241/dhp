@@ -9,30 +9,34 @@
         input:invalid {
             border-color: red;
         }
-    .text14{
-      font-size:14pt;
-      text-align: center;
-      line-height: 12pt;
-      margin-bottom: 5pt;
-    }
-    .text12{
-      line-height: 12pt;
-      font-size:12pt;
-      margin-bottom: 5pt;
-    }
-    .passport {
-  /*height: 842pt; /* Высота блока */
-  width: 595pt; /* Ширина блока */
-  /*border-left: 1px solid black;
-  border-right: 1px solid black;
-  border-top: 1px solid black;*/
-  font: 14pt;
-  font-family: 'Times New Roman', Times, serif;
-  margin: auto;
-}
-    .line {
-        display:inline-block;
-    }
+
+        .text14 {
+            font-size: 14pt;
+            text-align: center;
+            line-height: 12pt;
+            margin-bottom: 5pt;
+        }
+
+        .text12 {
+            line-height: 12pt;
+            font-size: 12pt;
+            margin-bottom: 5pt;
+        }
+
+        .passport {
+            /*height: 842pt; /* Высота блока */
+            width: 595pt; /* Ширина блока */
+            /*border-left: 1px solid black;
+            border-right: 1px solid black;
+            border-top: 1px solid black;*/
+            font: 14pt;
+            font-family: 'Times New Roman', Times, serif;
+            margin: auto;
+        }
+
+        .line {
+            display: inline-block;
+        }
     </style>
     <script type="text/javascript">
         var count = 1;
@@ -197,7 +201,7 @@
                     $("#shLife").text(prod["inf_a"]['sh_life']);
                     var rowCount = $('#testing tr').length;
                     for (i = 0; i < rowCount; i++) $('#testing tr').eq(0).remove();
-                    for (i in prod['chars']){
+                    for (i in prod['chars']) {
                         $("<tr><td>" + prod['chars'][i].name + "</td><td>" + prod['chars'][i].norm + "</td><td>" + prod['chars'][i].value + "</td></tr>").appendTo("#testing");
                     }
                     $('#pass').modal('show');
@@ -283,6 +287,7 @@
                         <th>Операция</th>
                         <th>Количество, шт</th>
                         <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -300,17 +305,23 @@
                                         Акт
                                     </button>
                                 </td>
+                                <td></td>
                             {% else %}
                                 <td>
                                     <button class="btn btn-default btn-sm" type="button" onclick="getPass({{ key }})">
                                         Паспорт
                                     </button>
                                 </td>
+                                <td>
+                                    <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editPack">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                    </button>
+                                </td>
                             {% endif %}
                         </tr>
                     {% endfor %}
                     <tr>
-                        <td colspan="7" align="center"><a href="#" onclick="addRows()">Показать ещё</a></td>
+                        <td colspan="8" align="center"><a href="#" onclick="addRows()">Показать ещё</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -404,32 +415,67 @@
         </div>
     </div>
 
-    <div class="modal fade" id="pass" class="pg">
-        <div class="modal-dialog modal-lg pg1">
-            <div class="modal-content pg1">
-                <div class="modal-header pg">
-                    <button class="close pg" data-dismiss="modal">x</button>
-                    <h4 class="pg">Паспорт фасовки</h4>
+     <div class="modal fade" id="editPack">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4 id="storCode">Редактирование фасовки</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="passport">
-                        <div class="text14">ОАО «Дальхимпром»</div>
-                        <div class="text12" style="text-align: center;margin-bottom:15pt">690074, г. Владивосток, ул.
-                            Снеговая, д.64
-                        </div>
-                        <div class="text14">
-                            <p class="line">ПАСПОРТ ПРОДУКЦИИ № </p><div id="passName" class="line"></div>
-                            <p><div id="prod"></div></p>
-                        </div>
-                        <div class="text12" id="standard"
-                             style="text-align: center;margin-bottom:15pt"></div>
-                        <div class="text12">
-                            <p class="line">Номер партии: &nbsp;</p><div id="batch" class="line"></div> <br>
-                            <p class="line">Вес партии, кг: &nbsp;</p><div id="amount" class="line"></div><br>
-                            <p class="line">Дата изготовления: &nbsp;</p><div id="passDate" class="line"></div><br>
-                            <p class="line">Упаковка: &nbsp;</p><div id="pack" class="line"></div><br>
-                            <p class="line">Гарантийный срок хранения: &nbsp;<div id="shLife" class="line"></div>&nbsp; месяца с даты
-                                производства при соблюдении условий транспортировки и хранения</p>
+
+                    <h5>Продукт</h5>
+                    <select class="form-control" id="packProd">
+
+                    </select>
+                    <h5>Количество</h5>
+                    <input type="number" class="form-control" id="packAm"/>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="confirmButton" onclick="check(2)" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="pass" class="pg">
+    <div class="modal-dialog modal-lg pg1">
+        <div class="modal-content pg1">
+            <div class="modal-header pg">
+                <button class="close pg" data-dismiss="modal">x</button>
+                <h4 class="pg">Паспорт фасовки</h4>
+            </div>
+            <div class="modal-body">
+                <div class="passport">
+                    <div class="text14">ОАО «Дальхимпром»</div>
+                    <div class="text12" style="text-align: center;margin-bottom:15pt">690074, г. Владивосток, ул.
+                        Снеговая, д.64
+                    </div>
+                    <div class="text14">
+                        <p class="line">ПАСПОРТ ПРОДУКЦИИ № </p>
+                        <div id="passName" class="line"></div>
+                        <p>
+                        <div id="prod"></div>
+                        </p>
+                    </div>
+                    <div class="text12" id="standard"
+                         style="text-align: center;margin-bottom:15pt"></div>
+                    <div class="text12">
+                        <p class="line">Номер партии: &nbsp;</p>
+                        <div id="batch" class="line"></div>
+                        <br>
+                        <p class="line">Вес партии, кг: &nbsp;</p>
+                        <div id="amount" class="line"></div>
+                        <br>
+                        <p class="line">Дата изготовления: &nbsp;</p>
+                        <div id="passDate" class="line"></div>
+                        <br>
+                        <p class="line">Упаковка: &nbsp;</p>
+                        <div id="pack" class="line"></div>
+                        <br>
+                        <p class="line">Гарантийный срок хранения: &nbsp;
+                        <div id="shLife" class="line"></div>&nbsp; месяца с даты
+                        производства при соблюдении условий транспортировки и хранения</p>
 
                         <div class="text12">
                             Показатели качества:
@@ -449,8 +495,9 @@
                             </table>
                         </div>
                         <div class="text12">
-                                <p class="line">Заключение: качество продукции соответствует
-                                    требованиям &nbsp;</p><div id="standard2" class="line"></div>
+                            <p class="line">Заключение: качество продукции соответствует
+                                требованиям &nbsp;</p>
+                            <div id="standard2" class="line"></div>
                             <br>
                             <p>Представитель ОТК ___________________________________________</p>
                         </div>
@@ -464,6 +511,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="modal fade" id="act" class="pg">
         <div class="modal-dialog modal-lg pg1">
@@ -497,20 +545,5 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="inventory">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal">x</button>
-                    <h4 id="storCode">Предупреждение</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Сбросить композицию?</p>
-                    <div class="modal-footer">
-                        <input value="Сброс" id="confirmButton" onclick="" class="btn btn-primary" data-dismiss="modal"
-                               style="float: right"/></div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 {% endblock content %}

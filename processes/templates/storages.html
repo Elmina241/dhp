@@ -339,7 +339,7 @@ $(document).ready(function(){
                 <td id="ct-{{t.tank.id}}">{{ t.tank.code }}</td>
                 <td>{{ t.tank.name }}</td>
                 {% if t.content_type == 1 %}
-                <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }} <button class ="btn btn-default" onclick='editBounds(this, {{ t.amount|floatformat:"2" }})'><i class="glyphicon glyphicon-pencil"></i></td>
+                    <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }} <button class ="btn btn-default" onclick='editBounds(this, {{ t.amount|floatformat:"2" }})'><i class="glyphicon glyphicon-pencil"></i></button></td>
                 {% else %}
                 <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }}</td>
                 {% endif %}
