@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^movement/print_pass/$', views.print_pass, name = 'print_pass'),
     url(r'^movement/release/$', views.release, name = 'release'),
     url(r'^movement/add_rows/$', views.add_rows, name = 'add_rows'),
+    url(r'^movement/edit_pack/$', views.edit_pack, name = 'edit_pack'),
 ]

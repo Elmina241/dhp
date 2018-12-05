@@ -60,17 +60,17 @@
                     for (d in rows) {
                         row = row + "<tr><td>" + rows[d]["date"] + "</td><td>" + rows[d]["code"] + "</td><td>" + rows[d]["name"] + "</td><td>" + rows[d].batch + "</td><td>" + rows[d]["operation"] + "</td><td>" + rows[d]["amount"] + "</td>";
                         if (rows[d]["operation"] == 'Выпуск товара') {
-                            row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getInf(" + d + ")'>Акт</button></td>";
+                            row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getInf(" + d + ")'>Акт</button></td><td></td>";
                         }
                         else {
-                            row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getPass(" + d + ")''>Паспорт</button></td>";
+                            row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getPass(" + d + ")''>Паспорт</button></td><td></td>";
                         }
                         row = row + "</tr>";
                     }
                     var table = $("#tableBody");
                     var rowCount = $('#tableBody tr').length;
                     $('#tableBody tr').eq(rowCount - 1).remove();
-                    row = row + "<tr><td colspan='7' align='center'><a href='#' onclick='addRows()'>Показать ещё</a></td></tr>";
+                    row = row + "<tr><td colspan='8' align='center'><a href='#' onclick='addRows()'>Показать ещё</a></td></tr>";
                     $(row).appendTo(table);
                     count = count + 1;
                 }
@@ -211,6 +211,44 @@
             });
         }
 
+        function getSelOfProd(composition) {
+            prods = $("#products").prop("value");
+            prods = JSON.parse(prods);
+            select = "";
+            for (p in prods) {
+                if (composition == prods[p].composition) select = select + "<option value=" + p + ">" + prods[p].name + "</option>";
+            }
+            $("#packProd").html(select);
+        }
+
+        function pack() {
+            var csrftoken = getCookie('csrftoken');
+            $("#packBtn").prop('disabled', true);
+            $.ajax({
+                type: "POST",
+                url: 'edit_pack/',
+                data: {
+                    'id': $("#packId").prop("value"),
+                    'amm': $("#packAm").prop("value"),
+                    'pr_id': $("#packProd").prop("value")
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess() {
+                    location.reload();
+                }
+            });
+        }
+
+        function showEdit(amount, prod, id) {
+            $("#packAm").prop("value", amount);
+            $("#packId").prop("value", id);
+            getSelOfProd(prod);
+        }
+
         function print_pass() {
             var csrftoken = getCookie('csrftoken');
             $.ajax({
@@ -275,6 +313,7 @@
             </button>
             <!--<button type="button" class="btn btn-info" data-toggle="modal" data-target="#inventory"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>  Инвентаризационная запись</button>-->
         </div>
+        <input type="hidden" id="products" value="{{ products }}">
         <div class="panel-body pg">
             {% if movements %}
                 <table class="table table-hover table-sm" id="materials">
@@ -313,7 +352,9 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#editPack">
+                                    <button class="btn btn-default btn-sm" type="button"
+                                            onclick="showEdit({{ values.amount }}, {{ values.comp }}, {{ key }})"
+                                            data-toggle="modal" data-target="#editPack">
                                         <i class="glyphicon glyphicon-pencil"></i>
                                     </button>
                                 </td>
@@ -415,7 +456,7 @@
         </div>
     </div>
 
-     <div class="modal fade" id="editPack">
+    <div class="modal fade" id="editPack">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -428,10 +469,11 @@
                     <select class="form-control" id="packProd">
 
                     </select>
+                    <input type="number" id="packId" hidden/>
                     <h5>Количество</h5>
                     <input type="number" class="form-control" id="packAm"/>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="confirmButton" onclick="check(2)" class="btn btn-primary"
+                        <input value="Сохранить" id="packBtn" onclick="pack()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>

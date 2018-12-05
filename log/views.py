@@ -17,9 +17,12 @@ def movement(request):
         last_acc = Acceptance.objects.latest('date').code + 1
     except:
         last_acc = 1
+    prods = {}
+    for p in Product.objects.all():
+        prods[str(p.pk)] = {'name': p.code + " " + p.get_name_for_table(), 'composition': p.production.composition.id}
     records = {}
     for r in Movement_rec.objects.order_by("-id")[:20]:
-        records[str(r.id)] = {"date": r.date.strftime('%d.%m.%Y'), "code": r.product.code, "name": r.product.get_name_for_table, "batch": r.get_batch, "operation": r.operation.name, "amount": r.amount}
+        records[str(r.id)] = {"date": r.date.strftime('%d.%m.%Y'), "code": r.product.code, "name": r.product.get_name_for_table, "batch": r.get_batch, "operation": r.operation.name, "amount": r.amount, "comp": r.batch.kneading.list.formula.composition.id}
     batches = {}
     for r in Movement_rec.objects.all():
         if r.operation.id == 1 or r.operation.id == 2 or r.operation.id == 3:
@@ -34,7 +37,7 @@ def movement(request):
                             amm = amm - m.amount
                 if amm > 0:
                     batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
-    return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": records, "batches": batches, "last_acc": last_acc, "batches2": json.dumps(batches)})
+    return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": records, "batches": batches, "last_acc": last_acc, "products": json.dumps(prods), "batches2": json.dumps(batches)})
 
 def accepting(request):
     acts = {}
@@ -160,3 +163,17 @@ def print_pass(request):
             product.is_printed = True
             product.save()
             return HttpResponse("ok")
+
+def edit_pack(request):
+    if request.method == 'POST':
+        #Дописать соответсвие выпуску товара
+        movm = Movement_rec.objects.get(id = request.POST['id'])
+        div = Packing_divergence.objects.filter(batch = movm.batch, date = movm.date)[0]
+        div.prod_num = request.POST['amm']
+        prod = get_object_or_404(Product, pk=request.POST['pr_id'])
+        div.product = prod
+        movm.product = prod
+        movm.amount = request.POST['amm']
+        div.save()
+        movm.save()
+        return HttpResponse('ok')
