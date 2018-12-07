@@ -122,7 +122,7 @@ $(document).ready(function(){
   <li  class="current"><a href="#" title=""><em>Тестирование</em></a></li>
   <li><a href="#" title=""><em>Перемещение</em></a></li>
 </ul>
-{% if isTested %}
+{% if need_test %}
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
 {% else %}
 <button type="button" class="btn btn-success" style="margin-bottom: 5pt" onclick="window.location.href='/processes/process/{{ p.id }}/finish_testing/'" disabled><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Закончить тестирование</button>
@@ -147,7 +147,7 @@ $(document).ready(function(){
           <div class="col-sm-3">
           <h5><p><b>Дата конца: </b></p></div>
           <div class="col-sm-7">
-          <h5><p>{{p.finish_date|date:"d.m.Y"}}</p>
+          <h5><p>{{p.finish_date|date:"d.m.Y"}}</p></h5>
           </div>
           <div class="col-sm-3">
           <h5><p><b>Партия: </b></p></h5></div>

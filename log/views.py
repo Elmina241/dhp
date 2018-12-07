@@ -77,7 +77,7 @@ def add_rows(request):
             date = r.date.strftime('%d.%m.%Y')
             name = r.product.get_name_for_table()
             batch = r.get_batch()
-            records[str(r.id)] = {"date": date, "code": r.product.code, "name": name, "batch": batch, "operation": r.operation.name, "amount": r.amount}
+            records[str(r.id)] = {"date": date, "code": r.product.code, "name": name, "batch": batch, "operation": r.operation.name, "amount": r.amount, "comp": r.batch.kneading.list.formula.composition.id}
         res = json.dumps(records)
         return HttpResponse(res)
 
@@ -121,7 +121,7 @@ def get_pass(request):
             "name": product.product.get_name_for_table(),
             "batch": product.get_batch(),
             "amount": product.batch.kneading.list.ammount,
-            "date": product.batch.kneading.finish_date.strftime('%d.%m.%Y'),
+            "date": product.date.strftime('%d.%m.%Y'),
             "standard": product.batch.kneading.list.formula.composition.standard,
             "pack": product.batch.kneading.list.formula.composition.get_package_pass(),
             "sh_life": product.batch.kneading.list.formula.composition.sh_life

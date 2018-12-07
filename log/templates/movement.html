@@ -63,7 +63,7 @@
                             row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getInf(" + d + ")'>Акт</button></td><td></td>";
                         }
                         else {
-                            row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getPass(" + d + ")''>Паспорт</button></td><td></td>";
+                            row = row + "<td><button class='btn btn-default btn-sm' type='button' onclick='getPass(" + d + ")''>Паспорт</button></td>" + "<td><button class='btn btn-default btn-sm' type='button' onclick='showEdit(" + rows[d]["amount"] + ", " + rows[d]["comp"] + ", " + d  + ")' data-toggle='modal' data-target='#editPack'> <i class='glyphicon glyphicon-pencil'></i> </button> </td>";
                         }
                         row = row + "</tr>";
                     }

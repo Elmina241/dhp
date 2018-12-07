@@ -1325,8 +1325,19 @@ def kneading_detail(request, kneading_id):
             chars = Composition_char.objects.filter(comp = kneading.list.formula.composition, characteristic__is_general = False)
         if kneading.list.formula.composition.isFinal == False:
             isTested = True
+        processes = Kneading.objects.filter(list__formula=kneading.list.formula, batch_num=kneading.batch_num,
+                                            start_date__year=kneading.start_date.year)
+        tested = False
+        for p in processes:
+            if State_log.objects.filter(kneading = p).last().state.pk < 4:
+                tested = True
+        if processes.count() > 1 and tested:
+            tested = True
+        else:
+            tested = isTested
         return render(request, 'testing.html', {
                                                 "chars": chars,
+                                                "need_test": tested,
                                                 "isTested": isTested,
                                                 "isValid": kneading.isValid,
                                                 "kneading_chars": Kneading_char.objects.filter(kneading = kneading),
