@@ -5,7 +5,7 @@ import json
 from django.core import serializers
 from django.utils import timezone
 import datetime
-from .models import  Movement_rec, Operation, Acceptance, Packing_divergence
+from .models import  Movement_rec, Operation, Acceptance, Packing_divergence, Packaged
 from processes.models import Batch, Kneading_char, Kneading_char_number, Kneading_char_var
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 
@@ -24,19 +24,23 @@ def movement(request):
     for r in Movement_rec.objects.order_by("-id")[:20]:
         records[str(r.id)] = {"date": r.date.strftime('%d.%m.%Y'), "code": r.product.code, "name": r.product.get_name_for_table, "batch": r.get_batch, "operation": r.operation.name, "amount": r.amount, "comp": r.batch.kneading.list.formula.composition.id}
     batches = {}
-    for r in Movement_rec.objects.all():
-        if r.operation.id == 1 or r.operation.id == 2 or r.operation.id == 3:
-            name = str(r.batch.id) + "_" + str(r.product.id)
-            if name not in batches:
-                amm = 0
-                for m in Movement_rec.objects.filter(product = r.product, batch = r.batch):
-                    if m.operation.id == 1:
-                        amm = amm + m.amount
-                    else:
-                        if m.operation.id == 2 or m.operation.id == 3:
-                            amm = amm - m.amount
-                if amm > 0:
-                    batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
+    for p in Packaged.objects.all():
+        name = str(p.rec.batch.id) + "_" + str(p.rec.product.id)
+        batches[name] = {"pr_id": p.rec.product.id, "code": p.rec.product.code, "name": p.rec.product.get_name_for_table(),
+                         "batch": p.rec.get_batch(), "amount": p.amount}
+    # for r in Movement_rec.objects.all():
+    #     if r.operation.id == 1 or r.operation.id == 2 or r.operation.id == 3:
+    #         name = str(r.batch.id) + "_" + str(r.product.id)
+    #         if name not in batches:
+    #             amm = 0
+    #             for m in Movement_rec.objects.filter(product = r.product, batch = r.batch):
+    #                 if m.operation.id == 1:
+    #                     amm = amm + m.amount
+    #                 else:
+    #                     if m.operation.id == 2 or m.operation.id == 3:
+    #                         amm = amm - m.amount
+    #             if amm > 0:
+    #                 batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
     return render(request, "movement.html", {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": records, "batches": batches, "last_acc": last_acc, "products": json.dumps(prods), "batches2": json.dumps(batches)})
 
 def accepting(request):
@@ -66,6 +70,11 @@ def release(request):
         else:
             rec = Movement_rec(product = product, batch = batch, amount = request.POST['amm'], operation = Operation.objects.filter(id = 2)[0])
         rec.save()
+        p_rec = Packaged.objects.filter(rec__batch = batch, rec__product = product)[0]
+        p_rec.amount = p_rec.amount - float(request.POST['amm'])
+        p_rec.save()
+        if p_rec.amount <= 0:
+            p_rec.delete()
         return HttpResponse('ok')
 
 def add_rows(request):
@@ -174,6 +183,9 @@ def edit_pack(request):
         div.product = prod
         movm.product = prod
         movm.amount = request.POST['amm']
+        p_rec = Packaged.objects.filter(rec = movm)[0]
+        p_rec.amount = movm.amount
+        p_rec.save()
         div.save()
         movm.save()
         return HttpResponse('ok')

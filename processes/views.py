@@ -2,11 +2,11 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from typing import Any
+#from typing import Any
 
 from tables.models import Product, Composition, Comp_prop_var, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Pack_process, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
-from log.models import Movement_rec, Operation, Packing_divergence
+from log.models import Movement_rec, Operation, Packing_divergence, Packaged
 import json
 import math
 from django.core import serializers
@@ -631,6 +631,8 @@ def pack(request, pack_id = None):
         div.batch = storage.batch
         rec = Movement_rec(batch = storage.batch, product = prod, amount = float(request.POST['num']), operation = Operation.objects.filter(id = 1)[0])
         rec.save()
+        p_rec = Packaged(rec = rec, amount=float(request.POST['num']))
+        p_rec.save()
         div.save()
         if storage.amount == 0:
             storage.content_type = 3

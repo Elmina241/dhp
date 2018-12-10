@@ -13,6 +13,12 @@ class Operation(models.Model):
     def __str__(self):
         return self.name
 
+class Packaged(models.Model):
+    rec = models.ForeignKey('Movement_rec', null=True)
+    amount = models.FloatField(null=True)
+    def __str__(self):
+        return "test"
+
 class Movement_rec(models.Model):
     batch = models.ForeignKey('processes.Batch', null=True)
     product = models.ForeignKey('tables.Product', null=True)
