@@ -6,7 +6,7 @@ from django.core import serializers
 from django.utils import timezone
 import datetime
 from .models import  Movement_rec, Operation, Acceptance, Packing_divergence, Packaged
-from processes.models import Batch, Kneading_char, Kneading_char_number, Kneading_char_var
+from processes.models import Batch, Kneading_char, Kneading_char_number, Kneading_char_var, Kneading
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor
 
 def materials(request):
@@ -124,12 +124,17 @@ def get_pass(request):
         product = Movement_rec.objects.filter(pk = prod)[0]
         #amount2 = Packing_divergence.objects.filter(batch = product.batch, date = product.date)[0].pack_amm
         pass_num = Movement_rec.objects.filter(operation__id = 1, pk__lte = prod).count()
+        amount = 0
+        processes = Kneading.objects.filter(list__formula=product.batch.kneading.list.formula, batch_num=product.batch.kneading.batch_num,
+                                            start_date__year=product.batch.kneading.start_date.year)
+        for p in processes:
+            amount = amount + p.list.ammount
         inf_a = {
             "id": pass_num,
             "code": product.product.code,
             "name": product.product.get_name_for_table(),
             "batch": product.get_batch(),
-            "amount": product.batch.kneading.list.ammount,
+            "amount": amount,
             "date": product.date.strftime('%d.%m.%Y'),
             "standard": product.batch.kneading.list.formula.composition.standard,
             "pack": product.batch.kneading.list.formula.composition.get_package_pass(),
