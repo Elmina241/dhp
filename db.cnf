@@ -1,0 +1,5 @@
+[client]
+database = dhp
+user = SYSDBA2
+password = masterkey
+default-character-set = utf8

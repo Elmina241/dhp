@@ -14,6 +14,8 @@ class Model_component(models.Model):
     formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
     ammount = models.FloatField()
+    min = models.FloatField(blank=True, default = 0, null=True)
+    max = models.FloatField(blank=True, default=0, null=True)
     def __str__(self):
         return self.mat.name
 
@@ -53,6 +55,9 @@ class Kneading(models.Model):
         log = State_log.objects.filter(kneading = self).last()
         name = log.get_state()
         return name
+    def get_state_id(self):
+        log = State_log.objects.filter(kneading = self).last()
+        return log.state.id
 
 #Партия
 class Batch(models.Model):

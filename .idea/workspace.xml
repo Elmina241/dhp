@@ -3,7 +3,116 @@
   <component name="ChangeListManager">
     <list default="true" id="25317915-4a66-47a2-81b7-518c2ac33d7c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/log/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST5.FDB" beforeDir="false" afterPath="$PROJECT_DIR$/TEST5.FDB" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/log/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0002_auto_20180111_1427.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0003_movement_rec_product.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0004_auto_20180206_1103.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0005_packing_divergence.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0006_packing_divergence_date.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0007_acceptance.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0008_movement_rec_is_printed.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/migrations/0009_packaged.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/processes/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0002_remove_kneading_formula.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0003_list_component_loaded.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0004_kneading_reactor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0005_auto_20170331_1025.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0006_auto_20170420_1507.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0007_batch_finish_date.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0008_kneading_isvalid.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0009_auto_20170609_1553.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0010_auto_20170619_1225.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0011_reactor_content_tank_content.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0012_auto_20170712_2122.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0013_reactor_content_tank_content.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0014_auto_20170807_1310.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0015_batch_comp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0016_remove_model_component_compl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0017_model_component_formula.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0018_list_component_batch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0019_auto_20170822_1317.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0020_remove_list_component_batch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0021_auto_20170822_1636.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0022_list_component_formula.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0023_kneading_batch_num.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0024_kneading_isfinished.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0025_auto_20171025_1117.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0026_auto_20171026_1132.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0027_month_plan.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0028_auto_20171222_1559.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0029_model_list_time.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0029_pack_process.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0030_auto_20180711_1509.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0030_remove_model_list_time.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0031_model_list_time.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0031_pack_process_finished.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0032_remove_model_list_time.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0033_model_list_w_time.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0034_merge.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/migrations/0035_remove_model_list_w_time.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/processes/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/templates/loading_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/processes/templates/loading_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/processes/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/tables/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0002_auto_20170215_1913.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0003_production_reactor_tank.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0004_auto_20170216_2000.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0005_formula_formula_component.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0006_remove_reactor_capacity.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0007_auto_20170331_1025.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0008_auto_20170403_1202.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0009_auto_20170404_1305.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0010_characteristic_number.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0011_auto_20170405_2015.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0012_auto_20170405_2015.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0013_remove_characteristic_type.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0014_characteristic_char_type.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0015_auto_20170407_1151.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0016_formula_isfinal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0017_auto_20170511_1508.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0018_compl_comp_compl_comp_comp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0019_compl_comp_ammount.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0020_compl_comp_composition.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0021_auto_20170523_1210.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0022_auto_20170625_1906.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0023_material_char.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0024_mat_char_number_mat_char_var.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0025_compl_comp_store_amount.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0026_remove_cap_form.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0027_cap_form.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0028_auto_20170731_1458.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0029_auto_20170731_1458.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0030_remove_boxing_name.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0031_boxing_colour.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0032_boxing_form.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0033_box_group.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0034_boxing_mat.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0035_auto_20170731_1644.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0036_auto_20170801_1532.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0037_compl_comp_form.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0038_auto_20170802_1458.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0039_auto_20170802_1500.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0040_auto_20170802_1507.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0041_auto_20170802_1526.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0042_auto_20170802_1543.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0043_auto_20170802_1549.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0044_auto_20170803_1205.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0045_auto_20170803_1215.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0046_auto_20170803_1220.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0047_remove_compl_comp_composition.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0048_compl_comp_formula.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0049_formula_name.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0050_auto_20170822_1636.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0051_composition_cur_batch.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0052_auto_20180206_1103.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0053_auto_20180215_2241.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0054_composition_package.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0055_characteristic_is_general.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0056_comp_prop_number_comp_prop_var.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/migrations/0057_auto_20180405_1240.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/tables/models.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,11 +128,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.43764845">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/log/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="578">
-                  <caret line="133" column="41" lean-forward="true" selection-start-line="133" selection-start-column="41" selection-end-line="133" selection-end-column="41" />
+                <state relative-caret-position="2533">
+                  <caret line="158" column="30" selection-start-line="158" selection-start-column="30" selection-end-line="158" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#45#0" expanded="true" />
                   </folding>
@@ -31,11 +140,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/log/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="646">
-                  <caret line="39" column="34" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
+                <state relative-caret-position="271">
+                  <caret line="23" column="60" lean-forward="true" selection-start-line="23" selection-start-column="60" selection-end-line="23" selection-end-column="60" />
                   <folding>
                     <element signature="e#0#28#0" expanded="true" />
                   </folding>
@@ -46,8 +155,17 @@
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/tables/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1598">
-                  <caret line="94" column="41" selection-start-line="94" selection-start-column="41" selection-end-line="94" selection-end-column="41" />
+                <state relative-caret-position="254">
+                  <caret line="93" column="42" lean-forward="true" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/models.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="340">
+                  <caret line="21" column="17" lean-forward="true" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
                 </state>
               </provider>
             </entry>
@@ -55,8 +173,8 @@
           <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/processes/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="190">
-                  <caret line="1176" column="15" lean-forward="true" selection-start-line="1175" selection-start-column="4" selection-end-line="1177" selection-end-column="40" />
+                <state relative-caret-position="527">
+                  <caret line="43" column="100" selection-start-line="43" selection-start-column="100" selection-end-line="43" selection-end-column="100" />
                   <folding>
                     <element signature="e#24#69#0" expanded="true" />
                   </folding>
@@ -86,65 +204,29 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="movement.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1190">
-                  <caret line="70" column="61" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="testing.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/testing.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3332">
-                  <caret line="196" column="10" selection-start-line="196" selection-start-column="10" selection-end-line="196" selection-end-column="10" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="storages.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/storages.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="476">
-                  <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="base.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/tables/templates/tables/base.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="403">
-                  <caret line="43" column="64" selection-start-line="43" selection-start-column="64" selection-end-line="43" selection-end-column="64" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="finished.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/finished.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1717">
-                  <caret line="101" column="51" selection-start-line="101" selection-start-column="51" selection-end-line="101" selection-end-column="51" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="arch_detail.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/arch_detail.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1649">
-                  <caret line="97" column="225" selection-start-line="97" selection-start-column="225" selection-end-line="97" selection-end-column="225" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="json_to_table57.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="6630">
-                  <caret line="390" column="34" selection-start-line="390" selection-start-column="34" selection-end-line="390" selection-end-column="34" />
+                <state relative-caret-position="7021">
+                  <caret line="413" selection-start-line="413" selection-end-line="413" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="loading_list.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/templates/loading_list.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="335">
+                  <caret line="172" column="36" lean-forward="true" selection-start-line="172" selection-start-column="36" selection-end-line="172" selection-end-column="36" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="442">
+                  <caret line="87" column="89" selection-start-line="87" selection-start-column="89" selection-end-line="87" selection-end-column="89" />
                 </state>
               </provider>
             </entry>
@@ -188,6 +270,7 @@
       <find>Any</find>
       <find>Packaged</find>
       <find>Movement_rec</find>
+      <find>default</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -196,10 +279,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/tables/models.py" />
         <option value="$PROJECT_DIR$/log/PyDev/custom_tags.py" />
         <option value="$PROJECT_DIR$/processes/templates/print_lists.html" />
-        <option value="$PROJECT_DIR$/processes/templates/loading_list.html" />
         <option value="$PROJECT_DIR$/processes/static/scripts/json_to_table57.js" />
         <option value="$PROJECT_DIR$/processes/templates/arch_detail.html" />
         <option value="$PROJECT_DIR$/processes/urls.py" />
@@ -209,8 +290,12 @@
         <option value="$PROJECT_DIR$/processes/templates/testing.html" />
         <option value="$PROJECT_DIR$/tables/templates/tables/base.html" />
         <option value="$PROJECT_DIR$/log/models.py" />
-        <option value="$PROJECT_DIR$/processes/views.py" />
         <option value="$PROJECT_DIR$/log/views.py" />
+        <option value="$PROJECT_DIR$/processes/views.py" />
+        <option value="$PROJECT_DIR$/processes/models.py" />
+        <option value="$PROJECT_DIR$/processes/templates/loading_list.html" />
+        <option value="$PROJECT_DIR$/django_example/settings.py" />
+        <option value="$PROJECT_DIR$/tables/models.py" />
       </list>
     </option>
   </component>
@@ -388,6 +473,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -424,13 +510,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/processes/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23035">
-          <caret line="1355" column="19" selection-start-line="1342" selection-start-column="8" selection-end-line="1355" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -621,20 +700,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1139">
-          <caret line="26" column="65" lean-forward="true" selection-start-line="26" selection-start-column="65" selection-end-line="26" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/loading_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="517">
-          <caret line="122" column="73" selection-start-line="122" selection-start-column="61" selection-end-line="122" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/processes/templates/planning.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1559">
@@ -660,16 +725,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="9" lean-forward="true" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#27#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/arch_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1649">
-          <caret line="97" column="225" selection-start-line="97" selection-start-column="225" selection-end-line="97" selection-end-column="225" />
         </state>
       </provider>
     </entry>
@@ -694,23 +749,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/finished.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1717">
-          <caret line="101" column="51" selection-start-line="101" selection-start-column="51" selection-end-line="101" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6630">
-          <caret line="390" column="34" selection-start-line="390" selection-start-column="34" selection-end-line="390" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/models.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -731,20 +769,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/storages.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="70" column="61" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/processes/templates/processes/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
@@ -752,54 +776,117 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/testing.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3332">
-          <caret line="196" column="10" selection-start-line="196" selection-start-column="10" selection-end-line="196" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tables/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1598">
-          <caret line="94" column="41" selection-start-line="94" selection-start-column="41" selection-end-line="94" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="39" column="34" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/processes/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="1176" column="15" lean-forward="true" selection-start-line="1175" selection-start-column="4" selection-end-line="1177" selection-end-column="40" />
+        <state relative-caret-position="527">
+          <caret line="43" column="100" selection-start-line="43" selection-start-column="100" selection-end-line="43" selection-end-column="100" />
           <folding>
             <element signature="e#24#69#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/archive.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="85" column="24" lean-forward="true" selection-start-line="85" selection-start-column="24" selection-end-line="85" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/tables/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="53" column="33" lean-forward="true" selection-start-line="53" selection-start-column="33" selection-end-line="53" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/storages.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/testing.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="196" column="10" selection-start-line="196" selection-start-column="10" selection-end-line="196" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="70" column="61" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/finished.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="101" column="51" selection-start-line="101" selection-start-column="51" selection-end-line="101" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/arch_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="97" column="225" selection-start-line="97" selection-start-column="225" selection-end-line="97" selection-end-column="225" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7021">
+          <caret line="413" selection-start-line="413" selection-end-line="413" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/log/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="133" column="41" lean-forward="true" selection-start-line="133" selection-start-column="41" selection-end-line="133" selection-end-column="41" />
+        <state relative-caret-position="2533">
+          <caret line="158" column="30" selection-start-line="158" selection-start-column="30" selection-end-line="158" selection-end-column="30" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tables/templates/tables/base.html">
+    <entry file="file://$PROJECT_DIR$/processes/templates/loading_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="43" column="64" selection-start-line="43" selection-start-column="64" selection-end-line="43" selection-end-column="64" />
+        <state relative-caret-position="335">
+          <caret line="172" column="36" lean-forward="true" selection-start-line="172" selection-start-column="36" selection-end-line="172" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="87" column="89" selection-start-line="87" selection-start-column="89" selection-end-line="87" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="21" column="17" lean-forward="true" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="93" column="42" lean-forward="true" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="23" column="60" lean-forward="true" selection-start-line="23" selection-start-column="60" selection-end-line="23" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

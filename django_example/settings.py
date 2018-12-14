@@ -84,13 +84,8 @@ WSGI_APPLICATION = 'django_example.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE' : 'firebird',
-        'NAME' : 'C:\PROGRAM FILES (X86)\FIREBIRD\FIREBIRD_2_5\BIN\TEST5.FDB', #os.path.join(BASE_DIR, 'TEST2.fdb'), # Path to database or db alias
-        'USER' : 'SYSDBA',           # Your db user
-        'PASSWORD' : 'masterkey',    # db user password
-        'HOST' : '127.0.0.1',        # Your host machine
-        'PORT' : '3050',             # If is empty, use default 3050
-        'OPTIONS' : {'charset':'UTF8'}
+        'ENGINE' : 'django.db.backends.mysql',
+        'OPTIONS' : {'read_default_file': 'C:/Users/Anna/Documents/Python/django_example/db.cnf',}
     }
 }
 

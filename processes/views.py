@@ -41,9 +41,8 @@ def mixing(request, kneading_id = -1):
 
 def archive(request):
     kneadings = []
-    for k in Kneading.objects.filter(isFinished = True, list__formula__composition__isFinal = True):
-        log = State_log.objects.filter(kneading = k).last().state.pk
-        if  log == 7:
+    for k in Kneading.objects.filter(isFinished = True, list__formula__composition__isFinal = True, start_date__year = datetime.datetime.now().year):
+        if k.get_state_id() == 7:
             kneadings.append(k)
     return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings})
 

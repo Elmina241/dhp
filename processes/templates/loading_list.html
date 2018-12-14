@@ -62,7 +62,7 @@
             <div id="errors" class="alert alert-danger" role="alert" style="display:none">
             </div>
             <div class="col-sm-12">
-                <div class="col-md-12 col-lg-7">
+                <div class="col-md-12 col-lg-6">
                     <div class="panel panel-default" style="margin: auto">
                         <div class="panel-heading"><b><h4 class="panel-title">Состав</h4></b></div>
                         <div class="panel-body">
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-lg-5">
+                <div class="col-md-12 col-lg-6">
                     <div class="panel panel-default" style="margin: auto">
                         <div class="panel-heading"><b><h4 class="panel-title">Загрузочный лист</h4></b>
                             <hr>
@@ -163,6 +163,8 @@
                                     <th>Код</th>
                                     <th>Наименование</th>
                                     <th>Количество, %</th>
+                                    <th>-, %</th>
+                                    <th>+, %</th>
                                     <th></th>
                                     <th style="visibility:collapse;width:1px">%</th>
                                 </tr>
@@ -178,13 +180,23 @@
                                         <tr id="{{ c.formula.id }}" name="compl">
                                             <td>{{ c.formula.code }}</td>
                                             <td>{{ c.formula }}</td>
-                                            <td><input type="number" value="{{ c.ammount }}" readonly></td>
+                                            <td><input type="number" value="{{ c.ammount }}"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td></td>
+                                            <td></td>
+
                                         </tr>
                                     {% else %}
                                         <tr id="{{ c.mat.id }}">
                                             <td>{{ c.mat.code }}</td>
                                             <td>{{ c.mat }}</td>
-                                            <td><input type="number" value="{{ c.ammount }}" readonly></td>
+                                            <td><input type="number" value="{{ c.ammount }}"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td></td>
+                                            <td></td>
+
                                         </tr>
                                     {% endif %}
                                 {% endfor %}

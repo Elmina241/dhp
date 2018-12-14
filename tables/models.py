@@ -201,10 +201,10 @@ class Boxing_mat(models.Model):
 
 class Boxing(models.Model):
     code = models.CharField(max_length=80)
-    group = models.ForeignKey('Box_group', default = 0, null=True)
+    group = models.ForeignKey('Box_group', null=True)
     form = models.CharField(max_length=80)
-    colour = models.ForeignKey('Colour', default = 0, null=True)
-    mat = models.ForeignKey('Boxing_mat', default = 0, null=True)
+    colour = models.ForeignKey('Colour', null=True)
+    mat = models.ForeignKey('Boxing_mat', null=True)
     def __str__(self):
         return 'Нет' if self.code == 'Я000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
