@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'stock',
     'processes',
     'log',
     'tables.apps.TablesConfig',

@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^tables/', include('tables.urls')),
     url(r'^processes/', include('processes.urls')),
     url(r'^log/', include('log.urls')),
+    url(r'^stock/', include('stock.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', include('tables.urls')),
 ]

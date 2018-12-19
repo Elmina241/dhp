@@ -26,8 +26,10 @@ def movement(request):
     batches = {}
     for p in Packaged.objects.all():
         name = str(p.rec.batch.id) + "_" + str(p.rec.product.id)
-        batches[name] = {"pr_id": p.rec.product.id, "code": p.rec.product.code, "name": p.rec.product.get_name_for_table(),
-                         "batch": p.rec.get_batch(), "amount": p.amount}
+        if name in batches:
+            batches[name]['amount'] = batches[name]['amount'] + p.amount
+        else:
+            batches[name] = {"pr_id": p.rec.product.id, "code": p.rec.product.code, "name": p.rec.product.get_name_for_table(), "batch": p.rec.get_batch(), "amount": p.amount}
     # for r in Movement_rec.objects.all():
     #     if r.operation.id == 1 or r.operation.id == 2 or r.operation.id == 3:
     #         name = str(r.batch.id) + "_" + str(r.product.id)
@@ -70,11 +72,15 @@ def release(request):
         else:
             rec = Movement_rec(product = product, batch = batch, amount = request.POST['amm'], operation = Operation.objects.filter(id = 2)[0])
         rec.save()
-        p_rec = Packaged.objects.filter(rec__batch = batch, rec__product = product)[0]
-        p_rec.amount = p_rec.amount - float(request.POST['amm'])
-        p_rec.save()
-        if p_rec.amount <= 0:
-            p_rec.delete()
+        amm = float(request.POST['amm'])
+        for p_rec in Packaged.objects.filter(rec__batch = batch, rec__product = product):
+            if p_rec.amount <= amm:
+                amm = amm - p_rec.amount
+                p_rec.delete()
+            else:
+                p_rec.amount = p_rec.amount - amm
+                p_rec.save()
+                amm = 0
         return HttpResponse('ok')
 
 def add_rows(request):

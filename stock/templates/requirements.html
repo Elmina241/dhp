@@ -1,0 +1,63 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% csrf_token %}
+    <div class="filter">
+    <lable for="filter" class="col-form-label">Записи за</lable>
+    <select class="form-control-sm col-sm-2" id="filter" onchange="getReq($(this).val())">
+        <option value="0">День</option>
+        <option value="1">Неделя</option>
+        <option value="2">Месяц</option>
+        <option value="3">Квартал</option>
+        <option value="4">Пол года</option>
+        <option value="5">Год</option>
+        <option value="6">Все</option>
+    </select>
+    </div>
+    <div class="stock_table">
+        <table class="table table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Дата</th>
+                <th scope="col">Номер</th>
+                <th scope="col">Подразделение</th>
+                <th scope="col">Склад</th>
+                <th scope="col">Примечание</th>
+            </tr>
+            </thead>
+            <tbody id="stock-tbody">
+            {% for key, values in demands.items %}
+            <tr>
+                <th scope="row">{{ values.date }}</th>
+                <td>{{ values.num }}</td>
+                <td>{{ values.unit }}</td>
+                <td>{{ values.stock }}</td>
+                {% if values.remark == None %}
+                    <td>-</td>
+                {% else %}
+                    <td>{{ values.remark }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="stock_table">
+        <table class="table table-sm">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Артикул</th>
+                <th scope="col">Товар</th>
+                <th scope="col">Кол-во Б</th>
+                <th scope="col">Ед. изм.</th>
+                <th scope="col">Комплектность</th>
+                <th scope="col">Ед. Б</th>
+                <th scope="col">Кол-во</th>
+            </tr>
+            </thead>
+            <tbody id="doc-tbody">
+
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

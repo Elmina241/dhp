@@ -1,0 +1,49 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <script>
+    $(document).ready(function(){
+        var goods = JSON.parse($("#goods_data").prop("value"));
+        initTree(goods);
+    });
+    </script>
+    <input id="tree_data" value="{{ tree }}" hidden>
+    <input id="goods_data" value="{{ goods }}" hidden>
+    <div class="container-fluid">
+    <div class="filter">
+    <lable for="filter" class="col-form-label">Цена</lable>
+    <select class="form-control-sm col-sm-2" id="filter" onchange="getPrices($(this).val())">
+        <option value="-1">Базовая</option>
+        {% for p in prices %}
+            <option value={{ p.id }}>{{ p.name }}</option>
+        {% endfor %}
+
+    </select>
+    <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
+    </div>
+        <div class="row">
+            <div class="left-column goods-tree-container">
+            <ul id="tree" class="goods_tree">
+            </ul>
+        </div>
+            <div class="right-column">
+                <div class="goods_table">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Код</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Цена</th>
+                            <th scope="col">Комплектность</th>
+                            <th scope="col">Ед.</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goods-body">
+                        <tr><td></td><td></td><td class="no-data text-right">Нет записей</td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

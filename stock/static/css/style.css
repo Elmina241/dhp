@@ -1,0 +1,62 @@
+.header {
+    margin-left: 9px;
+    /*margin-top: 10px;*/
+}
+
+.header-panel {
+    background-color: white;
+    padding: 10px;
+    border-bottom: 1px solid #cfdce3;
+}
+
+.stock_table {
+    overflow: scroll;
+    height: 37%;
+    background-color: white;
+    margin-left: 30px;
+    margin-right: 30px;
+    border: 1px solid #cfdce3;
+}
+
+.goods_table{
+    /*margin-top: 30px;*/
+    background-color: white;
+    margin-left: 30px;
+    margin-right: 30px;
+    border: 1px solid #cfdce3;
+}
+
+.goods_tree{
+    background-color: white;
+    border: 1px solid #cfdce3;
+}
+
+.goods-tree-container{
+    /*margin-top: 30px;*/
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+li { cursor: pointer; }
+
+.filter {
+    margin: 15px 0 15px 30px;
+}
+
+body {
+    background-color: #f6f6f6;
+}
+
+.left-column {
+    width: 25%;
+}
+
+.right-column {
+    width: 70%;
+    float: left;
+}
+
+.no-data {
+    color: #a8a8a8;
+
+}
