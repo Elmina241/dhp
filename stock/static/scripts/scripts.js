@@ -45,15 +45,15 @@ function getPrices(price) {
     });
 }
 
-function initTree(goods){
+function initTree(){
         makeTree($("#tree_data").prop("value"));
         $('#tree').treed({openedClass:'fa-folder-open', closedClass:'fa-folder'});
         $("#tree li").click(function(event){
-            id = $(this).prop("id");
-            addGoods("goods-body", goods[id]);
+            /*id = $(this).prop("id");
+            addGoods("goods-body", goods[id]);*/
             event.stopPropagation();
         });
-        document.getElementById("1").click();
+       // document.getElementById("1").click();
 }
 
 function getDoc(id) {
@@ -160,7 +160,8 @@ function makeTree(data){
 }
 
 function addBranch(code, branch){
-    code = code + "<li id="+ branch.id +">" + branch["name"];
+    menu = "<span style='font-size: 20px; color: yellowgreen;'><i class='fas fa-plus-circle'></i></span>";
+    code = code + "<li id="+ branch.id +">" + branch["name"] + " " + menu;
     if (branch["nodes"] != undefined){
         code = code + "<ul>";
         for (br in branch["nodes"]){

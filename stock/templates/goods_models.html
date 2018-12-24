@@ -3,28 +3,33 @@
     {% load staticfiles %}
     <script>
     $(document).ready(function(){
-        var goods = JSON.parse($("#goods_data").prop("value"));
-        initTree(goods);
+        //var goods = JSON.parse($("#goods_data").prop("value"));
+        initTree();
     });
     </script>
+    {% if tree %}
     <input id="tree_data" value="{{ tree }}" hidden>
+    {% else %}
+        <input id="tree_data" value="[{&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;: {&quot;1&quot;: {&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;:{}}}}]" hidden>
+    {% endif %}
     <input id="goods_data" value="{{ goods }}" hidden>
     <div class="container-fluid">
     <div class="filter">
-    <lable for="filter" class="col-form-label">Цена</lable>
-    <select class="form-control-sm col-sm-2" id="filter" onchange="getPrices($(this).val())">
-        <option value="-1">Базовая</option>
-        {% for p in prices %}
-            <option value={{ p.id }}>{{ p.name }}</option>
-        {% endfor %}
+        <div class="form-inline">
 
-    </select>
+    <lable for="filter" class="col-form-label">Поиск </lable>
+    <input type="text" class="form-control col-sm-3" style="margin-left:10px" id="filter" onchange=""/>
     <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
+        </div>
     </div>
         <div class="row">
             <div class="left-column goods-tree-container">
+
             <ul id="tree" class="goods_tree">
+
             </ul>
+
+
         </div>
             <div class="right-column">
                 <div class="goods_table">

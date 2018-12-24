@@ -26,8 +26,9 @@ $.fn.extend({
                     icon.toggleClass(openedClass + " " + closedClass);
                     $(this).children().children().toggle();
                 }
-            })
+            });
             branch.children().children().toggle();
+            //$("<span style='font-size: 20px; color: yellowgreen;'><i class='fas fa-plus-circle'></i></span>").appendTo(this);
         });
         //fire event from the dynamically added icon
       tree.find('.branch .indicator').each(function(){
