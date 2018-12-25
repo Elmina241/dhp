@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'django_example.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE' : 'django.db.backends.mysql',
-        'OPTIONS' : {'read_default_file': 'C:/Users/Anna/Documents/Python/django_example/db.cnf',}
+        'OPTIONS' : {'read_default_file': 'C:/Users/Elmina/Documents/python/dhp/db.cnf',}
     }
 }
 

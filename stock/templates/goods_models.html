@@ -2,51 +2,98 @@
 {% block content %}
     {% load staticfiles %}
     <script>
-    $(document).ready(function(){
-        //var goods = JSON.parse($("#goods_data").prop("value"));
-        initTree();
-    });
+        $(document).ready(function () {
+            //var goods = JSON.parse($("#goods_data").prop("value"));
+            initTree();
+            $("#tree li").mouseover(function (event) {
+                id = $(this).prop("id");
+                $("#m" + id).show();
+                event.stopPropagation();
+            });
+            $("#tree li").mouseout(function (event) {
+                id = $(this).prop("id");
+                obj = $("#m" + id);
+                $("#m" + id).hide();
+                event.stopPropagation();
+            });
+        });
     </script>
     {% if tree %}
-    <input id="tree_data" value="{{ tree }}" hidden>
+        <input id="tree_data" value="{{ tree }}" hidden>
     {% else %}
-        <input id="tree_data" value="[{&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;: {&quot;1&quot;: {&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;:{}}}}]" hidden>
+        <input id="tree_data"
+               value="[{&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;: {&quot;1&quot;: {&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;:{}}}}]"
+               hidden>
     {% endif %}
     <input id="goods_data" value="{{ goods }}" hidden>
     <div class="container-fluid">
-    <div class="filter">
-        <div class="form-inline">
 
-    <lable for="filter" class="col-form-label">Поиск </lable>
-    <input type="text" class="form-control col-sm-3" style="margin-left:10px" id="filter" onchange=""/>
-    <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
-        </div>
-    </div>
         <div class="row">
             <div class="left-column goods-tree-container">
 
-            <ul id="tree" class="goods_tree">
+                <ul id="tree" class="goods_tree">
 
-            </ul>
+                </ul>
 
 
-        </div>
+            </div>
             <div class="right-column">
-                <div class="goods_table">
-                    <table class="table">
-                        <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Код</th>
-                            <th scope="col">Название</th>
-                            <th scope="col">Цена</th>
-                            <th scope="col">Комплектность</th>
-                            <th scope="col">Ед.</th>
-                        </tr>
-                        </thead>
-                        <tbody id="goods-body">
-                        <tr><td></td><td></td><td class="no-data text-right">Нет записей</td><td></td><td></td></tr>
-                        </tbody>
-                    </table>
+
+                <div class="card" style="margin-left: 30px;margin-right: 30px;">
+                    <div class="card-header">
+                        <div class="filter">
+                            <div class="form-inline">
+                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#add_model">Добавить макет</button>
+
+                                <div class="form-inline" style="position: absolute; right: 0">
+                                <lable for="filter" class="col-form-label">Поиск</lable>
+                                <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px" id="filter"
+                                       onchange=""/>
+                                <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods_table">
+                        <table class="table">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Код</th>
+                                <th scope="col">Название</th>
+                            </tr>
+                            </thead>
+                            <tbody id="goods-body">
+                            <tr>
+                                <td class="no-data text-right">Нет записей</td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_model">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Создание макета</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body">
+                    <h6>Наименование</h6>
+                    <input type="text" class="form-control" id="name"/>
+                    <h6>Узел в иерархии</h6>
+                    <select class="form-control" id="group">
+
+                    </select>
+                    <h6>Количество</h6>
+                    <input type="number" class="form-control" id="packAm"/>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"
+                               style="float: right"/></div>
                 </div>
             </div>
         </div>

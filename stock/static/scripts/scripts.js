@@ -160,8 +160,8 @@ function makeTree(data){
 }
 
 function addBranch(code, branch){
-    menu = "<span style='font-size: 20px; color: yellowgreen;'><i class='fas fa-plus-circle'></i></span>";
-    code = code + "<li id="+ branch.id +">" + branch["name"] + " " + menu;
+    menu = "<span style='font-size: 15px; color: yellowgreen;' id='m" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i><span style='font-size: 15px; color: dodgerblue;' id='m" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='m" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+    code = code + "<li id="+ branch.id +">" + branch["name"] + menu;
     if (branch["nodes"] != undefined){
         code = code + "<ul>";
         for (br in branch["nodes"]){
