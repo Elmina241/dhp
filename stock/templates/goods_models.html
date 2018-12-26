@@ -2,6 +2,8 @@
 {% block content %}
     {% load staticfiles %}
     <script>
+        var unitNum = 1;
+        var propNum = 1;
         $(document).ready(function () {
             //var goods = JSON.parse($("#goods_data").prop("value"));
             initTree();
@@ -17,6 +19,21 @@
                 event.stopPropagation();
             });
         });
+
+        function addUnit(){
+            unitNum++;
+            var code = "<br><br><div class='form-inline'>" + unitNum + ". <select class='form-control inline-el' id='unit'><option>Ящик</option><option>Килограмм</option></select>\n" +
+                "                        Коэфф. <input type='number' class='form-control inline-el' style='width: 7em' id='koeff'/>\n" +
+                "                        <input type='checkbox' class='form-control inline-el' id='base'> Базовая</div>";
+            var additionalUnit = $("#additional_unit");
+            $(code).appendTo(additionalUnit);
+        }
+        function addProp(){
+            propNum++;
+            var code = "<br><br><div class='form-inline'>" + propNum + ". <select class='form-control inline-el' id='prop'><option>Цвет</option><option>Производитель</option></select>";
+            var additionalProp = $("#additional_prop");
+            $(code).appendTo(additionalProp);
+        }
     </script>
     {% if tree %}
         <input id="tree_data" value="{{ tree }}" hidden>
@@ -82,15 +99,29 @@
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
-                <div class="modal-body">
+                <div class="modal-body create-form">
                     <h6>Наименование</h6>
                     <input type="text" class="form-control" id="name"/>
                     <h6>Узел в иерархии</h6>
                     <select class="form-control" id="group">
 
                     </select>
-                    <h6>Количество</h6>
-                    <input type="number" class="form-control" id="packAm"/>
+                    <h6>Единицы измерения</h6>
+                    <div class="form-inline" style="padding:0px">
+                        1. <select class="form-control inline-el" id="unit"><option>Ящик</option><option>Килограмм</option></select>
+                        Коэфф. <input type="number" class="form-control inline-el" style="width: 7em" id="koeff"/>
+                        <input type="checkbox" class="form-control inline-el" id="base"/> Базовая
+                    </div>
+                    <div class="form-inline" id ="additional_unit">
+                    </div>
+                    <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px' onclick="addUnit()"><i class='fas fa-plus-circle'></i></span>
+                        <h6>Свойства</h6>
+                    <div class="form-inline" style="padding:0px">
+                    1. <select class="form-control inline-el" id="prop"><option>Цвет</option><option>Производитель</option></select>
+                    </div>
+                    <div class="form-inline" id ="additional_prop">
+                    </div>
+                    <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px' onclick="addProp()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"
                                style="float: right"/></div>

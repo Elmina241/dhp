@@ -508,9 +508,14 @@ def save_process(request):
                 k = get_object_or_404(Kneading, pk=request.POST['kneading'])
                 kneading.batch_num = k.batch_num
             else:
-                kneading.batch_num = formula.composition.cur_batch
-                formula.composition.cur_batch = formula.composition.cur_batch + 1
-                formula.composition.save()
+                if Kneading.objects.filter(start_date__year = datetime.datetime.now().year, list__formula = formula).count() == 0:
+                    kneading.batch_num = 1
+                    formula.composition.cur_batch = 2
+                    formula.composition.save()
+                else:
+                    kneading.batch_num = formula.composition.cur_batch
+                    formula.composition.cur_batch = formula.composition.cur_batch + 1
+                    formula.composition.save()
             kneading.reactor = reactor
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=1))
@@ -557,9 +562,15 @@ def save_tech_comp(request):
             kneading.finish_date = datetime.date.today()
             kneading.list = list
             kneading.reactor = reactor
-            kneading.batch_num = formula.composition.cur_batch
-            formula.composition.cur_batch = formula.composition.cur_batch + 1
-            formula.composition.save()
+            if Kneading.objects.filter(start_date__year=datetime.datetime.now().year,
+                                       list__formula=formula).count() == 0:
+                kneading.batch_num = 1
+                formula.composition.cur_batch = 2
+                formula.composition.save()
+            else:
+                kneading.batch_num = formula.composition.cur_batch
+                formula.composition.cur_batch = formula.composition.cur_batch + 1
+                formula.composition.save()
             kneading.save()
             st = State_log(kneading = kneading, state = get_object_or_404(State, pk=5))
             st.save()

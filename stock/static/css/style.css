@@ -63,5 +63,13 @@ body {
 
 .no-data {
     color: #a8a8a8;
+}
 
+.inline-el {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.create-form h6:not(:first-child){
+    margin-top: 10px;
 }
