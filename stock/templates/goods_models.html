@@ -4,9 +4,11 @@
     <script>
         var unitNum = 1;
         var propNum = 1;
+        var tree = {};
         $(document).ready(function () {
+            tree = JSON.parse($("#tree_data").prop("value"));
             //var goods = JSON.parse($("#goods_data").prop("value"));
-            initTree();
+            initTree(tree);
             $("#tree li").mouseover(function (event) {
                 id = $(this).prop("id");
                 $("#m" + id).show();
@@ -20,9 +22,15 @@
             });
         });
 
+        function addGroup(branch){
+            obj = $("#tree");
+            $(branch).children("ul")[0].append("<li><input class='form-control form-control-sm' type='text'/></li>");
+            obj = $("#tree");
+        }
+
         function addUnit(){
             unitNum++;
-            var code = "<br><br><div class='form-inline'>" + unitNum + ". <select class='form-control inline-el' id='unit'><option>Ящик</option><option>Килограмм</option></select>\n" +
+            var code = "<div class='form-inline' style='margin-top:10px;'>" + unitNum + ". <select class='form-control inline-el' id='unit'><option>Ящик</option><option>Килограмм</option></select>\n" +
                 "                        Коэфф. <input type='number' class='form-control inline-el' style='width: 7em' id='koeff'/>\n" +
                 "                        <input type='checkbox' class='form-control inline-el' id='base'> Базовая</div>";
             var additionalUnit = $("#additional_unit");
@@ -30,7 +38,7 @@
         }
         function addProp(){
             propNum++;
-            var code = "<br><br><div class='form-inline'>" + propNum + ". <select class='form-control inline-el' id='prop'><option>Цвет</option><option>Производитель</option></select>";
+            var code = "<div class='form-inline' style='margin-top:10px;'>" + propNum + ". <select class='form-control inline-el' id='prop'><option>Цвет</option><option>Производитель</option></select></div>";
             var additionalProp = $("#additional_prop");
             $(code).appendTo(additionalProp);
         }
@@ -107,20 +115,24 @@
 
                     </select>
                     <h6>Единицы измерения</h6>
+                    <div>
                     <div class="form-inline" style="padding:0px">
                         1. <select class="form-control inline-el" id="unit"><option>Ящик</option><option>Килограмм</option></select>
                         Коэфф. <input type="number" class="form-control inline-el" style="width: 7em" id="koeff"/>
                         <input type="checkbox" class="form-control inline-el" id="base"/> Базовая
                     </div>
-                    <div class="form-inline" id ="additional_unit">
+                    </div>
+                    <div id ="additional_unit">
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px' onclick="addUnit()"><i class='fas fa-plus-circle'></i></span>
                         <h6>Свойства</h6>
+                    <div>
                     <div class="form-inline" style="padding:0px">
                     1. <select class="form-control inline-el" id="prop"><option>Цвет</option><option>Производитель</option></select>
                     </div>
-                    <div class="form-inline" id ="additional_prop">
+                    <div style='display:block' id ="additional_prop">
                     </div>
+                        </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px' onclick="addProp()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"

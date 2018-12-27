@@ -45,8 +45,9 @@ function getPrices(price) {
     });
 }
 
-function initTree(){
-        makeTree($("#tree_data").prop("value"));
+function initTree(tree){
+        $('#tree').html("");
+        makeTree(tree);
         $('#tree').treed({openedClass:'fa-folder-open', closedClass:'fa-folder'});
         $("#tree li").click(function(event){
             /*id = $(this).prop("id");
@@ -152,15 +153,27 @@ function addRows(table, data) {
     $(row).appendTo(tableBody);
 }
 
-function makeTree(data){
-    var tree = JSON.parse(data);
+function makeTree(tree){
     code = "";
     code = code + addBranch(code, tree[0]["nodes"][1]);
     $(code).appendTo("#tree");
 }
 
+/*function findBranch(id, node){
+    if (id == node.id) {
+        node.nodes["-1"] = {'id': -1, 'name': "<input type='text' />"}
+    }
+    else {
+        if (node["nodes"] != undefined){
+            for (br in node["nodes"]){
+                findBranch(id, node);
+            }
+        }
+    }
+}*/
+
 function addBranch(code, branch){
-    menu = "<span style='font-size: 15px; color: yellowgreen;' id='m" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i><span style='font-size: 15px; color: dodgerblue;' id='m" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='m" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+    menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='addGroup(this.parentElement)' id='m" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='m" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='m" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
     code = code + "<li id="+ branch.id +">" + branch["name"] + menu;
     if (branch["nodes"] != undefined){
         code = code + "<ul>";
