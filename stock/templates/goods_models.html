@@ -11,20 +11,46 @@
             initTree(tree);
             $("#tree li").mouseover(function (event) {
                 id = $(this).prop("id");
-                $("#m" + id).show();
+                $("#a" + id).show();
+                $("#e" + id).show();
+                $("#d" + id).show();
                 event.stopPropagation();
             });
             $("#tree li").mouseout(function (event) {
                 id = $(this).prop("id");
-                obj = $("#m" + id);
-                $("#m" + id).hide();
+                $("#a" + id).hide();
+                $("#e" + id).hide();
+                $("#d" + id).hide();
                 event.stopPropagation();
             });
         });
 
+        function saveGroup(obj){
+            //menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+            val = $(obj).children().children("input")[0];
+            $(obj).html($(val).prop('value'));
+        }
+
         function addGroup(branch){
+            openedClass = 'fa-folder-open';
+            closedClass = 'fa-folder';
             obj = $("#tree");
-            $(branch).children("ul")[0].append("<li><input class='form-control form-control-sm' type='text'/></li>");
+            if ($(branch).children("ul").length == 0){
+                $(branch).append("<ul><li><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='saveGroup(this.parentElement.parentElement)'><i class='fas fa-check-circle'></i></span></div></li></ul>");
+            $(branch).prepend("<i class='indicator fas " + openedClass + "'></i>");
+            $(branch).addClass('branch');
+            $(branch).on('click', function (e) {
+                if (this == e.target) {
+                    var icon = $(this).children('i:first');
+                    icon.toggleClass(openedClass + " " + closedClass);
+                    $(this).children().children().toggle();
+                }
+            });
+            //$(branch).children().children().toggle();
+            }
+            else {
+                $($(branch).children("ul")[0]).append("<li><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='saveGroup(this.parentElement.parentElement)'><i class='fas fa-check-circle'></i></span></div></li></li>");
+            }
             obj = $("#tree");
         }
 
@@ -32,7 +58,7 @@
             unitNum++;
             var code = "<div class='form-inline' style='margin-top:10px;'>" + unitNum + ". <select class='form-control inline-el' id='unit'><option>Ящик</option><option>Килограмм</option></select>\n" +
                 "                        Коэфф. <input type='number' class='form-control inline-el' style='width: 7em' id='koeff'/>\n" +
-                "                        <input type='checkbox' class='form-control inline-el' id='base'> Базовая</div>";
+                "                        <input type='checkbox' class='form-control inline-el' id='base'> Базовая <span style='font-size: 20px; color: red;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalUnit = $("#additional_unit");
             $(code).appendTo(additionalUnit);
         }
@@ -88,9 +114,15 @@
                             </tr>
                             </thead>
                             <tbody id="goods-body">
+                            <tr onclick="$('#inf_model').modal();">
+                                <!--<td class="no-data text-right">Нет записей</td>
+                                <td></td>-->
+                                <td>1</td>
+                                <td>Макет 1</td>
+                            </tr>
                             <tr>
-                                <td class="no-data text-right">Нет записей</td>
-                                <td></td>
+                            <td>2</td>
+                                <td>Макет 2</td>
                             </tr>
                             </tbody>
                         </table>
@@ -137,6 +169,52 @@
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"
                                style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="modal fade" id="inf_model">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Макет 1</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <h6>Наименование</h6>
+                    <p>Макет 1</p>
+                    <h6>Узел в иерархии</h6>
+                    <select class="form-control" id="group" readonly>
+                        <option>Главный</option>
+                    </select>
+                    <h6>Единицы измерения</h6>
+                    <div>
+                    <div class="form-inline" style="padding:0px">
+                        1. <select class="form-control inline-el" id="unit"><option>Ящик</option><option>Килограмм</option></select>
+                        Коэфф. <input type="number" class="form-control inline-el" style="width: 7em" id="koeff" value="5"/>
+                        <input type="checkbox" class="form-control inline-el" id="base"/> Базовая
+                    </div>
+                        <div class="form-inline" style="margin-top:5px">
+                        2. <select class="form-control inline-el" id="unit"><option>Ящик</option><option selected>Килограмм</option></select>
+                        Коэфф. <input type="number" class="form-control inline-el" style="width: 7em" id="koeff" value="1"/>
+                        <input type="checkbox" class="form-control inline-el" id="base" checked/> Базовая
+                    </div>
+                    </div>
+                    <div id ="additional_unit">
+                    </div>
+                        <h6>Свойства</h6>
+                    <div>
+                    <div class="form-inline" style="padding:0px">
+                    1. <select class="form-control inline-el" id="prop"><option>Цвет</option><option>Производитель</option></select>
+                    </div>
+                    <div style='display:block' id ="additional_prop">
+                    </div>
+                        </div>
+                    <!--<div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"
+                               style="float: right"/></div>-->
                 </div>
             </div>
         </div>

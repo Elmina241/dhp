@@ -173,7 +173,7 @@ function makeTree(tree){
 }*/
 
 function addBranch(code, branch){
-    menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='addGroup(this.parentElement)' id='m" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='m" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='m" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+    menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
     code = code + "<li id="+ branch.id +">" + branch["name"] + menu;
     if (branch["nodes"] != undefined){
         code = code + "<ul>";
