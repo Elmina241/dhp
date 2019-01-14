@@ -73,3 +73,11 @@ body {
 .create-form h6:not(:first-child){
     margin-top: 10px;
 }
+
+#tree li span{
+    opacity: 0.5;
+}
+
+#tree li span:hover{
+    opacity: 1;
+}

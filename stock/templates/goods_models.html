@@ -4,55 +4,14 @@
     <script>
         var unitNum = 1;
         var propNum = 1;
+        var tr = null;
         var tree = {};
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
             //var goods = JSON.parse($("#goods_data").prop("value"));
-            initTree(tree);
-            $("#tree li").mouseover(function (event) {
-                id = $(this).prop("id");
-                $("#a" + id).show();
-                $("#e" + id).show();
-                $("#d" + id).show();
-                event.stopPropagation();
-            });
-            $("#tree li").mouseout(function (event) {
-                id = $(this).prop("id");
-                $("#a" + id).hide();
-                $("#e" + id).hide();
-                $("#d" + id).hide();
-                event.stopPropagation();
-            });
+            tr = new Tree(tree);
         });
 
-        function saveGroup(obj){
-            //menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-            val = $(obj).children().children("input")[0];
-            $(obj).html($(val).prop('value'));
-        }
-
-        function addGroup(branch){
-            openedClass = 'fa-folder-open';
-            closedClass = 'fa-folder';
-            obj = $("#tree");
-            if ($(branch).children("ul").length == 0){
-                $(branch).append("<ul><li><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='saveGroup(this.parentElement.parentElement)'><i class='fas fa-check-circle'></i></span></div></li></ul>");
-            $(branch).prepend("<i class='indicator fas " + openedClass + "'></i>");
-            $(branch).addClass('branch');
-            $(branch).on('click', function (e) {
-                if (this == e.target) {
-                    var icon = $(this).children('i:first');
-                    icon.toggleClass(openedClass + " " + closedClass);
-                    $(this).children().children().toggle();
-                }
-            });
-            //$(branch).children().children().toggle();
-            }
-            else {
-                $($(branch).children("ul")[0]).append("<li><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='saveGroup(this.parentElement.parentElement)'><i class='fas fa-check-circle'></i></span></div></li></li>");
-            }
-            obj = $("#tree");
-        }
 
         function addUnit(){
             unitNum++;

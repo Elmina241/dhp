@@ -13,8 +13,8 @@ function getReq(period) {
         },
         success: function onAjaxSuccess(data) {
             addRows("stock-tbody", data);
-            $("#stock-tbody tr").each(function(){
-                $(this).click(function() {
+            $("#stock-tbody tr").each(function () {
+                $(this).click(function () {
                     getDoc($(this).prop("id"));
                 });
             });
@@ -45,17 +45,7 @@ function getPrices(price) {
     });
 }
 
-function initTree(tree){
-        $('#tree').html("");
-        makeTree(tree);
-        $('#tree').treed({openedClass:'fa-folder-open', closedClass:'fa-folder'});
-        $("#tree li").click(function(event){
-            /*id = $(this).prop("id");
-            addGoods("goods-body", goods[id]);*/
-            event.stopPropagation();
-        });
-       // document.getElementById("1").click();
-}
+
 
 function getDoc(id) {
     var csrftoken = getCookie('csrftoken');
@@ -99,12 +89,14 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
 $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
+    beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
@@ -115,8 +107,8 @@ function addGoods(table, rows) {
     row = "";
     for (r in rows) {
         row = row + "<tr id=id-" + r + ">";
-        for (d in rows[r]){
-            if (rows[r][d] == null){
+        for (d in rows[r]) {
+            if (rows[r][d] == null) {
                 row = row + "<td>--</td>";
             }
             else row = row + "<td>" + rows[r][d] + "</td>";
@@ -126,7 +118,7 @@ function addGoods(table, rows) {
     var tableBody = $("#" + table);
     //var rowCount = $("#" + table + " tr").length;
     $(tableBody).html("");
-    if (row == ""){
+    if (row == "") {
         row = "<tr><td></td><td></td><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>";
     }
     //for (i = 0; i < rowCount; i++) $("#" + table + " tr").eq(0).remove();
@@ -138,8 +130,8 @@ function addRows(table, data) {
     row = "";
     for (r in rows) {
         row = row + "<tr id=id-" + r + ">";
-        for (d in rows[r]){
-            if (rows[r][d] == null){
+        for (d in rows[r]) {
+            if (rows[r][d] == null) {
                 row = row + "<td>--</td>";
             }
             else row = row + "<td>" + rows[r][d] + "</td>";
@@ -153,35 +145,98 @@ function addRows(table, data) {
     $(row).appendTo(tableBody);
 }
 
-function makeTree(tree){
-    code = "";
-    code = code + addBranch(code, tree[0]["nodes"][1]);
-    $(code).appendTo("#tree");
-}
 
-/*function findBranch(id, node){
-    if (id == node.id) {
-        node.nodes["-1"] = {'id': -1, 'name': "<input type='text' />"}
-    }
-    else {
-        if (node["nodes"] != undefined){
-            for (br in node["nodes"]){
-                findBranch(id, node);
-            }
-        }
-    }
-}*/
-
-function addBranch(code, branch){
-    menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-    code = code + "<li id="+ branch.id +">" + branch["name"] + menu;
-    if (branch["nodes"] != undefined){
+function addBranch(code, branch) {
+    menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+    code = code + "<li id=" + branch.id + ">" + branch["name"] + menu;
+    if (branch["nodes"] != undefined) {
         code = code + "<ul>";
-        for (br in branch["nodes"]){
+        for (br in branch["nodes"]) {
             code = addBranch(code, branch["nodes"][br]);
         }
         code = code + "</ul>";
     }
-    code = code  + "</li>";
+    code = code + "</li>";
     return code;
+}
+
+function Tree(tree) {
+    this.tree = tree;
+
+    this.init = function () {
+        $('#tree').html("");
+        this.makeTree();
+        $('#tree').treed({openedClass: 'fa-folder-open', closedClass: 'fa-folder'});
+        $("#tree li").click(function (event) {
+            event.stopPropagation();
+        });
+    };
+
+    this.makeTree = function () {
+        code = "";
+        code = code + addBranch(code, this.tree[0]["nodes"][1]);
+        $(code).appendTo("#tree");
+    };
+
+    this.updEvent = function () {
+        $("#tree li").unbind('mouseover');
+        $("#tree li").unbind('mouseout');
+        $("#tree li").mouseover(function (event) {
+            id = $(this).prop("id");
+            $("#a" + id).show();
+            $("#e" + id).show();
+            $("#d" + id).show();
+            event.stopPropagation();
+        });
+        $("#tree li").mouseout(function (event) {
+            id = $(this).prop("id");
+            $("#a" + id).hide();
+            $("#e" + id).hide();
+            $("#d" + id).hide();
+            event.stopPropagation();
+        });
+    };
+
+    this.saveGroup = function (obj, id) {
+        menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+        val = $(obj).children().children("input")[0];
+        $(obj).html($(val).prop('value') + menu);
+        this.updEvent();
+    };
+
+    this.editGroup = function (obj, id) {
+        //menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+        val = $(obj).text();
+        $(obj).html("<div class='form-inline'><input class='form-control form-control-sm' value='" + val + "'  type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement, " + id + ")'><i class='fas fa-check-circle'></i></span></div>");
+        //this.updEvent();
+    };
+
+    this.delGroup = function (obj) {
+        $(obj).remove();
+        //this.updEvent();
+    };
+
+    this.addGroup = function (branch) {
+        openedClass = 'fa-folder-open';
+        closedClass = 'fa-folder';
+        id = $(branch).prop('id') + ($(branch).children("ul").length + 1).toString();
+        if ($(branch).children("ul").length == 0) {
+            $(branch).append("<ul><li id='" + id + "'><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement, " + id + ")'><i class='fas fa-check-circle'></i></span></div></li></ul>");
+            $(branch).prepend("<i class='indicator fas " + openedClass + "'></i>");
+            $(branch).addClass('branch');
+            $(branch).on('click', function (e) {
+                if (this == e.target) {
+                    var icon = $(this).children('i:first');
+                    icon.toggleClass(openedClass + " " + closedClass);
+                    $(this).children().children().toggle();
+                }
+            });
+        }
+        else {
+            $($(branch).children("ul")[0]).append("<li id='" + id + "'><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement, " + id + ")'><i class='fas fa-check-circle'></i></span></div></li></li>");
+        }
+    };
+
+    this.init();
+    this.updEvent();
 }
