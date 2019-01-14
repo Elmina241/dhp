@@ -2,11 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25317915-4a66-47a2-81b7-518c2ac33d7c" name="Default" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TEST5.FDB" beforeDir="false" afterPath="$PROJECT_DIR$/TEST5.FDB" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/scripts/scripts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/goods_models.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/goods_models.html" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/TEST5.FDB" beforeDir="false" afterPath="$PROJECT_DIR$/TEST5.FDB" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processes/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/processes/admin.py" afterDir="false" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,44 +24,14 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.43764845">
+    <splitter split-orientation="horizontal" split-proportion="0.49149507">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/urls.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret column="32" selection-start-column="32" selection-end-column="32" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/models.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="714">
-                  <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/stock/static/css/style.css">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="687">
-                  <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/views.py">
+            <entry file="file://$PROJECT_DIR$/log/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="34">
-                  <caret line="9" selection-start-line="9" selection-end-line="9" />
-                  <folding>
-                    <element signature="e#0#45#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="306">
+                  <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
                 </state>
               </provider>
             </entry>
@@ -64,37 +39,111 @@
           <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/processes/views.py">
               <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="20740">
+                  <caret line="1232" column="24" selection-start-line="1232" selection-start-column="24" selection-end-line="1232" selection-end-column="24" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/stock/static/css/style.css">
+              <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+                <state relative-caret-position="687">
+                  <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
+=======
+                <state relative-caret-position="1224">
+                  <caret line="72" column="1" selection-start-line="72" selection-start-column="1" selection-end-line="72" selection-end-column="12" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/models.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="425">
+                  <caret line="25" column="29" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="29" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+<<<<<<< HEAD
+          <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/views.py">
+              <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="17">
                   <caret line="536" column="36" selection-start-line="536" selection-start-column="36" selection-end-line="536" selection-end-column="36" />
+=======
+          <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/stock/views.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="295">
+                  <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
                   <folding>
-                    <element signature="e#24#69#0" expanded="true" />
+                    <element signature="e#0#45#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
+          <file leaf-file-name="tree.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/static/css/tree.css">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
                 <state relative-caret-position="340">
                   <caret line="20" column="16" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="16" />
+=======
+                <state relative-caret-position="782">
+                  <caret line="46" column="1" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
                 </state>
               </provider>
             </entry>
           </file>
+<<<<<<< HEAD
           <file leaf-file-name="goods_models.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/goods_models.html">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="425">
                   <caret line="25" column="63" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
+=======
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="goods_models.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/templates/goods_models.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="952">
+                  <caret line="148" column="22" selection-start-line="148" selection-start-column="22" selection-end-line="148" selection-end-column="22" />
+                  <folding>
+                    <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#2;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#1;n#div#2;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#1;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#3;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#3;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#2;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#1;n#div#2;n#div#1;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+                  </folding>
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
                 </state>
               </provider>
             </entry>
           </file>
+<<<<<<< HEAD
           <file leaf-file-name="scripts.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
@@ -114,6 +163,22 @@
                     <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#ul#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#!!top" expanded="true" />
                   </folding>
+=======
+          <file leaf-file-name="admin.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/processes/admin.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="17">
+                  <caret line="1" column="29" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="29" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="movement.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="7939">
+                  <caret line="467" column="20" selection-start-line="467" selection-start-column="20" selection-end-line="470" selection-end-column="29" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
                 </state>
               </provider>
             </entry>
@@ -121,8 +186,49 @@
           <file leaf-file-name="tree.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/tree.js">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
                 <state relative-caret-position="306">
                   <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
+=======
+                <state relative-caret-position="340">
+                  <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2958">
+                  <caret line="174" column="23" selection-start-line="174" selection-start-column="23" selection-end-line="174" selection-end-column="23" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="print.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/templates/print.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="578">
+                  <caret line="34" column="10" selection-start-line="34" selection-start-column="10" selection-end-line="34" selection-end-column="10" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="style3.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/templates/css/style3.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="408">
+                  <caret line="24" selection-start-line="24" selection-end-line="33" selection-end-column="1" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="storages.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/processes/templates/storages.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="7446">
+                  <caret line="438" column="12" selection-start-line="438" selection-start-column="12" selection-end-line="454" selection-end-column="20" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
                 </state>
               </provider>
             </entry>
@@ -194,8 +300,12 @@
         <option value="$PROJECT_DIR$/stock/views.py" />
         <option value="$PROJECT_DIR$/stock/static/scripts/tree.js" />
         <option value="$PROJECT_DIR$/stock/templates/goods_models.html" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/stock/static/css/style.css" />
         <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
+=======
+        <option value="$PROJECT_DIR$/processes/admin.py" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
       </list>
     </option>
   </component>
@@ -223,73 +333,18 @@
         <subPane>
           <expand>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
               <item name="django_example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="log" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
               <item name="processes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="store" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="tables" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -358,7 +413,11 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
+<<<<<<< HEAD
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+=======
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -367,8 +426,13 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.030303031" />
+<<<<<<< HEAD
       <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.0882353" />
       <window_info content_ui="combo" id="Project" order="0" side_tool="true" visible="true" weight="0.12953092" />
+=======
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" side_tool="true" visible="true" weight="0.18228404" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -396,13 +460,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6732">
-          <caret line="396" column="63" selection-start-line="396" selection-start-column="63" selection-end-line="396" selection-end-column="104" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/processes/templates/print.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="629">
@@ -675,38 +732,55 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/processes/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20740">
+          <caret line="1232" column="24" selection-start-line="1232" selection-start-column="24" selection-end-line="1232" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="72" column="1" selection-start-line="72" selection-start-column="1" selection-end-line="72" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
     <entry file="file://$PROJECT_DIR$/stock/static/css/tree.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="519">
-          <caret line="46" column="1" lean-forward="true" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
+        <state relative-caret-position="782">
+          <caret line="46" column="1" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+        <state relative-caret-position="425">
+          <caret line="25" column="29" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="7939">
           <caret line="467" column="20" selection-start-line="467" selection-start-column="20" selection-end-line="470" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/processes/templates/css/style3.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
+        <state relative-caret-position="408">
           <caret line="24" selection-start-line="24" selection-end-line="33" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="295">
+          <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>
@@ -716,17 +790,26 @@
     <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
+<<<<<<< HEAD
           <caret line="20" column="16" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="16" />
+=======
+          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/processes/views.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="17">
           <caret line="536" column="36" selection-start-line="536" selection-start-column="36" selection-end-line="536" selection-end-column="36" />
           <folding>
             <element signature="e#24#69#0" expanded="true" />
           </folding>
+=======
+        <state relative-caret-position="2958">
+          <caret line="174" column="23" selection-start-line="174" selection-start-column="23" selection-end-line="174" selection-end-column="23" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
         </state>
       </provider>
     </entry>
@@ -739,6 +822,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/goods_models.html">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="425">
           <caret line="25" column="63" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
         </state>
@@ -755,6 +839,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
           <caret line="208" column="28" lean-forward="true" selection-start-line="208" selection-start-column="28" selection-end-line="208" selection-end-column="28" />
+=======
+        <state relative-caret-position="952">
+          <caret line="148" column="22" selection-start-line="148" selection-start-column="22" selection-end-line="148" selection-end-column="22" />
+>>>>>>> feef72171b430ec88607b579f3ddfcf14dcfbf1d
           <folding>
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#!!top" expanded="true" />
@@ -769,6 +857,13 @@
             <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#ul#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="29" selection-start-line="1" selection-start-column="29" selection-end-line="1" selection-end-column="29" />
         </state>
       </provider>
     </entry>
