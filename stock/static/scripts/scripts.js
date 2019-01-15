@@ -74,6 +74,40 @@ function getDoc(id) {
     });
 }
 
+function sendProp() {
+    var data = null;
+    var t = $('#type').prop('value');
+    if (t == 0){
+        data = {'from': $('#from').prop('value'), 'to': $('#to').prop('value')};
+    }
+    else if (t == 2){
+         data = [];
+         tbody = document.getElementById("elems");
+         for (i = 1; i < tbody.rows.length; i++) {
+             var tr = $("#loadList tr").eq(i);
+             data.push(tr.find("td").eq(0).text());
+         }
+    }
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'send_prop/',
+        data: {
+            'name': $('#name').prop('value'),
+            'type': t,
+            'data': JSON.stringify(data)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -239,4 +273,41 @@ function Tree(tree) {
 
     this.init();
     this.updEvent();
+}
+
+function getProps(selType){
+    switch (selType){
+    case "0":
+      $("#charVal").html("<h6 style='margin-top: 10px'>Числовой диапазон: </h6>" +
+        "<h7>От: </h7>" +
+        "<input id='from' name='from' type='number' class='form-control' required>" +
+          "<h7>До: </h7>" +
+          "<input id='to' name='to' type='number' class='form-control' required>");
+      break;
+    case "1":
+        $("#charVal").html("");
+      break;
+    case "2":
+    $("#charVal").html(
+    "<div class='card' style='margin-top: 10px'>" +
+      "<div class='card-header'>" +
+        "<button class='btn btn-success btn-sm' onclick='addEl();' data-target='#newComp'>Добавить элемент множества</button>" +
+      "</div>" +
+    "<table class='table table-sm' id='elems'>" +
+      "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
+    "</div>"+
+    "<input type='hidden' id='json' name='json' value=''>");
+      break;
+    default:
+      return false;
+  }
+}
+
+function addEl(){
+    $("<tr><td><input type='text' class='form-control input-sm' style='height:32px'></td><td><button class='btn btn-success btn-sm' onclick='saveEl(this)'>Сохранить</button></td></tr>").appendTo("#elems");
+}
+
+function saveEl(el){
+    var text = $(el.parentElement.parentElement).find('input').prop('value');
+    $(el.parentElement.parentElement).html("<td>" + text + "</td><td><button class='btn btn-danger btn-sm' onclick='$(this.parentElement.parentElement).remove()'>Удалить</button></td>");
 }

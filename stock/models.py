@@ -26,9 +26,9 @@ class Model_group(models.Model):
 class Property(models.Model):
     name = models.CharField(max_length=200)
     prop_type = models.PositiveSmallIntegerField()
-    visible = models.BooleanField()
-    editable = models.BooleanField()
-    default = models.CharField(max_length=200, null = True)
+    #visible = models.BooleanField()
+    #editable = models.BooleanField()
+    #default = models.CharField(max_length=200, null = True)
     def __str__(self):
         return self.name
 
