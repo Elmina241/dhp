@@ -84,7 +84,7 @@ function sendProp() {
          data = [];
          tbody = document.getElementById("elems");
          for (i = 1; i < tbody.rows.length; i++) {
-             var tr = $("#loadList tr").eq(i);
+             var tr = $("#elems tr").eq(i);
              data.push(tr.find("td").eq(0).text());
          }
     }
@@ -310,4 +310,40 @@ function addEl(){
 function saveEl(el){
     var text = $(el.parentElement.parentElement).find('input').prop('value');
     $(el.parentElement.parentElement).html("<td>" + text + "</td><td><button class='btn btn-danger btn-sm' onclick='$(this.parentElement.parentElement).remove()'>Удалить</button></td>");
+}
+
+function Property(data){
+    this.props = JSON.parse(data);
+    this.getInf = function(id){
+        $("#e_name").prop("value", this.props[id].name);
+        $("#e_type [value=" + this.props[id].type + "]").prop("selected", "selected");
+        switch (this.props[id].type) {
+            case 0:
+                $("#e_charVal").html("<h6 style='margin-top: 10px'>Числовой диапазон: </h6>" +
+                    "<h7>От: </h7>" +
+                    "<input id='from' name='from' type='number' class='form-control' value='" + this.props[id].from + "' required>" +
+                    "<h7>До: </h7>" +
+                    "<input id='to' name='to' type='number' class='form-control'  value='" + this.props[id].to + "' required>");
+                break;
+            case 1:
+                $("#e_charVal").html("");
+                break;
+            case 2:
+                $("#e_charVal").html(
+                    "<div class='card' style='margin-top: 10px'>" +
+                    "<div class='card-header'>" +
+                    "<button class='btn btn-success btn-sm' onclick=''>Добавить элемент множества</button>" +
+                    "</div>" +
+                    "<table class='table table-sm' id='e_elems'>" +
+                    "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
+                    "</div>");
+                for (p in this.props[id].vals){
+                    $("<tr><td>" + this.props[id].vals[p] + "</td><td><button class='btn btn-danger btn-sm' onclick='$(this.parentElement.parentElement).remove()'>Удалить</button></td></tr>").appendTo("#e_elems");
+                }
+                break;
+            default:
+                return false;
+        };
+        $("#inf_prop").modal();
+    }
 }

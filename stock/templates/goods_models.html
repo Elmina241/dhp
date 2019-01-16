@@ -6,16 +6,38 @@
         var propNum = 1;
         var tr = null;
         var tree = {};
+        var props = null;
+        var units = null;
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
+            props = JSON.parse(JSON.parse($("#props").prop("value")));
+            units = JSON.parse(JSON.parse($("#units").prop("value")));
             //var goods = JSON.parse($("#goods_data").prop("value"));
             tr = new Tree(tree);
         });
 
+        function getPropsCode(){
+            code = "<select class='form-control inline-el' id='prop'>";
+            for (p in props){
+                code = code + "<option value='" + props[p].pk + "'>" +  props[p].fields.name + "</option>";
+            }
+            code = code + "</select>";
+            return code;
+        }
+
+        function getUnits(){
+            code = "<select class='form-control inline-el' id='unit'>";
+            for (p in units){
+                code = code + "<option value='" + units[p].pk + "'>" +  units[p].fields.name + "</option>";
+            }
+            code = code + "</select>";
+            return code;
+        }
+
 
         function addUnit(){
             unitNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'>" + unitNum + ". <select class='form-control inline-el' id='unit'><option>Ящик</option><option>Килограмм</option></select>\n" +
+            var code = "<div class='form-inline' style='margin-top:10px;'>" + unitNum + ". " + getUnits() +
                 "                        Коэфф. <input type='number' class='form-control inline-el' style='width: 7em' id='koeff'/>\n" +
                 "                        <input type='checkbox' class='form-control inline-el' id='base'> Базовая <span style='font-size: 20px; color: red;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalUnit = $("#additional_unit");
@@ -23,7 +45,7 @@
         }
         function addProp(){
             propNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'>" + propNum + ". <select class='form-control inline-el' id='prop'><option>Цвет</option><option>Производитель</option></select></div>";
+            var code = "<div class='form-inline' style='margin-top:10px;'>" + propNum + ". " + getPropsCode() + "</div>";
             var additionalProp = $("#additional_prop");
             $(code).appendTo(additionalProp);
         }
@@ -36,6 +58,8 @@
                hidden>
     {% endif %}
     <input id="goods_data" value="{{ goods }}" hidden>
+    <input value="{{ props }}" id="props" hidden/>
+    <input value="{{ units }}" id="units" hidden/>
     <div class="container-fluid">
 
         <div class="row">
