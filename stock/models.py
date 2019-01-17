@@ -19,7 +19,7 @@ class Model_unit(models.Model):
 
 class Model_group(models.Model):
     name = models.CharField(max_length=200)
-    parent = models.ForeignKey('Model_group', null = True)
+    parent = models.IntegerField(null = True)
     def __str__(self):
         return self.name
 

@@ -1,79 +1,3 @@
-function getReq(period) {
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'get_req/',
-        data: {
-            'period': period
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        },
-        success: function onAjaxSuccess(data) {
-            addRows("stock-tbody", data);
-            $("#stock-tbody tr").each(function () {
-                $(this).click(function () {
-                    getDoc($(this).prop("id"));
-                });
-            });
-        }
-    });
-}
-
-function getPrices(price) {
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'get_price/',
-        data: {
-            'price': price
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-            $("#loader").show();
-        },
-        success: function onAjaxSuccess(data) {
-            var goods = JSON.parse(data);
-            $("#tree").html("");
-            initTree(goods);
-            $("#loader").hide();
-        }
-    });
-}
-
-
-
-function getDoc(id) {
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'get_doc/',
-        data: {
-            'id': id
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        },
-        success: function onAjaxSuccess(data) {
-            addRows("doc-tbody", data);
-            var rows = JSON.parse(data);
-            num_b = 0;
-            num = 0;
-            for (r in rows) {
-                num_b = num_b + parseInt(rows[r]["num_b"]);
-                num = num + parseInt(rows[r]["num"]);
-            }
-            $("<tr class='table-info'><td><b>Итого</b></td><td></td><td>" + num_b + "</td><td></td><td></td><td></td><td>" + num + "</td></tr>").appendTo("#doc-tbody");
-        }
-    });
-}
-
 function sendProp() {
     var data = null;
     var t = $('#type').prop('value');
@@ -95,6 +19,40 @@ function sendProp() {
         data: {
             'name': $('#name').prop('value'),
             'type': t,
+            'data': JSON.stringify(data)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
+function editProp(id) {
+    var data = null;
+    var t = $('#e_type').prop('value');
+    if (t == 0){
+        data = {'from': $('#e_from').prop('value'), 'to': $('#e_to').prop('value')};
+    }
+    else if (t == 2){
+         data = [];
+         tbody = document.getElementById("e_elems");
+         for (i = 1; i < tbody.rows.length; i++) {
+             var tr = $("#e_elems tr").eq(i);
+             data.push(tr.find("td").eq(0).text());
+         }
+    }
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'edit_prop/',
+        data: {
+            'name': $('#e_name').prop('value'),
+            'id': id,
             'data': JSON.stringify(data)
         },
         beforeSend: function (xhr, settings) {
@@ -307,6 +265,10 @@ function addEl(){
     $("<tr><td><input type='text' class='form-control input-sm' style='height:32px'></td><td><button class='btn btn-success btn-sm' onclick='saveEl(this)'>Сохранить</button></td></tr>").appendTo("#elems");
 }
 
+function addEl2(){
+    $("<tr><td><input type='text' class='form-control input-sm' style='height:32px'></td><td><button class='btn btn-success btn-sm' onclick='saveEl(this)'>Сохранить</button></td></tr>").appendTo("#e_elems");
+}
+
 function saveEl(el){
     var text = $(el.parentElement.parentElement).find('input').prop('value');
     $(el.parentElement.parentElement).html("<td>" + text + "</td><td><button class='btn btn-danger btn-sm' onclick='$(this.parentElement.parentElement).remove()'>Удалить</button></td>");
@@ -321,9 +283,9 @@ function Property(data){
             case 0:
                 $("#e_charVal").html("<h6 style='margin-top: 10px'>Числовой диапазон: </h6>" +
                     "<h7>От: </h7>" +
-                    "<input id='from' name='from' type='number' class='form-control' value='" + this.props[id].from + "' required>" +
+                    "<input id='e_from' name='from' type='number' class='form-control' value='" + this.props[id].from + "' required>" +
                     "<h7>До: </h7>" +
-                    "<input id='to' name='to' type='number' class='form-control'  value='" + this.props[id].to + "' required>");
+                    "<input id='e_to' name='to' type='number' class='form-control'  value='" + this.props[id].to + "' required>");
                 break;
             case 1:
                 $("#e_charVal").html("");
@@ -332,7 +294,7 @@ function Property(data){
                 $("#e_charVal").html(
                     "<div class='card' style='margin-top: 10px'>" +
                     "<div class='card-header'>" +
-                    "<button class='btn btn-success btn-sm' onclick=''>Добавить элемент множества</button>" +
+                    "<button class='btn btn-success btn-sm' onclick='addEl2()'>Добавить элемент множества</button>" +
                     "</div>" +
                     "<table class='table table-sm' id='e_elems'>" +
                     "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
@@ -344,6 +306,10 @@ function Property(data){
             default:
                 return false;
         };
+        $("#editBtn").unbind('click');
+        $("#editBtn").click(function() {
+                editProp(id);
+        });
         $("#inf_prop").modal();
     }
 }

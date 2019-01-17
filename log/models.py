@@ -27,7 +27,7 @@ class Movement_rec(models.Model):
     operation = models.ForeignKey('Operation')
     is_printed = models.BooleanField(default = False)
     def __str__(self):
-        return "test"
+        return str(self.product) + " " + str(self.date) + " " + str(self.operation)
     def get_batch(self):
         num = 'П-' + str(round(self.batch.kneading.batch_num))
         return num
