@@ -81,7 +81,7 @@ def send_prop(request):
 def save_group(request):
     if request.method == 'POST':
         if 'name' in request.POST:
-            if request.POST['id'] is not None:
+            if request.POST['id'] != '':
                 group = Model_group.objects.get(pk = request.POST['id'])
                 group.name = request.POST['name']
             else:

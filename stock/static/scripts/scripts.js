@@ -189,11 +189,31 @@ function Tree(tree) {
         });
     };
 
-    this.saveGroup = function (obj, id) {
-        menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+    this.saveGroup = function (obj, id = null) {
+        self = this;
+        parent = $(obj).prop("id");
         val = $(obj).children().children("input")[0];
-        $(obj).html($(val).prop('value') + menu);
-        this.updEvent();
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_group/',
+            data: {
+                'name': $(val).prop('value'),
+                'id': id,
+                'parent': parent.split('-')[0]
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                id = data;
+                menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+                $(obj).html($(val).prop('value') + menu);
+                self.updEvent();
+            }
+        });
     };
 
     this.editGroup = function (obj, id) {
@@ -211,9 +231,9 @@ function Tree(tree) {
     this.addGroup = function (branch) {
         openedClass = 'fa-folder-open';
         closedClass = 'fa-folder';
-        id = $(branch).prop('id') + ($(branch).children("ul").length + 1).toString();
+        id = $(branch).prop('id') + "-" + ($(branch).children("ul").length + 1).toString();
         if ($(branch).children("ul").length == 0) {
-            $(branch).append("<ul><li id='" + id + "'><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement, " + id + ")'><i class='fas fa-check-circle'></i></span></div></li></ul>");
+            $(branch).append("<ul><li id='" + id + "'><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement)'><i class='fas fa-check-circle'></i></span></div></li></ul>");
             $(branch).prepend("<i class='indicator fas " + openedClass + "'></i>");
             $(branch).addClass('branch');
             $(branch).on('click', function (e) {
@@ -225,7 +245,7 @@ function Tree(tree) {
             });
         }
         else {
-            $($(branch).children("ul")[0]).append("<li id='" + id + "'><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement, " + id + ")'><i class='fas fa-check-circle'></i></span></div></li></li>");
+            $($(branch).children("ul")[0]).append("<li id='" + id + "'><div class='form-inline'><input class='form-control form-control-sm' type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement)'><i class='fas fa-check-circle'></i></span></div></li></li>");
         }
     };
 

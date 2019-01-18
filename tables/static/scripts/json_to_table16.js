@@ -5,6 +5,7 @@ function getComponentsF(c, m, f='') {
   for (i = 2; i < length; i++) table.deleteRow(2);
   var sel = document.getElementById("composition");
   var sel_id = sel.value;
+  console.log(c);
   var components = JSON.parse(c);
   var materials = JSON.parse(m);
   if (f!="0"){
