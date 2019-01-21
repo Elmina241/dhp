@@ -140,7 +140,7 @@ function addRows(table, data) {
 
 function addBranch(code, branch) {
     menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-    code = code + "<li id=" + branch.id + ">" + branch["name"] + menu;
+    code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + "</span>" +menu;
     if (branch["nodes"] != undefined) {
         code = code + "<ul>";
         for (br in branch["nodes"]) {
@@ -154,7 +154,8 @@ function addBranch(code, branch) {
 
 function Tree(tree) {
     this.tree = tree;
-
+    this.selected = 1;
+    var self = this;
     this.init = function () {
         $('#tree').html("");
         this.makeTree();
@@ -210,7 +211,7 @@ function Tree(tree) {
             success: function onAjaxSuccess(data) {
                 id = data;
                 menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-                $(obj).html($(val).prop('value') + menu);
+                $(obj).html("<span class='txt'>" + $(val).prop('value') + "</span>" + menu);
                 self.updEvent();
             }
         });
@@ -251,6 +252,14 @@ function Tree(tree) {
 
     this.init();
     this.updEvent();
+     $("#tree li").click(function (event) {
+            id = $(this).prop("id");
+            self.selected = id;
+            $("#tree span").removeClass('active');
+            obj = $(this).children("span");
+            $(this).children("span").eq(0).addClass('active');
+            //event.stopPropagation();
+        });
 }
 
 function getProps(selType){

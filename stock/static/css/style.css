@@ -74,7 +74,7 @@ body {
     margin-top: 10px;
 }
 
-#tree li span{
+#tree li span:not(.txt){
     opacity: 0.5;
 }
 
@@ -85,4 +85,9 @@ body {
 .table-sm tbody tr td{
     padding: 5px 0px 5px 10px;
     text-align: center;
+}
+
+.txt.active{
+    background: #eceeef;
+    /*border: solid #eceeef 1px;*/
 }
