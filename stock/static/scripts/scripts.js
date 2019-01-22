@@ -152,6 +152,29 @@ function addBranch(code, branch) {
     return code;
 }
 
+function saveModel(){
+
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_model/',
+        data: {
+            'name': $('#name').prop('value'),
+            'group': $("#group option:selected").val(),
+            'units': JSON.stringify(units),
+            'props': JSON.stringify(props)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function Tree(tree) {
     this.tree = tree;
     this.selected = 1;
@@ -212,6 +235,7 @@ function Tree(tree) {
                 id = data;
                 menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
                 $(obj).html("<span class='txt'>" + $(val).prop('value') + "</span>" + menu);
+                $(obj.parentElement).prop("id", id);
                 self.updEvent();
             }
         });
@@ -258,6 +282,7 @@ function Tree(tree) {
             $("#tree span").removeClass('active');
             obj = $(this).children("span");
             $(this).children("span").eq(0).addClass('active');
+            $("#group option[value=" + id + "]").prop('selected', true);
             //event.stopPropagation();
         });
 }

@@ -19,7 +19,7 @@
         });
 
         function getPropsCode(){
-            code = "<select class='form-control inline-el' id='prop'>";
+            code = "<select class='form-control inline-el prop'>";
             for (p in props){
                 code = code + "<option value='" + props[p].pk + "'>" +  props[p].fields.name + "</option>";
             }
@@ -28,7 +28,7 @@
         }
 
         function getUnits(){
-            code = "<select class='form-control inline-el' id='unit'>";
+            code = "<select class='form-control inline-el unit'>";
             for (p in units){
                 code = code + "<option value='" + units[p].pk + "'>" +  units[p].fields.name + "</option>";
             }
@@ -128,9 +128,13 @@
                     <input type="text" class="form-control" id="name"/>
                     </div>
                     <h6>Узел в иерархии</h6>
+                <div class="col-6" style="padding:0">
                     <select class="form-control" id="group">
-
+                        {% for g in groups %}
+                            <option value="{{ g.pk }}">{{ g.name }}</option>
+                        {% endfor %}
                     </select>
+                </div>
                     <h6>Единицы измерения</h6>
                     <div id ="additional_unit">
                     </div>
@@ -140,7 +144,7 @@
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px' onclick="addProp()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"
+                        <input value="Сохранить" id="saveModel" onclick="saveModel" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>

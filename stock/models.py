@@ -12,8 +12,8 @@ class Product_model(models.Model):
 class Model_unit(models.Model):
     model = models.ForeignKey('Product_model')
     unit = models.ForeignKey('tables.Unit')
-    coeff = models.FloatField()
-    is_base = models.BooleanField()
+    #coeff = models.FloatField()
+    #is_base = models.BooleanField()
     def __str__(self):
         return self.unit.name
 
@@ -52,6 +52,9 @@ class Property_var(models.Model):
 class Model_property(models.Model):
     model = models.ForeignKey('Product_model')
     prop = models.ForeignKey('Property')
+    visible = models.BooleanField()
+    editable = models.BooleanField()
+    isDefault = models.BooleanField()
     def __str__(self):
         return self.name
 

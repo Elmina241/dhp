@@ -36,7 +36,7 @@ def goods_models(request):
     #         }
     #     }
     # }
-    return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "tree": json.dumps(tree), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
+    return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "tree": json.dumps(tree), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "groups": Model_group.objects.exclude(pk = 0), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
 def add_children(obj, node):
     for o in Model_group.objects.filter(parent = obj.id):
