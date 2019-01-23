@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Property, Property_range, Property_var, Model_group
+from .models import Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
 from django.core import serializers
 from django.utils import timezone
 import datetime
@@ -36,7 +36,7 @@ def goods_models(request):
     #         }
     #     }
     # }
-    return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "tree": json.dumps(tree), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "groups": Model_group.objects.exclude(pk = 0), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
+    return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "models": Product_model.objects.all(),"tree": json.dumps(tree), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "groups": Model_group.objects.exclude(pk = 0), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
 def add_children(obj, node):
     for o in Model_group.objects.filter(parent = obj.id):
@@ -76,6 +76,26 @@ def send_prop(request):
                     for d in data:
                         p = Property_var(prop = prop, name = d)
                         p.save()
+            return HttpResponse('ok')
+
+def save_model(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            group = Model_group.objects.get(pk = request.POST['group'])
+            name = request.POST['name']
+            units = json.loads(request.POST['units'])
+            props = json.loads(request.POST['props'])
+            model = Product_model(name = name, group = group)
+            model.save()
+            for u in units:
+                unit = Unit.objects.get(pk = u)
+                m = Model_unit(model = model, unit = unit)
+                m.save()
+            for p in props:
+                print(p)
+                prop = Property.objects.get(pk = int(props[p]["prop"]))
+                m = Model_property(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'])
+                m.save()
             return HttpResponse('ok')
 
 def save_group(request):

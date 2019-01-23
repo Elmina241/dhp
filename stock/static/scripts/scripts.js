@@ -153,7 +153,18 @@ function addBranch(code, branch) {
 }
 
 function saveModel(){
-
+    units = [];
+    $("#additional_unit").find("select").each(function(item){
+        units.push($("option:selected", this).val());
+    });
+    props = {};
+    $("#additional_prop").find("select").each(function(item){
+        props[item] = {};
+        props[item]['prop'] = $("option:selected", this).val();
+        props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
+        props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
+        props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
+    });
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -235,7 +246,7 @@ function Tree(tree) {
                 id = data;
                 menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
                 $(obj).html("<span class='txt'>" + $(val).prop('value') + "</span>" + menu);
-                $(obj.parentElement).prop("id", id);
+                $(obj).prop("id", id);
                 self.updEvent();
             }
         });

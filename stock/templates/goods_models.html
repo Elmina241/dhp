@@ -46,7 +46,7 @@
         }
         function addProp(){
             propNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'>" + propNum + ". " + getPropsCode() + " <input type='checkbox' class='form-control inline-el' id='base'> Скрытое <input type='checkbox' class='form-control inline-el' id='base'> Неизменяемое <input type='checkbox' class='form-control inline-el' id='base'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+            var code = "<div class='form-inline' style='margin-top:10px;'>" + propNum + ". " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalProp = $("#additional_prop");
             $(code).appendTo(additionalProp);
         }
@@ -97,16 +97,19 @@
                             </tr>
                             </thead>
                             <tbody id="goods-body">
-                            <tr onclick="$('#inf_model').modal();">
-                                <!--<td class="no-data text-right">Нет записей</td>
-                                <td></td>-->
-                                <td>1</td>
-                                <td>Макет 1</td>
-                            </tr>
-                            <tr>
-                            <td>2</td>
-                                <td>Макет 2</td>
-                            </tr>
+                            {% if models %}
+                                {% for m in models %}
+                                <tr onclick="$('#inf_model').modal();">
+                                <td>{{ m.pk }}</td>
+                                <td>{{ m.name }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                <td class="no-data text-right">Нет записей</td>
+                                <td></td>
+                                </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -144,7 +147,7 @@
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px' onclick="addProp()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="saveModel" onclick="saveModel" class="btn btn-primary"
+                        <input value="Сохранить" id="saveModel" onclick="saveModel()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
