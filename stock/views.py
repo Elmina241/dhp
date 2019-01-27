@@ -78,6 +78,23 @@ def send_prop(request):
                         p.save()
             return HttpResponse('ok')
 
+def get_model_inf(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            model = Product_model.objects.get(pk = request.POST['id'])
+            data = {}
+            data['name'] = model.name
+            data['group'] = model.group.pk
+            units = []
+            for u in Model_unit.objects.filter(model = model):
+                units.append(u.unit.pk)
+            data["units"] = units
+            props = {}
+            for p in Model_property.objects.filter(model=model):
+                props[str(p.pk)] = {"id": p.prop.pk, "visible": p.visible, "editable": p.editable, "isDefault": p.isDefault}
+            data["props"] = props
+            return HttpResponse(json.dumps(data))
+
 def save_model(request):
     if request.method == 'POST':
         if 'name' in request.POST:
