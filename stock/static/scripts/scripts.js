@@ -1,16 +1,16 @@
 function sendProp() {
     var data = null;
     var t = $('#type').prop('value');
-    if (t == 0){
+    if (t == 0) {
         data = {'from': $('#from').prop('value'), 'to': $('#to').prop('value')};
     }
-    else if (t == 2){
-         data = [];
-         tbody = document.getElementById("elems");
-         for (i = 1; i < tbody.rows.length; i++) {
-             var tr = $("#elems tr").eq(i);
-             data.push(tr.find("td").eq(0).text());
-         }
+    else if (t == 2) {
+        data = [];
+        tbody = document.getElementById("elems");
+        for (i = 1; i < tbody.rows.length; i++) {
+            var tr = $("#elems tr").eq(i);
+            data.push(tr.find("td").eq(0).text());
+        }
     }
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -35,16 +35,16 @@ function sendProp() {
 function editProp(id) {
     var data = null;
     var t = $('#e_type').prop('value');
-    if (t == 0){
+    if (t == 0) {
         data = {'from': $('#e_from').prop('value'), 'to': $('#e_to').prop('value')};
     }
-    else if (t == 2){
-         data = [];
-         tbody = document.getElementById("e_elems");
-         for (i = 1; i < tbody.rows.length; i++) {
-             var tr = $("#e_elems tr").eq(i);
-             data.push(tr.find("td").eq(0).text());
-         }
+    else if (t == 2) {
+        data = [];
+        tbody = document.getElementById("e_elems");
+        for (i = 1; i < tbody.rows.length; i++) {
+            var tr = $("#e_elems tr").eq(i);
+            data.push(tr.find("td").eq(0).text());
+        }
     }
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -62,6 +62,58 @@ function editProp(id) {
         },
         success: function onAjaxSuccess(data) {
             window.location.reload();
+        }
+    });
+}
+
+function e_addUnit() {
+    e_unitNum++;
+    var code = "<div class='form-inline' style='margin-top:10px;'>" + e_unitNum + ". " + getUnits() +
+        "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+    var additionalUnit = $("#e_additional_unit");
+    $(code).appendTo(additionalUnit);
+}
+
+function e_addProp() {
+    e_propNum++;
+    var code = "<div class='form-inline' style='margin-top:10px;'>" + e_propNum + ". " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+    var additionalProp = $("#e_additional_prop");
+    $(code).appendTo(additionalProp);
+}
+
+function getInf(id) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'get_model_inf/',
+        data: {
+            'id': id
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            inf = JSON.parse(data);
+            $("#e_additional_unit").html("");
+            $("#e_additional_prop").html("");
+            $("#e_name").prop("value", inf.name);
+            $("#e_group option[value=" + inf.group + "]").prop('selected', true);
+            for (u in inf.units){
+                e_addUnit();
+                $("option[value=" + inf.units[u] + "]", $("#e_additional_unit").find("select").last()).prop('selected', true);
+            }
+            temp = inf.props;
+            for (i in temp){
+                e_addProp();
+                $("option[value=" + inf.props[i].id + "]", $("#e_additional_prop").find("select").last()).prop('selected', true);
+                obj = $("#e_additional_prop").find("select").last()[0];
+                $(obj.parentElement).find(".visible").eq(0).prop("checked", !inf.props[i].visible);
+                $(obj.parentElement).find(".editable").eq(0).prop("checked", !inf.props[i].editable);
+                $(obj.parentElement).find(".isDefault").eq(0).prop("checked", inf.props[i].isDefault);
+            }
+            $("#inf_model").modal();
         }
     });
 }
@@ -140,7 +192,7 @@ function addRows(table, data) {
 
 function addBranch(code, branch) {
     menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-    code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + "</span>" +menu;
+    code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + menu + "</span>";
     if (branch["nodes"] != undefined) {
         code = code + "<ul>";
         for (br in branch["nodes"]) {
@@ -152,13 +204,13 @@ function addBranch(code, branch) {
     return code;
 }
 
-function saveModel(){
+function saveModel() {
     units = [];
-    $("#additional_unit").find("select").each(function(item){
+    $("#additional_unit").find("select").each(function (item) {
         units.push($("option:selected", this).val());
     });
     props = {};
-    $("#additional_prop").find("select").each(function(item){
+    $("#additional_prop").find("select").each(function (item) {
         props[item] = {};
         props[item]['prop'] = $("option:selected", this).val();
         props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
@@ -245,7 +297,7 @@ function Tree(tree) {
             success: function onAjaxSuccess(data) {
                 id = data;
                 menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + id + ")'  id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-                $(obj).html("<span class='txt'>" + $(val).prop('value') + "</span>" + menu);
+                $(obj).html("<span class='txt'>" + $(val).prop('value') + menu + "</span>");
                 $(obj).prop("id", id);
                 self.updEvent();
             }
@@ -254,6 +306,7 @@ function Tree(tree) {
 
     this.editGroup = function (obj, id) {
         //menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' id='e" + id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' id='d" + id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+        //obj = $(obj).find(".txt").eq(0);
         val = $(obj).text();
         $(obj).html("<div class='form-inline'><input class='form-control form-control-sm' value='" + val + "'  type='text'/><span style='font-size: 20px; color: yellowgreen; margin-left: 5px' onclick='tr.saveGroup(this.parentElement.parentElement, " + id + ")'><i class='fas fa-check-circle'></i></span></div>");
         //this.updEvent();
@@ -287,61 +340,61 @@ function Tree(tree) {
 
     this.init();
     this.updEvent();
-     $("#tree li").click(function (event) {
-            id = $(this).prop("id");
-            self.selected = id;
-            $("#tree span").removeClass('active');
-            obj = $(this).children("span");
-            $(this).children("span").eq(0).addClass('active');
-            $("#group option[value=" + id + "]").prop('selected', true);
-            //event.stopPropagation();
-        });
+    $("#tree li").click(function (event) {
+        id = $(this).prop("id");
+        self.selected = id;
+        $("#tree span").removeClass('active');
+        obj = $(this).children("span");
+        $(this).children("span").eq(0).addClass('active');
+        $("#group option[value=" + id + "]").prop('selected', true);
+        //event.stopPropagation();
+    });
 }
 
-function getProps(selType){
-    switch (selType){
-    case "0":
-      $("#charVal").html("<h6 style='margin-top: 10px'>Числовой диапазон: </h6>" +
-        "<h7>От: </h7>" +
-        "<input id='from' name='from' type='number' class='form-control' required>" +
-          "<h7>До: </h7>" +
-          "<input id='to' name='to' type='number' class='form-control' required>");
-      break;
-    case "1":
-        $("#charVal").html("");
-      break;
-    case "2":
-    $("#charVal").html(
-    "<div class='card' style='margin-top: 10px'>" +
-      "<div class='card-header'>" +
-        "<button class='btn btn-success btn-sm' onclick='addEl();' data-target='#newComp'>Добавить элемент множества</button>" +
-      "</div>" +
-    "<table class='table table-sm' id='elems'>" +
-      "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
-    "</div>"+
-    "<input type='hidden' id='json' name='json' value=''>");
-      break;
-    default:
-      return false;
-  }
+function getProps(selType) {
+    switch (selType) {
+        case "0":
+            $("#charVal").html("<h6 style='margin-top: 10px'>Числовой диапазон: </h6>" +
+                "<h7>От: </h7>" +
+                "<input id='from' name='from' type='number' class='form-control' required>" +
+                "<h7>До: </h7>" +
+                "<input id='to' name='to' type='number' class='form-control' required>");
+            break;
+        case "1":
+            $("#charVal").html("");
+            break;
+        case "2":
+            $("#charVal").html(
+                "<div class='card' style='margin-top: 10px'>" +
+                "<div class='card-header'>" +
+                "<button class='btn btn-success btn-sm' onclick='addEl();' data-target='#newComp'>Добавить элемент множества</button>" +
+                "</div>" +
+                "<table class='table table-sm' id='elems'>" +
+                "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
+                "</div>" +
+                "<input type='hidden' id='json' name='json' value=''>");
+            break;
+        default:
+            return false;
+    }
 }
 
-function addEl(){
+function addEl() {
     $("<tr><td><input type='text' class='form-control input-sm' style='height:32px'></td><td><button class='btn btn-success btn-sm' onclick='saveEl(this)'>Сохранить</button></td></tr>").appendTo("#elems");
 }
 
-function addEl2(){
+function addEl2() {
     $("<tr><td><input type='text' class='form-control input-sm' style='height:32px'></td><td><button class='btn btn-success btn-sm' onclick='saveEl(this)'>Сохранить</button></td></tr>").appendTo("#e_elems");
 }
 
-function saveEl(el){
+function saveEl(el) {
     var text = $(el.parentElement.parentElement).find('input').prop('value');
     $(el.parentElement.parentElement).html("<td>" + text + "</td><td><button class='btn btn-danger btn-sm' onclick='$(this.parentElement.parentElement).remove()'>Удалить</button></td>");
 }
 
-function Property(data){
+function Property(data) {
     this.props = JSON.parse(data);
-    this.getInf = function(id){
+    this.getInf = function (id) {
         $("#e_name").prop("value", this.props[id].name);
         $("#e_type [value=" + this.props[id].type + "]").prop("selected", "selected");
         switch (this.props[id].type) {
@@ -364,16 +417,17 @@ function Property(data){
                     "<table class='table table-sm' id='e_elems'>" +
                     "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
                     "</div>");
-                for (p in this.props[id].vals){
+                for (p in this.props[id].vals) {
                     $("<tr><td>" + this.props[id].vals[p] + "</td><td><button class='btn btn-danger btn-sm' onclick='$(this.parentElement.parentElement).remove()'>Удалить</button></td></tr>").appendTo("#e_elems");
                 }
                 break;
             default:
                 return false;
-        };
+        }
+        ;
         $("#editBtn").unbind('click');
-        $("#editBtn").click(function() {
-                editProp(id);
+        $("#editBtn").click(function () {
+            editProp(id);
         });
         $("#inf_prop").modal();
     }

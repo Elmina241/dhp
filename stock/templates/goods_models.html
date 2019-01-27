@@ -4,6 +4,8 @@
     <script>
         var unitNum = 0;
         var propNum = 0;
+        var e_unitNum = 0;
+        var e_propNum = 0;
         var tr = null;
         var tree = {};
         var props = null;
@@ -99,7 +101,7 @@
                             <tbody id="goods-body">
                             {% if models %}
                                 {% for m in models %}
-                                <tr onclick="$('#inf_model').modal();">
+                                <tr onclick="getInf({{ m.pk }})">
                                 <td>{{ m.pk }}</td>
                                 <td>{{ m.name }}</td>
                                 </tr>
@@ -155,41 +157,33 @@
     </div>
 
      <div class="modal fade" id="inf_model">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Макет 1</h5>
+                    <h5>Редактирование макета</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
                 <div class="modal-body create-form">
                     <h6>Наименование</h6>
-                    <p>Макет 1</p>
+                    <input type="text" class="form-control" id="e_name"/>
                     <h6>Узел в иерархии</h6>
-                    <select class="form-control" id="group" readonly>
-                        <option>Главный</option>
+                    <div class="col-6" style="padding:0">
+                    <select class="form-control" id="e_group">
+                        {% for g in groups %}
+                            <option value="{{ g.pk }}">{{ g.name }}</option>
+                        {% endfor %}
                     </select>
+                </div>
                     <h6>Единицы измерения</h6>
-                    <div>
-                        <div class="form-inline" style="margin-top:5px">
-                        2. <select class="form-control inline-el" id="unit"><option>Ящик</option><option selected>Килограмм</option></select>
-                        Коэфф. <input type="number" class="form-control inline-el" style="width: 7em" id="koeff" value="1"/>
-                        <input type="checkbox" class="form-control inline-el" id="base" checked/> Базовая
-                    </div>
-                    </div>
-                    <div id ="additional_unit">
+                    <div id ="e_additional_unit">
                     </div>
                         <h6>Свойства</h6>
-                    <div>
-                    <div class="form-inline" style="padding:0px">
-                    1. <select class="form-control inline-el" id="prop"><option>Цвет</option><option>Производитель</option></select>
+                    <div style='display:block' id ="e_additional_prop">
                     </div>
-                    <div style='display:block' id ="additional_prop">
-                    </div>
-                        </div>
-                    <!--<div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="packBtn" onclick="" class="btn btn-primary"
-                               style="float: right"/></div>-->
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="editBtn" onclick="" class="btn btn-primary"
+                               style="float: right"/></div>
                 </div>
             </div>
         </div>
