@@ -68,7 +68,7 @@ function editProp(id) {
 
 function e_addUnit() {
     e_unitNum++;
-    var code = "<div class='form-inline' style='margin-top:10px;'>" + e_unitNum + ". " + getUnits() +
+    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getUnits() +
         "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
     var additionalUnit = $("#e_additional_unit");
     $(code).appendTo(additionalUnit);
@@ -76,9 +76,24 @@ function e_addUnit() {
 
 function e_addProp() {
     e_propNum++;
-    var code = "<div class='form-inline' style='margin-top:10px;'>" + e_propNum + ". " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
     var additionalProp = $("#e_additional_prop");
     $(code).appendTo(additionalProp);
+}
+
+function searchModel(text){
+    if (text == ""){
+        changeGroup();
+    }
+    else {
+        $("#goods-body").html("");
+    for (m in models){
+        if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1){
+            $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td></tr>").appendTo("#goods-body");
+        }
+    }
+    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+    }
 }
 
 function getInf(id) {
@@ -313,6 +328,22 @@ function Tree(tree) {
     };
 
     this.delGroup = function (obj) {
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'del_group/',
+            data: {
+                'id': $(obj.parentElement).prop("id")
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                $(obj).remove();
+            }
+        });
         $(obj).remove();
         //this.updEvent();
     };
@@ -347,8 +378,47 @@ function Tree(tree) {
         obj = $(this).children("span");
         $(this).children("span").eq(0).addClass('active');
         $("#group option[value=" + id + "]").prop('selected', true);
+        changeGroup();
         //event.stopPropagation();
     });
+}
+
+function changeGroup(){
+    $("#goods-body").html("");
+    for (m in models){
+        if (models[m].group == tr.selected){
+            $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td></tr>").appendTo("#goods-body");
+        }
+    }
+    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+}
+
+function getDefault(sel){
+    t = $("option:selected", sel).prop("class");
+    id = $("option:selected", sel).val();
+    code = "";
+    if (t == "0"){
+        code = "<input type='number' class='form-control default' />";
+    }
+    else if (t == "1") {
+        code = "<input type='text' class='form-control default' />";
+    }
+    else {
+        code = "<select class='form-control default'>";
+        for (p in propVars){
+            if (propVars[p].fields.prop == id){
+                code = code + "<option value='" + propVars[p].pk + "'>" +  propVars[p].fields.name + "</option>";
+            }
+        }
+        code = code + "</select>";
+    }
+    return code;
+}
+
+function addDefault(obj){
+    if ($(obj).prop("checked") == true){
+        $(getDefault($(obj.parentElement).find('select').eq(0))).appendTo(obj.parentElement);
+    }
 }
 
 function getProps(selType) {

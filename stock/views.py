@@ -14,29 +14,10 @@ def goods_models(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children(g, tree[0])
-    # tree = {
-    #     0: {
-    #         'id': 0,
-    #         'name': "null",
-    #         'nodes': {
-    #             1: {
-    #                 'id': 1,
-    #                 'name': "Главный",
-    #                 'nodes': {
-    #                     2: {
-    #                         'id': 2,
-    #                         'name': "Пункт 1"
-    #                     },
-    #                     3: {
-    #                         'id': 3,
-    #                         'name': "Пункт 2"
-    #                     }
-    #                 }
-    #             }
-    #         }
-    #     }
-    # }
-    return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "models": Product_model.objects.all(),"tree": json.dumps(tree), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "groups": Model_group.objects.exclude(pk = 0), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
+    model_json = {}
+    for m in Product_model.objects.all():
+        model_json[str(m.pk)] = {"id": m.pk, "name": m.name, "group": m.group.pk}
+    return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "models": Product_model.objects.all(), "prop_vars": json.dumps(serializers.serialize("json", Property_var.objects.all())), "tree": json.dumps(tree), "model_json": json.dumps(model_json), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "groups": Model_group.objects.exclude(pk = 0), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
 def add_children(obj, node):
     for o in Model_group.objects.filter(parent = obj.id):

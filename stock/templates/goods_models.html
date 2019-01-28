@@ -10,8 +10,12 @@
         var tree = {};
         var props = null;
         var units = null;
+        var models = null;
+        var propVars = null;
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
+            models = JSON.parse($("#model_json").prop("value"));
+            propVars = JSON.parse(JSON.parse($("#prop_vars").prop("value")));
             props = JSON.parse(JSON.parse($("#props").prop("value")));
             units = JSON.parse(JSON.parse($("#units").prop("value")));
             //var goods = JSON.parse($("#goods_data").prop("value"));
@@ -23,7 +27,7 @@
         function getPropsCode(){
             code = "<select class='form-control inline-el prop'>";
             for (p in props){
-                code = code + "<option value='" + props[p].pk + "'>" +  props[p].fields.name + "</option>";
+                code = code + "<option value='" + props[p].pk + "' class='" + props[p].fields.prop_type + "'>" +  props[p].fields.name + "</option>";
             }
             code = code + "</select>";
             return code;
@@ -41,14 +45,14 @@
 
         function addUnit(){
             unitNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'>" + unitNum + ". " + getUnits() +
+            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getUnits() +
                 "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalUnit = $("#additional_unit");
             $(code).appendTo(additionalUnit);
         }
         function addProp(){
             propNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'>" + propNum + ". " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox'  onclick='addDefault(this)' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalProp = $("#additional_prop");
             $(code).appendTo(additionalProp);
         }
@@ -63,6 +67,8 @@
     <input id="goods_data" value="{{ goods }}" hidden>
     <input value="{{ props }}" id="props" hidden/>
     <input value="{{ units }}" id="units" hidden/>
+    <input value="{{ model_json }}" id="model_json" hidden/>
+    <input value="{{ prop_vars }}" id="prop_vars" hidden/>
     <div class="container-fluid">
         <div class="row">
             <div class="left-column goods-tree-container">
@@ -83,8 +89,7 @@
 
                                 <div class="form-inline" style="position: absolute; right: 0">
                                 <lable for="filter" class="col-form-label">Поиск</lable>
-                                <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px" id="filter"
-                                       onchange=""/>
+                                <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px" id="filter" oninput="searchModel($(this).prop('value'));"/>
                                 <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
                                 </div>
                             </div>
