@@ -25,7 +25,7 @@
         });
 
         function getPropsCode(){
-            code = "<select class='form-control inline-el prop'>";
+            code = "<select class='form-control inline-el prop' onchange='addDefault2(this)'>";
             for (p in props){
                 code = code + "<option value='" + props[p].pk + "' class='" + props[p].fields.prop_type + "'>" +  props[p].fields.name + "</option>";
             }

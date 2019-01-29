@@ -94,6 +94,17 @@ def save_model(request):
                 prop = Property.objects.get(pk = int(props[p]["prop"]))
                 m = Model_property(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'])
                 m.save()
+                if m.isDefault:
+                    if m.prop.prop_type == 0:
+                        m.default_number = Default_number(number = props[p]['default'])
+                        m.default_number.save()
+                    else:
+                        if m.prop.prop_type == 1:
+                            m.default_text = Default_text(text=props[p]['default'])
+                            m.default_text.save()
+                        else:
+                            m.default_var = Default_var(var=Property_var.objects.get(pk = props[p]['default']))
+                            m.default_var.save()
             return HttpResponse('ok')
 
 def save_group(request):

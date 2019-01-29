@@ -38,10 +38,6 @@ class Property_range(Property):
     def __str__(self):
         return self.name
 
-class Property_string(Property):
-    text = models.CharField(max_length=500)
-    def __str__(self):
-        return self.text
 
 class Property_var(models.Model):
     prop = models.ForeignKey('Property')
@@ -57,6 +53,21 @@ class Model_property(models.Model):
     isDefault = models.BooleanField()
     def __str__(self):
         return self.name
+
+class Default_text(Model_property):
+    text = models.CharField(max_length=200)
+    def __str__(self):
+        return self.text
+
+class Default_number(Model_property):
+    number = models.FloatField()
+    def __str__(self):
+        return self.number
+
+class Default_var(Model_property):
+    var = models.ForeignKey('Property_var')
+    def __str__(self):
+        return str(self.var)
 
 #Модели МЦ
 

@@ -231,6 +231,9 @@ function saveModel() {
         props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
         props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
         props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
+        if (props[item]['isDefault'] == true){
+            props[item]['default'] = $(this.parentElement).find(".default").eq(0).prop("value");
+        }
     });
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -396,29 +399,34 @@ function changeGroup(){
 function getDefault(sel){
     t = $("option:selected", sel).prop("class");
     id = $("option:selected", sel).val();
-    code = "";
+    code = "<h6 class='addDefault'>Значение по умолчанию ";
     if (t == "0"){
-        code = "<input type='number' class='form-control default' />";
+        code = code + "<input type='number' class='form-control default' />";
     }
     else if (t == "1") {
-        code = "<input type='text' class='form-control default' />";
+        code = code + "<input type='text' class='form-control default' />";
     }
     else {
-        code = "<select class='form-control default'>";
+        code = code + "<select class='form-control default'>";
         for (p in propVars){
             if (propVars[p].fields.prop == id){
                 code = code + "<option value='" + propVars[p].pk + "'>" +  propVars[p].fields.name + "</option>";
             }
         }
-        code = code + "</select>";
+        code = code + "</select></h6>";
     }
     return code;
 }
 
 function addDefault(obj){
+    $(obj.parentElement).find(".addDefault").remove();
     if ($(obj).prop("checked") == true){
         $(getDefault($(obj.parentElement).find('select').eq(0))).appendTo(obj.parentElement);
     }
+}
+
+function addDefault2(obj){
+    addDefault($(obj.parentElement).find(".isDefault").eq(0)[0]);
 }
 
 function getProps(selType) {
