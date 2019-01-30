@@ -81,18 +81,18 @@ function e_addProp() {
     $(code).appendTo(additionalProp);
 }
 
-function searchModel(text){
-    if (text == ""){
+function searchModel(text) {
+    if (text == "") {
         changeGroup();
     }
     else {
         $("#goods-body").html("");
-    for (m in models){
-        if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1){
-            $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td></tr>").appendTo("#goods-body");
+        for (m in models) {
+            if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
+                $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td></tr>").appendTo("#goods-body");
+            }
         }
-    }
-    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+        if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
     }
 }
 
@@ -115,18 +115,42 @@ function getInf(id) {
             $("#e_additional_prop").html("");
             $("#e_name").prop("value", inf.name);
             $("#e_group option[value=" + inf.group + "]").prop('selected', true);
-            for (u in inf.units){
+            for (u in inf.units) {
                 e_addUnit();
                 $("option[value=" + inf.units[u] + "]", $("#e_additional_unit").find("select").last()).prop('selected', true);
             }
             temp = inf.props;
-            for (i in temp){
+            for (i in temp) {
                 e_addProp();
                 $("option[value=" + inf.props[i].id + "]", $("#e_additional_prop").find("select").last()).prop('selected', true);
                 obj = $("#e_additional_prop").find("select").last()[0];
                 $(obj.parentElement).find(".visible").eq(0).prop("checked", !inf.props[i].visible);
                 $(obj.parentElement).find(".editable").eq(0).prop("checked", !inf.props[i].editable);
                 $(obj.parentElement).find(".isDefault").eq(0).prop("checked", inf.props[i].isDefault);
+                if (inf.props[i].isDefault) {
+                    code = "<h6 class='addDefault'>Значение по умолчанию ";
+                    if (inf.props[i].default_type == "0") {
+                        code = code + "<input type='number' value=" + inf.props[i].default + " class='form-control default' />";
+                    }
+                    else if (inf.props[i].default_type == "1") {
+                        code = code + "<input type='text' value=" + inf.props[i].default + " class='form-control default' />";
+                    }
+                    else {
+                        code = code + "<select class='form-control default'>";
+                        for (p in propVars) {
+                            if (propVars[p].fields.prop == inf.props[i].id) {
+                                if (propVars[p].pk = inf.props[i].default) {
+                                    code = code + "<option value='" + propVars[p].pk + "' selected>" + propVars[p].fields.name + "</option>";
+                                }
+                                else {
+                                    code = code + "<option value='" + propVars[p].pk + "'>" + propVars[p].fields.name + "</option>";
+                                }
+                            }
+                        }
+                    }
+                    code = code + "</select></h6>";
+                }
+                $(code).appendTo(obj.parentElement);
             }
             $("#inf_model").modal();
         }
@@ -226,13 +250,15 @@ function saveModel() {
     });
     props = {};
     $("#additional_prop").find("select").each(function (item) {
-        props[item] = {};
-        props[item]['prop'] = $("option:selected", this).val();
-        props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
-        props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
-        props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
-        if (props[item]['isDefault'] == true){
-            props[item]['default'] = $(this.parentElement).find(".default").eq(0).prop("value");
+        if (!$(this).hasClass("default")) {
+            props[item] = {};
+            props[item]['prop'] = $("option:selected", this).val();
+            props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
+            props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
+            props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
+            if (props[item]['isDefault'] == true) {
+                props[item]['default'] = $(this.parentElement).find(".default").eq(0).prop("value");
+            }
         }
     });
     var csrftoken = getCookie('csrftoken');
@@ -352,6 +378,7 @@ function Tree(tree) {
     };
 
     this.addGroup = function (branch) {
+        branch = branch.parentElement;
         openedClass = 'fa-folder-open';
         closedClass = 'fa-folder';
         id = $(branch).prop('id') + "-" + ($(branch).children("ul").length + 1).toString();
@@ -386,21 +413,41 @@ function Tree(tree) {
     });
 }
 
-function changeGroup(){
+function changeGroup() {
     $("#goods-body").html("");
-    for (m in models){
-        if (models[m].group == tr.selected){
-            $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td></tr>").appendTo("#goods-body");
+    for (m in models) {
+        if (models[m].group == tr.selected) {
+            $("<tr id=" + models[m].id + "><td>" + models[m].id + "</td><td  onclick='getInf(" + models[m].id + ")'>" + models[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
         }
     }
-    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'><td></td>Нет записей</td><td></td></tr>");
 }
 
-function getDefault(sel){
+function delModel(obj) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'del_model/',
+        data: {
+            'id': $(obj.parentElement).prop("id")
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            $(obj.parentElement).remove();
+        }
+    });
+    //this.updEvent();
+};
+
+function getDefault(sel) {
     t = $("option:selected", sel).prop("class");
     id = $("option:selected", sel).val();
     code = "<h6 class='addDefault'>Значение по умолчанию ";
-    if (t == "0"){
+    if (t == "0") {
         code = code + "<input type='number' class='form-control default' />";
     }
     else if (t == "1") {
@@ -408,9 +455,9 @@ function getDefault(sel){
     }
     else {
         code = code + "<select class='form-control default'>";
-        for (p in propVars){
-            if (propVars[p].fields.prop == id){
-                code = code + "<option value='" + propVars[p].pk + "'>" +  propVars[p].fields.name + "</option>";
+        for (p in propVars) {
+            if (propVars[p].fields.prop == id) {
+                code = code + "<option value='" + propVars[p].pk + "'>" + propVars[p].fields.name + "</option>";
             }
         }
         code = code + "</select></h6>";
@@ -418,14 +465,14 @@ function getDefault(sel){
     return code;
 }
 
-function addDefault(obj){
+function addDefault(obj) {
     $(obj.parentElement).find(".addDefault").remove();
-    if ($(obj).prop("checked") == true){
+    if ($(obj).prop("checked") == true) {
         $(getDefault($(obj.parentElement).find('select').eq(0))).appendTo(obj.parentElement);
     }
 }
 
-function addDefault2(obj){
+function addDefault2(obj) {
     addDefault($(obj.parentElement).find(".isDefault").eq(0)[0]);
 }
 

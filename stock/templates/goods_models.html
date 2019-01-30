@@ -73,9 +73,15 @@
         <div class="row">
             <div class="left-column goods-tree-container">
 
+                 <div class="card">
+                     <div class="card-header" style="height: 64px">
+                         <h5>Группы</h5>
+                         </div>
                 <ul id="tree" class="goods_tree">
 
                 </ul>
+
+                     </div>
 
 
             </div>
@@ -101,18 +107,21 @@
                             <tr>
                                 <th scope="col">Код</th>
                                 <th scope="col">Название</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody id="goods-body">
                             {% if models %}
                                 {% for m in models %}
-                                <tr onclick="getInf({{ m.pk }})">
+                                <tr id="{{ m.pk }}">
                                 <td>{{ m.pk }}</td>
-                                <td>{{ m.name }}</td>
+                                <td onclick="getInf({{ m.pk }})">{{ m.name }}</td>
+                                <td style="text-align: right"><button class="btn btn-danger" onclick="delModel(this.parentElement)">Удалить</button></td>
                                 </tr>
                                 {% endfor %}
                             {% else %}
                                 <tr>
+                                <td></td>
                                 <td class="no-data text-right">Нет записей</td>
                                 <td></td>
                                 </tr>

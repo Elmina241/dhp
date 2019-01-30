@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
+from .models import Default_number, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
 from django.core import serializers
 from django.utils import timezone
 import datetime
@@ -73,6 +73,15 @@ def get_model_inf(request):
             props = {}
             for p in Model_property.objects.filter(model=model):
                 props[str(p.pk)] = {"id": p.prop.pk, "visible": p.visible, "editable": p.editable, "isDefault": p.isDefault}
+                if p.isDefault:
+                    props[str(p.pk)]["default_type"] = p.prop.prop_type
+                    if p.prop.prop_type == 0:
+                        props[str(p.pk)]["default"] = p.default_number.number
+                    else:
+                        if p.prop.prop_type == 1:
+                            props[str(p.pk)]["default"] = p.default_text.text
+                        else:
+                            props[str(p.pk)]["default"] = p.default_var.var.id
             data["props"] = props
             return HttpResponse(json.dumps(data))
 
@@ -90,21 +99,21 @@ def save_model(request):
                 m = Model_unit(model = model, unit = unit)
                 m.save()
             for p in props:
-                print(p)
                 prop = Property.objects.get(pk = int(props[p]["prop"]))
-                m = Model_property(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'])
-                m.save()
-                if m.isDefault:
-                    if m.prop.prop_type == 0:
-                        m.default_number = Default_number(number = props[p]['default'])
-                        m.default_number.save()
+                if props[p]['default']:
+                    if prop.prop_type == 0:
+                        d = Default_number(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], number = props[p]['default'])
+                        d.save()
                     else:
-                        if m.prop.prop_type == 1:
-                            m.default_text = Default_text(text=props[p]['default'])
-                            m.default_text.save()
+                        if prop.prop_type == 1:
+                            d = Default_text(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], text=props[p]['default'])
+                            d.save()
                         else:
-                            m.default_var = Default_var(var=Property_var.objects.get(pk = props[p]['default']))
-                            m.default_var.save()
+                            d = Default_var(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], var=Property_var.objects.get(pk = props[p]['default']))
+                            d.save()
+                else:
+                    m = Model_property(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'])
+                    m.save()
             return HttpResponse('ok')
 
 def save_group(request):
@@ -121,6 +130,11 @@ def save_group(request):
 def del_group(request):
     if request.method == 'POST':
         Model_group.objects.get(pk = request.POST['id']).delete()
+        return HttpResponse("ok")
+
+def del_model(request):
+    if request.method == 'POST':
+        Product_model.objects.get(pk = request.POST['id']).delete()
         return HttpResponse("ok")
 
 def edit_prop(request):
