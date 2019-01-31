@@ -19,6 +19,14 @@ def goods_models(request):
         model_json[str(m.pk)] = {"id": m.pk, "name": m.name, "group": m.group.pk}
     return render(request, "goods_models.html", {"header": "Макеты материальных ценностей", "models": Product_model.objects.all(), "prop_vars": json.dumps(serializers.serialize("json", Property_var.objects.all())), "tree": json.dumps(tree), "model_json": json.dumps(model_json), "props": json.dumps(serializers.serialize("json", Property.objects.all())), "groups": Model_group.objects.exclude(pk = 0), "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
+def goods(request):
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children(g, tree[0])
+    return render(request, "goods.html", {"header": "Материальные ценности",  "tree": json.dumps(tree)})
+
+
 def add_children(obj, node):
     for o in Model_group.objects.filter(parent = obj.id):
         if 'nodes' not in node:
@@ -100,7 +108,42 @@ def save_model(request):
                 m.save()
             for p in props:
                 prop = Property.objects.get(pk = int(props[p]["prop"]))
-                if props[p]['default']:
+                if props[p]['isDefault']:
+                    if prop.prop_type == 0:
+                        d = Default_number(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], number = props[p]['default'])
+                        d.save()
+                    else:
+                        if prop.prop_type == 1:
+                            d = Default_text(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], text=props[p]['default'])
+                            d.save()
+                        else:
+                            d = Default_var(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], var=Property_var.objects.get(pk = props[p]['default']))
+                            d.save()
+                else:
+                    m = Model_property(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'])
+                    m.save()
+            return HttpResponse('ok')
+
+def edit_model(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            group = Model_group.objects.get(pk = request.POST['group'])
+            name = request.POST['name']
+            units = json.loads(request.POST['units'])
+            props = json.loads(request.POST['props'])
+            model = Product_model.objects.get(pk = request.POST['id'])
+            model.name = name
+            model.group = group
+            model.save()
+            Model_unit.objects.filter(model=model).delete()
+            for u in units:
+                unit = Unit.objects.get(pk = u)
+                m = Model_unit(model=model, unit=unit)
+                m.save()
+            Model_property.objects.filter(model = model).delete()
+            for p in props:
+                prop = Property.objects.get(pk = int(props[p]["prop"]))
+                if props[p]['isDefault']:
                     if prop.prop_type == 0:
                         d = Default_number(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'], number = props[p]['default'])
                         d.save()

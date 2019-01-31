@@ -76,7 +76,7 @@ function e_addUnit() {
 
 function e_addProp() {
     e_propNum++;
-    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault' onclick='addDefault(this)'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
     var additionalProp = $("#e_additional_prop");
     $(code).appendTo(additionalProp);
 }
@@ -89,7 +89,7 @@ function searchModel(text) {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-                $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td></tr>").appendTo("#goods-body");
+                $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
             }
         }
         if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
@@ -115,6 +115,7 @@ function getInf(id) {
             $("#e_additional_prop").html("");
             $("#e_name").prop("value", inf.name);
             $("#e_group option[value=" + inf.group + "]").prop('selected', true);
+
             for (u in inf.units) {
                 e_addUnit();
                 $("option[value=" + inf.units[u] + "]", $("#e_additional_unit").find("select").last()).prop('selected', true);
@@ -147,12 +148,18 @@ function getInf(id) {
                                 }
                             }
                         }
+                        code = code + "</select></h6>";
                     }
-                    code = code + "</select></h6>";
+                    $(code).appendTo(obj.parentElement);
                 }
-                $(code).appendTo(obj.parentElement);
+
             }
+            $("#editBtn").unbind('click');
+        $("#editBtn").click(function () {
+            editModel(id);
+        });
             $("#inf_model").modal();
+
         }
     });
 }
@@ -241,6 +248,46 @@ function addBranch(code, branch) {
     }
     code = code + "</li>";
     return code;
+}
+
+function editModel(id) {
+    units = [];
+    $("#e_additional_unit").find("select").each(function (item) {
+        units.push($("option:selected", this).val());
+    });
+    props = {};
+    $("#e_additional_prop").find("select").each(function (item) {
+        if (!$(this).hasClass("default")) {
+            props[item] = {};
+            props[item]['prop'] = $("option:selected", this).val();
+            props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
+            props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
+            props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
+            if (props[item]['isDefault'] == true) {
+                props[item]['default'] = $(this.parentElement).find(".default").eq(0).prop("value");
+            }
+        }
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'edit_model/',
+        data: {
+            'name': $('#e_name').prop('value'),
+            'group': $("#e_group option:selected").val(),
+            'units': JSON.stringify(units),
+            'props': JSON.stringify(props),
+            'id': id
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
 }
 
 function saveModel() {
@@ -420,7 +467,7 @@ function changeGroup() {
             $("<tr id=" + models[m].id + "><td>" + models[m].id + "</td><td  onclick='getInf(" + models[m].id + ")'>" + models[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
         }
     }
-    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'><td></td>Нет записей</td><td></td></tr>");
+    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>");
 }
 
 function delModel(obj) {
