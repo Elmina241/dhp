@@ -49,6 +49,9 @@ def props(request):
                 prop_data[str(p.id)] = {'name': p.name, 'type': 2, 'vals': vals}
     return render(request, "props.html", {"header": "Свойства материальных ценностей", "props": Property.objects.all(), "prop_data": json.dumps(prop_data)})
 
+def counterparties(request):
+    return render(request, "counterparties.html", {"header": "Контрагенты"})
+
 def send_prop(request):
     if request.method == 'POST':
         if 'name' in request.POST:

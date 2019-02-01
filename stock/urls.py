@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^goods_models/del_model/$', views.del_model, name='del_model'),
     url(r'^goods_models/get_model_inf/$', views.get_model_inf, name='get_model_inf'),
     url(r'^props/$', views.props, name='props'),
+    url(r'^counterparties/$', views.counterparties, name='counterparties'),
     url(r'^props/send_prop/$', views.send_prop, name='send_prop'),
     url(r'^props/edit_prop/$', views.edit_prop, name='edit_prop'),
 ]

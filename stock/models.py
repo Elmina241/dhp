@@ -101,8 +101,31 @@ class Goods_var(Goods_property):
     def __str__(self):
         return str(self.var)
 
-
-
-
+class Counterparty(models.Model):
+    ORG = '0'
+    PHYS = '1'
+    ENTR = '2'
+    DIV = '3'
+    PROV = '0'
+    CONS = '1'
+    MIX = '2'
+    INF = '3'
+    KIND_CHOICES = (
+        (ORG, 'Организация'),
+        (PHYS, 'Физлицо'),
+        (ENTR, 'Предприниматель'),
+        (DIV, 'Подразделение'),
+    )
+    CATEGORY_CHOICES = (
+        (PROV, 'Поставщик'),
+        (CONS, 'Потребитель'),
+        (MIX, 'Смешанный'),
+        (INF, 'Информационный'),
+    )
+    name = models.CharField(max_length=200)
+    kind = models.CharField(choices=KIND_CHOICES)
+    category = models.CharField(choices=CATEGORY_CHOICES)
+    def __str__(self):
+        return self.name
 
 
