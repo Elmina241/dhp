@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
+from .models import Default_number, Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
 from django.core import serializers
 from django.utils import timezone
 import datetime
@@ -50,7 +50,7 @@ def props(request):
     return render(request, "props.html", {"header": "Свойства материальных ценностей", "props": Property.objects.all(), "prop_data": json.dumps(prop_data)})
 
 def counterparties(request):
-    return render(request, "counterparties.html", {"header": "Контрагенты"})
+    return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all()})
 
 def send_prop(request):
     if request.method == 'POST':
@@ -68,6 +68,16 @@ def send_prop(request):
                     for d in data:
                         p = Property_var(prop = prop, name = d)
                         p.save()
+            return HttpResponse('ok')
+
+def send_counter(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            kind = request.POST['kind']
+            name = request.POST['name']
+            category = request.POST['category']
+            c = Counterparty(name = name, kind = kind, category = category)
+            c.save()
             return HttpResponse('ok')
 
 def get_model_inf(request):

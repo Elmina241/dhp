@@ -123,8 +123,8 @@ class Counterparty(models.Model):
         (INF, 'Информационный'),
     )
     name = models.CharField(max_length=200)
-    kind = models.CharField(choices=KIND_CHOICES)
-    category = models.CharField(choices=CATEGORY_CHOICES)
+    kind = models.CharField(choices=KIND_CHOICES, max_length=20)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=20)
     def __str__(self):
         return self.name
 

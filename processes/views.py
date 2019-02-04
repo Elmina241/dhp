@@ -1183,7 +1183,7 @@ def print_passport(request, kneading_id):
     batch = Batch.objects.filter(kneading = kneading)[0]
     amount = 0
     comps = {}
-    processes = Kneading.objects.filter(list__formula = kneading.list.formula, batch_num = kneading.batch_num, start_date__year = kneading.start_date.year)
+    processes = Kneading.objects.filter(list__formula = kneading.list.formula, batch_num = kneading.batch_num, start_date__year = kneading.start_date.year, isFinished = True)
     for p in processes:
         amount = amount + p.list.ammount
         batch_t = Batch.objects.filter(kneading = p)[0]

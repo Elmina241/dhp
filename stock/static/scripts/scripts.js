@@ -32,6 +32,27 @@ function sendProp() {
     });
 }
 
+function sendCounter() {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'send_counter/',
+        data: {
+            'name': $('#name').prop('value'),
+            'kind': $('#kind').val(),
+            'category': $('#category').val(),
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function editProp(id) {
     var data = null;
     var t = $('#e_type').prop('value');

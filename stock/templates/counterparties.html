@@ -4,18 +4,17 @@
     <script>
         var pr = null;
         $(document).ready(function () {
-            getProps("0");
-            pr = new Property($("#propData").prop("value"));
+
         });
     </script>
     <div class="container-fluid">
-    <input value="{{ prop_data }}" id="propData" hidden/>
+    <input value="{{ count_data }}" id="countData" hidden/>
 
                 <div class="card" style="margin-left: 30px;margin-right: 30px;">
                     <div class="card-header">
                         <div class="filter">
                             <div class="form-inline">
-                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#add_prop">Добавить контрагента</button>
+                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#add_counter">Добавить контрагента</button>
 
                                 <div class="form-inline" style="position: absolute; right: 0">
                                 <lable for="filter" class="col-form-label">Поиск</lable>
@@ -26,23 +25,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_table">
+                    <div class="count_table">
                         <table class="table">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Код</th>
-                                <th scope="col">Название</th>
+                                <th scope="col">Наименование</th>
+                                <th scope="col">Вид</th>
+                                <th scope="col">Категория</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
-
                             </tr>
                             </thead>
-                            <tbody id="goods-body">
-                            {% for p in props %}
+                            <tbody id="count-body">
+                            {% for c in counters %}
                                 <tr>
-                                    <td>{{ p.id }}</td>
-                                    <td>{{ p.name }}</td>
-                                    <td style="text-align: right"><button class="btn btn-info" onclick="pr.getInf({{ p.id }})">Редактировать</button></td>
+                                    <td>{{ c.id }}</td>
+                                    <td>{{ c.name }}</td>
+                                    <td>{{ c.get_kind_display }}</td>
+                                    <td>{{ c.get_category_display }}</td>
+                                    <td style="text-align: right"><button class="btn btn-info" onclick="pr.getInf({{ c.id }})">Редактировать</button></td>
                                     <td style="text-align: left"><button class="btn btn-danger">Удалить</button></td>
                                 </tr>
                             {% endfor %}
@@ -51,7 +53,7 @@
                     </div>
         </div>
     </div>
-    <div class="modal fade" id="add_prop">
+    <div class="modal fade" id="add_counter">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -63,21 +65,21 @@
                     <h6>Наименование</h6>
                     <input type="text" class="form-control" id="name"/>
                     <h6>Вид</h6>
-                    <select class="form-control" name="type" id="type">
+                    <select class="form-control" name="kind" id="kind">
                         <option selected value="0">Организация</option>
                         <option value="1">Физлицо</option>
                         <option value="2">Предприниматель</option>
                         <option value="2">Подразделение</option>
                     </select>
                     <h6>Категория</h6>
-                    <select class="form-control" name="type" id="type">
+                    <select class="form-control" name="category" id="category">
                         <option selected value="0">Поставщик</option>
                         <option value="1">Потребитель</option>
                         <option value="2">Смешанный</option>
                         <option value="2">Информационный</option>
                     </select>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="packBtn" onclick="sendProp()" class="btn btn-primary"
+                        <input value="Сохранить" id="counterBtn" onclick="sendCounter()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
