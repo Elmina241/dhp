@@ -625,3 +625,16 @@ function Property(data) {
         $("#inf_prop").modal();
     }
 }
+
+function getModelInfo(){
+    id = $("#model").val();
+    $("#units").html("");
+    $("#props").html("");
+    //получение единиц измерения
+    for (u in models[id]['units']){
+        code = "<div class='form-row'><div class='form-group col-md-6'><h7>" + models[id]['units'][u].name + "</h7></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control'/></div></div>";
+        code = code + "<div class='form-row'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> Применимая</div><div class='form-group col-md-6'><input type='radio' class='form-control'/>Базовая</div></div>";
+        $(code).appendTo("#units");
+    }
+    //получение свойств
+}

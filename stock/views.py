@@ -24,7 +24,12 @@ def goods(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children(g, tree[0])
-    return render(request, "goods.html", {"header": "Материальные ценности",  "tree": json.dumps(tree)})
+    models = {}
+    for m in Product_model.objects.all():
+        models[str(m.pk)] = {"units": {}, "props": {}}
+        for u in Model_unit.objects.filter(model = m):
+            models[str(m.pk)]["units"][str(u.pk)] = {"name": u.unit.name}
+    return render(request, "goods.html", {"header": "Материальные ценности",  "tree": json.dumps(tree), "counters": Counterparty.objects.all(), "models": Product_model.objects.all(), "model_json": json.dumps(models)})
 
 
 def add_children(obj, node):

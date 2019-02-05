@@ -14,8 +14,8 @@
         var propVars = null;
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
-            /*models = JSON.parse($("#model_json").prop("value"));
-            propVars = JSON.parse(JSON.parse($("#prop_vars").prop("value")));
+            models = JSON.parse($("#model_json").prop("value"));
+            /*propVars = JSON.parse(JSON.parse($("#prop_vars").prop("value")));
             props = JSON.parse(JSON.parse($("#props").prop("value")));
             units = JSON.parse(JSON.parse($("#units").prop("value")));
             //var goods = JSON.parse($("#goods_data").prop("value"));*/
@@ -25,39 +25,6 @@
             document.getElementById("1").click();
         });
 
-        function getPropsCode() {
-            code = "<select class='form-control inline-el prop' onchange='addDefault2(this)'>";
-            for (p in props) {
-                code = code + "<option value='" + props[p].pk + "' class='" + props[p].fields.prop_type + "'>" + props[p].fields.name + "</option>";
-            }
-            code = code + "</select>";
-            return code;
-        }
-
-        function getUnits() {
-            code = "<select class='form-control inline-el unit'>";
-            for (p in units) {
-                code = code + "<option value='" + units[p].pk + "'>" + units[p].fields.name + "</option>";
-            }
-            code = code + "</select>";
-            return code;
-        }
-
-
-        function addUnit() {
-            unitNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getUnits() +
-                "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
-            var additionalUnit = $("#additional_unit");
-            $(code).appendTo(additionalUnit);
-        }
-
-        function addProp() {
-            propNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox'  onclick='addDefault(this)' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
-            var additionalProp = $("#additional_prop");
-            $(code).appendTo(additionalProp);
-        }
     </script>
     {% if tree %}
         <input id="tree_data" value="{{ tree }}" hidden>
@@ -68,7 +35,6 @@
     {% endif %}
     <input id="goods_data" value="{{ goods }}" hidden>
     <input value="{{ props }}" id="props" hidden/>
-    <input value="{{ units }}" id="units" hidden/>
     <input value="{{ model_json }}" id="model_json" hidden/>
     <input value="{{ prop_vars }}" id="prop_vars" hidden/>
     <div class="container-fluid">
@@ -155,71 +121,61 @@
                 <div class="modal-body create-form">
                     <h6>Макет</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="group">
+                        <select class="form-control" id="model" onchange="getModelInfo()">
                             {% for m in models %}
                                 <option value="{{ m.pk }}">{{ m.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                <hr>
-                <h6>Имена</h6>
-                <div class="form-group row">
-    <label for="art" class="col-sm-2 col-form-label">Артикул</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="art">
-    </div>
-  </div>
-                 <div class="form-group row">
-    <label for="art" class="col-sm-2 col-form-label">Наименование</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="art">
-    </div>
-  </div>
-                 <div class="form-group row">
-    <label for="art" class="col-sm-2 col-form-label">Штрихкод</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="art">
-    </div>
-  </div>
-                 <div class="form-group row">
-    <label for="art" class="col-sm-2 col-form-label">Оригинальное</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="art">
-    </div>
-  </div>
-                <div class="form-group row">
-    <label for="art" class="col-sm-2 col-form-label">Локальное</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="art">
-    </div>
-  </div>
-                <div class="form-group row">
-    <label for="art" class="col-sm-2 col-form-label">Транзитное</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="art">
-    </div>
-  </div>
-                <hr>
-                 <h6>Производитель</h6>
+                    <hr>
+                    <h6>Имена</h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Артикул</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Наименование</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Штрихкод</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Оригинальное</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Локальное</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Транзитное</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="group">
-                            {% for m in models %}
-                                <option value="{{ m.pk }}">{{ m.name }}</option>
+                        <select class="form-control" id="counters">
+                            {% for c in counters %}
+                                <option value="{{ c.pk }}">{{ c.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                <hr>
+                    <hr>
                     <h6>Единицы измерения</h6>
-                    <div id="additional_unit">
+                    <div id="units">
                     </div>
-                    <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
-                          onclick="addUnit()"><i class='fas fa-plus-circle'></i></span>
-                <hr>
+                    <hr>
                     <h6>Свойства</h6>
-                    <div style='display:block' id="additional_prop">
+                    <div style='display:block' id="props">
                     </div>
-                    <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
-                          onclick="addProp()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="saveModel" onclick="saveModel()" class="btn btn-primary"
                                style="float: right"/></div>
