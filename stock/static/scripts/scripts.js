@@ -627,14 +627,44 @@ function Property(data) {
 }
 
 function getModelInfo(){
+    var code = "";
     id = $("#model").val();
     $("#units").html("");
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']){
-        code = "<div class='form-row'><div class='form-group col-md-6'><h7>" + models[id]['units'][u].name + "</h7></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control'/></div></div>";
-        code = code + "<div class='form-row'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> Применимая</div><div class='form-group col-md-6'><input type='radio' class='form-control'/>Базовая</div></div>";
-        $(code).appendTo("#units");
+        code = code + "<div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el'/></div></div>";
+        code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Применимая</span></div><div class='form-group col-md-6'><input type='radio' class='form-control'/><span class='inline-el'> Базовая</span></div></div>";
     }
+    $(code).appendTo("#units");
     //получение свойств
+    code = "";
+    for (p in models[id]['props']){
+        code = code + "<div class='form-inline'><h6>- " + models[id]['props'][p].name + "</h6>" + getPropCode(models[id]['props'][p]['type'], models[id]['props'][p]['value'], models[id]['props'][p]['choises']) + "</div>";
+        code = code + "<div class='form-inline'><input type='checkbox' class='form-control' /> <span class='inline-el'>Скрытое</span><input type='checkbox' class='form-control'/><span class='inline-el'> Неизменяемое</span><input type='checkbox' class='form-control'/><span class='inline-el'> Неприменимое</span></div>";
+    }
+    $(code).appendTo("#props");
+}
+
+function getPropCode(t, value = "", choises = null){
+    var code = "";
+    switch (t){
+        case 0:
+            code = "<input type='number' class='form-control inline-el' value='" + value + "'/>";
+            break;
+        case 1:
+            code = "<input type='text' class='form-control inline-el' value='" + value + "'/>";
+            break;
+        case 2:
+            code = "<select class='form-control inline-el'>";
+            for (c in choises){
+                if (c == value){
+                    code = code + "<option value='" + c +"' selected>" + choises[c] + "</option>";
+                }
+                else code = code + "<option value='" + c +"'>" + choises[c] + "</option>";
+            }
+            code = code + "</select>";
+            break;
+    }
+    return code;
 }

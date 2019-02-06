@@ -29,6 +29,25 @@ def goods(request):
         models[str(m.pk)] = {"units": {}, "props": {}}
         for u in Model_unit.objects.filter(model = m):
             models[str(m.pk)]["units"][str(u.pk)] = {"name": u.unit.name}
+        for p in Model_property.objects.filter(model = m):
+            models[str(m.pk)]["props"][str(p.pk)] = {"name": p.prop.name, "type": p.prop.prop_type, "visible": p.visible, "editable": p.editable, "default": "", "choises": None}
+            if p.isDefault:
+                if p.prop.prop_type == 0:
+                    try:
+                        models[str(m.pk)]["props"][str(p.pk)]["default"] = p.default_number.number
+                    except AttributeError as error:
+                        print(error)
+                else:
+                    if p.prop.prop_type == 1:
+                        try:
+                            models[str(m.pk)]["props"][str(p.pk)]["default"] = p.default_text.text
+                        except AttributeError as error:
+                            print(error)
+                    else:
+                        models[str(m.pk)]["props"][str(p.pk)]["default"] = p.default_var.var.id
+                        models[str(m.pk)]["props"][str(p.pk)]["choises"] = {}
+                        for v in Property_var.objects.filter(prop = p.prop):
+                            models[str(m.pk)]["props"][str(p.pk)]["choises"][str(v.pk)] = v.name
     return render(request, "goods.html", {"header": "Материальные ценности",  "tree": json.dumps(tree), "counters": Counterparty.objects.all(), "models": Product_model.objects.all(), "model_json": json.dumps(models)})
 
 
