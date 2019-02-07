@@ -9,17 +9,16 @@
         var tr = null;
         var tree = {};
         var props = null;
-        var units = null;
+        var goods = null;
         var models = null;
         var propVars = null;
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
             models = JSON.parse($("#model_json").prop("value"));
-            /*propVars = JSON.parse(JSON.parse($("#prop_vars").prop("value")));
-            props = JSON.parse(JSON.parse($("#props").prop("value")));
-            units = JSON.parse(JSON.parse($("#units").prop("value")));
+            goods = JSON.parse($("#goods_json").prop("value"));
+            /*units = JSON.parse(JSON.parse($("#units").prop("value")));
             //var goods = JSON.parse($("#goods_data").prop("value"));*/
-            tr = new Tree(tree);
+            tr = new Tree(tree, "goods");
             //addUnit();
             //addProp();
             document.getElementById("1").click();
@@ -35,6 +34,7 @@
     {% endif %}
     <input id="goods_data" value="{{ goods }}" hidden>
     <input value="{{ model_json }}" id="model_json" hidden/>
+    <input value="{{ goods_json }}" id="goods_json" hidden/>
     <input value="{{ prop_vars }}" id="prop_vars" hidden/>
     <div class="container-fluid">
         <div class="row">
@@ -83,13 +83,13 @@
                             </tr>
                             </thead>
                             <tbody id="goods-body">
-                            {% if models %}
-                                {% for m in models %}
-                                    <tr id="{{ m.pk }}">
-                                        <td>{{ m.pk }}</td>
-                                        <td onclick="getInf({{ m.pk }})">{{ m.name }}</td>
+                            {% if goods %}
+                                {% for g in goods %}
+                                    <tr id="{{ g.pk }}">
+                                        <td>{{ g.pk }}</td>
+                                        <td onclick="getInf({{ g.pk }})">{{ g }}</td>
                                         <td style="text-align: right">
-                                            <button class="btn btn-danger" onclick="delModel(this.parentElement)">
+                                            <button class="btn btn-danger" onclick="delGood(this.parentElement)">
                                                 Удалить
                                             </button>
                                         </td>
@@ -130,38 +130,38 @@
                     <h6>Имена</h6>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="inputEmail4">Артикул</label>
-                            <input type="text" class="form-control" id="">
+                            <label for="article">Артикул</label>
+                            <input type="text" class="form-control" id="article">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputPassword4">Наименование</label>
-                            <input type="text" class="form-control" id="">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail4">Штрихкод</label>
-                            <input type="text" class="form-control" id="">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="inputPassword4">Оригинальное</label>
-                            <input type="text" class="form-control" id="">
+                            <label for="name">Наименование</label>
+                            <input type="text" class="form-control" id="name">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="inputEmail4">Локальное</label>
-                            <input type="text" class="form-control" id="">
+                            <label for="barcode">Штрихкод</label>
+                            <input type="text" class="form-control" id="barcode">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputPassword4">Транзитное</label>
-                            <input type="text" class="form-control" id="">
+                            <label for="original">Оригинальное</label>
+                            <input type="text" class="form-control" id="original">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="local">Локальное</label>
+                            <input type="text" class="form-control" id="local">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="transit">Транзитное</label>
+                            <input type="text" class="form-control" id="transit">
                         </div>
                     </div>
                     <hr>
                     <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="counters">
+                        <select class="form-control" id="counter">
                             {% for c in counters %}
                                 <option value="{{ c.pk }}">{{ c.name }}</option>
                             {% endfor %}
@@ -176,7 +176,7 @@
                     <div style='display:block' id="props">
                     </div>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="saveModel" onclick="saveModel()" class="btn btn-primary"
+                        <input value="Сохранить" id="saveModel" onclick="saveGood()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>

@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
+from .models import Default_number, Goods, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var,  Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, Model_group, Product_model
 from django.core import serializers
 from django.utils import timezone
 import datetime
@@ -24,31 +24,35 @@ def goods(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children(g, tree[0])
+    goods_json = {}
+    for m in Goods.objects.all():
+        names = Good_name.objects.filter(product = m)[0]
+        goods_json[str(m.pk)] = {"id": m.pk, "name": names.name, "article": names.article, "group": m.model.group.pk}
     models = {}
     for m in Product_model.objects.all():
         models[str(m.pk)] = {"units": {}, "props": {}}
         for u in Model_unit.objects.filter(model = m):
-            models[str(m.pk)]["units"][str(u.pk)] = {"name": u.unit.name}
+            models[str(m.pk)]["units"][str(u.unit.pk)] = {"name": u.unit.name}
         for p in Model_property.objects.filter(model = m):
-            models[str(m.pk)]["props"][str(p.pk)] = {"name": p.prop.name, "type": p.prop.prop_type, "visible": p.visible, "editable": p.editable, "default": "", "choises": None}
+            models[str(m.pk)]["props"][str(p.prop.pk)] = {"name": p.prop.name, "type": p.prop.prop_type, "visible": p.visible, "editable": p.editable, "default": "", "choises": None}
             if p.isDefault:
                 if p.prop.prop_type == 0:
                     try:
-                        models[str(m.pk)]["props"][str(p.pk)]["default"] = p.default_number.number
+                        models[str(m.pk)]["props"][str(p.prop.pk)]["default"] = p.default_number.number
                     except AttributeError as error:
                         print(error)
                 else:
                     if p.prop.prop_type == 1:
                         try:
-                            models[str(m.pk)]["props"][str(p.pk)]["default"] = p.default_text.text
+                            models[str(m.pk)]["props"][str(p.prop.pk)]["default"] = p.default_text.text
                         except AttributeError as error:
                             print(error)
                     else:
-                        models[str(m.pk)]["props"][str(p.pk)]["default"] = p.default_var.var.id
-                        models[str(m.pk)]["props"][str(p.pk)]["choises"] = {}
+                        models[str(m.pk)]["props"][str(p.prop.pk)]["default"] = p.default_var.var.id
+                        models[str(m.pk)]["props"][str(p.prop.pk)]["choises"] = {}
                         for v in Property_var.objects.filter(prop = p.prop):
-                            models[str(m.pk)]["props"][str(p.pk)]["choises"][str(v.pk)] = v.name
-    return render(request, "goods.html", {"header": "Материальные ценности",  "tree": json.dumps(tree), "counters": Counterparty.objects.all(), "models": Product_model.objects.all(), "model_json": json.dumps(models)})
+                            models[str(m.pk)]["props"][str(p.prop.pk)]["choises"][str(v.pk)] = v.name
+    return render(request, "goods.html", {"header": "Материальные ценности",  "tree": json.dumps(tree), "counters": Counterparty.objects.all(), "models": Product_model.objects.all(), "model_json": json.dumps(models), "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
 
 
 def add_children(obj, node):
@@ -159,6 +163,41 @@ def save_model(request):
                 else:
                     m = Model_property(model = model, prop = prop, visible = not props[p]['hidden'], editable = not props[p]['uneditable'], isDefault = props[p]['isDefault'])
                     m.save()
+            return HttpResponse('ok')
+
+def save_good(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            model = Product_model.objects.get(pk = request.POST['model'])
+            counter = Counterparty.objects.get(pk=request.POST['counter'])
+            name = request.POST['name']
+            article = request.POST['article']
+            barcode = request.POST['barcode']
+            original = request.POST['original']
+            local = request.POST['local']
+            transit = request.POST['transit']
+            units = json.loads(request.POST['units'])
+            props = json.loads(request.POST['props'])
+            good = Goods(model = model, producer = counter)
+            good.save()
+            names = Good_name(product = good, name = name, article = article, barcode = barcode, original = original, local = local, transit = transit)
+            names.save()
+            for u in units:
+                unit = Unit.objects.get(pk = u)
+                m = Goods_unit(product = good, unit = unit, applicable = units[u]['applicable'], isBase = units[u]['isBase'], coeff = units[u]['coeff'])
+                m.save()
+            for p in props:
+                prop = Property.objects.get(pk = p)
+                if prop.prop_type == 0:
+                    d = Property_num(product = good, property = prop, applicable = props[p]['applicable'], visible = props[p]['visible'], editable = props[p]['editable'], number = props[p]['value'])
+                    d.save()
+                else:
+                    if prop.prop_type == 1:
+                        d = Goods_string(product = good, property = prop, applicable = props[p]['applicable'], visible = props[p]['visible'], editable = props[p]['editable'], text=props[p]['value'])
+                        d.save()
+                    else:
+                        d = Goods_var(product = good, property = prop, applicable = props[p]['applicable'], visible = props[p]['visible'], editable = props[p]['editable'], var=Property_var.objects.get(pk = props[p]['value']))
+                        d.save()
             return HttpResponse('ok')
 
 def edit_model(request):

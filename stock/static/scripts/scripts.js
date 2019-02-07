@@ -350,7 +350,53 @@ function saveModel() {
     });
 }
 
-function Tree(tree) {
+function saveGood() {
+    units = {};
+    $("#units").find(".unit").each(function (item) {
+        id = $(this).prop('id');
+        units[id] = {};
+        units[id]['coeff'] = $(this).find(":input[type='number']").eq(0).prop("value");
+        units[id]['applicable'] = !$(this).find(":input[type='checkbox']").eq(0).prop("checked");
+        units[id]['isBase'] = $(this).find(":input[type='radio']").eq(0).prop("checked");
+    });
+    props = {};
+    $("#props").find(".prop").each(function (item) {
+        id = $(this).prop('id');
+        props[id] = {};
+        props[id]['value'] = $(this).find(".value").eq(0).val();
+        props[id]['visible'] = !$(this).find(".visible").eq(0).prop("checked");
+        props[id]['editable'] = !$(this).find(".editable").eq(0).prop("checked");
+        props[id]['applicable'] = !$(this).find(".applicable").eq(0).prop("checked");
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_good/',
+        data: {
+            'name': $('#name').prop('value'),
+            'model': $("#model option:selected").val(),
+            'counter': $("#counter option:selected").val(),
+            'article': $('#article').prop('value'),
+            'barcode': $('#barcode').prop('value'),
+            'original': $('#original').prop('value'),
+            'local': $('#local').prop('value'),
+            'transit': $('#transit').prop('value'),
+            'units': JSON.stringify(units),
+            'props': JSON.stringify(props)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
+function Tree(tree, t) {
+    this.t = t;
     this.tree = tree;
     this.selected = 1;
     var self = this;
@@ -476,16 +522,23 @@ function Tree(tree) {
         obj = $(this).children("span");
         $(this).children("span").eq(0).addClass('active');
         $("#group option[value=" + id + "]").prop('selected', true);
-        changeGroup();
+        changeGroup(self.t);
         //event.stopPropagation();
     });
 }
 
-function changeGroup() {
+function changeGroup(t) {
+    if (t == "goods"){
+        data = goods;
+    }
+    else {
+        data = models;
+    }
     $("#goods-body").html("");
-    for (m in models) {
-        if (models[m].group == tr.selected) {
-            $("<tr id=" + models[m].id + "><td>" + models[m].id + "</td><td  onclick='getInf(" + models[m].id + ")'>" + models[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+    for (m in data) {
+        if (data[m].group == tr.selected) {
+            id = t == "goods" ? data[m].article : data[m].id
+            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='getInf(" + data[m].id + ")'>" + data[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>");
@@ -633,15 +686,19 @@ function getModelInfo(){
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']){
-        code = code + "<div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el'/></div></div>";
-        code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Применимая</span></div><div class='form-group col-md-6'><input type='radio' class='form-control'/><span class='inline-el'> Базовая</span></div></div>";
+        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el'/></div></div>";
+        code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
     //получение свойств
     code = "";
     for (p in models[id]['props']){
-        code = code + "<div class='form-inline'><h6>- " + models[id]['props'][p].name + "</h6>" + getPropCode(models[id]['props'][p]['type'], models[id]['props'][p]['value'], models[id]['props'][p]['choises']) + "</div>";
-        code = code + "<div class='form-inline'><input type='checkbox' class='form-control' /> <span class='inline-el'>Скрытое</span><input type='checkbox' class='form-control'/><span class='inline-el'> Неизменяемое</span><input type='checkbox' class='form-control'/><span class='inline-el'> Неприменимое</span></div>";
+        if (!models[id]['props'][p]['visible']) checkedV = "checked";
+        else checkedV = "";
+        if (!models[id]['props'][p]['editable']) checkedE = "checked";
+        else checkedE = "";
+        code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + models[id]['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(models[id]['props'][p]['type'], models[id]['props'][p]['default'], models[id]['props'][p]['choises']) + "</div></div>";
+        code = code + "<div class='form-inline inline-el'><input type='checkbox' " + checkedV + " class='form-control visible' /> <span class='inline-el'>Скрытое</span><input type='checkbox' " + checkedE + " class='form-control editable'/><span class='inline-el'> Неизменяемое</span><input type='checkbox'  class='form-control applicable'/><span class='inline-el'> Неприменимое</span></div></div>";
     }
     $(code).appendTo("#props");
 }
@@ -650,13 +707,13 @@ function getPropCode(t, value = "", choises = null){
     var code = "";
     switch (t){
         case 0:
-            code = "<input type='number' class='form-control inline-el' value='" + value + "'/>";
+            code = "<input type='number' class='form-control inline-el value' value='" + value + "'/>";
             break;
         case 1:
-            code = "<input type='text' class='form-control inline-el' value='" + value + "'/>";
+            code = "<input type='text' class='form-control inline-el value' value='" + value + "'/>";
             break;
         case 2:
-            code = "<select class='form-control inline-el'>";
+            code = "<select class='form-control inline-el value'>";
             for (c in choises){
                 if (c == value){
                     code = code + "<option value='" + c +"' selected>" + choises[c] + "</option>";

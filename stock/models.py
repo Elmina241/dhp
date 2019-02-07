@@ -73,18 +73,38 @@ class Default_var(Model_property):
 
 class Goods(models.Model):
     model = models.ForeignKey('Product_model')
-    base_unit = models.ForeignKey('tables.Unit')
-    supply_price = models.FloatField()
-    income_price = models.FloatField()
+    producer = models.ForeignKey('Counterparty', null=True, default=None)
     def __str__(self):
         return self.model.name
+
+class Good_name(models.Model):
+    product = models.ForeignKey('Goods')
+    article = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    barcode = models.CharField(max_length=200)
+    original = models.CharField(max_length=200)
+    local = models.CharField(max_length=200)
+    transit = models.CharField(max_length=200)
+    def __str__(self):
+        return self.name
 
 class Goods_property(models.Model):
     product = models.ForeignKey('Goods')
     property = models.ForeignKey('Property')
     applicable = models.BooleanField()
+    visible = models.BooleanField()
+    editable = models.BooleanField()
     def __str__(self):
         return str(self.product) + " " + str(self.property)
+
+class Goods_unit(models.Model):
+    product = models.ForeignKey('Goods')
+    unit = models.ForeignKey('tables.Unit')
+    applicable = models.BooleanField()
+    isBase = models.BooleanField()
+    coeff = models.FloatField()
+    def __str__(self):
+        return str(self.product) + " " + str(self.unit)
 
 class Property_num(Goods_property):
     number = models.FloatField()
