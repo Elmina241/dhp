@@ -183,30 +183,71 @@
         </div>
     </div>
 
-    <div class="modal fade" id="inf_model">
+    <div class="modal fade" id="inf_good">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Редактирование макета</h5>
+                    <h5>Редактирование МЦ</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
                 <div class="modal-body create-form">
-                    <h6>Наименование</h6>
-                    <input type="text" class="form-control" id="e_name"/>
-                    <h6>Узел в иерархии</h6>
+                    <h6>Макет</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="e_group">
-                            {% for g in groups %}
-                                <option value="{{ g.pk }}">{{ g.name }}</option>
+                        <select class="form-control" id="e_model" readonly>
+                            {% for m in models %}
+                                <option value="{{ m.pk }}">{{ m.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <h6>Единицы измерения</h6>
-                    <div id="e_additional_unit">
+                    <hr>
+                    <h6>Имена</h6>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="article">Артикул</label>
+                            <input type="text" class="form-control" id="e_article">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="name">Наименование</label>
+                            <input type="text" class="form-control" id="e_name">
+                        </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="barcode">Штрихкод</label>
+                            <input type="text" class="form-control" id="e_barcode">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="original">Оригинальное</label>
+                            <input type="text" class="form-control" id="e_original">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="local">Локальное</label>
+                            <input type="text" class="form-control" id="e_local">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="transit">Транзитное</label>
+                            <input type="text" class="form-control" id="e_transit">
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Производитель</h6>
+                    <div class="col-6" style="padding:0">
+                        <select class="form-control" id="e_counter">
+                            {% for c in counters %}
+                                <option value="{{ c.pk }}">{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <hr>
+                    <h6>Единицы измерения</h6>
+                    <div id="e_units">
+                    </div>
+                    <hr>
                     <h6>Свойства</h6>
-                    <div style='display:block' id="e_additional_prop">
+                    <div style='display:block' id="e_props">
                     </div>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="editBtn" onclick="" class="btn btn-primary"

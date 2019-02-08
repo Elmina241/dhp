@@ -185,6 +185,58 @@ function getInf(id) {
     });
 }
 
+function getGoodInf(id) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'get_good_inf/',
+        data: {
+            'id': id
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            inf = JSON.parse(data);
+            $("#e_units").html("");
+            $("#e_props").html("");
+            $("#e_name").prop("value", inf.name);
+            $("#e_article").prop("value", inf.article);
+            $("#e_barcode").prop("value", inf.barcode);
+            $("#e_original").prop("value", inf.original);
+            $("#e_local").prop("value", inf.local);
+            $("#e_transit").prop("value", inf.transit);
+            $("#e_model option[value=" + inf.model + "]").prop('selected', true);
+            $("#e_counter option[value=" + inf.counter + "]").prop('selected', true);
+            var code = "";
+            for (u in inf.units) {
+                code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + inf['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' value='" + inf.units[u].value + "' class='form-control inline-el'/></div></div>";
+                if (inf.units[u].isBase) checked = "checked";
+                else checked = "";
+                code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='radio' name='e_isBase' class='form-control' " + checked + "/><span class='inline-el'> Базовая</span></div></div>";
+            }
+            $(code).appendTo("#e_units");
+            code = "";
+            for (p in inf.props) {
+                code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + inf['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(inf['props'][p]['type'], inf['props'][p]['value'], inf['props'][p]['choises']) + "</div></div>";
+            }
+            $(code).appendTo("#e_props");
+            $("#e_props").find(".prop").each(function(item){
+                id = $(this).prop("id");
+                $(this).find("input").eq(0).prop("disabled", !inf.props[id].editable);
+            });
+            /*$("#editBtn").unbind('click');
+        $("#editBtn").click(function () {
+            editModel(id);
+        });*/
+            $("#inf_good").modal();
+
+        }
+    });
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -530,15 +582,22 @@ function Tree(tree, t) {
 function changeGroup(t) {
     if (t == "goods"){
         data = goods;
+        gInf = function (id){
+            getGoodInf(id);
+        };
     }
     else {
         data = models;
+        gInf = function (id){
+            getInf(id);
+        };
     }
+
     $("#goods-body").html("");
     for (m in data) {
         if (data[m].group == tr.selected) {
             id = t == "goods" ? data[m].article : data[m].id
-            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='getInf(" + data[m].id + ")'>" + data[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>");

@@ -1341,7 +1341,7 @@ def kneading_detail(request, kneading_id):
                                             start_date__year=kneading.start_date.year)
         tested = False
         for p in processes:
-            if State_log.objects.filter(kneading = p).last().state.pk < 4:
+            if State_log.objects.filter(kneading = p).last().state.pk <= 4:
                 tested = True
         if processes.count() > 1 and tested:
             tested = True
