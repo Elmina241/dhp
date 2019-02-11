@@ -281,6 +281,47 @@ def save_good(request):
                         d.save()
             return HttpResponse('ok')
 
+def edit_good(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            good = Goods.objects.get(pk=request.POST['id'])
+            counter = Counterparty.objects.get(pk=request.POST['counter'])
+            name = request.POST['name']
+            article = request.POST['article']
+            barcode = request.POST['barcode']
+            original = request.POST['original']
+            local = request.POST['local']
+            transit = request.POST['transit']
+            units = json.loads(request.POST['units'])
+            props = json.loads(request.POST['props'])
+            good.producer = counter
+            good.save()
+            names = Good_name.objects.filter(product = good)[0]
+            names.name=name
+            names.article=article
+            names.barcode=barcode
+            names.original=original
+            names.local=local
+            names.transit=transit
+            names.save()
+            for u in units:
+                unit = Goods_unit.objects.get(pk=u)
+                unit.isBase = units[u]['isBase']
+                unit.coeff = units[u]['coeff']
+                unit.save()
+            for p in props:
+                prop = Goods_property.objects.get(pk=p)
+                if prop.property.prop_type == 0:
+                    prop.number = props[p]['value']
+                    prop.save()
+                else:
+                    if prop.property.prop_type == 1:
+                        prop.text = props[p]['value']
+                        prop.save()
+                    else:
+                        prop.var = Property_var.objects.get(pk=props[p]['value'])
+                        prop.save()
+            return HttpResponse('ok')
 
 def edit_model(request):
     if request.method == 'POST':

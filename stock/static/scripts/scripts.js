@@ -104,13 +104,28 @@ function e_addProp() {
 
 function searchModel(text) {
     if (text == "") {
-        changeGroup();
+        changeGroup("models");
     }
     else {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
                 $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+            }
+        }
+        if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+    }
+}
+
+function searchGood(text) {
+    if (text == "") {
+        changeGroup("goods");
+    }
+    else {
+        $("#goods-body").html("");
+        for (g in goods) {
+            if (goods[g].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
+                $("<tr onclick='getGoodInf(" + goods[g].id + ")'><td>" + goods[g].article + "</td><td>" + goods[g].name + "</td><td><button class='btn btn-danger' onclick='delGood(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
             }
         }
         if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
@@ -227,10 +242,10 @@ function getGoodInf(id) {
                 id = $(this).prop("id");
                 $(this).find("input").eq(0).prop("disabled", !inf.props[id].editable);
             });
-            /*$("#editBtn").unbind('click');
+            $("#editBtn").unbind('click');
         $("#editBtn").click(function () {
-            editModel(id);
-        });*/
+            editGood(id);
+        });
             $("#inf_good").modal();
 
         }
@@ -433,6 +448,47 @@ function saveGood() {
             'original': $('#original').prop('value'),
             'local': $('#local').prop('value'),
             'transit': $('#transit').prop('value'),
+            'units': JSON.stringify(units),
+            'props': JSON.stringify(props)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
+function editGood(id) {
+    units = {};
+    $("#e_units").find(".unit").each(function (item) {
+        id = $(this).prop('id');
+        units[id] = {};
+        units[id]['coeff'] = $(this).find(":input[type='number']").eq(0).prop("value");
+        units[id]['isBase'] = $(this).find(":input[type='radio']").eq(0).prop("checked");
+    });
+    props = {};
+    $("#e_props").find(".prop").each(function (item) {
+        id = $(this).prop('id');
+        props[id] = {};
+        props[id]['value'] = $(this).find(".value").eq(0).val();
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'edit_good/',
+        data: {
+            'id': id,
+            'name': $('#e_name').prop('value'),
+            'counter': $("#e_counter option:selected").val(),
+            'article': $('#e_article').prop('value'),
+            'barcode': $('#e_barcode').prop('value'),
+            'original': $('#e_original').prop('value'),
+            'local': $('#e_local').prop('value'),
+            'transit': $('#e_transit').prop('value'),
             'units': JSON.stringify(units),
             'props': JSON.stringify(props)
         },

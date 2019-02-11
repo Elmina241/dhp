@@ -12,8 +12,6 @@ class Product_model(models.Model):
 class Model_unit(models.Model):
     model = models.ForeignKey('Product_model')
     unit = models.ForeignKey('tables.Unit')
-    #coeff = models.FloatField()
-    #is_base = models.BooleanField()
     def __str__(self):
         return self.unit.name
 
@@ -26,9 +24,6 @@ class Model_group(models.Model):
 class Property(models.Model):
     name = models.CharField(max_length=200)
     prop_type = models.PositiveSmallIntegerField()
-    #visible = models.BooleanField()
-    #editable = models.BooleanField()
-    #default = models.CharField(max_length=200, null = True)
     def __str__(self):
         return self.name
 
@@ -148,4 +143,44 @@ class Counterparty(models.Model):
     def __str__(self):
         return self.name
 
+class Currency(models.Model):
+    name = models.CharField(max_length=200)
+    abbreviation = models.CharField(max_length=200)
+    def __str__(self):
+        return self.name
+
+class Stock(models.Model):
+    name = models.CharField(max_length=200)
+    currency = models.ForeignKey('Currency')
+    def __str__(self):
+        return self.name
+
+class Base(models.Model):
+    name = models.CharField(max_length=200)
+    def __str__(self):
+        return self.name
+
+class User(models.Model):
+    name = models.CharField(max_length=500)
+    group = models.IntegerField(default=0)
+    def __str__(self):
+        return self.name
+
+
+class Demand(models.Model):
+    STATUS_CHOICES = (
+        ('0', 'Не рассмотренно'),
+        ('1', 'Одобрено'),
+        ('2', 'Отвергнуто'),
+    )
+    date = models.DateField(auto_now_add=True)
+    consumer = models.ForeignKey('Counterparty')
+    stock = models.ForeignKey('Stock')
+    base = models.ForeignKey('Base')
+    is_closed = models.BooleanField()
+    finish_date = models.DateField(null = True)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20)
+    signer = models.ForeignKey('User')
+    def __str__(self):
+        return self.name
 
