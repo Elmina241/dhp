@@ -97,6 +97,9 @@ def props(request):
 def counterparties(request):
     return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all()})
 
+def requirements(request):
+    return render(request, "requirements.html", {"header": "Требования", "counters": Counterparty.objects.all()})
+
 
 def send_prop(request):
     if request.method == 'POST':

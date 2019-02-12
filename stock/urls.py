@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^goods_models/get_model_inf/$', views.get_model_inf, name='get_model_inf'),
     url(r'^goods/get_good_inf/$', views.get_good_inf, name='get_good_inf'),
     url(r'^props/$', views.props, name='props'),
+    url(r'^requirements/$', views.requirements, name='requirements'),
     url(r'^counterparties/$', views.counterparties, name='counterparties'),
     url(r'^counterparties/send_counter/$', views.send_counter, name='send_counter'),
     url(r'^props/send_prop/$', views.send_prop, name='send_prop'),
