@@ -61,11 +61,11 @@ def release(request):
         batch = Batch.objects.filter(id = b_id)[0]
         if request.POST['op']=='1':
             rec = Movement_rec(product = product, batch = batch, amount = request.POST['amm'], operation = Operation.objects.filter(id = 3)[0])
-            #code = request.POST['code']
-            try:
-                code = Acceptance.objects.latest('code').code + 1
-            except:
-                code = 1
+            code = request.POST['code']
+            #try:
+                #code = Acceptance.objects.latest('code').code + 1
+            #except:
+                #code = 1
             rec.save()
             acc = Acceptance(code = code, prod = rec)
             acc.save()
@@ -118,6 +118,7 @@ def get_act_by_prod(request):
             date = a.date
             err = err and Movement_rec.objects.filter(batch = a.prod.batch)[0].is_printed
             inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(), "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
+            print(err)
         inf_a['date'] = date.strftime('%d.%m.%Y')
         inf_a['code'] = code
         inf_a['check'] = err

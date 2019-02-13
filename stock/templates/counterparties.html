@@ -39,13 +39,13 @@
                             </thead>
                             <tbody id="count-body">
                             {% for c in counters %}
-                                <tr>
+                                <tr id="{{ c.id }}">
                                     <td>{{ c.id }}</td>
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.get_kind_display }}</td>
                                     <td>{{ c.get_category_display }}</td>
                                     <td style="text-align: right"><button class="btn btn-info" onclick="pr.getInf({{ c.id }})">Редактировать</button></td>
-                                    <td style="text-align: left"><button class="btn btn-danger">Удалить</button></td>
+                                    <td style="text-align: left"><button class="btn btn-danger" onclick="delCounter(this.parentElement)">Удалить</button></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

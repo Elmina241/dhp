@@ -641,19 +641,25 @@ function changeGroup(t) {
         gInf = function (id){
             getGoodInf(id);
         };
+        delObj = function (obj){
+            delGood(obj);
+        }
     }
     else {
         data = models;
         gInf = function (id){
             getInf(id);
         };
+        delObj = function (obj){
+            delModel(obj);
+        }
     }
 
     $("#goods-body").html("");
     for (m in data) {
         if (data[m].group == tr.selected) {
             id = t == "goods" ? data[m].article : data[m].id
-            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><button class='btn btn-danger' onclick='delObj(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>");
@@ -676,7 +682,63 @@ function delModel(obj) {
             $(obj.parentElement).remove();
         }
     });
-    //this.updEvent();
+};
+
+function delCounter(obj) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'del_counter/',
+        data: {
+            'id': $(obj.parentElement).prop("id")
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            $(obj.parentElement).remove();
+        }
+    });
+};
+
+function delProp(obj) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'del_prop/',
+        data: {
+            'id': $(obj.parentElement).prop("id")
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            $(obj.parentElement).remove();
+        }
+    });
+};
+
+function delGood(obj) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'del_good/',
+        data: {
+            'id': $(obj.parentElement).prop("id")
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            $(obj.parentElement).remove();
+        }
+    });
 };
 
 function getDefault(sel) {

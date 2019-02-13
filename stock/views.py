@@ -392,6 +392,20 @@ def del_model(request):
         Product_model.objects.get(pk=request.POST['id']).delete()
         return HttpResponse("ok")
 
+def del_good(request):
+    if request.method == 'POST':
+        Goods.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
+
+def del_counter(request):
+    if request.method == 'POST':
+        Counterparty.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
+
+def del_prop(request):
+    if request.method == 'POST':
+        Property.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
 
 def edit_prop(request):
     if request.method == 'POST':

@@ -39,11 +39,11 @@
                             </thead>
                             <tbody id="goods-body">
                             {% for p in props %}
-                                <tr>
+                                <tr id="{{ p.id }}">
                                     <td>{{ p.id }}</td>
                                     <td>{{ p.name }}</td>
                                     <td style="text-align: right"><button class="btn btn-info" onclick="pr.getInf({{ p.id }})">Редактировать</button></td>
-                                    <td style="text-align: left"><button class="btn btn-danger">Удалить</button></td>
+                                    <td style="text-align: left"><button class="btn btn-danger" onclick="delProp(this.parentElement)">Удалить</button></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
