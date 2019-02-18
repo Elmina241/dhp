@@ -91,3 +91,7 @@ body {
     background: #eceeef;
     /*border: solid #eceeef 1px;*/
 }
+
+.half{
+    width: 47%;
+}

@@ -902,3 +902,8 @@ function getPropCode(t, value = "", choises = null){
     }
     return code;
 }
+
+function openClose(obj, arrow){
+    $("#"+obj).toggle();
+    $(arrow).toggleClass("fa-angle-up fa-angle-down");
+}

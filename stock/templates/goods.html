@@ -138,6 +138,7 @@
                             <input type="text" class="form-control" id="name">
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="barcode">Штрихкод</label>
@@ -158,6 +159,7 @@
                             <input type="text" class="form-control" id="transit">
                         </div>
                     </div>
+
                     <hr>
                     <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">
@@ -171,6 +173,7 @@
                     <h6>Единицы измерения</h6>
                     <div id="units">
                     </div>
+
                     <hr>
                     <h6>Свойства</h6>
                     <div style='display:block' id="props">
@@ -212,6 +215,7 @@
                             <input type="text" class="form-control" id="e_name">
                         </div>
                     </div>
+                <div id="names" style="display:none">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="barcode">Штрихкод</label>
@@ -232,6 +236,8 @@
                             <input type="text" class="form-control" id="e_transit">
                         </div>
                     </div>
+                </div>
+    <div class="form-row"><hr class="half"><span style='font-size: 20px;' onclick="openClose('names', this.firstChild)"><i class='fas fa-angle-down'></i></span><hr class="half"></div>
                     <hr>
                     <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">
@@ -245,6 +251,7 @@
                     <h6>Единицы измерения</h6>
                     <div id="e_units">
                     </div>
+                <div class="form-row"><hr class="half"><span style='font-size: 20px;' onclick="openClose('e_units', this.firstChild)"><i class='fas fa-angle-up'></i></span><hr class="half"></div>
                     <hr>
                     <h6>Свойства</h6>
                     <div style='display:block' id="e_props">
