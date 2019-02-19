@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Goods, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
+from .models import Default_number, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
     Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, \
     Model_group, Product_model
 from django.core import serializers
@@ -95,7 +95,7 @@ def props(request):
 
 
 def counterparties(request):
-    return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all()})
+    return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
 def requirements(request):
     return render(request, "requirements.html", {"header": "Требования", "counters": Counterparty.objects.all()})
@@ -125,9 +125,12 @@ def send_counter(request):
         if 'name' in request.POST:
             kind = request.POST['kind']
             name = request.POST['name']
-            category = request.POST['category']
-            c = Counterparty(name=name, kind=kind, category=category)
+            c = Counterparty(name=name, kind=kind, is_provider = json.loads(request.POST['isProv']), is_consumer = json.loads(request.POST['isCons']), is_member = json.loads(request.POST['isMember']))
             c.save()
+            data = json.loads(request.POST['stocks'])
+            for d in data:
+                p = Counter_stock(counter=c, stock=Stock.objects.get(pk = d))
+                p.save()
             return HttpResponse('ok')
 
 

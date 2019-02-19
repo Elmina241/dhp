@@ -2,13 +2,33 @@
 {% block content %}
     {% load staticfiles %}
     <script>
-        var pr = null;
+        var stocks = null;
         $(document).ready(function () {
-
+            changeType(0);
+            stocks = JSON.parse(JSON.parse($("#stockData").prop("value")));
+            addStock();
         });
+        function getStocks() {
+            code = "<select class='form-control inline-el stock'>";
+            for (p in stocks) {
+                code = code + "<option value='" + stocks[p].pk + "'>" + stocks[p].fields.name + "</option>";
+            }
+            code = code + "</select>";
+            return code;
+        }
+        function addStock() {
+            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getStocks() + "<span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+            var additionalStock = $("#stocks");
+            $(code).appendTo(additionalStock);
+        }
+        function changeType(t){
+            if (t == '2') $("#stock").show();
+            else $("#stock").hide();
+        }
     </script>
     <div class="container-fluid">
     <input value="{{ count_data }}" id="countData" hidden/>
+    <input value="{{ stockData }}" id="stockData" hidden/>
 
                 <div class="card" style="margin-left: 30px;margin-right: 30px;">
                     <div class="card-header">
@@ -32,7 +52,6 @@
                                 <th scope="col">Код</th>
                                 <th scope="col">Наименование</th>
                                 <th scope="col">Вид</th>
-                                <th scope="col">Категория</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
@@ -43,7 +62,6 @@
                                     <td>{{ c.id }}</td>
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.get_kind_display }}</td>
-                                    <td>{{ c.get_category_display }}</td>
                                     <td style="text-align: right"><button class="btn btn-info" onclick="pr.getInf({{ c.id }})">Редактировать</button></td>
                                     <td style="text-align: left"><button class="btn btn-danger" onclick="delCounter(this.parentElement)">Удалить</button></td>
                                 </tr>
@@ -65,19 +83,19 @@
                     <h6>Наименование</h6>
                     <input type="text" class="form-control" id="name"/>
                     <h6>Вид</h6>
-                    <select class="form-control" name="kind" id="kind">
+                    <select class="form-control" name="kind" id="kind" onchange="changeType($(this).val())">
                         <option selected value="0">Организация</option>
                         <option value="1">Физлицо</option>
-                        <option value="2">Предприниматель</option>
-                        <option value="2">Подразделение</option>
+                        <option value="2">Административная группа</option>
                     </select>
-                    <h6>Категория</h6>
-                    <select class="form-control" name="category" id="category">
-                        <option selected value="0">Поставщик</option>
-                        <option value="1">Потребитель</option>
-                        <option value="2">Смешанный</option>
-                        <option value="2">Информационный</option>
-                    </select>
+                    <div class='form-inline' style="margin-top: 10px"><input type='checkbox' class='form-control' style="margin-right: 10px" id="isProv"> Поставщик <input type='checkbox' class='form-control inline-el' id="isCons"> Потребитель <input type='checkbox' class='form-control inline-el' id="isMember"> Участник</div>
+                    <div id="stock">
+                    <h6>Субъекты оборота</h6>
+                    <div id="stocks">
+                     </div>
+                        <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                          onclick="addStock()"><i class='fas fa-plus-circle'></i></span>
+                    </div>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="sendCounter()" class="btn btn-primary"
                                style="float: right"/></div>

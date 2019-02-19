@@ -734,8 +734,8 @@ def move(request):
                 accepting.batch = donor.batch
             else:
                 if amm > accepting.amount:
-                    accepting.batch.kneading.batch_num = donor.batch.kneading.batch_num
-                    accepting.batch.kneading.save()
+                    accepting.batch = donor.batch
+                    accepting.save()
                 for m in Batch_comp.objects.filter(batch = accepting.batch):
                     comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
                     m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100
@@ -781,8 +781,8 @@ def move_batch(request, kneading_id):
             accepting.batch = donor.batch
         else:
             if amm > accepting.amount:
-                accepting.batch.kneading.batch_num = donor.batch.kneading.batch_num
-                accepting.batch.kneading.save()
+                accepting.batch = donor.batch
+                accepting.save()
             for m in Batch_comp.objects.filter(batch = accepting.batch):
                 comp = Batch_comp.objects.filter(batch = donor.batch, mat = m.mat)[0]
                 m.ammount = ((m.ammount*accepting.batch.kneading.list.ammount/100 + comp.ammount * donor.batch.kneading.list.ammount/100)/(accepting.batch.kneading.list.ammount + donor.batch.kneading.list.ammount))*100

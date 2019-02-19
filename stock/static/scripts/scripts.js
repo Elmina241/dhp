@@ -33,6 +33,10 @@ function sendProp() {
 }
 
 function sendCounter() {
+    stocks = [];
+    $("#stocks").find("select").each(function (item) {
+        stocks.push($("option:selected", this).val());
+    });
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -40,7 +44,10 @@ function sendCounter() {
         data: {
             'name': $('#name').prop('value'),
             'kind': $('#kind').val(),
-            'category': $('#category').val(),
+            'stocks': JSON.stringify(stocks),
+            'isProv': $("#isProv").prop('checked'),
+            'isCons': $("#isCons").prop('checked'),
+            'isMember': $("#isMember").prop('checked')
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

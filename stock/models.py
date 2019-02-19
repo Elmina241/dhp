@@ -117,31 +117,24 @@ class Goods_var(Goods_property):
         return str(self.var)
 
 class Counterparty(models.Model):
-    ORG = '0'
-    PHYS = '1'
-    ENTR = '2'
-    DIV = '3'
-    PROV = '0'
-    CONS = '1'
-    MIX = '2'
-    INF = '3'
     KIND_CHOICES = (
-        (ORG, 'Организация'),
-        (PHYS, 'Физлицо'),
-        (ENTR, 'Предприниматель'),
-        (DIV, 'Подразделение'),
-    )
-    CATEGORY_CHOICES = (
-        (PROV, 'Поставщик'),
-        (CONS, 'Потребитель'),
-        (MIX, 'Смешанный'),
-        (INF, 'Информационный'),
+        ('0', 'Организация'),
+        ('1', 'Физлицо'),
+        ('2', 'Административная группа'),
     )
     name = models.CharField(max_length=200)
     kind = models.CharField(choices=KIND_CHOICES, max_length=20)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=20)
+    is_provider = models.BooleanField()
+    is_consumer = models.BooleanField()
+    is_member = models.BooleanField()
     def __str__(self):
         return self.name
+
+class Counter_stock(models.Model):
+    counter = models.ForeignKey('Counterparty')
+    stock = models.ForeignKey('Stock')
+    def __str__(self):
+        return str(self.counter) + ' ' + str(self.stock)
 
 class Currency(models.Model):
     name = models.CharField(max_length=200)
@@ -151,7 +144,7 @@ class Currency(models.Model):
 
 class Stock(models.Model):
     name = models.CharField(max_length=200)
-    currency = models.ForeignKey('Currency')
+    currency = models.ForeignKey('Currency', null=True)
     def __str__(self):
         return self.name
 
@@ -169,18 +162,18 @@ class User(models.Model):
 
 class Demand(models.Model):
     STATUS_CHOICES = (
-        ('0', 'Не рассмотренно'),
-        ('1', 'Одобрено'),
-        ('2', 'Отвергнуто'),
+        ('0', 'Отказ'),
+        ('1', 'Выполнение'),
+        ('2', 'Закрыт'),
     )
     date = models.DateField(auto_now_add=True)
     consumer = models.ForeignKey('Counterparty')
-    stock = models.ForeignKey('Stock')
-    base = models.ForeignKey('Base')
+    provider = models.ForeignKey('Counterparty')
+    donor = models.ForeignKey('Stock')
+    acceptor = models.ForeignKey('Stock')
     is_closed = models.BooleanField()
     finish_date = models.DateField(null = True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=20)
-    signer = models.ForeignKey('User')
     def __str__(self):
         return self.name
 
