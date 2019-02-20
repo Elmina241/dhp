@@ -1,0 +1,83 @@
+{% load staticfiles %}
+<head>
+  <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/breadcrumb3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.css' %}">
+  <script src="{% static 'scripts/jquery.tabletojson.js' %}"></script>
+  <script src="{% static 'scripts/validation5.js' %}"></script>
+  <script src="{% static 'scripts/json_to_table48.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepickerrumin.js' %}"></script>
+  <script src="{% static 'scripts/jquery.tablesorter.js' %}"></script>
+  <script type="text/javascript">
+  </script>
+     <style type="text/css">
+         td {
+             margin-top: 55px;
+         }
+     </style>
+</head>
+<body>
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+$(document).ready(function(){
+});
+
+</script>
+
+    {% csrf_token %}
+          {% if kneading %}
+              <table class="table table-striped" id="prTable" style="font-size: 220%;">
+                <thead class="thead-inverse">
+                  <tr  style="height:100px; text-align: center">
+                    <th>№</th><th>Партия</th><th>Состав</th><th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for k in kneading|dictsortreversed:"id" %}
+                  <tr style="height:100px;">
+                    <td>{{ k.id }}</td>
+                    <td>П-{{ k.batch_num|floatformat:"0" }}</td>
+                    <td onClick="window.location.href='/processes/process/{{ k.id }}/'">{{ k.list.formula }}</td>
+                    <td id="{{k.id}}">{{ k.get_state }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+</body>

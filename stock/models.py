@@ -162,18 +162,19 @@ class User(models.Model):
 
 class Demand(models.Model):
     STATUS_CHOICES = (
-        ('0', 'Отказ'),
-        ('1', 'Выполнение'),
-        ('2', 'Закрыт'),
+        #('0', 'Отказ'),
+        #('1', 'Выполнение'),
+        #('2', 'Закрыт'),
     )
     date = models.DateField(auto_now_add=True)
-    consumer = models.ForeignKey('Counterparty')
-    provider = models.ForeignKey('Counterparty')
-    donor = models.ForeignKey('Stock')
-    acceptor = models.ForeignKey('Stock')
+    consumer = models.ForeignKey('Counterparty', related_name="consumer")
+    provider = models.ForeignKey('Counterparty', related_name="provider")
+    donor = models.ForeignKey('Stock', related_name="donor")
+    acceptor = models.ForeignKey('Stock', related_name="acceptor")
     is_closed = models.BooleanField()
+    release_date = models.DateField(null=True)
     finish_date = models.DateField(null = True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=20)
     def __str__(self):
-        return self.name
+        return str(self.pk) + " " + str(self.date)
 

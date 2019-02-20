@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stock', '0012_auto_20190213_1224'),
+        ('stock', '0011_stock'),
     ]
 
     operations = [
         migrations.CreateModel(
+            name='Base',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('name', models.CharField(max_length=200)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Counter_stock',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='User',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('name', models.CharField(max_length=500)),
+                ('group', models.IntegerField(default=0)),
             ],
         ),
         migrations.RemoveField(

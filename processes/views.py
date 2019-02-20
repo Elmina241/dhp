@@ -39,6 +39,16 @@ def mixing(request, kneading_id = -1):
                 batches[name] = name
     return render(request, "process.html", {"header": "Процессы смешения", "states": State.objects.all(), "location": "/processes/process/", "kneading": Kneading.objects.filter(isFinished = False), "new_kneading": kneading, "batches": batches})
 
+def m_process(request):
+    batches = {}
+    for k in Kneading.objects.filter(isFinished = False):
+        log = State_log.objects.filter(kneading = k).last().state.pk
+        if  log != 7 and log!=6:
+            name = "П-" + str(int(k.batch_num)) + " " + str(k.list.formula)
+            if name not in batches:
+                batches[name] = name
+    return render(request, "m_process.html", {"states": State.objects.all(), "kneading": Kneading.objects.filter(isFinished = False), "batches": batches})
+
 def archive(request):
     kneadings = []
     for k in Kneading.objects.filter(isFinished = True, list__formula__composition__isFinal = True, start_date__year = datetime.datetime.now().year):

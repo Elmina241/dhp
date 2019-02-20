@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^(?P<kneading_id>[0-9]+)/process/del_process/$', views.del_process, name = 'del_process'),
     url(r'^planning/$', views.planning, name = 'planning'),
     url(r'^process/$', views.mixing, name = 'mixing'),
+    url(r'^m/process/$', views.m_process, name = 'm_process'),
     url(r'^(?P<kneading_id>[0-9]+)/process/$', views.mixing, name = 'mixing'),
     url(r'^storages/$', views.storages, name = 'storages'),
     url(r'^(?P<kneading_id>[0-9]+)/process/get_state/$', views.get_state, name = 'get_state'),
