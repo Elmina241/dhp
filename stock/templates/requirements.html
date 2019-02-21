@@ -3,7 +3,8 @@
     {% load staticfiles %}
     <script>
         $(document).ready(function () {
-
+            //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
+            //addStock();
         });
     </script>
     <div class="container-fluid">
@@ -30,6 +31,7 @@
                             <tr>
                                 <th scope="col">Дата</th>
                                 <th scope="col">Номер</th>
+                                <th scope="col">Поставщик</th>
                                 <th scope="col">Потребитель</th>
                                 <th scope="col">Склад</th>
                                 <th scope="col">Статус</th>
@@ -61,7 +63,7 @@
         </div>
     </div>
     <div class="modal fade" id="add_req">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5>Создание требования</h5>
@@ -69,21 +71,34 @@
 
                 </div>
                 <div class="modal-body create-form">
-                    <h6>Дата</h6>
-                    <input type="text" class="form-control" id="date"/>
-                    <h6>Потребитель</h6>
+                    <div class="form-row">
+                    <div class="form-group col-md-6"><h6>Поставщик</h6>
+                    <select class="form-control" name="counter" id="counter">
+                        {% for c in counters %}
+                        <option value="{{ c.id }}">{{ c.name }}</option>
+                        {% endfor %}
+                    </select></div>
+                    <div class="form-group col-md-6">
+                    <h6>Донор</h6>
+                    <select class="form-control" name="stock" id="stock">
+                    </select></div></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                <h6>Потребитель</h6>
                     <select class="form-control" name="counter" id="counter">
                         {% for c in counters %}
                         <option value="{{ c.id }}">{{ c.name }}</option>
                         {% endfor %}
                     </select>
-                    <h6>Склад</h6>
+                    </div>
+                <div class="form-group col-md-6">
+                    <h6>Акцептор</h6>
                     <select class="form-control" name="stock" id="stock">
-                        <option selected value="0">Поставщик</option>
-                        <option value="1">Потребитель</option>
-                        <option value="2">Смешанный</option>
-                        <option value="2">Информационный</option>
                     </select>
+                    </div>
+                </div>
+                <h6>Ожидаемая дата поступления</h6>
+                    <input type="date" class="form-control" id="date"/>
                 <hr>
                 <h6>Товары</h6>
                 <div class="form-inline">
@@ -99,8 +114,10 @@
                     Количество
                     <input type="number" class="form-control inline-el" id="date"/>
                 </div>
-                <div id="additional_goods">
-                </div>
+                <div id="goods">
+                     </div>
+                        <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                          onclick="addGood()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="sendCounter()" class="btn btn-primary"
                                style="float: right"/></div>

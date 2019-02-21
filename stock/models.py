@@ -178,3 +178,12 @@ class Demand(models.Model):
     def __str__(self):
         return str(self.pk) + " " + str(self.date)
 
+class Demand_good(models.Model):
+    demand = models.ForeignKey('Demand')
+    good = models.ForeignKey('Goods')
+    name = models.ForeignKey('Good_name')
+    unit = models.ForeignKey('tables.Unit')
+    amount = models.IntegerField(default=0)
+    def __str__(self):
+        return str(self.demand) + ' ' + str(self.good)
+
