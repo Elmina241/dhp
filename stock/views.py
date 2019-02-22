@@ -76,6 +76,19 @@ def add_children(obj, node):
         node['nodes'][o.id] = {"name": o.name, "id": o.id}
         add_children(o, node['nodes'][o.id])
 
+def add_children_g(obj, node):
+    for o in Model_group.objects.filter(parent=obj.id):
+        if 'nodes' not in node:
+            node['nodes'] = {}
+        node['nodes'][o.id] = {"name": o.name, "id": o.id}
+        node['nodes'][o.id]['nodes'] = {}
+        for m in Product_model.objects.filter(group = o):
+            node['nodes'][o.id]['nodes']['m_' + str(m.pk)] = {"name": m.name, "id": 'm_' + str(m.id)}
+            node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes'] = {}
+            for g in Goods.objects.filter(model = m):
+                node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes']['g_' + str(g.pk)] = {"name": g.get_name(), "id": 'g_' + str(g.id)}
+        add_children(o, node['nodes'][o.id])
+
 
 def props(request):
     prop_data = {}
@@ -98,7 +111,11 @@ def counterparties(request):
     return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
 def requirements(request):
-    return render(request, "requirements.html", {"header": "Требования", "counters": Counterparty.objects.all()})
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0])
+    return render(request, "requirements.html", {"header": "Требования", "tree": json.dumps(tree), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):

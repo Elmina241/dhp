@@ -71,6 +71,8 @@ class Goods(models.Model):
     producer = models.ForeignKey('Counterparty', null=True, default=None)
     def __str__(self):
         return self.model.name
+    def get_name(self):
+        return Good_name.objects.filter(product = self)[0].name
 
 class Good_name(models.Model):
     product = models.ForeignKey('Goods')
