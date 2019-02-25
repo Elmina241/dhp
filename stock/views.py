@@ -87,7 +87,7 @@ def add_children_g(obj, node):
             node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes'] = {}
             for g in Goods.objects.filter(model = m):
                 node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes']['g_' + str(g.pk)] = {"name": g.get_name(), "id": 'g_' + str(g.id)}
-        add_children(o, node['nodes'][o.id])
+        add_children_g(o, node['nodes'][o.id])
 
 
 def props(request):
@@ -115,7 +115,14 @@ def requirements(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    return render(request, "requirements.html", {"header": "Требования", "tree": json.dumps(tree), "counters": Counterparty.objects.all()})
+    goods = []
+    goods_inf = {}
+    i = 0
+    for g in Good_name.objects.all():
+        goods.append(g.article + ' ' + g.name)
+        goods_inf[i] = g.product.pk
+        i = i + 1
+    return render(request, "requirements.html", {"header": "Требования", "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):

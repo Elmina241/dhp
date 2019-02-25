@@ -914,3 +914,55 @@ function openClose(obj, arrow){
     $("#"+obj).toggle();
     $(arrow).toggleClass("fa-angle-up fa-angle-down");
 }
+
+function GTree(tree, t) {
+    this.t = t;
+    this.tree = tree;
+    this.selected = 1;
+    var self = this;
+    this.init = function () {
+        $('#tree').html("");
+        this.makeTree();
+        $('#tree').treed({openedClass: 'fa-folder-open', closedClass: 'fa-folder'});
+        $("#tree li").click(function (event) {
+            event.stopPropagation();
+        });
+    };
+
+    this.makeTree = function () {
+        code = "";
+        code = code + addGBranch(code, this.tree[0]["nodes"][1]);
+        $(code).appendTo("#tree");
+    };
+
+    this.init();
+    $("#tree li").click(function (event) {
+        id = $(this).prop("id");
+        self.selected = id;
+        $("#tree span").removeClass('active');
+        obj = $(this).children("span");
+        $(this).children("span").eq(0).addClass('active');
+        $("#group option[value=" + id + "]").prop('selected', true);
+        if (id[0] == 'g'){
+            $("#selectBtn").prop("disabled", false);
+            self.selected = id.substring(2);
+        }
+        else {
+            $("#selectBtn").prop("disabled", true);
+        }
+        //event.stopPropagation();
+    });
+}
+
+function addGBranch(code, branch) {
+    code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + "</span>";
+    if (branch["nodes"] != undefined) {
+        code = code + "<ul>";
+        for (br in branch["nodes"]) {
+            code = addGBranch(code, branch["nodes"][br]);
+        }
+        code = code + "</ul>";
+    }
+    code = code + "</li>";
+    return code;
+}

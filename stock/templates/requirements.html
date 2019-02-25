@@ -2,17 +2,65 @@
 {% block content %}
     {% load staticfiles %}
     <script>
+        var selected = 0;
+        var goods_inf = null;
+        var inp = null;
+        var tr = null;
+        var goods = null;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
-            var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-            autocomplete(document.getElementById("myInput"), countries);
+            goods = JSON.parse($("#goods").prop("value"));
+            goods_inf = JSON.parse($("#goods_inf").prop("value"));
+            //var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+            autocomplete(document.getElementById("myInput"), goods);
             tree = JSON.parse($("#tree_data").prop("value"));
-            tr = new Tree(tree, "goods");
+            tr = new GTree(tree, "goods");
             document.getElementById("1").click();
         });
+
+        function setNameId(id, obj) {
+            obj.name = goods_inf[id];
+        }
+
+        function setGoodName(obj) {
+            for (g in goods_inf) {
+                if (goods_inf[g] == tr.selected) {
+                    obj.value = goods[g];
+                }
+            }
+        }
+
+        function addGoodField(){
+            code = "<div class='form-row'>\n" +
+                "                        <div class='form-group col-md-6'>\n" +
+                "                        <h7>Товар</h7>\n" +
+                "                            <div class='form-inline'>\n" +
+                "                        <div class='autocomplete' style='width:330px;'>\n" +
+                "                            <input id='myInput' style='width:330px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry'>\n" +
+                "                        </div>\n" +
+                "                        <button class='btn btn-light'\n" +
+                "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;'\n" +
+                "                                data-toggle='modal' data-target='#tree-div'><span\n" +
+                "                                style='font-size: 15px;' onclick=''><i class='fas fa-stream'></i></span></button></div></div>\n" +
+                "                            <div class='form-group col-md-6'><h7>Имя</h7>\n" +
+                "                        <select class='form-control form-control-sm'>\n" +
+                "                        </select></div></div>\n" +
+                "                        <div class='form-row'>\n" +
+                "                        <div class='form-group col-md-6'>\n" +
+                "                            <h7>Ед. изм.</h7> <select class='form-control form-control-sm'>\n" +
+                "                        </select></div><div class='form-group col-md-6'>\n" +
+                "                            <h7>Количество</h7>\n" +
+                "                            <input type='number' class='form-control form-control-sm' id='date'/></div>\n" +
+                "                    </div>";
+            $(code).appendTo("#add_goods");
+            autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
+        }
+
     </script>
     <input id="tree_data" value="{{ tree }}" hidden>
+    <input id="goods" value="{{ goods }}" hidden>
+    <input id="goods_inf" value="{{ goods_inf }}" hidden>
     <div class="container-fluid">
         <input value="{{ count_data }}" id="countData" hidden/>
 
@@ -111,24 +159,31 @@
                     <input type="date" class="form-control" id="date"/>
                     <hr>
                     <h6>Товары</h6>
-                    <div class="form-inline">
-                        - <div class="autocomplete" style="width:220px;">
-    <input id="myInput" class="form-control inline-el" type="text" name="myCountry" placeholder="Country">
-  </div> <button class="btn btn-light"  data-toggle="modal" data-target="#tree-div" style='margin-right: 35px;'><span style='font-size: 15px;' onclick=""><i class='fas fa-stream'></i></span></button>
-                        Имя
-                        <select class="form-control inline-el">
-                        </select>
+                        <div class="form-row">
+                        <div class="form-group col-md-6">
+                        <h7>Товар</h7>
+                            <div class="form-inline">
+                        <div class="autocomplete" style="width:330px;">
+                            <input id="myInput" style="width:330px;" class="form-control form-control-sm  goodInp" type="text" name="myCountry">
+                        </div>
+                        <button class="btn btn-light"
+                                onclick="inp = this.previousSibling.previousSibling.firstChild.nextSibling;"
+                                data-toggle="modal" data-target="#tree-div"><span
+                                style='font-size: 15px;' onclick=""><i class='fas fa-stream'></i></span></button></div></div>
+                            <div class="form-group col-md-6"><h7>Имя</h7>
+                        <select class="form-control form-control-sm">
+                        </select></div></div>
+                        <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <h7>Ед. изм.</h7> <select class="form-control form-control-sm">
+                        </select></div><div class="form-group col-md-6">
+                            <h7>Количество</h7>
+                            <input type="number" class="form-control form-control-sm" id="date"/></div>
                     </div>
-                    <div class="form-inline">
-                        Ед. изм. <select class="form-control inline-el">
-                    </select>
-                        Количество
-                        <input type="number" class="form-control inline-el" id="date"/>
-                    </div>
-                    <div id="goods">
+                    <div id="add_goods">
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
-                          onclick="addGood()"><i class='fas fa-plus-circle'></i></span>
+                          onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="sendCounter()" class="btn btn-primary"
                                style="float: right"/></div>
@@ -176,7 +231,9 @@
 
                     </ul>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Выбрать" id="editBtn" class="btn btn-primary"
+                        <input value="Выбрать"
+                               onclick="setNameId(tr.selected, inp);setGoodName(inp);$('#tree-div').modal('hide');"
+                               id="selectBtn" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
