@@ -7,32 +7,52 @@
         var inp = null;
         var tr = null;
         var goods = null;
+        var units = null;
+        var stock = null;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
             goods = JSON.parse($("#goods").prop("value"));
             goods_inf = JSON.parse($("#goods_inf").prop("value"));
             //var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-            autocomplete(document.getElementById("myInput"), goods);
+            //autocomplete(document.getElementById("myInput"), goods);
             tree = JSON.parse($("#tree_data").prop("value"));
             tr = new GTree(tree, "goods");
             document.getElementById("1").click();
+            units = JSON.parse($("#units").prop("value"));
+            stock = JSON.parse(JSON.parse($("#stock_data").prop("value")));
+            addGoodField();
         });
 
         function setNameId(id, obj) {
             obj.name = goods_inf[id];
+            getUnits(obj);
         }
 
         function setGoodName(obj) {
             for (g in goods_inf) {
                 if (goods_inf[g] == tr.selected) {
                     obj.value = goods[g];
+                    setNameId(g, obj);
                 }
             }
         }
 
-        function addGoodField(){
-            code = "<div class='form-row'>\n" +
+        function getUnits(obj){
+            id = obj.name;
+            select = obj.parentElement.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.childNodes[3];
+            code = "<select class='form-control form-control-sm unit'>";
+            for (u in units){
+                if (units[u].product == id && units[u].applicable){
+                    code = code + "<option value='" + units[u].pk + "'>" + units[u].unit + "</option>";
+                }
+            }
+            code = code + "</select>";
+            select.innerHTML = code;
+        }
+
+        function addGoodField() {
+            code = "<div class='form-row good-item'>\n" +
                 "                        <div class='form-group col-md-6'>\n" +
                 "                        <h7>Товар</h7>\n" +
                 "                            <div class='form-inline'>\n" +
@@ -45,6 +65,11 @@
                 "                                style='font-size: 15px;' onclick=''><i class='fas fa-stream'></i></span></button></div></div>\n" +
                 "                            <div class='form-group col-md-6'><h7>Имя</h7>\n" +
                 "                        <select class='form-control form-control-sm'>\n" +
+                "   <option value='0'>Наименование</option>\n" +
+                "   <option value='1'>Штрихкод</option>\n" +
+                "           <option value='2'>Оригинальное</option>\n" +
+                "            <option value='3'>Локальное</option>\n" +
+                "            <option value='4'>Транзитное</option>\n" +
                 "                        </select></div></div>\n" +
                 "                        <div class='form-row'>\n" +
                 "                        <div class='form-group col-md-6'>\n" +
@@ -61,6 +86,8 @@
     <input id="tree_data" value="{{ tree }}" hidden>
     <input id="goods" value="{{ goods }}" hidden>
     <input id="goods_inf" value="{{ goods_inf }}" hidden>
+    <input value="{{ stockData }}" id="stock_data" hidden/>
+    <input value="{{ units }}" id="units" hidden/>
     <div class="container-fluid">
         <input value="{{ count_data }}" id="countData" hidden/>
 
@@ -90,13 +117,25 @@
                         <th scope="col">Номер</th>
                         <th scope="col">Поставщик</th>
                         <th scope="col">Потребитель</th>
-                        <th scope="col">Склад</th>
+                        <th scope="col">Донор</th>
+                        <th scope="col">Акцептор</th>
                         <th scope="col">Статус</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
-                    <tbody id="count-body">
-
+                    <tbody id="req-body">
+                        {% for r in reqs %}
+                            <tr>
+                            <td>{{ r.date|date:"d.m.Y" }}</td>
+                            <td>{{ r.pk }}</td>
+                            <td>{{ r.provider }}</td>
+                            <td>{{ r.consumer }}</td>
+                            <td>{{ r.donor|default_if_none:"-" }}</td>
+                            <td>{{ r.acceptor|default_if_none:"-" }}</td>
+                            <td>{{ r.get_status_display }}</td>
+                            <td></td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -130,20 +169,20 @@
                 <div class="modal-body create-form">
                     <div class="form-row">
                         <div class="form-group col-md-6"><h6>Поставщик</h6>
-                            <select class="form-control" name="counter" id="counter">
+                            <select class="form-control" id="provider">
                                 {% for c in counters %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
                                 {% endfor %}
                             </select></div>
                         <div class="form-group col-md-6">
                             <h6>Донор</h6>
-                            <select class="form-control" name="stock" id="stock">
+                            <select class="form-control" id="donor">
                             </select></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <h6>Потребитель</h6>
-                            <select class="form-control" name="counter" id="counter">
+                            <select class="form-control" id="consumer">
                                 {% for c in counters %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
                                 {% endfor %}
@@ -151,7 +190,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <h6>Акцептор</h6>
-                            <select class="form-control" name="stock" id="stock">
+                            <select class="form-control"  id="acceptor">
                             </select>
                         </div>
                     </div>
@@ -159,33 +198,46 @@
                     <input type="date" class="form-control" id="date"/>
                     <hr>
                     <h6>Товары</h6>
-                        <div class="form-row">
+                    {% comment %}<div class="form-row good-item">
                         <div class="form-group col-md-6">
-                        <h7>Товар</h7>
+                            <h7>Товар</h7>
                             <div class="form-inline">
-                        <div class="autocomplete" style="width:330px;">
-                            <input id="myInput" style="width:330px;" class="form-control form-control-sm  goodInp" type="text" name="myCountry">
+                                <div class="autocomplete" style="width:330px;">
+                                    <input id="myInput" style="width:330px;"
+                                           class="form-control form-control-sm goodInp"  type="text" name="myCountry">
+                                </div>
+                                <button class="btn btn-light"
+                                        onclick="inp = this.previousSibling.previousSibling.firstChild.nextSibling;"
+                                        data-toggle="modal" data-target="#tree-div"><span
+                                        style='font-size: 15px;' onclick=""><i class='fas fa-stream'></i></span>
+                                </button>
+                            </div>
                         </div>
-                        <button class="btn btn-light"
-                                onclick="inp = this.previousSibling.previousSibling.firstChild.nextSibling;"
-                                data-toggle="modal" data-target="#tree-div"><span
-                                style='font-size: 15px;' onclick=""><i class='fas fa-stream'></i></span></button></div></div>
-                            <div class="form-group col-md-6"><h7>Имя</h7>
-                        <select class="form-control form-control-sm">
-                        </select></div></div>
-                        <div class="form-row">
                         <div class="form-group col-md-6">
-                            <h7>Ед. изм.</h7> <select class="form-control form-control-sm">
-                        </select></div><div class="form-group col-md-6">
+                            <h7>Имя</h7>
+                            <select class="form-control form-control-sm">
+                                <option value='0'>Наименование</option>
+                                <option value='1'>Штрихкод</option>
+                                <option value='2'>Оригинальное</option>
+                                <option value='3'>Локальное</option>
+                                <option value='4'>Транзитное</option>
+                            </select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <h7>Ед. изм.</h7>
+                            <select class="form-control form-control-sm">
+                            </select></div>
+                        <div class="form-group col-md-6">
                             <h7>Количество</h7>
                             <input type="number" class="form-control form-control-sm" id="date"/></div>
-                    </div>
+                    </div>{% endcomment %}
                     <div id="add_goods">
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="counterBtn" onclick="sendCounter()" class="btn btn-primary"
+                        <input value="Сохранить" id="counterBtn" onclick="saveDemand()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
@@ -232,7 +284,7 @@
                     </ul>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Выбрать"
-                               onclick="setNameId(tr.selected, inp);setGoodName(inp);$('#tree-div').modal('hide');"
+                               onclick="setGoodName(inp);$('#tree-div').modal('hide');"
                                id="selectBtn" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>

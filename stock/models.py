@@ -73,6 +73,21 @@ class Goods(models.Model):
         return self.model.name
     def get_name(self):
         return Good_name.objects.filter(product = self)[0].name
+    def get_name_type(self, t):
+        names = Good_name.objects.filter(product = self)[0]
+        if t == '0':
+            return names.name
+        else:
+            if t == '1':
+                return names.barcode
+            else:
+                if t == '2':
+                    return names.original
+                else:
+                    if t == '3':
+                        return names.local
+                    else:
+                        return names.transit
 
 class Good_name(models.Model):
     product = models.ForeignKey('Goods')
@@ -148,7 +163,10 @@ class Stock(models.Model):
     name = models.CharField(max_length=200)
     currency = models.ForeignKey('Currency', null=True)
     def __str__(self):
-        return self.name
+        if self is None:
+            return "-"
+        else:
+            return self.name
 
 class Base(models.Model):
     name = models.CharField(max_length=200)
@@ -164,26 +182,27 @@ class User(models.Model):
 
 class Demand(models.Model):
     STATUS_CHOICES = (
-        #('0', 'Отказ'),
-        #('1', 'Выполнение'),
-        #('2', 'Закрыт'),
+        ('0', 'Отказ'),
+        ('1', 'Выполнение'),
+        ('2', 'Закрыт'),
+        ('3', 'Не рассмотрено'),
     )
     date = models.DateField(auto_now_add=True)
     consumer = models.ForeignKey('Counterparty', related_name="consumer")
     provider = models.ForeignKey('Counterparty', related_name="provider")
-    donor = models.ForeignKey('Stock', related_name="donor")
-    acceptor = models.ForeignKey('Stock', related_name="acceptor")
-    is_closed = models.BooleanField()
+    donor = models.ForeignKey('Stock', related_name="donor", null=True)
+    acceptor = models.ForeignKey('Stock', related_name="acceptor", null=True)
+    is_closed = models.BooleanField(default=False)
     release_date = models.DateField(null=True)
     finish_date = models.DateField(null = True)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=20)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)
 
 class Demand_good(models.Model):
     demand = models.ForeignKey('Demand')
     good = models.ForeignKey('Goods')
-    name = models.ForeignKey('Good_name')
+    name = models.CharField(max_length=500)
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
     def __str__(self):

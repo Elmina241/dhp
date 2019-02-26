@@ -424,6 +424,39 @@ function saveModel() {
     });
 }
 
+function saveDemand() {
+    goods = {};
+    $("#add_goods").find(".good-item").each(function (item) {
+        goods[item] = {};
+        goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
+        goods[item]['name'] = $(this).find("select").eq(0).val();
+        obj = this.nextElementSibling;
+        goods[item]['unit'] = $(obj).find("select").eq(0).val();
+        goods[item]['num'] = $(obj).find("input").eq(0).prop("value");
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_demand/',
+        data: {
+            'consumer': $("#consumer").val(),
+            'provider': $("#provider").val(),
+            'donor': $("#donor").val(),
+            'acceptor': $("#acceptor").val(),
+            'date': $("#date").prop('value'),
+            'goods': JSON.stringify(goods)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function saveGood() {
     units = {};
     $("#units").find(".unit").each(function (item) {

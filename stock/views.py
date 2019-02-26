@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
+from .models import Default_number, Demand, Demand_good, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
     Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, \
     Model_group, Product_model
 from django.core import serializers
@@ -122,7 +122,10 @@ def requirements(request):
         goods.append(g.article + ' ' + g.name)
         goods_inf[i] = g.product.pk
         i = i + 1
-    return render(request, "requirements.html", {"header": "Требования", "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "counters": Counterparty.objects.all()})
+    units = {}
+    for u in Goods_unit.objects.all():
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+    return render(request, "requirements.html", {"header": "Требования", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(serializers.serialize("json", Counter_stock.objects.all())), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -309,6 +312,27 @@ def save_good(request):
                                       visible=props[p]['visible'], editable=props[p]['editable'],
                                       var=Property_var.objects.get(pk=props[p]['value']))
                         d.save()
+            return HttpResponse('ok')
+
+def save_demand(request):
+    if request.method == 'POST':
+        if 'date' in request.POST:
+            consumer = Counterparty.objects.get(pk=request.POST['consumer'])
+            provider = Counterparty.objects.get(pk=request.POST['provider'])
+            donor = None
+            acceptor = None
+            if request.POST['donor'] != '':
+                donor = Stock.objects.get(pk=request.POST['donor'])
+            if request.POST['acceptor'] != '':
+                acceptor = Stock.objects.get(pk=request.POST['acceptor'])
+            date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
+            goods = json.loads(request.POST['goods'])
+            demand = Demand(consumer=consumer, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
+            demand.save()
+            for g in goods:
+                good = Goods.objects.get(pk=goods[g]['product'])
+                d = Demand_good(demand=demand, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], name = good.get_name_type(goods[g]['name']))
+                d.save()
             return HttpResponse('ok')
 
 def edit_good(request):
