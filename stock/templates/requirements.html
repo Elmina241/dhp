@@ -8,7 +8,7 @@
         var tr = null;
         var goods = null;
         var units = null;
-        var stock = null;
+        var stocks = null;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
@@ -20,7 +20,7 @@
             tr = new GTree(tree, "goods");
             document.getElementById("1").click();
             units = JSON.parse($("#units").prop("value"));
-            stock = JSON.parse(JSON.parse($("#stock_data").prop("value")));
+            stocks = JSON.parse($("#stock_data").prop("value"));
             addGoodField();
         });
 
@@ -49,6 +49,25 @@
             }
             code = code + "</select>";
             select.innerHTML = code;
+        }
+
+        function getStocks(counter){
+            if (counter == 'donor'){
+                select = $("#donor");
+                id = $("#provider").val();
+            }
+            else {
+                select = $("#acceptor");
+                id = $("#consumer").val();
+            }
+            code = "";
+            for (s in stocks){
+                if (stocks[s].counter == id){
+                    code = code + "<option value='" + stocks[s].pk + "'>" + stocks[s].stock + "</option>";
+                }
+            }
+            $(select).html("");
+            $(code).appendTo(select);
         }
 
         function addGoodField() {
@@ -133,7 +152,8 @@
                             <td>{{ r.donor|default_if_none:"-" }}</td>
                             <td>{{ r.acceptor|default_if_none:"-" }}</td>
                             <td>{{ r.get_status_display }}</td>
-                            <td></td>
+                            <td><span style='font-size: 17px;'
+                          onclick=""><i class='fas fa-edit'></i></span></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -169,7 +189,7 @@
                 <div class="modal-body create-form">
                     <div class="form-row">
                         <div class="form-group col-md-6"><h6>Поставщик</h6>
-                            <select class="form-control" id="provider">
+                            <select class="form-control" id="provider" onchange="getStocks('donor')">
                                 {% for c in counters %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
                                 {% endfor %}
@@ -182,7 +202,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <h6>Потребитель</h6>
-                            <select class="form-control" id="consumer">
+                            <select class="form-control" id="consumer" onchange="getStocks('acceptor')">
                                 {% for c in counters %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
                                 {% endfor %}
@@ -198,40 +218,6 @@
                     <input type="date" class="form-control" id="date"/>
                     <hr>
                     <h6>Товары</h6>
-                    {% comment %}<div class="form-row good-item">
-                        <div class="form-group col-md-6">
-                            <h7>Товар</h7>
-                            <div class="form-inline">
-                                <div class="autocomplete" style="width:330px;">
-                                    <input id="myInput" style="width:330px;"
-                                           class="form-control form-control-sm goodInp"  type="text" name="myCountry">
-                                </div>
-                                <button class="btn btn-light"
-                                        onclick="inp = this.previousSibling.previousSibling.firstChild.nextSibling;"
-                                        data-toggle="modal" data-target="#tree-div"><span
-                                        style='font-size: 15px;' onclick=""><i class='fas fa-stream'></i></span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <h7>Имя</h7>
-                            <select class="form-control form-control-sm">
-                                <option value='0'>Наименование</option>
-                                <option value='1'>Штрихкод</option>
-                                <option value='2'>Оригинальное</option>
-                                <option value='3'>Локальное</option>
-                                <option value='4'>Транзитное</option>
-                            </select></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <h7>Ед. изм.</h7>
-                            <select class="form-control form-control-sm">
-                            </select></div>
-                        <div class="form-group col-md-6">
-                            <h7>Количество</h7>
-                            <input type="number" class="form-control form-control-sm" id="date"/></div>
-                    </div>{% endcomment %}
                     <div id="add_goods">
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'

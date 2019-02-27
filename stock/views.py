@@ -125,7 +125,10 @@ def requirements(request):
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
-    return render(request, "requirements.html", {"header": "Требования", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(serializers.serialize("json", Counter_stock.objects.all())), "counters": Counterparty.objects.all()})
+    stocks = {}
+    for s in Counter_stock.objects.all():
+        stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
+    return render(request, "requirements.html", {"header": "Требования", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
