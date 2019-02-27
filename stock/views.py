@@ -188,6 +188,16 @@ def get_model_inf(request):
             data["props"] = props
             return HttpResponse(json.dumps(data))
 
+def get_demand_goods(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            demand = Demand.objects.get(pk=request.POST['id'])
+            data = {}
+            for d in Demand_good.objects.filter(demand=demand):
+                b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
+                data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit), 'balance': d.balance}
+            return HttpResponse(json.dumps(data))
+
 
 def get_good_inf(request):
     if request.method == 'POST':
@@ -331,7 +341,7 @@ def save_demand(request):
             demand.save()
             for g in goods:
                 good = Goods.objects.get(pk=goods[g]['product'])
-                d = Demand_good(demand=demand, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], name = good.get_name_type(goods[g]['name']))
+                d = Demand_good(demand=demand, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name_type(goods[g]['name']))
                 d.save()
             return HttpResponse('ok')
 

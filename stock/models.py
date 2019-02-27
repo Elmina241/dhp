@@ -205,6 +205,7 @@ class Demand_good(models.Model):
     name = models.CharField(max_length=500)
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
+    balance = models.IntegerField(default=0)
     def __str__(self):
         return str(self.demand) + ' ' + str(self.good)
 

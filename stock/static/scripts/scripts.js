@@ -999,3 +999,23 @@ function addGBranch(code, branch) {
     code = code + "</li>";
     return code;
 }
+
+function getDemandGoods(id){
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'get_demand_goods/',
+        data: {
+            'id': id
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            //$("#goods-body").html("");
+            addRows("goods-body", data);
+        }
+    });
+}

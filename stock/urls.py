@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^props/$', views.props, name='props'),
     url(r'^requirements/$', views.requirements, name='requirements'),
     url(r'^requirements/save_demand/$', views.save_demand, name='save_demand'),
+    url(r'^requirements/get_demand_goods/$', views.get_demand_goods, name='get_demand_goods'),
     url(r'^counterparties/$', views.counterparties, name='counterparties'),
     url(r'^counterparties/send_counter/$', views.send_counter, name='send_counter'),
     url(r'^counterparties/del_counter/$', views.del_counter, name='del_counter'),
