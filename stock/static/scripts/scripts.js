@@ -332,7 +332,7 @@ function addRows(table, data) {
 
 
 function addBranch(code, branch) {
-    menu = "<span style='font-size: 15px; color: yellowgreen;' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue;' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red;' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+    menu = "<span style='font-size: 15px; color: yellowgreen; display: none' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue; display: none' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red; display: none' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
     code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + menu + "</span>";
     if (branch["nodes"] != undefined) {
         code = code + "<ul>";
@@ -663,6 +663,13 @@ function Tree(tree, t) {
 
     this.init();
     this.updEvent();
+    $("#tree li").each(function (event) {
+            id = $(this).prop("id");
+            $("#a" + id).hide();
+            $("#e" + id).hide();
+            $("#d" + id).hide();
+            //event.stopPropagation();
+        });
     $("#tree li").click(function (event) {
         id = $(this).prop("id");
         self.selected = id;
@@ -1016,6 +1023,8 @@ function getDemandGoods(id){
         success: function onAjaxSuccess(data) {
             //$("#goods-body").html("");
             addRows("goods-body", data);
+            $(".table-info").removeClass("table-info");
+            $("#l-"+id).addClass("table-info");
         }
     });
 }
