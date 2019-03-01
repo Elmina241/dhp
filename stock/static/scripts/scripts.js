@@ -1023,8 +1023,8 @@ function getDemandGoods(id){
         success: function onAjaxSuccess(data) {
             //$("#goods-body").html("");
             addRows("goods-body", data);
-            $(".table-info").removeClass("table-info");
-            $("#l-"+id).addClass("table-info");
+            $(".table-selected").removeClass("table-selected");
+            $("#l-"+id).addClass("table-selected");
         }
     });
 }

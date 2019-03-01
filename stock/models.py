@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 
 #Классы модели МЦ
 class Product_model(models.Model):
@@ -208,4 +208,36 @@ class Demand_good(models.Model):
     balance = models.IntegerField(default=0)
     def __str__(self):
         return str(self.demand) + ' ' + str(self.good)
+
+class Stock_operation(models.Model):
+    OPERATION_CHOICES = (
+        ('0', 'Приход'),
+        ('1', 'Расход'),
+        ('2', 'Коррекция'),
+    )
+    CAUSE_CHOICES = (
+        ('0', 'Перемещение'),
+        ('1', 'Оприходование'),
+        ('2', 'Выбытие'),
+        ('3', 'Инвентаризация'),
+    )
+    stock = models.ForeignKey('Stock')
+    good = models.ForeignKey('Goods')
+    operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
+    date = models.DateTimeField(auto_now_add=True, blank=True)
+    cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
+    unit = models.ForeignKey('tables.Unit')
+    amount = models.IntegerField(default=0)
+    cost = models.FloatField(default=0)
+    def __str__(self):
+        return str(self.stock) + ' ' + str(self.good)
+
+class Stock_good(models.Model):
+    stock = models.ForeignKey('Stock')
+    good = models.ForeignKey('Goods')
+    unit = models.ForeignKey('tables.Unit')
+    amount = models.IntegerField(default=0)
+    cost = models.FloatField(default=0)
+    def __str__(self):
+        return str(self.stock) + ' ' + str(self.good)
 
