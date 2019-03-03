@@ -9,6 +9,7 @@
         var goods = null;
         var units = null;
         var stocks = null;
+        var reqInfo = {};
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
@@ -192,7 +193,7 @@
 
 
                     </div>
-                                <button class="btn btn-info" >Получить поставку</button>
+                                <button class="btn btn-info" onclick="openSupply({{ r.pk }})">Получить поставку</button>
 
                             </div></td></tr>
                         {% endfor %}
@@ -333,8 +334,6 @@
                 <tr>
                     <th scope="col">Артикул</th>
                     <th scope="col">Наименование</th>
-                    <th scope="col">Кол-во операционное</th>
-                    <th scope="col">Ед. изм. операционная</th>
                     <th scope="col">Поставка, кол-во</th>
                 </tr>
                 </thead>
@@ -342,7 +341,7 @@
                 </tbody>
             </table>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Выбрать"
+                        <input value="Оформить"
                                onclick=""
                                id="supplyBtn" class="btn btn-primary"
                                style="float: right"/></div>

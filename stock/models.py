@@ -221,16 +221,19 @@ class Stock_operation(models.Model):
         ('2', 'Выбытие'),
         ('3', 'Инвентаризация'),
     )
-    stock = models.ForeignKey('Stock')
+    stock = models.ForeignKey('Stock', blank=True, null=True)
     good = models.ForeignKey('Goods')
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
     date = models.DateTimeField(auto_now_add=True, blank=True)
     cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
+    cause_id = models.IntegerField(default=0)
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
-    cost = models.FloatField(default=0)
+    cost = models.FloatField(default=0, blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.good)
+    def get_good_name(self):
+        return Demand_good.objects.filter(demand__pk = self.cause_id, good = self.good)[0].name
 
 class Stock_good(models.Model):
     stock = models.ForeignKey('Stock')

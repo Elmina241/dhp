@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Demand, Demand_good, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
+from .models import Default_number, Stock_operation, Demand, Demand_good, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
     Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, \
     Model_group, Product_model
 from django.core import serializers
@@ -200,6 +200,29 @@ def get_demand_goods(request):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
                 data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit), 'balance': d.balance}
             return HttpResponse(json.dumps(data))
+
+def save_stock_operation(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            demand = Demand.objects.get(pk=request.POST['id'])
+            goods = json.loads(request.POST['goods'])
+            for g in goods:
+                good_d = Demand_good.objects.get(pk = goods[g]['id'])
+                s = Stock_operation(
+                    stock = demand.acceptor,
+                    good = good_d.good,
+                    operation = request.POST['operation'],
+                    cause_id = request.POST['id'],
+                    cause = request.POST['cause'],
+                    unit = good_d.unit,
+                    amount = goods[g]['amount']
+                )
+                s.save()
+                #добавление информации в склад
+            return HttpResponse('ok')
+
+def stock_operations(request):
+    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": Stock_operation.objects.all()})
 
 
 def get_good_inf(request):

@@ -198,9 +198,9 @@ function getInf(id) {
 
             }
             $("#editBtn").unbind('click');
-        $("#editBtn").click(function () {
-            editModel(id);
-        });
+            $("#editBtn").click(function () {
+                editModel(id);
+            });
             $("#inf_model").modal();
 
         }
@@ -245,14 +245,14 @@ function getGoodInf(id) {
                 code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + inf['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(inf['props'][p]['type'], inf['props'][p]['value'], inf['props'][p]['choises']) + "</div></div>";
             }
             $(code).appendTo("#e_props");
-            $("#e_props").find(".prop").each(function(item){
+            $("#e_props").find(".prop").each(function (item) {
                 id = $(this).prop("id");
                 $(this).find("input").eq(0).prop("disabled", !inf.props[id].editable);
             });
             $("#editBtn").unbind('click');
-        $("#editBtn").click(function () {
-            editGood(id);
-        });
+            $("#editBtn").click(function () {
+                editGood(id);
+            });
             $("#inf_good").modal();
 
         }
@@ -664,12 +664,12 @@ function Tree(tree, t) {
     this.init();
     this.updEvent();
     $("#tree li").each(function (event) {
-            id = $(this).prop("id");
-            $("#a" + id).hide();
-            $("#e" + id).hide();
-            $("#d" + id).hide();
-            //event.stopPropagation();
-        });
+        id = $(this).prop("id");
+        $("#a" + id).hide();
+        $("#e" + id).hide();
+        $("#d" + id).hide();
+        //event.stopPropagation();
+    });
     $("#tree li").click(function (event) {
         id = $(this).prop("id");
         self.selected = id;
@@ -683,21 +683,21 @@ function Tree(tree, t) {
 }
 
 function changeGroup(t) {
-    if (t == "goods"){
+    if (t == "goods") {
         data = goods;
-        gInf = function (id){
+        gInf = function (id) {
             getGoodInf(id);
         };
-        delObj = function (obj){
+        delObj = function (obj) {
             delGood(obj);
         }
     }
     else {
         data = models;
-        gInf = function (id){
+        gInf = function (id) {
             getInf(id);
         };
-        delObj = function (obj){
+        delObj = function (obj) {
             delModel(obj);
         }
     }
@@ -903,20 +903,20 @@ function Property(data) {
     }
 }
 
-function getModelInfo(){
+function getModelInfo() {
     var code = "";
     id = $("#model").val();
     $("#units").html("");
     $("#props").html("");
     //получение единиц измерения
-    for (u in models[id]['units']){
+    for (u in models[id]['units']) {
         code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el'/></div></div>";
         code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
     //получение свойств
     code = "";
-    for (p in models[id]['props']){
+    for (p in models[id]['props']) {
         if (!models[id]['props'][p]['visible']) checkedV = "checked";
         else checkedV = "";
         if (!models[id]['props'][p]['editable']) checkedE = "checked";
@@ -927,9 +927,9 @@ function getModelInfo(){
     $(code).appendTo("#props");
 }
 
-function getPropCode(t, value = "", choises = null){
+function getPropCode(t, value = "", choises = null) {
     var code = "";
-    switch (t){
+    switch (t) {
         case 0:
             code = "<input type='number' class='form-control inline-el value' value='" + value + "'/>";
             break;
@@ -938,11 +938,11 @@ function getPropCode(t, value = "", choises = null){
             break;
         case 2:
             code = "<select class='form-control inline-el value'>";
-            for (c in choises){
-                if (c == value){
-                    code = code + "<option value='" + c +"' selected>" + choises[c] + "</option>";
+            for (c in choises) {
+                if (c == value) {
+                    code = code + "<option value='" + c + "' selected>" + choises[c] + "</option>";
                 }
-                else code = code + "<option value='" + c +"'>" + choises[c] + "</option>";
+                else code = code + "<option value='" + c + "'>" + choises[c] + "</option>";
             }
             code = code + "</select>";
             break;
@@ -950,8 +950,8 @@ function getPropCode(t, value = "", choises = null){
     return code;
 }
 
-function openClose(obj, arrow){
-    $("#"+obj).toggle();
+function openClose(obj, arrow) {
+    $("#" + obj).toggle();
     $(arrow).toggleClass("fa-angle-up fa-angle-down");
 }
 
@@ -983,7 +983,7 @@ function GTree(tree, t) {
         obj = $(this).children("span");
         $(this).children("span").eq(0).addClass('active');
         $("#group option[value=" + id + "]").prop('selected', true);
-        if (id[0] == 'g'){
+        if (id[0] == 'g') {
             $("#selectBtn").prop("disabled", false);
             self.selected = id.substring(2);
         }
@@ -1007,7 +1007,7 @@ function addGBranch(code, branch) {
     return code;
 }
 
-function getDemandGoods(id){
+function getDemandGoods(id) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -1023,8 +1023,54 @@ function getDemandGoods(id){
         success: function onAjaxSuccess(data) {
             //$("#goods-body").html("");
             addRows("goods-body", data);
+            reqInfo[id] = {};
+            var rows = JSON.parse(data);
+            for (r in rows) {
+                reqInfo[id][r] = {
+                    id: r,
+                    article: rows[r]['article'],
+                    name: rows[r]['name'],
+                    amount: rows[r]['balance']
+                }
+            }
             $(".table-selected").removeClass("table-selected");
-            $("#l-"+id).addClass("table-selected");
+            $("#l-" + id).addClass("table-selected");
         }
+    });
+}
+
+function openSupply(id) {
+    code = "";
+    for (r in reqInfo[id]) {
+        code = code + "<tr id=" + r + "><td>" + reqInfo[id][r].article + "</td><td>" + reqInfo[id][r].name + "</td><td><input type='number' class='form-control' value=" + reqInfo[id][r].amount + " /></td></tr>";
+    }
+    $("#supply-body").html(code);
+    $("#supply").modal();
+    $("#supplyBtn").unbind('click');
+    $("#supplyBtn").click(function () {
+        var csrftoken = getCookie('csrftoken');
+        goods = {};
+        $("#supply-body").find("tr").each(function (item) {
+            i = $(this).prop('id');
+            if ($(this).find('input').eq(0).prop("value") != null) goods[i] = {"id": i, "amount": $(this).find('input').eq(0).prop("value")};
+        });
+        $.ajax({
+            type: "POST",
+            url: 'save_stock_operation/',
+            data: {
+                'id': id,
+                'operation': 0,
+                'cause': 1,
+                'goods': JSON.stringify(goods)
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+
+            }
+        });
     });
 }
