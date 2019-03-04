@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Stock_operation, Demand, Demand_good, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
+from .models import Default_number, Stock_good, Stock_operation, Demand, Demand_good, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
     Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, \
     Model_group, Product_model
 from django.core import serializers
@@ -27,6 +27,19 @@ def goods_models(request):
                    "groups": Model_group.objects.exclude(pk=0),
                    "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
+def stocks(request):
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children(g, tree[0])
+    goods_json = {}
+    for m in Goods.objects.all():
+        names = Good_name.objects.filter(product=m)[0]
+        goods_json[str(m.pk)] = {"id": m.pk, "name": names.name, "article": names.article, "group": m.model.group.pk}
+    return render(request, "stocks.html",
+                  {"header": "Склад", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
+                   "models": Product_model.objects.all(), "stocks": Stock.objects.all(),
+                   "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
 
 def goods(request):
     tree = {}
@@ -218,7 +231,16 @@ def save_stock_operation(request):
                     amount = goods[g]['amount']
                 )
                 s.save()
+                good_d.balance = good_d.balance - int(goods[g]['amount'])
+                good_d.save()
                 #добавление информации в склад
+                if Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good).count() == 0:
+                    rec = Stock_good(stock = demand.acceptor, good = good_d.good, unit = Goods_unit.objects.filter(product = good_d.good, isBase = True)[0].unit, amount = Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount']))
+                    rec.save()
+                else:
+                    rec = Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good)[0]
+                    rec.amount = rec.amount + Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
+                    rec.save()
             return HttpResponse('ok')
 
 def stock_operations(request):

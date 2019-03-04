@@ -1,0 +1,91 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <script>
+        var tr = null;
+        var tree = {};
+        var goods = null;
+        $(document).ready(function () {
+            tree = JSON.parse($("#tree_data").prop("value"));
+            goods = JSON.parse($("#goods_json").prop("value"));
+            /*units = JSON.parse(JSON.parse($("#units").prop("value")));
+            //var goods = JSON.parse($("#goods_data").prop("value"));*/
+            tr = new Tree(tree, "stocks");
+            //addUnit();
+            //addProp();
+            document.getElementById("1").click();
+        });
+
+    </script>
+    {% if tree %}
+        <input id="tree_data" value="{{ tree }}" hidden>
+    {% else %}
+        <input id="tree_data"
+               value="[{&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;: {&quot;1&quot;: {&quot;name&quot;:&quot;Main&quot;, &quot;id&quot;: 0, &quot;nodes&quot;:{}}}}]"
+               hidden>
+    {% endif %}
+    <input id="goods_data" value="{{ goods }}" hidden>
+    <input value="{{ goods_json }}" id="goods_json" hidden/>
+    <input value="{{ prop_vars }}" id="prop_vars" hidden/>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="left-column goods-tree-container">
+
+                <div class="card">
+                    <div class="card-header" style="height: 62px">
+                        <h5>Группы</h5>
+                    </div>
+                    <ul id="tree" class="goods_tree">
+
+                    </ul>
+
+                </div>
+
+
+            </div>
+            <div class="right-column">
+
+                <div class="card" style="margin-left: 30px;margin-right: 30px;">
+                    <div class="card-header">
+                        <div class="filter">
+                            <div class="form-inline">
+                                <select class="form-control">
+                                    {% for s in stocks %}
+                                        <option value="{{ s.pk }}">{{ s.name }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <div class="form-inline" style="position: absolute; right: 0">
+                                    <lable for="filter" class="col-form-label">Поиск</lable>
+                                    <input type="search" class="form-control col-sm-9"
+                                           style="margin-left:10px;width:300px" id="filter"
+                                           oninput="searchGood($(this).prop('value'));"/>
+                                    <img src="{% static "img/spinner.gif" %}" id="loader"
+                                         style="width: 30px; display:none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods_table">
+                        <table class="table table-bordered">
+                            <thead class="thead">
+                            <tr>
+                                <th scope="col">Код</th>
+                                <th scope="col">Название</th>
+                                <th scope="col">Учётная ед. изм.</th>
+                                <th scope="col">Количество</th>
+                                <th scope="col">Учётная цена</th>
+                            </tr>
+                            </thead>
+                            <tbody id="goods-body">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

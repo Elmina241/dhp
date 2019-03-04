@@ -6,6 +6,7 @@ app_name = 'stock'
 urlpatterns = [
     url(r'^goods_models/$', views.goods_models, name='goods_models'),
     url(r'^goods/$', views.goods, name='goods'),
+    url(r'^stocks/$', views.stocks, name='stocks'),
     url(r'^stock_operations/$', views.stock_operations, name='stock_operations'),
     url(r'^goods/save_good/$', views.save_good, name='save_good'),
     url(r'^goods/edit_good/$', views.edit_good, name='edit_good'),

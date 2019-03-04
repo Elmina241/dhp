@@ -240,7 +240,7 @@ class Stock_good(models.Model):
     good = models.ForeignKey('Goods')
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
-    cost = models.FloatField(default=0)
+    cost = models.FloatField(default=0, blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.good)
 
