@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^props/send_prop/$', views.send_prop, name='send_prop'),
     url(r'^props/edit_prop/$', views.edit_prop, name='edit_prop'),
     url(r'^props/del_prop/$', views.del_prop, name='del_prop'),
+    url(r'^requirements/save_status/$', views.save_status, name='save_status'),
 ]

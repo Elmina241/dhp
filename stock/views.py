@@ -141,7 +141,7 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"header": "Требования", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "requirements.html", {"header": "Перемещение", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -515,6 +515,14 @@ def del_prop(request):
     if request.method == 'POST':
         Property.objects.get(pk=request.POST['id']).delete()
         return HttpResponse("ok")
+
+def save_status(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            d = Demand.objects.get(pk = request.POST['id'])
+            d.status = request.POST['status']
+            d.save()
+            return HttpResponse('ok')
 
 def edit_prop(request):
     if request.method == 'POST':

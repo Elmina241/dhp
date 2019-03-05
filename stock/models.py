@@ -185,7 +185,7 @@ class Demand(models.Model):
         ('0', 'Отказ'),
         ('1', 'Выполнение'),
         ('2', 'Закрыт'),
-        ('3', 'Не рассмотрено'),
+        ('3', 'Запрос'),
     )
     date = models.DateField(auto_now_add=True)
     consumer = models.ForeignKey('Counterparty', related_name="consumer")

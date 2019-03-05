@@ -54,15 +54,17 @@
 
         function changeStatus(obj){
             select = obj.parentElement.previousElementSibling;
-            code = "<div class='form-inline'><select class='form-control form-control-sm'><option value='0'>Не рассмотренно</option><option value='1'>Выполнение</option><option value='2'>Отказано</option></select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
+            text = $(select).text();
+            code = "<div class='form-inline'><select class='form-control form-control-sm'><option value='3'>Запрос</option><option value='1'>Выполнение</option><option value='0'>Отказ</option></select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
                 "onclick='saveStatus(this.previousElementSibling)'><i class='fas fa-check'></i></span></div>";
             select.innerHTML = code;
+            $("option:contains('"+ text +"')", select.firstElementChild.firstElementChild).prop("selected", true);
         }
 
-        function saveStatus(obj){
+        /*function saveStatus(obj){
             obj.parentElement.parentElement.innerHTML = $("option:selected", obj).text();
             //
-        }
+        }*/
 
         function openInf(id, obj){
             $("#add-" + id).toggle();
@@ -138,7 +140,7 @@
                 <div class="filter">
                     <div class="form-inline">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_req">
-                            Добавить требование
+                            Добавить перемещение
                         </button>
 
                         <div class="form-inline" style="position: absolute; right: 0">

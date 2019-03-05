@@ -1074,3 +1074,26 @@ function openSupply(id) {
         });
     });
 }
+
+function saveStatus(obj) {
+        status = $("option:selected", obj).val();
+        id = obj.parentElement.parentElement.parentElement.id.substr(2);
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_status/',
+            data: {
+                'id': id,
+                'status': status
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                obj.parentElement.parentElement.innerHTML = $("option:selected", obj).text();
+
+            }
+        });
+}
