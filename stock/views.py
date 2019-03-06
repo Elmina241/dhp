@@ -244,7 +244,13 @@ def save_stock_operation(request):
             return HttpResponse('ok')
 
 def stock_operations(request):
-    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": Stock_operation.objects.all()})
+    operations = {}
+    for s in Stock_operation.objects.all():
+        id = str(s.cause) + '_' + str(s.cause_id)
+        if id not in operations:
+            operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "stock": str(s.stock), "cause": s.get_cause_display()}
+        operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
+    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations)})
 
 
 def get_good_inf(request):

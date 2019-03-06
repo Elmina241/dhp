@@ -2,14 +2,24 @@
 {% block content %}
     {% load staticfiles %}
     <script>
-
+        var operations = null;
         $(document).ready(function () {
-
+            operations = JSON.parse($("#operations_json").prop("value"));
         });
+
+        function getOperationGoods(id){
+            code = "";
+            for (row in operations[id]){
+                if (!isNaN(row)) code = code + "<tr><td>" + operations[id][row]["article"] + "</td><td>" + operations[id][row]["name"] + "</td><td>" + operations[id][row]["amount"] +"</td><td>" + operations[id][row]["unit"] +"</td><td>" + operations[id][row]["cost"] + "</td></tr>";
+            }
+            $("#goods-body").html(code);
+            $(".table-selected").removeClass("table-selected");
+            $("#"+id).addClass("table-selected");
+        }
 
     </script>
     <div class="container-fluid">
-
+        <input id="operations_json" value="{{ operations_json }}" hidden>
         <div class="card" style="margin-left: 30px;margin-right: 30px;" >
             <div class="card-header">
                 <div class="filter">
@@ -35,29 +45,37 @@
                     <thead class="thead-light">
                     <tr>
                         <th scope="col">Дата</th>
-                        <th scope="col">Номер</th>
-                        <th scope="col">Товар</th>
                         <th scope="col">Основание</th>
-                        <th scope="col">Учётная ед. изм.</th>
-                        <th scope="col">Кол-во</th>
-                        <th scope="col">Стоимость</th>
+                        <th scope="col">Склад</th>
                     </tr>
                     </thead>
                     <tbody id="req-body">
-                        {% for o in operations %}
-                            <tr id="{{ o.pk }}">
-                                <td>{{ o.date|date:"d.m.Y" }}</td>
-                            <td>{{ o.pk }}</td>
-                            <td>{{ o.get_good_name }}</td>
-                            <td>{{ o.get_cause_display }}</td>
-                            <td>{{ o.unit }}</td>
-                            <td>{{ o.amount }}</td>
-                            <td>{{ o.cost }}</td>
+                        {% for key, values in operations.items %}
+                            <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
+                                <td>{{ values.date }}</td>
+                            <td>{{ values.cause }}</td>
+                            <td>{{ values.stock|default_if_none:"-" }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+
+        </div>
+    <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Артикул</th>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Кол-во</th>
+                    <th scope="col">Ед. изм. операционная</th>
+                    <th scope="col">Цена</th>
+                </tr>
+                </thead>
+                <tbody id="goods-body">
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock content %}

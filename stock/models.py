@@ -73,6 +73,8 @@ class Goods(models.Model):
         return self.model.name
     def get_name(self):
         return Good_name.objects.filter(product = self)[0].name
+    def get_article(self):
+        return Good_name.objects.filter(product = self)[0].article
     def get_name_type(self, t):
         names = Good_name.objects.filter(product = self)[0]
         if t == '0':
