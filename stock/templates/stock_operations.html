@@ -17,6 +17,19 @@
             $("#"+id).addClass("table-selected");
         }
 
+        function changeOperGroup(group){
+            code = "";
+            for (row in operations){
+                if (operations[row]['cause'] == group || group == "Все операции"){
+                    code = code + "<tr id="+ row +" onclick=\"getOperationGoods('" + row +"')\"><td>" + operations[row]['date'] + "</td><td>"+ operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td></tr>";
+                }
+            }
+            if (code == "") code = "<tr><td colspan=3 align='center'>Нет записей</td></tr>";
+            goods = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
+            $("#goods-body").html(goods);
+            $("#op-body").html(code);
+        }
+
     </script>
     <div class="container-fluid">
         <input id="operations_json" value="{{ operations_json }}" hidden>
@@ -24,17 +37,26 @@
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#add_req">
+                        <button type="button" class="btn btn-success inline-el" data-toggle="modal" data-target="#add_req">
+                            Поставка
+                        </button>
+                        <button type="button" class="btn btn-danger inline-el" data-toggle="modal" data-target="#add_req">
                             Выбытие
                         </button>
                         <button type="button" class="btn btn-warning inline-el" data-toggle="modal" data-target="#add_req">
                             Инвентаризация
                         </button>
                         <div class="form-inline" style="position: absolute; right: 0">
-                            <lable for="filter" class="col-form-label">Поиск</lable>
-                            <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px"
+                            <lable for="filter" class="col-form-label">Фильтр</lable>
+                            <select class="form-control col-sm-9" style="margin-left:10px;width:300px"
                                    id="filter"
-                                   onchange=""/>
+                                   onchange="changeOperGroup($('option:selected', this).text())">
+                                <option value="0">Все операции</option>
+                                <option value="1">Перемещение</option>
+                                <option value="2">Оприходование</option>
+                                <option value="3">Выбытие</option>
+                                <option value="4">Инвентаризация</option>
+                            </select>
                             <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
                         </div>
                     </div>
@@ -49,7 +71,7 @@
                         <th scope="col">Склад</th>
                     </tr>
                     </thead>
-                    <tbody id="req-body">
+                    <tbody id="op-body">
                         {% for key, values in operations.items %}
                             <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
                                 <td>{{ values.date }}</td>
@@ -74,6 +96,7 @@
                 </tr>
                 </thead>
                 <tbody id="goods-body">
+                    <tr><td colspan=5 align='center'>Нет записей</td></tr>
                 </tbody>
             </table>
         </div>
