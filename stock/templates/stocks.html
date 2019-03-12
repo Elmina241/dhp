@@ -10,7 +10,7 @@
             goods = JSON.parse($("#goods_json").prop("value"));
             /*units = JSON.parse(JSON.parse($("#units").prop("value")));
             //var goods = JSON.parse($("#goods_data").prop("value"));*/
-            tr = new Tree(tree, "stocks");
+            tr = new STree(tree);
             //addUnit();
             //addProp();
             document.getElementById("1").click();
@@ -49,7 +49,7 @@
                     <div class="card-header">
                         <div class="filter">
                             <div class="form-inline">
-                                <select class="form-control">
+                                <select class="form-control" id="stock" onchange="tr.changeStockGroup()">
                                     {% for s in stocks %}
                                         <option value="{{ s.pk }}">{{ s.name }}</option>
                                     {% endfor %}

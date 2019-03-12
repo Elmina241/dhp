@@ -33,9 +33,14 @@ def stocks(request):
     g = Model_group.objects.all().first()
     add_children(g, tree[0])
     goods_json = {}
-    for m in Goods.objects.all():
-        names = Good_name.objects.filter(product=m)[0]
-        goods_json[str(m.pk)] = {"id": m.pk, "name": names.name, "article": names.article, "group": m.model.group.pk}
+    for g in Model_group.objects.all():
+        if str(g.pk) not in goods_json:
+            goods_json[str(g.pk)] = {}
+        for s in Stock.objects.all():
+            if str(s.pk) not in goods_json[str(g.pk)]:
+                goods_json[str(g.pk)][str(s.pk)] = {}
+            for r in Stock_good.objects.filter(stock = s, good__model__group = g):
+                goods_json[str(g.pk)][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(),"name": r.good.get_name(), "amount": r.amount, "unit": str(r.unit), "cost": r.cost}
     return render(request, "stocks.html",
                   {"header": "Склад", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
                    "models": Product_model.objects.all(), "stocks": Stock.objects.all(),

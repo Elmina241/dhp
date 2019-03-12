@@ -994,6 +994,47 @@ function GTree(tree, t) {
     });
 }
 
+function STree(tree) {
+    this.tree = tree;
+    this.selected = 1;
+    var self = this;
+    this.init = function () {
+        $('#tree').html("");
+        this.makeTree();
+        $('#tree').treed({openedClass: 'fa-folder-open', closedClass: 'fa-folder'});
+        $("#tree li").click(function (event) {
+            event.stopPropagation();
+        });
+    };
+
+    this.makeTree = function () {
+        code = "";
+        code = code + addGBranch(code, this.tree[0]["nodes"][1]);
+        $(code).appendTo("#tree");
+    };
+
+    this.init();
+    $("#tree li").click(function (event) {
+        id = $(this).prop("id");
+        self.selected = id;
+        $("#tree span").removeClass('active');
+        obj = $(this).children("span");
+        $(this).children("span").eq(0).addClass('active');
+        self.changeStockGroup();
+        //event.stopPropagation();
+    });
+
+    this.changeStockGroup = function() {
+        stock = $("#stock").val();
+        code = "";
+        for (r in goods[self.selected][stock]){
+            code = code + "<tr><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+        }
+        if (code == "") code = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
+        $("#goods-body").html(code);
+    }
+}
+
 function addGBranch(code, branch) {
     code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + "</span>";
     if (branch["nodes"] != undefined) {
