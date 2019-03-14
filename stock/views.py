@@ -167,6 +167,11 @@ def send_prop(request):
                         p.save()
             return HttpResponse('ok')
 
+def get_prod_info(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            return HttpResponse('ok')
+
 
 def send_counter(request):
     if request.method == 'POST':

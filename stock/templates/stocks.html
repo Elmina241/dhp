@@ -48,8 +48,8 @@
                 <div class="card" style="margin-left: 30px;margin-right: 30px;">
                     <div class="card-header">
                         <div class="filter">
-                            <div class="form-inline">
-                                <select class="form-control" id="stock" onchange="tr.changeStockGroup()">
+                            <div class="form-inline">Склад
+                                <select class="form-control inline-el" id="stock" onchange="tr.changeStockGroup()">
                                     {% for s in stocks %}
                                         <option value="{{ s.pk }}">{{ s.name }}</option>
                                     {% endfor %}
@@ -70,6 +70,7 @@
                         <table class="table table-bordered">
                             <thead class="thead">
                             <tr>
+                                <th></th>
                                 <th scope="col">Код</th>
                                 <th scope="col">Название</th>
                                 <th scope="col">Учётная ед. изм.</th>

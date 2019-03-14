@@ -1028,7 +1028,8 @@ function STree(tree) {
         stock = $("#stock").val();
         code = "";
         for (r in goods[self.selected][stock]){
-            code = code + "<tr><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+            code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
+                "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
         }
         if (code == "") code = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
         $("#goods-body").html(code);
@@ -1046,6 +1047,73 @@ function addGBranch(code, branch) {
     }
     code = code + "</li>";
     return code;
+}
+
+function openGood(id, obj) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'get_prod_info/',
+        data: {
+            'id': id
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            names =  " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
+                "<div class=\"form-row\">\n" +
+                "                        <div class=\"form-group col-md-6\">\n" +
+                "                            <h9>Артикул</h9>\n" +
+                "                            <h8>Артикул</h8>\n" +
+                "                        </div>\n" +
+                "                        <div class=\"form-group col-md-6\">\n" +
+                "                            <h9>Наименование</h9>\n" +
+                "                            <h8>Артикул</h8>\n" +
+                "                        </div>\n" +
+                "                    </div>\n" +
+                "\n" +
+                "                    <div class=\"form-row\">\n" +
+                "                        <div class=\"form-group col-md-6\">\n" +
+                "                            <h9>Штрихкод</h9>\n" +
+                "                            <h8>Артикул</h8>\n" +
+                "                        </div>\n" +
+                "                        <div class=\"form-group col-md-6\">\n" +
+                "                            <h9>Оригинальное</h9>\n" +
+                "                            <h8>Артикул</h8>\n" +
+                "                        </div>\n" +
+                "                    </div>\n" +
+                "                    <div class=\"form-row\">\n" +
+                "                        <div class=\"form-group col-md-6\">\n" +
+                "                            <h9>Локальное</h9>\n" +
+                "                            <h8>Артикул</h8>\n" +
+                "                        </div>\n" +
+                "                        <div class=\"form-group col-md-6\">\n" +
+                "                            <h9>Транзитное</h9>\n" +
+                "                            <h8>Артикул</h8>\n" +
+                "                        </div>\n" +
+                "                    </div></div>";
+            code = "<tr><td colspan='6'><div class='add-info-good'>" +
+                "<ul class=\"nav nav-tabs\" id=\"myTab\" role=\"tablist\">\n" +
+                "  <li class=\"nav-item\">\n" +
+                "    <a class=\"nav-link active\" id=\"names-tab\" data-toggle=\"tab\" href=\"#names\" role=\"tab\" aria-controls=\"home\" aria-selected=\"true\">Имена</a>\n" +
+                "  </li>" +
+                "<li class=\"nav-item\">\n" +
+                "    <a class=\"nav-link\" id=\"profile-tab\" data-toggle=\"tab\" href=\"#profile\" role=\"tab\" aria-controls=\"profile\" aria-selected=\"false\">Единицы измерения</a>\n" +
+                "  </li><li class=\"nav-item\">\n" +
+                "    <a class=\"nav-link\" id=\"profile-tab\" data-toggle=\"tab\" href=\"#profile\" role=\"tab\" aria-controls=\"profile\" aria-selected=\"false\">Поступления/Отпуски</a>\n" +
+                "  </li><li class=\"nav-item\">\n" +
+                "    <a class=\"nav-link\" id=\"profile-tab\" data-toggle=\"tab\" href=\"#profile\" role=\"tab\" aria-controls=\"profile\" aria-selected=\"false\">Приходы/Расходы</a>\n" +
+                "  </li></ul>\n" +
+                "<div class=\"tab-content\" id=\"myTabContent\">\n" + names +
+                "  <div class=\"tab-pane fade\" id=\"profile\" role=\"tabpanel\" aria-labelledby=\"profile-tab\">...</div>\n" +
+                "  <div class=\"tab-pane fade\" id=\"contact\" role=\"tabpanel\" aria-labelledby=\"contact-tab\">...</div>\n" +
+                "</div></div></tr>";
+            $(obj.parentElement.parentElement).after(code);
+        }
+    });
 }
 
 function getDemandGoods(id) {

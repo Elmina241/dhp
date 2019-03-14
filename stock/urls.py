@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^goods/del_good/$', views.del_good, name='del_good'),
     url(r'^goods_models/get_model_inf/$', views.get_model_inf, name='get_model_inf'),
     url(r'^goods/get_good_inf/$', views.get_good_inf, name='get_good_inf'),
+    url(r'^stocks/get_prod_info/$', views.get_prod_info, name='get_prod_info'),
     url(r'^props/$', views.props, name='props'),
     url(r'^requirements/$', views.requirements, name='requirements'),
     url(r'^requirements/save_demand/$', views.save_demand, name='save_demand'),
