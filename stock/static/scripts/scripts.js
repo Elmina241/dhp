@@ -117,7 +117,7 @@ function searchModel(text) {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-                $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><button class='btn btn-danger' onclick='delModel(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+                $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
             }
         }
         if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
@@ -706,7 +706,7 @@ function changeGroup(t) {
     for (m in data) {
         if (data[m].group == tr.selected) {
             id = t == "goods" ? data[m].article : data[m].id
-            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><button class='btn btn-danger' onclick='delObj(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='delObj(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>");
