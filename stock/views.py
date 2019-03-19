@@ -170,7 +170,26 @@ def send_prop(request):
 def get_prod_info(request):
     if request.method == 'POST':
         if 'id' in request.POST:
-            return HttpResponse('ok')
+            stock = Stock.objects.get(pk = request.POST['stock'])
+            good = Stock_good.objects.get(pk = request.POST['id']).good
+            data = {}
+            n = Good_name.objects.filter(product = good)[0]
+            names = {}
+            units = {}
+            names['name'] = '-' if n.name == "" else n.name
+            names['article'] = n.article
+            names['barcode'] = '-' if n.barcode == "" else n.barcode
+            names['original'] = '-' if n.original == "" else n.original
+            names['local'] = '-' if n.local == "" else n.local
+            names['transit'] = '-' if n.transit == "" else n.transit
+            s_g = Stock_good.objects.get(pk = request.POST['id'])
+            base_amm = s_g.amount / Goods_unit.objects.filter(product = good, unit = s_g.unit)[0].coeff
+            for g in  Goods_unit.objects.filter(product = good):
+                coeff = Goods_unit.objects.filter(product = good, unit = g.unit)[0].coeff
+                units[str(g)] = {'amount': base_amm * coeff, "unit": str(g.unit)}
+            data['names'] = names
+            data['units'] = units
+            return HttpResponse(json.dumps(data))
 
 
 def send_counter(request):

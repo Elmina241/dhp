@@ -177,3 +177,12 @@ h9{
 .tab-pane{
     padding: 15px;
 }
+
+.nav-tabs a:link {
+  color: #b8b4af;
+}
+
+.nav-tabs a:hover {
+  color: #23a3ab;
+  border-bottom: .07em solid;
+}
