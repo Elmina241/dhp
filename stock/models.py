@@ -246,3 +246,57 @@ class Stock_good(models.Model):
     def __str__(self):
         return str(self.stock) + ' ' + str(self.good)
 
+class Matrix(models.Model):
+    ACCESS_CHOICES = (
+        ('0', 'Открыто всем'),
+        ('1', 'Открыто донору'),
+        ('2', 'Открыто акцептору'),
+        ('3', 'Закрыто'),
+    )
+    CAUSE_CHOICES = (
+        ('0', 'Перемещение'),
+        ('1', 'Оприходование'),
+        ('2', 'Выбытие'),
+        ('3', 'Инвентаризация'),
+    )
+    access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
+    cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
+    cause_id = models.IntegerField(default=0)
+    name = models.CharField(max_length=500, null=True)
+    def __str__(self):
+        return self.name
+
+class Order(models.Model):
+    ACCESS_CHOICES = (
+        ('0', 'Свободно'),
+        ('1', 'Заполнение'),
+        ('2', 'Завершено')
+    )
+    stock = models.ForeignKey('Stock')
+    matrix = models.ForeignKey('Matrix')
+    isDonor = models.BooleanField()
+    date = models.DateTimeField(blank=True)
+    access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
+    def __str__(self):
+        return str(self.stock) + ' ' + str(self.matrix)
+
+class Order(models.Model):
+    ACCESS_CHOICES = (
+        ('0', 'Свободно'),
+        ('1', 'Заполнение'),
+        ('2', 'Завершено')
+    )
+    stock = models.ForeignKey('Stock')
+    matrix = models.ForeignKey('Matrix')
+    isDonor = models.BooleanField()
+    date = models.DateTimeField(blank=True)
+    access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
+    def __str__(self):
+        return str(self.stock) + ' ' + str(self.matrix)
+
+class Package(models.Model):
+    stock = models.ForeignKey('Stock')
+    matrix = models.ForeignKey('Matrix')
+    date = models.DateTimeField(blank=True)
+    def __str__(self):
+        return str(self.stock) + ' ' + str(self.matrix)

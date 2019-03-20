@@ -49,12 +49,28 @@ def m_process(request):
                 batches[name] = name
     return render(request, "m_process.html", {"states": State.objects.all(), "kneading": Kneading.objects.filter(isFinished = False), "batches": batches})
 
+def change_arch_date(request):
+    if 'year' in request.POST:
+        kneadings = []
+        for k in Kneading.objects.filter(isFinished=True, list__formula__composition__isFinal=True,
+                                         start_date__year=int(request.POST['year'])):
+            if k.get_state_id() == 7:
+                k = {'id': k.pk, 'batch': "П-" + str(int(k.batch_num)), "name": str(k.list.formula),
+                     "start": k.start_date.strftime('%d.%m.%Y'), "end": k.finish_date.strftime('%d.%m.%Y')}
+                kneadings.append(k)
+        return HttpResponse(json.dumps(kneadings))
+
 def archive(request):
+    years = []
+    year = datetime.date.today().year
+    while year > 2016:
+        years.append(year)
+        year = year - 1
     kneadings = []
     for k in Kneading.objects.filter(isFinished = True, list__formula__composition__isFinal = True, start_date__year = datetime.datetime.now().year):
         if k.get_state_id() == 7:
             kneadings.append(k)
-    return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings})
+    return render(request, "archive.html", {"header": "Архив", "states": State.objects.all(), "location": "/processes/archive/", "kneading": kneadings, 'years': years})
 
 def stoped(request):
     kneadings = []
@@ -1083,6 +1099,8 @@ def return_to_testing(request, kneading_id):
     kneading = get_object_or_404(Kneading, pk=kneading_id)
     st = State_log(kneading = kneading, state = get_object_or_404(State, pk=4))
     st.save()
+    kneading.isFinished = False
+    kneading.save()
     return redirect('kneading_detail', kneading_id = kneading_id)
 
 

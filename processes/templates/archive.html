@@ -28,6 +28,30 @@ $.ajaxSetup({
     }
 });
 
+function changeDate(year) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'change_arch_date/',
+        data: {
+            'year': year
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            kneadings = JSON.parse(data);
+            code = "";
+            for (k in kneadings){
+                code = code + "<tr><td>" + kneadings[k]['id'] + "</td><td>" + kneadings[k]['name'] + "</td><td>" + kneadings[k]['batch'] + "</td><td>" + kneadings[k]['start'] + "</td><td>" + kneadings[k]['end'] + "</td></tr>";
+            }
+            $("#kneading-body").html(code);
+        }
+    });
+}
+
 
 function applyFilters(){
   $("tr").each(function(){
@@ -64,32 +88,39 @@ function filterDate(){
 
 </script>
 <div class="row">
-  <div class="col-sm-4">
-  <div class="input-group input-group-sm">
-    <span class="input-group-addon">Фильтр по дате</span>
+  <div class="col-sm-2">
+  <div class="input-group">
+      <span class="input-group-addon">Год</span>
+      <select id="year" class="form-control" onchange="changeDate($(this).val())">
+        {% for y in years %}
+          <option value="{{ y }}">{{ y }}</option>
+        {% endfor %}
+      </select>
+  </div>
+    <!--<span class="input-group-addon">Фильтр по дате</span>
     <div class="input-daterange input-group" id="datepicker">
         <input type="text" required data-provide="datepicker" class="input-sm form-control" name="start" id="groupDateStart"/>
         <span class="input-group-addon">-</span>
         <input type="text" required data-provide="datepicker" class="input-sm form-control" name="end" id="groupDateEnd"/>
       </div>
-    </div>
+    </div>-->
   </div>
 </div>
 <hr>
 <form action="del_process/" method="post">
     {% csrf_token %}
           <br><br>
-          {% if kneading %}
+
               <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>№</th><th>Партия</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th>
+                    <th>№</th><th>Партия</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="kneading-body">
+                          {% if kneading %}
                   {% for k in kneading %}
                   <tr>
-                    <td><input type="checkbox" value="{{ k.id }}" name="del_list"></td>
                     <td>{{ k.id }}</td>
                     <td>П-{{ k.batch_num|floatformat:"0" }}</td>
                     <td  onClick="window.location.href='/processes/archive/{{ k.id }}/'">{{ k.list.formula }}</td>
@@ -97,9 +128,10 @@ function filterDate(){
                     <td>{{ k.finish_date|date:"d.m.Y" }}</td>
                   </tr>
                   {% endfor %}
+                {% else %}
+              <tr><td colspan="5" align="center">Нет записей</td> </tr>
+              {% endif %}
                 </tbody>
               </table>
-              {% else %}
-              <p>No materials are available right now.</p>
-              {% endif %}
+
   {% endblock content %}
