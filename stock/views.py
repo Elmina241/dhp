@@ -238,7 +238,7 @@ def get_demand_goods(request):
         if 'id' in request.POST:
             demand = Demand.objects.get(pk=request.POST['id'])
             data = {}
-            for d in Demand_good.objects.filter(demand=demand):
+            for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
                 data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit), 'balance': d.balance}
             return HttpResponse(json.dumps(data))
@@ -248,14 +248,15 @@ def save_stock_operation(request):
         if 'id' in request.POST:
             demand = Demand.objects.get(pk=request.POST['id'])
             goods = json.loads(request.POST['goods'])
+            m = Matrix(access = '0', cause = request.POST['cause'], cause_id = request.POST['id'])
+            m.save()
+            p = Package(matrix = m, stock = demand.acceptor, date = datetime.datetime.now())
             for g in goods:
                 good_d = Demand_good.objects.get(pk = goods[g]['id'])
                 s = Stock_operation(
-                    stock = demand.acceptor,
+                    package = p,
                     good = good_d.good,
                     operation = request.POST['operation'],
-                    cause_id = request.POST['id'],
-                    cause = request.POST['cause'],
                     unit = good_d.unit,
                     amount = goods[g]['amount']
                 )
@@ -273,13 +274,30 @@ def save_stock_operation(request):
             return HttpResponse('ok')
 
 def stock_operations(request):
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0])
+    goods = []
+    goods_inf = {}
+    i = 0
+    for g in Good_name.objects.all():
+        goods.append(g.article + ' ' + g.name)
+        goods_inf[i] = g.product.pk
+        i = i + 1
+    units = {}
+    for u in Goods_unit.objects.all():
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+    stocks = {}
+    for s in Counter_stock.objects.all():
+        stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
     operations = {}
     for s in Stock_operation.objects.all():
-        id = str(s.cause) + '_' + str(s.cause_id)
+        id = s.package.pk
         if id not in operations:
             operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "stock": str(s.stock), "cause": s.get_cause_display()}
         operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
-    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations)})
+    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def get_good_inf(request):
@@ -420,12 +438,39 @@ def save_demand(request):
                 acceptor = Stock.objects.get(pk=request.POST['acceptor'])
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
             goods = json.loads(request.POST['goods'])
-            demand = Demand(consumer=consumer, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
+            matrix = Matrix(access = '0', cause = '0')
+            matrix.save()
+            demand = Demand(consumer=consumer, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
             demand.save()
+            matrix.cause_id = demand.pk
+            matrix.save()
             for g in goods:
                 good = Goods.objects.get(pk=goods[g]['product'])
-                d = Demand_good(demand=demand, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name_type(goods[g]['name']))
+                d = Demand_good(matrix=matrix, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name_type(goods[g]['name']))
                 d.save()
+            return HttpResponse('ok')
+
+def save_supply(request):
+    if request.method == 'POST':
+        if 'date' in request.POST:
+            matrix = Matrix(access='0', cause='1')
+            matrix.save()
+            consumer = Counterparty.objects.get(pk=request.POST['consumer'])
+            acceptor = Stock.objects.get(pk=request.POST['acceptor'])
+            date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
+            p = Package(stock= acceptor, matrix = matrix, date = date)
+            goods = json.loads(request.POST['goods'])
+            for g in goods:
+                good = Goods.objects.get(pk=goods[g]['product'])
+                s = Stock_operation(
+                    package=p,
+                    good=good,
+                    operation='0',
+                    unit=Unit.objects.get(pk=goods[g]['unit']),
+                    amount=goods[g]['num'],
+                    date = date
+                )
+                s.save()
             return HttpResponse('ok')
 
 def edit_good(request):

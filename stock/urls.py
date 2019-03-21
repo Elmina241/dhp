@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^goods/$', views.goods, name='goods'),
     url(r'^stocks/$', views.stocks, name='stocks'),
     url(r'^stock_operations/$', views.stock_operations, name='stock_operations'),
+    url(r'^stock_operations/save_supply/$', views.save_supply, name='save_supply'),
     url(r'^goods/save_good/$', views.save_good, name='save_good'),
     url(r'^goods/edit_good/$', views.edit_good, name='edit_good'),
     url(r'^goods_models/save_group/$', views.save_group, name='save_group$'),

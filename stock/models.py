@@ -183,13 +183,8 @@ class User(models.Model):
 
 
 class Demand(models.Model):
-    STATUS_CHOICES = (
-        ('0', 'Отказ'),
-        ('1', 'Выполнение'),
-        ('2', 'Закрыт'),
-        ('3', 'Запрос'),
-    )
     date = models.DateField(auto_now_add=True)
+    matrix = models.ForeignKey('Matrix')
     consumer = models.ForeignKey('Counterparty', related_name="consumer")
     provider = models.ForeignKey('Counterparty', related_name="provider")
     donor = models.ForeignKey('Stock', related_name="donor", null=True)
@@ -197,12 +192,12 @@ class Demand(models.Model):
     is_closed = models.BooleanField(default=False)
     release_date = models.DateField(null=True)
     finish_date = models.DateField(null = True)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
+    #status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)
 
 class Demand_good(models.Model):
-    demand = models.ForeignKey('Demand')
+    matrix = models.ForeignKey('Matrix')
     good = models.ForeignKey('Goods')
     name = models.CharField(max_length=500)
     unit = models.ForeignKey('tables.Unit')
@@ -217,18 +212,13 @@ class Stock_operation(models.Model):
         ('1', 'Расход'),
         ('2', 'Коррекция'),
     )
-    CAUSE_CHOICES = (
-        ('0', 'Перемещение'),
-        ('1', 'Оприходование'),
-        ('2', 'Выбытие'),
-        ('3', 'Инвентаризация'),
-    )
-    stock = models.ForeignKey('Stock', blank=True, null=True)
+    #stock = models.ForeignKey('Stock', blank=True, null=True)
+    package = models.ForeignKey('Package')
     good = models.ForeignKey('Goods')
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
     date = models.DateTimeField(auto_now_add=True, blank=True)
-    cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
-    cause_id = models.IntegerField(default=0)
+    #cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
+    #cause_id = models.IntegerField(default=0, null = True)
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
     cost = models.FloatField(default=0, blank=True)
@@ -261,27 +251,14 @@ class Matrix(models.Model):
     )
     access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
     cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
-    cause_id = models.IntegerField(default=0)
+    cause_id = models.IntegerField(default=0, null = True)
     name = models.CharField(max_length=500, null=True)
     def __str__(self):
         return self.name
 
-class Order(models.Model):
-    ACCESS_CHOICES = (
-        ('0', 'Свободно'),
-        ('1', 'Заполнение'),
-        ('2', 'Завершено')
-    )
-    stock = models.ForeignKey('Stock')
-    matrix = models.ForeignKey('Matrix')
-    isDonor = models.BooleanField()
-    date = models.DateTimeField(blank=True)
-    access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
-    def __str__(self):
-        return str(self.stock) + ' ' + str(self.matrix)
 
 class Order(models.Model):
-    ACCESS_CHOICES = (
+    STATUS_CHOICES = (
         ('0', 'Свободно'),
         ('1', 'Заполнение'),
         ('2', 'Завершено')
@@ -290,7 +267,7 @@ class Order(models.Model):
     matrix = models.ForeignKey('Matrix')
     isDonor = models.BooleanField()
     date = models.DateTimeField(blank=True)
-    access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='0')
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)
 

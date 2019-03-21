@@ -457,6 +457,36 @@ function saveDemand() {
     });
 }
 
+function saveSupply() {
+    goods = {};
+    $("#add_goods").find(".good-item").each(function (item) {
+        goods[item] = {};
+        goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
+        obj = this.nextElementSibling;
+        goods[item]['unit'] = $(obj).find("select").eq(0).val();
+        goods[item]['num'] = $(obj).find("input").eq(0).prop("value");
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_supply/',
+        data: {
+            'consumer': $("#consumer").val(),
+            'acceptor': $("#acceptor").val(),
+            'date': $("#date").prop('value'),
+            'goods': JSON.stringify(goods)
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function saveGood() {
     units = {};
     $("#units").find(".unit").each(function (item) {
@@ -1024,10 +1054,10 @@ function STree(tree) {
         //event.stopPropagation();
     });
 
-    this.changeStockGroup = function() {
+    this.changeStockGroup = function () {
         stock = $("#stock").val();
         code = "";
-        for (r in goods[self.selected][stock]){
+        for (r in goods[self.selected][stock]) {
             code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
                 "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
         }
@@ -1065,7 +1095,7 @@ function openGood(id, obj) {
         },
         success: function onAjaxSuccess(data) {
             data = JSON.parse(data);
-            names =  " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
+            names = " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
                 "<div class=\"form-row\">\n" +
                 "                        <div class=\"form-group col-md-6\">\n" +
                 "                            <h9>Артикул</h9><h8>\n" + data['names']['article'] +
@@ -1091,7 +1121,7 @@ function openGood(id, obj) {
                 "                            <h9>Транзитное</h9><h8>\n" + data['names']['transit'] +
                 "                        </h8></div>\n" +
                 "                    </div></div>";
-            units =  " <div class='tab-pane fade' id='units' role='tabpanel' aria-labelledby='units-tab'>" +
+            units = " <div class='tab-pane fade' id='units' role='tabpanel' aria-labelledby='units-tab'>" +
                 "<table>\n" +
                 "<table class=\"table table-bordered\">\n" +
                 "                            <thead class=\"thead\">\n" +
@@ -1100,10 +1130,10 @@ function openGood(id, obj) {
                 "                                <th scope=\"col\">Ед. изм.</th>\n" +
                 "                            </thead>\n" +
                 "                            <tbody>\n";
-                for (u in data['units']){
-                    units = units + "<tr><td>" + data['units'][u].amount + "</td><td>" + data['units'][u].unit + "</td></tr>"
-                }
-                units = units + "</tbody></table></div>";
+            for (u in data['units']) {
+                units = units + "<tr><td>" + data['units'][u].amount + "</td><td>" + data['units'][u].unit + "</td></tr>"
+            }
+            units = units + "</tbody></table></div>";
             code = "<tr><td colspan='6'><div class='add-info-good'>" +
                 "<ul class=\"nav nav-tabs\" id=\"myTab\" role=\"tablist\">\n" +
                 "  <li class=\"nav-item\">\n" +
@@ -1170,7 +1200,10 @@ function openSupply(id) {
         goods = {};
         $("#supply-body").find("tr").each(function (item) {
             i = $(this).prop('id');
-            if ($(this).find('input').eq(0).prop("value") != null) goods[i] = {"id": i, "amount": $(this).find('input').eq(0).prop("value")};
+            if ($(this).find('input').eq(0).prop("value") != null) goods[i] = {
+                "id": i,
+                "amount": $(this).find('input').eq(0).prop("value")
+            };
         });
         $.ajax({
             type: "POST",
@@ -1194,24 +1227,97 @@ function openSupply(id) {
 }
 
 function saveStatus(obj) {
-        status = $("option:selected", obj).val();
-        id = obj.parentElement.parentElement.parentElement.id.substr(2);
-        var csrftoken = getCookie('csrftoken');
-        $.ajax({
-            type: "POST",
-            url: 'save_status/',
-            data: {
-                'id': id,
-                'status': status
-            },
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-            success: function onAjaxSuccess(data) {
-                obj.parentElement.parentElement.innerHTML = $("option:selected", obj).text();
-
+    status = $("option:selected", obj).val();
+    id = obj.parentElement.parentElement.parentElement.id.substr(2);
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_status/',
+        data: {
+            'id': id,
+            'status': status
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-        });
+        },
+        success: function onAjaxSuccess(data) {
+            obj.parentElement.parentElement.innerHTML = $("option:selected", obj).text();
+
+        }
+    });
+}
+
+function getStocks(counter) {
+    if (counter == 'donor') {
+        select = $("#donor");
+        id = $("#provider").val();
+    }
+    else {
+        select = $("#acceptor");
+        id = $("#consumer").val();
+    }
+    code = "";
+    for (s in stocks) {
+        if (stocks[s].counter == id) {
+            code = code + "<option value='" + stocks[s].pk + "'>" + stocks[s].stock + "</option>";
+        }
+    }
+    $(select).html("");
+    $(code).appendTo(select);
+}
+
+function addGoodField() {
+    code = "<div class='form-row good-item'>\n" +
+        "                        <div class='form-group col-md-6'>\n" +
+        "                        <h7>Товар</h7>\n" +
+        "                            <div class='form-inline'>\n" +
+        "                        <div class='autocomplete' style='width:335px;'>\n" +
+        "                            <input id='myInput' style='width:335px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry'>\n" +
+        "                        </div>\n" +
+        "                        <button class='btn btn-outline-info'\n" +
+        "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;'\n" +
+        "                                data-toggle='modal' data-target='#tree-div'><span\n" +
+        "                                style='font-size: 15px;' onclick=''><i class='fas fa-stream'></i></span></button></div></div>\n" +
+        "                        <div class='form-group col-md-3'>\n" +
+        "                            <h7>Ед. изм.</h7> <select class='form-control form-control-sm'>\n" +
+        "                        </select></div><div class='form-group col-md-3'>\n" +
+        "                            <h7>Количество</h7>\n" +
+        "                            <input type='number' class='form-control form-control-sm' id='date'/>\n" +
+        "                    </div>";
+    $(code).appendTo("#add_goods");
+    autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
+}
+
+function addDots() {
+    code = "<span style='font-size: 17px; color: #CCCCCC' ><i class='fas fa-ellipsis-v'></i></span>";
+    $(code).appendTo("#add_goods");
+}
+
+function getUnits(obj) {
+    id = obj.name;
+    select = obj.parentElement.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.childNodes[3];
+    code = "<select class='form-control form-control-sm unit'>";
+    for (u in units) {
+        if (units[u].product == id && units[u].applicable) {
+            code = code + "<option value='" + units[u].pk + "'>" + units[u].unit + "</option>";
+        }
+    }
+    code = code + "</select>";
+    select.innerHTML = code;
+}
+
+function setNameId(id, obj) {
+    obj.name = goods_inf[id];
+    getUnits(obj);
+}
+
+function setGoodName(obj) {
+    for (g in goods_inf) {
+        if (goods_inf[g] == tr.selected) {
+            obj.value = goods[g];
+            setNameId(g, obj);
+        }
+    }
 }
