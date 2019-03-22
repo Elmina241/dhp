@@ -34,7 +34,7 @@
             return code;
         }
 
-        function getUnits() {
+        function getMUnits() {
             code = "<select class='form-control inline-el unit'>";
             for (p in units) {
                 code = code + "<option value='" + units[p].pk + "'>" + units[p].fields.name + "</option>";
@@ -46,7 +46,7 @@
 
         function addUnit() {
             unitNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getUnits() +
+            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getMUnits() +
                 "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalUnit = $("#additional_unit");
             $(code).appendTo(additionalUnit);

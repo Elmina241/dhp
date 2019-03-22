@@ -42,8 +42,9 @@
                                 <tr id="{{ p.id }}">
                                     <td>{{ p.id }}</td>
                                     <td>{{ p.name }}</td>
-                                    <td style="text-align: right"><button class="btn btn-info" onclick="pr.getInf({{ p.id }})">Редактировать</button></td>
-                                    <td style="text-align: left"><button class="btn btn-danger" onclick="delProp(this.parentElement)">Удалить</button></td>
+                                    <td><span style='font-size: 17px;'
+                          onclick="pr.getInf({{ p.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
+                                    <td><span onclick='delProp(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
