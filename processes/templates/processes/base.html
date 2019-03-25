@@ -1,5 +1,6 @@
 {% load staticfiles %}
 <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
   <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
   <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
@@ -17,6 +18,7 @@
   <script src="{% static 'scripts/bootstrap-datepickerrumin.js' %}"></script>
   <script src="{% static 'scripts/jquery.tablesorter.js' %}"></script>
   <script src="{% static 'scripts/moment.js' %}"></script>
+    <script src="{% static 'scripts/footable.min.js' %}"></script>
   <script type="text/javascript">
   $(document).ready(function(){
     $('#gmenu > ul > li >a').each(function () {
@@ -36,7 +38,7 @@
         </ul>
       </nav>
       <div class="row">
-        <div class="col-xs-2" id="gmenu">
+        <div class="col-md-2 col-sm-12" id="gmenu">
           <ul class="nav nav-pills nav-stacked">
             <li><a href="/processes/loading_lists/">Модели загрузочных листов</a></li>
             <li><a href="/processes/storages/">Реакторы</a></li>
@@ -54,7 +56,7 @@
             <li><a href="/processes/task/">Задание на неделю</a></li>
           </ul>
         </div>
-        <div class="col-xs-10">
+        <div class="col-md-10 col-sm-12" >
           <ol class="breadcrumb">
             <li><a href="#">Процессы</a></li>
             <li class="active">{{ header }}<!--Реактивы--></li>

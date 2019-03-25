@@ -98,6 +98,13 @@ $(document).ready(function(){
     todayHighlight: true
   });
   $("#prTable").tablesorter({});
+  jQuery(function () {
+	jQuery('.table').footable({
+		calculateWidthOverride: function() {
+			return {width: jQuery(window).width()};
+		}
+	});
+});
   $("[name='groupState']").change(applyFilters);
   $("[name='groupBatch']").change(applyFilters);
   $("[name='start']").change(applyFilters);
@@ -200,7 +207,7 @@ function filterBatch(){
               <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
                 <thead>
                   <tr>
-                    <th></th><th>№</th><th>Партия</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th><th>Статус</th>
+                    <th data-breakpoints="mobile tablet"></th><th>№</th><th>Партия</th><th>Состав</th><th>Дата начала</th><th data-breakpoints="mobile tablet">Дата конца</th><th>Статус</th>
                   </tr>
                 </thead>
                 <tbody>
