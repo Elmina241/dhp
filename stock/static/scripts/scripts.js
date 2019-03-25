@@ -120,7 +120,7 @@ function searchModel(text) {
                 $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
             }
         }
-        if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+        if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td align='center' class='no-data' colspan='3'>Нет записей</td></tr>");
     }
 }
 
@@ -135,7 +135,7 @@ function searchGood(text) {
                 $("<tr onclick='getGoodInf(" + goods[g].id + ")'><td>" + goods[g].article + "</td><td>" + goods[g].name + "</td><td><button class='btn btn-danger' onclick='delGood(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
             }
         }
-        if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td></tr>");
+        if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data' align='center' colspan='3'>Нет записей</td></tr>");
     }
 }
 
@@ -304,7 +304,7 @@ function addGoods(table, rows) {
     //var rowCount = $("#" + table + " tr").length;
     $(tableBody).html("");
     if (row == "") {
-        row = "<tr><td></td><td></td><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>";
+        row = "<tr><td class='no-data' align='center' colspan='5'>Нет записей</td></tr>";
     }
     //for (i = 0; i < rowCount; i++) $("#" + table + " tr").eq(0).remove();
     $(row).appendTo(tableBody);
@@ -429,10 +429,9 @@ function saveDemand() {
     $("#add_goods").find(".good-item").each(function (item) {
         goods[item] = {};
         goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
-        goods[item]['name'] = $(this).find("select").eq(0).val();
-        obj = this.nextElementSibling;
-        goods[item]['unit'] = $(obj).find("select").eq(0).val();
-        goods[item]['num'] = $(obj).find("input").eq(0).prop("value");
+        //goods[item]['name'] = $(this).find("select").eq(0).val();
+        goods[item]['unit'] = $(this).find("select").eq(0).val();
+        goods[item]['num'] = $(this).find("input").eq(1).prop("value");
     });
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -462,9 +461,9 @@ function saveSupply() {
     $("#add_goods").find(".good-item").each(function (item) {
         goods[item] = {};
         goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
-        obj = this.nextElementSibling;
-        goods[item]['unit'] = $(obj).find("select").eq(0).val();
-        goods[item]['num'] = $(obj).find("input").eq(0).prop("value");
+        //obj = this.nextElementSibling;
+        goods[item]['unit'] = $(this).find("select").eq(0).val();
+        goods[item]['num'] = $(this).find("input").eq(1).prop("value");
     });
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -739,7 +738,7 @@ function changeGroup(t) {
             $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='delObj(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
         }
     }
-    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data text-right'>Нет записей</td><td></td><td></td></tr>");
+    if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data' align='center' colspan='3'>Нет записей</td></tr>");
 }
 
 function delModel(obj) {
@@ -1297,7 +1296,7 @@ function addDots() {
 
 function getUnits(obj) {
     id = obj.name;
-    select = obj.parentElement.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.childNodes[3];
+    select = obj.parentElement.parentElement.parentElement.nextElementSibling.childNodes[3];
     code = "<select class='form-control form-control-sm unit'>";
     for (u in units) {
         if (units[u].product == id && units[u].applicable) {

@@ -216,7 +216,7 @@ class Stock_operation(models.Model):
     package = models.ForeignKey('Package')
     good = models.ForeignKey('Goods')
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
-    date = models.DateTimeField(auto_now_add=True, blank=True)
+    date = models.DateField(auto_now_add=True, blank=True)
     #cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
     #cause_id = models.IntegerField(default=0, null = True)
     unit = models.ForeignKey('tables.Unit')
@@ -254,7 +254,7 @@ class Matrix(models.Model):
     cause_id = models.IntegerField(default=0, null = True)
     name = models.CharField(max_length=500, null=True)
     def __str__(self):
-        return self.name
+        return self.access
 
 
 class Order(models.Model):
@@ -266,7 +266,7 @@ class Order(models.Model):
     stock = models.ForeignKey('Stock')
     matrix = models.ForeignKey('Matrix')
     isDonor = models.BooleanField()
-    date = models.DateTimeField(blank=True)
+    date = models.DateField(blank=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='0')
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)
@@ -274,6 +274,6 @@ class Order(models.Model):
 class Package(models.Model):
     stock = models.ForeignKey('Stock')
     matrix = models.ForeignKey('Matrix')
-    date = models.DateTimeField(blank=True)
+    date = models.DateField(blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)

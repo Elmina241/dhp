@@ -105,7 +105,7 @@
                             <td>{{ r.consumer }}</td>
                             <td>{{ r.donor|default_if_none:"-" }}</td>
                             <td>{{ r.acceptor|default_if_none:"-" }}</td>
-                            <td>{{ r.get_status_display }}</td>
+                            <td>{{ r.matrix.get_access_display }}</td>
                             <td><span style='font-size: 17px;'
                           onclick="changeStatus(this)"><i class='fas fa-edit'></i></span></td>
                             </tr>

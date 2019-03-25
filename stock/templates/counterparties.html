@@ -8,7 +8,7 @@
             stocks = JSON.parse(JSON.parse($("#stockData").prop("value")));
             addStock();
         });
-        function getStocks() {
+        function getAllStocks() {
             code = "<select class='form-control inline-el stock'>";
             for (p in stocks) {
                 code = code + "<option value='" + stocks[p].pk + "'>" + stocks[p].fields.name + "</option>";
@@ -17,7 +17,7 @@
             return code;
         }
         function addStock() {
-            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getStocks() + "<span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getAllStocks() + "<span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalStock = $("#stocks");
             $(code).appendTo(additionalStock);
         }

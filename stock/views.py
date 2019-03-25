@@ -3,9 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 import json
 from tables.models import Unit
-from .models import Default_number, Stock_good, Stock_operation, Demand, Demand_good, Counter_stock, Goods, Stock, Good_name, Goods_property, Goods_unit, Property_num, Goods_string, Goods_var, \
-    Counterparty, Default_text, Default_var, Property, Property_range, Model_property, Model_unit, Property_var, \
-    Model_group, Product_model
+from .models import *
 from django.core import serializers
 from django.utils import timezone
 import datetime
@@ -146,7 +144,7 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"header": "Перемещение", "reqs": Demand.objects.filter(is_closed = False).exclude(status='2'), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "requirements.html", {"header": "Перемещение", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -295,7 +293,7 @@ def stock_operations(request):
     for s in Stock_operation.objects.all():
         id = s.package.pk
         if id not in operations:
-            operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "stock": str(s.stock), "cause": s.get_cause_display()}
+            operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display()}
         operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
     return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
@@ -446,7 +444,7 @@ def save_demand(request):
             matrix.save()
             for g in goods:
                 good = Goods.objects.get(pk=goods[g]['product'])
-                d = Demand_good(matrix=matrix, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name_type(goods[g]['name']))
+                d = Demand_good(matrix=matrix, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name())
                 d.save()
             return HttpResponse('ok')
 
@@ -459,6 +457,7 @@ def save_supply(request):
             acceptor = Stock.objects.get(pk=request.POST['acceptor'])
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
             p = Package(stock= acceptor, matrix = matrix, date = date)
+            p.save()
             goods = json.loads(request.POST['goods'])
             for g in goods:
                 good = Goods.objects.get(pk=goods[g]['product'])
@@ -467,10 +466,16 @@ def save_supply(request):
                     good=good,
                     operation='0',
                     unit=Unit.objects.get(pk=goods[g]['unit']),
-                    amount=goods[g]['num'],
-                    date = date
+                    amount=goods[g]['num']
                 )
                 s.save()
+                if Stock_good.objects.filter(stock = acceptor, good = good).count() == 0:
+                    rec = Stock_good(stock = acceptor, good = good, unit = Goods_unit.objects.filter(product = good, isBase = True)[0].unit, amount = Goods_unit.objects.filter(product = good, unit = Unit.objects.get(pk=goods[g]['unit']))[0].coeff * int(goods[g]['num']))
+                    rec.save()
+                else:
+                    rec = Stock_good.objects.filter(stock = acceptor, good = good)[0]
+                    rec.amount = rec.amount + Goods_unit.objects.filter(product = good, unit = Unit.objects.get(pk=goods[g]['unit']))[0].coeff * int(goods[g]['num'])
+                    rec.save()
             return HttpResponse('ok')
 
 def edit_good(request):
