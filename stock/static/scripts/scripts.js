@@ -96,7 +96,7 @@ function editProp(id) {
 
 function e_addUnit() {
     e_unitNum++;
-    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getUnits() +
+    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getMUnits() +
         "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
     var additionalUnit = $("#e_additional_unit");
     $(code).appendTo(additionalUnit);

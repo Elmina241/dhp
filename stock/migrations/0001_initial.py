@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
                 ('isDonor', models.BooleanField()),
-                ('date', models.DateTimeField(blank=True)),
+                ('date', models.DateField(blank=True)),
                 ('status', models.CharField(max_length=20, default='0', choices=[('0', 'Свободно'), ('1', 'Заполнение'), ('2', 'Завершено')])),
                 ('matrix', models.ForeignKey(to='stock.Matrix')),
             ],
@@ -147,7 +147,7 @@ class Migration(migrations.Migration):
             name='Package',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
-                ('date', models.DateTimeField(blank=True)),
+                ('date', models.DateField(blank=True)),
                 ('matrix', models.ForeignKey(to='stock.Matrix')),
             ],
         ),
@@ -198,7 +198,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
                 ('operation', models.CharField(max_length=20, default='0', choices=[('0', 'Приход'), ('1', 'Расход'), ('2', 'Коррекция')])),
-                ('date', models.DateTimeField(auto_now_add=True)),
+                ('date', models.DateField(auto_now_add=True)),
                 ('amount', models.IntegerField(default=0)),
                 ('cost', models.FloatField(blank=True, default=0)),
                 ('good', models.ForeignKey(to='stock.Goods')),

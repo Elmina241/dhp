@@ -1,5 +1,15 @@
 {% extends 'processes/base.html' %}
 {% block content %}
+     <style>
+    @media all and (max-width: 500px) {
+    .mobile-table {
+        font-size: 12px;
+    }
+        .tablet {
+            display: none;
+        }
+}
+    </style>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#formula').trigger("change");
@@ -95,19 +105,19 @@ $(document).ready(function(){
         <input hidden class="form-control" id="load_list" name="load_list" value="{{load_list}}">
       </div>
       <br><br>
-      <table class="table table-sm table-responsive" id="materials" style="width:100%; margin: auto">
+      <table class="table table-sm table-responsive mobile-table" id="materials" style="width:100%; margin: auto">
         <thead>
           <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Композиция</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
+            <th>Код</th><th>Наименование</th><th class="tablet">Минимум, кг</th><th class="tablet">Максимум, кг</th><th class="tablet">Композиция</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>ВД01</td>
             <td>Вода</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
+            <td class="tablet">-</td>
+            <td class="tablet">-</td>
+            <td class="tablet">-</td>
             <td id="water"></td>
           </tr>
         </tbody>
@@ -126,14 +136,14 @@ $(document).ready(function(){
         <h4 class="panel-title">Загрузочный лист</h4>
     </div>
     <div class="panel-body">
-    <table class="table table-sm" id="materials2" style="width:100%; margin: auto">
+    <table class="table table-sm mobile-table" id="materials2" style="width:100%; margin: auto">
       <thead>
         <tr>
-          <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th>
+          <th>Код</th><th>Наименование</th><th class="tablet">Минимум, кг</th><th class="tablet">Максимум, кг</th><th>Количество, кг</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water2"></td></tr>
+        <tr><td>ВД01</td><td>Вода</td><td  class="tablet">-</td><td  class="tablet">-</td><td id="water2"></td></tr>
       </tbody>
     </table>
   </div>
