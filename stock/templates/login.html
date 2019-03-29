@@ -1,0 +1,31 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <script>
+    </script>
+    <div class="container-fluid">
+    <div class="card" style="margin: auto; width: 500px; margin-top: 50px">
+        <div class="card-body">
+            <form action="/stock/login/" method="post">
+                {% csrf_token %}
+                <p class="login"><span><i class="fas fa-user-circle"></i></span></p>
+                <p>Пользователь</p>
+                <select name="user" class="form-control">
+                    {% for u in users %}
+                        <option value="{{ u }}">{{ u }}</option>
+                    {% endfor %}
+                </select>
+                <p class="good-item">Пароль</p>
+                <input type="password" name="password" class="form-control"/>
+                {% if error %}
+                    <div class="alert alert-danger good-item" role="alert">
+                        Неверный пароль!
+                    </div>
+                {% endif %}
+                <hr>
+                <button type="submit" class="btn btn-success" style="float: right">Войти</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}

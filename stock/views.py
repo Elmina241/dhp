@@ -1,12 +1,14 @@
 from django.http.response import HttpResponse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 import json
 from tables.models import Unit
 from .models import *
 from django.core import serializers
-from django.utils import timezone
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+#from django.contrib import auth
 import datetime
+from django.contrib.auth.models import User
 
 
 def goods_models(request):
@@ -43,6 +45,30 @@ def stocks(request):
                   {"header": "Склад", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
                    "models": Product_model.objects.all(), "stocks": Stock.objects.all(),
                    "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
+
+def auth(request):
+    users = User.objects.all()
+    if request.user.is_authenticated():
+        return redirect('goods')
+    else:
+        return render(request, "login.html", {"users": users})
+
+def logout(request):
+    auth_logout(request)
+    return redirect('auth')
+
+def login(request):
+    if request.POST:
+        username = request.POST['user']
+        password = request.POST['password']
+        user = authenticate(username = username, password = password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('auth')
+        else:
+            return render(request, "login.html", {'error': 'Неверный пароль', 'users': User.objects.all()})
+    else:
+        return redirect("auth")
 
 def goods(request):
     tree = {}
@@ -82,7 +108,7 @@ def goods(request):
     return render(request, "goods.html",
                   {"header": "Материальные ценности", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
                    "models": Product_model.objects.all(), "model_json": json.dumps(models),
-                   "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
+                   "goods_json": json.dumps(goods_json), "goods": Goods.objects.all(), 'username': request.user.username})
 
 
 def add_children(obj, node):

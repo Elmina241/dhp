@@ -4,6 +4,8 @@ from . import views
 app_name = 'stock'
 
 urlpatterns = [
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^login/$', views.login, name='login'),
     url(r'^goods_models/$', views.goods_models, name='goods_models'),
     url(r'^goods/$', views.goods, name='goods'),
     url(r'^stocks/$', views.stocks, name='stocks'),
@@ -32,4 +34,5 @@ urlpatterns = [
     url(r'^props/edit_prop/$', views.edit_prop, name='edit_prop'),
     url(r'^props/del_prop/$', views.del_prop, name='del_prop'),
     url(r'^requirements/save_status/$', views.save_status, name='save_status'),
+    url(r'^', views.auth, name='auth'),
 ]

@@ -186,3 +186,12 @@ h9{
   color: #23a3ab;
   border-bottom: .07em solid;
 }
+
+.login {
+    font-size: 65pt;
+    margin: auto;
+    margin-top: 20px;
+    text-align: center;
+    color: #169eb3;
+    margin-bottom: 20px;
+}
