@@ -2,10 +2,12 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
   <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
-  <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'css/tables.css' %}">
   <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.css' %}">
   <link rel="stylesheet" href="{% static 'css/style3.css' %}">
@@ -23,53 +25,51 @@
   $(document).ready(function(){
     $('#gmenu a').each(function () {
       if($(this).attr('href') == "{{ location }}" ) {
-        $(this).parent().addClass('active');
+        $(this).addClass('active');
       }
     });
   });</script>
 </head>
 <body>
-    <div class="container-fluid">
-      <nav class="navbar navbar-default" role="navigation">
-        <ul class="nav navbar-nav navbar-left">
-         <li class="active"><a href="/processes/loading_lists/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Процессы</a></li>
-         <li><a href="/tables/materials/"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Справочники</a></li>
-         <li><a href="/log/movement/"><span class="glyphicon glyphicon-copy" aria-hidden="true"></span> Журналы</a></li>
+    <div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <ul class="navbar-nav">
+         <li class="nav-item active"><a class="nav-link" href="/processes/loading_lists/">Процессы</a></li>
+         <li class="nav-item"><a class="nav-link" href="/tables/materials/">Справочники</a></li>
+         <li class="nav-item"><a class="nav-link" href="/log/movement/">Журналы</a></li>
         </ul>
       </nav>
-      <div class="row">
-        <div class="col-md-2 col-sm-12" id="gmenu">
+      <div class="row" style="padding: 0">
+        <div class="col-md-2 col-sm-12" id="gmenu" style="margin-left: -15px;">
             <nav class="navbar navbar-light">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
-    	<span class="glyphicon glyphicon-menu-hamburger"></span> Меню
-  	</button> <hr>
-               <div class="collapse navbar-collapse" id="navbar1">
-          <ul class="nav nav-pills nav-stacked">
-            <li><a href="/processes/loading_lists/">Модели загрузочных листов</a></li>
-            <li><a href="/processes/storages/">Реакторы</a></li>
-            <li><a href="/processes/process/">Процессы</a></li>
-            <li><a href="/processes/packing/">Фасовка</a></li>
+                <div class="list-group" id="list-tab"  role="tablist">
+            <a class="list-group-item list-group-item-action" href="/processes/loading_lists/">Модели загрузочных листов</a>
+            <a class="list-group-item list-group-item-action" href="/processes/storages/">Реакторы</a>
+            <a class="list-group-item list-group-item-action" href="/processes/process/">Процессы</a>
+            <a class="list-group-item list-group-item-action" href="/processes/packing/">Фасовка</a>
             <hr>
-            <li><a href="/processes/planning/">Планирование</a></li>
-            <li><a href="/processes/new_tech_comp/">Формирование технологической композиции</a></li>
-            <li><a href="/processes/new_associated_process/">Создание связанного процесса</a></li>
+            <a class="list-group-item list-group-item-action" href="/processes/planning/">Планирование</a>
+            <a class="list-group-item list-group-item-action" href="/processes/new_tech_comp/">Формирование технологической композиции</a>
+            <a class="list-group-item list-group-item-action" href="/processes/new_associated_process/">Создание связанного процесса</a>
             <hr>
-            <li><a href="/processes/archive/">Архив</a></li>
-            <li><a href="/processes/stoped/">Прерванные процессы</a></li>
+            <a class="list-group-item list-group-item-action" href="/processes/archive/">Архив</a>
+            <a class="list-group-item list-group-item-action" href="/processes/stoped/">Прерванные процессы</a>
             <hr>
-            <li><a href="/processes/plan/">План на месяц</a></li>
-            <li><a href="/processes/task/">Задание на неделю</a></li>
-          </ul>
+            <a class="list-group-item list-group-item-action" href="/processes/plan/">План на месяц</a>
+            <a class="list-group-item list-group-item-action" href="/processes/task/">Задание на неделю</a>
                     </div>
             </nav>
         </div>
-        <div class="col-md-10 col-sm-12" >
+        <div class="col-md-10 col-sm-12" style="padding: .5rem">
+        <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li><a href="#">Процессы</a></li>
-            <li class="active">{{ header }}<!--Реактивы--></li>
+            <li class="breadcrumb-item"><a href="#">Процессы</a></li>
+            <li class="breadcrumb-item active">{{ header }}<!--Реактивы--></li>
           </ol>
+        </nav>
           {% block content %}
           {% endblock %}
       </div>
+    </div>
     </div>
 </body>

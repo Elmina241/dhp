@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 #Классы модели МЦ
@@ -175,12 +176,17 @@ class Base(models.Model):
     def __str__(self):
         return self.name
 
-class User(models.Model):
-    name = models.CharField(max_length=500)
-    group = models.IntegerField(default=0)
-    def __str__(self):
-        return self.name
+#class User(models.Model):
+    #name = models.CharField(max_length=500)
+    #group = models.IntegerField(default=0)
+    #def __str__(self):
+        #return self.name
 
+class User_group(models.Model):
+    user = models.ForeignKey('auth.User')
+    group = models.ForeignKey('Counterparty')
+    def __str__(self):
+        return str(self.user)
 
 class Demand(models.Model):
     date = models.DateField(auto_now_add=True)
