@@ -63,6 +63,7 @@ body {
 
 .no-data {
     color: #a8a8a8;
+    text-align: center;
 }
 
 .inline-el {

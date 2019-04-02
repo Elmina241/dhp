@@ -251,9 +251,8 @@ class Matrix(models.Model):
     )
     CAUSE_CHOICES = (
         ('0', 'Перемещение'),
-        ('1', 'Оприходование'),
-        ('2', 'Выбытие'),
-        ('3', 'Инвентаризация'),
+        ('1', 'Оприходование/Выбытие'),
+        ('2', 'Инвентаризация'),
     )
     access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
     cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')

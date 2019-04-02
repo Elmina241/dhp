@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 import json
 from tables.models import Unit
+from django.db.models import Q
 from .models import *
 from django.core import serializers
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
@@ -153,6 +154,20 @@ def counterparties(request):
     return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
 def requirements(request):
+    counter = User_group.objects.filter(user = request.user)[0]
+    reqs = {}
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False):
+        d_id = r.donor
+        reqs[str(r.pk)] = {
+            'id': r.pk,
+            'date': r.date.strftime('%d.%m.%Y'),
+            'consumer': str(r.consumer),
+            'provider': str(r.provider),
+            'donor': "-" if r.donor is None else str(r.donor),
+            'acceptor': str(r.acceptor),
+            'donor_id': "-" if r.donor is None else r.donor.pk,
+            'acceptor_id': r.acceptor.pk
+        }
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
@@ -170,7 +185,7 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"header": "Перемещение", "reqs": Demand.objects.filter(is_closed = False), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "requirements.html", {"header": "Перемещение", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -264,7 +279,7 @@ def get_demand_goods(request):
             data = {}
             for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
-                data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit), 'balance': d.balance}
+                data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit)}
             return HttpResponse(json.dumps(data))
 
 def save_stock_operation(request):

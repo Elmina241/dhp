@@ -9,6 +9,7 @@
         var goods = null;
         var units = null;
         var stocks = null;
+        var reqs = {};
         var reqInfo = {};
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
@@ -20,11 +21,29 @@
             document.getElementById("1").click();
             units = JSON.parse($("#units").prop("value"));
             stocks = JSON.parse($("#stock_data").prop("value"));
+            reqs = JSON.parse($("#reqs").prop("value"));
             addGoodField();
+            loadReqs("-1");
         });
 
 
-
+        function loadReqs(stock){
+            code = "";
+            if (stock == "-1"){
+                for (r in reqs){
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td><td></td><td></td></tr>";
+                }
+            }
+            else {
+                for (r in reqs){
+                    if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td><td></td><td></td></tr>";
+                    }
+                }
+            }
+            if (code == "") code = "<tr><td colspan='9' class='no-data'>Нет записей</td></tr>";
+            $("#req-body").html(code);
+        }
 
 
         function changeStatus(obj){
@@ -54,6 +73,7 @@
     <input id="goods_inf" value="{{ goods_inf }}" hidden>
     <input value="{{ stockData }}" id="stock_data" hidden/>
     <input value="{{ units }}" id="units" hidden/>
+    <input value="{{ reqs }}" id="reqs" hidden/>
     <div class="container-fluid">
         <input value="{{ count_data }}" id="countData" hidden/>
 
@@ -64,6 +84,13 @@
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_req">
                             Добавить перемещение
                         </button>
+                        <span style="margin-left: 30px">Склад</span>
+                        <select class="form-control inline-el" onchange="loadReqs($(this).val())">
+                            <option value="-1">Все</option>
+                            {% for s in stocks %}
+                                <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
+                            {% endfor %}
+                        </select>
 
                         <div class="form-inline" style="position: absolute; right: 0">
                             <lable for="filter" class="col-form-label">Поиск</lable>
@@ -91,45 +118,15 @@
                     </tr>
                     </thead>
                     <tbody id="req-body">
-                        {% for r in reqs %}
-                            <tr onclick="getDemandGoods({{ r.pk }})" id="l-{{ r.pk }}">
-                            {% if r.status == '1' %}
-                            <td align="center"><span style='font-size: 20px; color: green'
-                          onclick="openInf({{ r.pk }}, this)"><i class='fas fa-caret-down'></i></span></td>
-                                {% else %}
-                                <td align="center"><span style='font-size: 20px; color: darkgray'><i class='fas fa-caret-down'></i></span></td>
-                                {% endif %}
-                            <td>{{ r.date|date:"d.m.Y" }}</td>
-                            <td>{{ r.pk }}</td>
-                            <td>{{ r.provider }}</td>
-                            <td>{{ r.consumer }}</td>
-                            <td>{{ r.donor|default_if_none:"-" }}</td>
-                            <td>{{ r.acceptor|default_if_none:"-" }}</td>
-                            <td>{{ r.matrix.get_access_display }}</td>
-                            <td><span style='font-size: 17px;'
-                          onclick="changeStatus(this)"><i class='fas fa-edit'></i></span></td>
-                            </tr>
-                            <tr class="table-sub"  id="add-{{ r.pk }}"><td colspan="9"><div class="add-info">
-                                <div class="form-row">
-                        <div class="form-group col-md-2"><h8>Ожидаемая дата расхода</h8>
-                            <input type="date" class="form-control form-control-sm good-item"  value="{{ r.release_date|date:"Y-m-d" }}"/>
-                            </div>
-                        <div class="form-group col-md-2">
-                            <h8>Ожидаемая дата прихода</h8>
-                            <input type="date" class="form-control form-control-sm good-item" value="{{ r.finish_date|date:"Y-m-d" }}"/>
-                            </div>
 
-
-                    </div>
-                                <button class="btn btn-info" onclick="openSupply({{ r.pk }})">Получить поставку</button>
-
-                            </div></td></tr>
-                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
+            <div class="card-header">
+                <p>Номенклатура</p>
+            </div>
             <table class="table table-bordered">
                 <thead class="thead-light">
                 <tr>
@@ -139,7 +136,7 @@
                     <th scope="col">Ед. изм. операционная</th>
                     <th scope="col">Кол-во базовых ед.</th>
                     <th scope="col">Ед. изм. базовая</th>
-                    <th scope="col">Остаток</th>
+                    <!--<th scope="col">Остаток</th>-->
                 </tr>
                 </thead>
                 <tbody id="goods-body">
