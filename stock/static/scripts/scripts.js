@@ -1172,14 +1172,18 @@ function getDemandGoods(id) {
             addRows("goods-body", data);
             reqInfo[id] = {};
             var rows = JSON.parse(data);
+            i = 0;
             for (r in rows) {
-                reqInfo[id][r] = {
+                reqInfo[id][i] = {
                     id: r,
                     article: rows[r]['article'],
                     name: rows[r]['name'],
-                    amount: rows[r]['balance']
+                    amount: rows[r]['amount']
                 }
+                i++;
             }
+            curReq = id;
+            $("#editReqBtn").prop('disabled', !(reqs[id].access == reqs[id].role));
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
         }

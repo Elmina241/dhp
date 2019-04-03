@@ -11,6 +11,7 @@
         var stocks = null;
         var reqs = {};
         var reqInfo = {};
+        var curReq = null;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
@@ -26,18 +27,76 @@
             loadReqs("-1");
         });
 
+        function sendReq(goods) {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'save_req_goods/',
+                data: {
+                    'goods': JSON.stringify(goods)
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess() {
+                    for (r in reqInfo[curReq]){
+                        $("#goods-body").find("tr").eq(r).find("td").eq(2).html(goods[reqInfo[curReq][r].id]);
+                    }
+                    $("#editReqBtn").toggleClass('btn-success btn-primary');
+                    $("#editReqBtn").prop('value', 'Редактировать');
+                }
+            });
+        }
 
-        function loadReqs(stock){
+        function editReq() {
+            if ($("#editReqBtn").prop('value') == "Редактировать") {
+                $("#goods-body tr").each(function (item) {
+                    td = $(this).find("td").eq(2)
+                    val = td.text();
+                    td.html("<input class='form-control form-control-sm' type='number' value='" + val + "'>");
+                });
+                $("#editReqBtn").toggleClass('btn-primary btn-success');
+                $("#editReqBtn").prop('value', 'Сохранить');
+            }
+            else {
+                data = {};
+                $("#goods-body input").each(function (item) {
+                    data[reqInfo[curReq][item].id] = $(this).val();
+                });
+                sendReq(data);
+            }
+        }
+
+        function getStatus(s, r) {
+            var status = "";
+            if (s == '3') {
+                status = "<td>Отказ</td><td></td>";
+            }
+            else if (s == '4') {
+                status = "<td>Выполнение</td><td></td>";
+            }
+            else {
+                status = "<td>Запрос</td><td><span style='font-size: 17px;'\n" +
+                    "                          onclick=\"changeStatus(this)\"><i class='fas fa-edit'></i></span></td>";
+            }
+            return status;
+        }
+
+        function loadReqs(stock) {
             code = "";
-            if (stock == "-1"){
-                for (r in reqs){
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td><td></td><td></td></tr>";
+            if (stock == "-1") {
+                for (r in reqs) {
+                    status = getStatus(reqs[r].access, reqs[r].role);
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
                 }
             }
             else {
-                for (r in reqs){
+                for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td><td></td><td></td></tr>";
+                        status = getStatus(reqs[r].access, reqs[r].role);
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
                     }
                 }
             }
@@ -46,13 +105,13 @@
         }
 
 
-        function changeStatus(obj){
+        function changeStatus(obj) {
             select = obj.parentElement.previousElementSibling;
             text = $(select).text();
             code = "<div class='form-inline'><select class='form-control form-control-sm'><option value='3'>Запрос</option><option value='2'>Закрыт</option><option value='1'>Выполнение</option><option value='0'>Отказ</option></select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
                 "onclick='saveStatus(this.previousElementSibling)'><i class='fas fa-check'></i></span></div>";
             select.innerHTML = code;
-            $("option:contains('"+ text +"')", select.firstElementChild.firstElementChild).prop("selected", true);
+            $("option:contains('" + text + "')", select.firstElementChild.firstElementChild).prop("selected", true);
         }
 
         /*function saveStatus(obj){
@@ -60,11 +119,10 @@
             //
         }*/
 
-        function openInf(id, obj){
+        function openInf(id, obj) {
             $("#add-" + id).toggle();
             $(obj.firstChild).toggleClass("fa-caret-down fa-caret-up");
         }
-
 
 
     </script>
@@ -77,7 +135,7 @@
     <div class="container-fluid">
         <input value="{{ count_data }}" id="countData" hidden/>
 
-        <div class="card" style="margin-left: 30px;margin-right: 30px;" >
+        <div class="card" style="margin-left: 30px;margin-right: 30px;">
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline">
@@ -91,14 +149,6 @@
                                 <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
                             {% endfor %}
                         </select>
-
-                        <div class="form-inline" style="position: absolute; right: 0">
-                            <lable for="filter" class="col-form-label">Поиск</lable>
-                            <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px"
-                                   id="filter"
-                                   onchange=""/>
-                            <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -124,9 +174,11 @@
             </div>
         </div>
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
-            <div class="card-header">
-                <p>Номенклатура</p>
-            </div>
+            <h6 class="card-header">
+                Номенклатура
+                <input style="float: right" onclick="editReq()" type="button" id="editReqBtn" disabled
+                       class="btn btn-primary btn-sm" value="Редактировать"/>
+            </h6>
             <table class="table table-bordered">
                 <thead class="thead-light">
                 <tr>
@@ -176,7 +228,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <h6>Акцептор</h6>
-                            <select class="form-control"  id="acceptor">
+                            <select class="form-control" id="acceptor">
                             </select>
                         </div>
                     </div>
@@ -255,16 +307,16 @@
                 </div>
                 <div class="modal-body">
                     <table class="table table-bordered">
-                <thead class="thead-light">
-                <tr>
-                    <th scope="col">Артикул</th>
-                    <th scope="col">Наименование</th>
-                    <th scope="col">Поставка, кол-во</th>
-                </tr>
-                </thead>
-                <tbody id="supply-body">
-                </tbody>
-            </table>
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Артикул</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Поставка, кол-во</th>
+                        </tr>
+                        </thead>
+                        <tbody id="supply-body">
+                        </tbody>
+                    </table>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Оформить"
                                onclick=""

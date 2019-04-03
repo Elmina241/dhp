@@ -157,7 +157,13 @@ def requirements(request):
     counter = User_group.objects.filter(user = request.user)[0]
     reqs = {}
     for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False):
-        d_id = r.donor
+        if r.consumer == counter.group:
+            role = '2'
+        else:
+            if r.provider == counter.group:
+                role = '1'
+            else:
+                role = '0'
         reqs[str(r.pk)] = {
             'id': r.pk,
             'date': r.date.strftime('%d.%m.%Y'),
@@ -166,7 +172,9 @@ def requirements(request):
             'donor': "-" if r.donor is None else str(r.donor),
             'acceptor': str(r.acceptor),
             'donor_id': "-" if r.donor is None else r.donor.pk,
-            'acceptor_id': r.acceptor.pk
+            'acceptor_id': r.acceptor.pk,
+            'access': r.matrix.access,
+            'role': role
         }
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
@@ -281,6 +289,17 @@ def get_demand_goods(request):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
                 data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit)}
             return HttpResponse(json.dumps(data))
+
+def save_req_goods(request):
+    if request.method == 'POST':
+        if 'goods' in request.POST:
+            goods = json.loads(request.POST['goods'])
+            for g in goods:
+                d = Demand_good.objects.get(pk = g)
+                d.amount = goods[g]
+                d.balance = goods[g]
+                d.save()
+            return HttpResponse('ok')
 
 def save_stock_operation(request):
     if request.method == 'POST':
@@ -467,8 +486,16 @@ def save_good(request):
 def save_demand(request):
     if request.method == 'POST':
         if 'date' in request.POST:
+            group = User_group.objects.filter(user = request.user)[0].group
             consumer = Counterparty.objects.get(pk=request.POST['consumer'])
             provider = Counterparty.objects.get(pk=request.POST['provider'])
+            if consumer == group:
+                access = '1'
+            else:
+                if provider == group:
+                    access = '2'
+                else:
+                    access = '0'
             donor = None
             acceptor = None
             if request.POST['donor'] != '':
@@ -477,7 +504,7 @@ def save_demand(request):
                 acceptor = Stock.objects.get(pk=request.POST['acceptor'])
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
             goods = json.loads(request.POST['goods'])
-            matrix = Matrix(access = '0', cause = '0')
+            matrix = Matrix(access = access, cause = '0')
             matrix.save()
             demand = Demand(consumer=consumer, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
             demand.save()
