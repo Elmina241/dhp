@@ -153,6 +153,34 @@ def props(request):
 def counterparties(request):
     return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
+def supplies(request):
+    counter = User_group.objects.filter(user=request.user)[0]
+    reqs = {}
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(matrix__access='4'):
+        if r.consumer == counter.group:
+            role = '2'
+        else:
+            if r.provider == counter.group:
+                role = '1'
+            else:
+                role = '0'
+        reqs[str(r.pk)] = {
+            'id': r.pk,
+            'date': r.date.strftime('%d.%m.%Y'),
+            'consumer': str(r.consumer),
+            'provider': str(r.provider),
+            'donor': "-" if r.donor is None else str(r.donor),
+            'acceptor': str(r.acceptor),
+            'donor_id': "-" if r.donor is None else r.donor.pk,
+            'acceptor_id': r.acceptor.pk,
+            'role': role
+        }
+    stocks = {}
+    for s in Counter_stock.objects.all():
+        stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
+    return render(request, "supplies.html", {"header": "Поставки", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs)})
+
+
 def requirements(request):
     counter = User_group.objects.filter(user = request.user)[0]
     reqs = {}
@@ -678,8 +706,18 @@ def save_status(request):
     if request.method == 'POST':
         if 'id' in request.POST:
             d = Demand.objects.get(pk = request.POST['id'])
-            d.status = request.POST['status']
-            d.save()
+            status = request.POST['status']
+            if status == '1':
+                status = '4'
+            else:
+                if status == '2':
+                    status = '3'
+                else:
+                    if status == '3':
+                        d.is_closed = True
+                        d.save()
+            d.matrix.access = status
+            d.matrix.save()
             return HttpResponse('ok')
 
 def edit_prop(request):

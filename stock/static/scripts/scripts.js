@@ -323,9 +323,11 @@ function addRows(table, data) {
         }
         row = row + "</tr>";
     }
+    colNum = $("#" + table).parent().find("th").length;
     var tableBody = $("#" + table);
     //var rowCount = $("#" + table + " tr").length;
     $(tableBody).html("");
+    if (row == "") row = "<tr><td colspan='" + colNum + "' class='no-data'>Нет записей</td></tr>";
     //for (i = 0; i < rowCount; i++) $("#" + table + " tr").eq(0).remove();
     $(row).appendTo(tableBody);
 }
@@ -1183,7 +1185,7 @@ function getDemandGoods(id) {
                 i++;
             }
             curReq = id;
-            $("#editReqBtn").prop('disabled', !(reqs[id].access == reqs[id].role || reqs[id].isEdited));
+            $("#editReqBtn").prop('disabled', reqs[id].isEdited);
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
         }
