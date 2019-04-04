@@ -69,7 +69,7 @@
             }
         }
 
-        function getStatus(s, r) {
+        function getStatus(s, id) {
             var status = "";
             if (s == '3') {
                 status = "<td>Отказ</td><td></td>";
@@ -79,7 +79,7 @@
             }
             else {
                 status = "<td>Запрос</td><td><span style='font-size: 17px;'\n" +
-                    "                          onclick=\"changeStatus(this)\"><i class='fas fa-edit'></i></span></td>";
+                    "                          onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></td>";
             }
             return status;
         }
@@ -88,14 +88,14 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    status = getStatus(reqs[r].access, reqs[r].role);
+                    status = getStatus(reqs[r].access, reqs[r].id);
                     code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        status = getStatus(reqs[r].access, reqs[r].role);
+                        status = getStatus(reqs[r].access, reqs[r].id);
                         code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
                     }
                 }
@@ -105,10 +105,19 @@
         }
 
 
-        function changeStatus(obj) {
+        function changeStatus(obj, id) {
+            if (!reqs[id].isEdited && reqs[id].access != reqs[id].role) {
+                options = "<option value='0'>Запрос</option><option value='3'>Закрыт</option>";
+            }
+            else if (reqs[id].isEdited && reqs[id].access == reqs[id].role){
+                options = "<option value='0'>Запрос</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
+            }
+            else {
+                options = "<option value='0'>Запрос</option><option value='1'>Выполнение</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
+            }
             select = obj.parentElement.previousElementSibling;
             text = $(select).text();
-            code = "<div class='form-inline'><select class='form-control form-control-sm'><option value='3'>Запрос</option><option value='2'>Закрыт</option><option value='1'>Выполнение</option><option value='0'>Отказ</option></select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
+            code = "<div class='form-inline'><select class='form-control form-control-sm'>" + options + "</select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
                 "onclick='saveStatus(this.previousElementSibling)'><i class='fas fa-check'></i></span></div>";
             select.innerHTML = code;
             $("option:contains('" + text + "')", select.firstElementChild.firstElementChild).prop("selected", true);

@@ -198,6 +198,7 @@ class Demand(models.Model):
     is_closed = models.BooleanField(default=False)
     release_date = models.DateField(null=True)
     finish_date = models.DateField(null = True)
+    is_edited = models.BooleanField(default=False)
     #status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)

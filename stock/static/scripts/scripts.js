@@ -1183,7 +1183,7 @@ function getDemandGoods(id) {
                 i++;
             }
             curReq = id;
-            $("#editReqBtn").prop('disabled', !(reqs[id].access == reqs[id].role));
+            $("#editReqBtn").prop('disabled', !(reqs[id].access == reqs[id].role || reqs[id].isEdited));
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
         }

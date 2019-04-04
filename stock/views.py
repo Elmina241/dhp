@@ -174,7 +174,8 @@ def requirements(request):
             'donor_id': "-" if r.donor is None else r.donor.pk,
             'acceptor_id': r.acceptor.pk,
             'access': r.matrix.access,
-            'role': role
+            'role': role,
+            'isEdited': r.is_edited
         }
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
@@ -298,7 +299,11 @@ def save_req_goods(request):
                 d = Demand_good.objects.get(pk = g)
                 d.amount = goods[g]
                 d.balance = goods[g]
+                matrix = d.matrix
                 d.save()
+            dem = Demand.objects.filter(matrix = matrix)[0]
+            dem.is_edited = True
+            dem.save()
             return HttpResponse('ok')
 
 def save_stock_operation(request):
