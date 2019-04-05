@@ -1156,13 +1156,14 @@ function openGood(id, obj) {
     });
 }
 
-function getDemandGoods(id) {
+function getDemandGoods(id, t = "d") {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
         url: 'get_demand_goods/',
         data: {
-            'id': id
+            'id': id,
+            't': t
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

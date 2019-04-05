@@ -5,6 +5,7 @@ import json
 from django.core import serializers
 from django.utils import timezone
 import datetime
+import operator
 from .models import Movement_rec, Operation, Acceptance, Packing_divergence, Packaged
 from processes.models import Batch, Kneading_char, Kneading_char_number, Kneading_char_var, Kneading
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, \
@@ -30,6 +31,7 @@ def movement(request):
         records[str(r.id)] = {"date": r.date.strftime('%d.%m.%Y'), "code": r.product.code,
                               "name": r.product.get_name_for_table, "batch": r.get_batch, "operation": r.operation.name,
                               "amount": r.amount, "comp": r.batch.kneading.list.formula.composition.id}
+    sorted_r = sorted(records.items(), key=operator.itemgetter(0), reverse=True)
     batches = {}
     for p in Packaged.objects.all():
         name = str(p.rec.batch.id) + "_" + str(p.rec.product.id)
@@ -52,7 +54,7 @@ def movement(request):
     #             if amm > 0:
     #                 batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
     return render(request, "movement.html",
-                  {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": records,
+                  {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": sorted_r,
                    "batches": batches, "last_acc": last_acc, "products": json.dumps(prods),
                    "batches2": json.dumps(batches)})
 

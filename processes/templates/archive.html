@@ -28,6 +28,14 @@ $.ajaxSetup({
     }
 });
 
+function compare(a,b) {
+  if (a.id < b.id)
+    return 1;
+  if (a.id > b.id)
+    return -1;
+  return 0;
+}
+
 function changeDate(year) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -43,6 +51,7 @@ function changeDate(year) {
         },
         success: function onAjaxSuccess(data) {
             kneadings = JSON.parse(data);
+            kneadings.sort(compare);
             code = "";
             for (k in kneadings){
                 code = code + "<tr><td>" + kneadings[k]['id'] + "</td><td>" + kneadings[k]['name'] + "</td><td>" + kneadings[k]['batch'] + "</td><td>" + kneadings[k]['start'] + "</td><td>" + kneadings[k]['end'] + "</td></tr>";
@@ -67,7 +76,7 @@ $(document).ready(function(){
     language: "ru",
     todayHighlight: true
   });
-  $("#prTable").tablesorter({sortList: [[1,1]]});
+  //$("#prTable").tablesorter({sortList: [[1,1]]});
   $("[name='start']").change(applyFilters);
   $("[name='end']").change(applyFilters);
 });
@@ -119,7 +128,7 @@ function filterDate(){
                 </thead>
                 <tbody id="kneading-body">
                           {% if kneading %}
-                  {% for k in kneading %}
+                  {% for k in kneading|dictsortreversed:"pk" %}
                   <tr>
                     <td>{{ k.id }}</td>
                     <td>П-{{ k.batch_num|floatformat:"0" }}</td>

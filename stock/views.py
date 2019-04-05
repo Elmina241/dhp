@@ -173,7 +173,9 @@ def supplies(request):
             'acceptor': str(r.acceptor),
             'donor_id': "-" if r.donor is None else r.donor.pk,
             'acceptor_id': r.acceptor.pk,
-            'role': role
+            'role': role,
+            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
         }
     stocks = {}
     for s in Counter_stock.objects.all():
@@ -317,6 +319,8 @@ def get_demand_goods(request):
             for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
                 data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit)}
+                if request.POST['t'] == 's':
+                    data[str(d.pk)]['balance'] = d.balance
             return HttpResponse(json.dumps(data))
 
 def save_req_goods(request):
@@ -333,6 +337,19 @@ def save_req_goods(request):
             dem.is_edited = True
             dem.save()
             return HttpResponse('ok')
+
+def save_date(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            d = Demand.objects.get(pk = request.POST['id'])
+            if request.POST['t'] == '0':
+                d.release_date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
+                date = d.release_date
+            else:
+                d.finish_date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
+                date = d.finish_date
+            d.save()
+            return HttpResponse(date.strftime('%d.%m.%Y'))
 
 def save_stock_operation(request):
     if request.method == 'POST':
