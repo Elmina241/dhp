@@ -68,11 +68,14 @@
             var btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this, 0)\"><i class='fas fa-edit'></i></span>";
             $("#req-body tr").each(function (item) {
                 //условие отображения кнопки
+                id = $(this).prop('id').substr(2);
                 td = $(this).find('td').eq(7).html();
-                $(this).find('td').eq(7).html(td + btn);
-                btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
-                td = $(this).find('td').eq(8).html();
-                $(this).find('td').eq(8).html(td + btn);
+                if (reqs[id].role == '1'){
+                    $(this).find('td').eq(7).html(td + btn);
+                    btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
+                    td = $(this).find('td').eq(8).html();
+                    $(this).find('td').eq(8).html(td + btn);
+                }
             });
         }
 
@@ -144,7 +147,7 @@
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
             <h6 class="card-header">
                 Номенклатура
-                <input style="float: right" onclick="editReq()" type="button" id="editReqBtn" disabled
+                <input style="float: right"  type="button" id="makeSupplyBtn" onclick="openSupply()" disabled
                        class="btn btn-primary btn-sm" value="Оприходовать"/>
             </h6>
             <table class="table table-bordered">
@@ -167,106 +170,8 @@
             </table>
         </div>
     </div>
-    <div class="modal fade" id="add_req">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5>Создание требования</h5>
-                    <button class="close" data-dismiss="modal">x</button>
 
-                </div>
-                <div class="modal-body create-form">
-                    <div class="form-row">
-                        <div class="form-group col-md-6"><h6>Поставщик</h6>
-                            <select class="form-control" id="provider" onchange="getStocks('donor')">
-                                {% for c in counters %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
-                                {% endfor %}
-                            </select></div>
-                        <div class="form-group col-md-6">
-                            <h6>Донор</h6>
-                            <select class="form-control" id="donor">
-                            </select></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <h6>Потребитель</h6>
-                            <select class="form-control" id="consumer" onchange="getStocks('acceptor')">
-                                {% for c in counters %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <h6>Акцептор</h6>
-                            <select class="form-control" id="acceptor">
-                            </select>
-                        </div>
-                    </div>
-                    <h6>Ожидаемая дата поступления</h6>
-                    <input type="date" class="form-control" id="date"/>
-                    <hr>
-                    <h6>Товары</h6>
-                    <div id="add_goods">
-                    </div>
-                    <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
-                          onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
-                    <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
-                    <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="counterBtn" onclick="saveDemand()" class="btn btn-primary"
-                               style="float: right"/></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal fade" id="inf_prop">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5>Редактирование свойства</h5>
-                    <button class="close" data-dismiss="modal">x</button>
-
-                </div>
-                <div class="modal-body create-form">
-                    <h6>Наименование</h6>
-                    <input type="text" class="form-control" id="e_name"/>
-                    <h6>Тип свойства</h6>
-                    <select class="form-control" name="type" id="e_type" disabled>
-                        <option value="0">Число</option>
-                        <option value="1">Текст</option>
-                        <option value="2">Множество</option>
-                    </select>
-                    <div id="e_charVal"></div>
-                    <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="editBtn" class="btn btn-primary"
-                               style="float: right"/></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="tree-div">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5>Товары</h5>
-                    <button class="close" data-dismiss="modal">x</button>
-
-                </div>
-                <div class="modal-body">
-                    <ul id="tree" class="goods_tree">
-
-                    </ul>
-                    <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Выбрать"
-                               onclick="setGoodName(inp);$('#tree-div').modal('hide');"
-                               id="selectBtn" class="btn btn-primary"
-                               style="float: right"/></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" id="supply">
         <div class="modal-dialog modal-md">

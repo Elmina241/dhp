@@ -359,6 +359,7 @@ def save_stock_operation(request):
             m = Matrix(access = '0', cause = request.POST['cause'], cause_id = request.POST['id'])
             m.save()
             p = Package(matrix = m, stock = demand.acceptor, date = datetime.datetime.now())
+            p.save()
             for g in goods:
                 good_d = Demand_good.objects.get(pk = goods[g]['id'])
                 s = Stock_operation(

@@ -1181,22 +1181,25 @@ function getDemandGoods(id, t = "d") {
                     id: r,
                     article: rows[r]['article'],
                     name: rows[r]['name'],
-                    amount: rows[r]['amount']
+                    amount: rows[r]['amount'],
+                    balance: rows[r]['balance']
                 }
                 i++;
             }
             curReq = id;
             $("#editReqBtn").prop('disabled', reqs[id].isEdited);
+            $("#makeSupplyBtn").prop('disabled', reqs[id].role != '2');
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
         }
     });
 }
 
-function openSupply(id) {
+function openSupply() {
+    id = curReq;
     code = "";
     for (r in reqInfo[id]) {
-        code = code + "<tr id=" + r + "><td>" + reqInfo[id][r].article + "</td><td>" + reqInfo[id][r].name + "</td><td><input type='number' class='form-control' value=" + reqInfo[id][r].amount + " /></td></tr>";
+        code = code + "<tr id=" + reqInfo[id][r].id + "><td>" + reqInfo[id][r].article + "</td><td>" + reqInfo[id][r].name + "</td><td><input type='number' class='form-control form-control-sm' value=" + reqInfo[id][r].balance + " /></td></tr>";
     }
     $("#supply-body").html(code);
     $("#supply").modal();
@@ -1225,8 +1228,8 @@ function openSupply(id) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             },
-            success: function onAjaxSuccess(data) {
-
+            success: function onAjaxSuccess() {
+                document.location.href = "/stock/stock_operations/";
             }
         });
     });
