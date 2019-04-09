@@ -56,3 +56,22 @@ h2 {
   display: inline-block;
   float: left;
 }
+
+.nav-link2 {
+  font-weight: 500;
+  color: #333;
+}
+
+.nav-link2 .feather {
+  margin-right: 4px;
+  color: #999;
+}
+
+.nav-link2.active {
+  color: #007bff;
+}
+
+.nav-link2:hover .feather,
+.nav-link2.active .feather {
+  color: inherit;
+}

@@ -26,7 +26,7 @@ $.fn.extend({
                     icon.toggleClass(openedClass + " " + closedClass);
                     $(this).children().children().toggle();
                 }
-            })
+            });
             branch.children().children().toggle();
         });
         //fire event from the dynamically added icon

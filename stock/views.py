@@ -727,6 +727,12 @@ def save_status(request):
             status = request.POST['status']
             if status == '1':
                 status = '4'
+                if d.donor is not None:
+                    ord_donor = Order(stock = d.donor, matrix = d.matrix, isDonor = True, status = '0')
+                    ord_donor.save()
+                if d.acceptor is not None:
+                    ord_acceptor = Order(stock=d.acceptor, matrix=d.matrix, isDonor=False, status='0')
+                    ord_acceptor.save()
             else:
                 if status == '2':
                     status = '3'

@@ -7,6 +7,11 @@
     background-color: white;
     padding: 10px;
     border-bottom: 1px solid #cfdce3;
+    margin-bottom: 30px;
+}
+
+.menu-btn {
+    margin-left: 5px;
 }
 
 .stock_table {
@@ -15,20 +20,20 @@
     background-color: white;
     margin-left: 30px;
     margin-right: 30px;
-    border: 1px solid #cfdce3;
+    border: 0px solid #cfdce3;
 }
 
 .goods_table{
     /*margin-top: 30px;*/
     background-color: white;
-    margin-left: 30px;
-    margin-right: 30px;
-    border: 1px solid #cfdce3;
+    /*margin-left: 30px;
+    margin-right: 30px;*/
+    border: 0px solid #cfdce3;
 }
 
 .goods_tree{
     background-color: white;
-    border: 1px solid #cfdce3;
+    /*border: 1px solid #cfdce3;*/
 }
 
 .goods-tree-container{
@@ -40,7 +45,7 @@
 li { cursor: pointer; }
 
 .filter {
-    margin: 15px 0 15px 30px;
+    margin: 0px 0 0px 0px;
 }
 
 body {
@@ -58,5 +63,136 @@ body {
 
 .no-data {
     color: #a8a8a8;
+    text-align: center;
+}
 
+.inline-el {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.create-form h6:not(:first-child){
+    margin-top: 10px;
+}
+
+#tree li span:not(.txt){
+    opacity: 0.5;
+}
+
+#tree li span:hover{
+    opacity: 1;
+}
+
+.table-sm tbody tr td{
+    padding: 5px 0px 5px 10px;
+    text-align: center;
+}
+
+.txt.active{
+    background: #eceeef;
+    /*border: solid #eceeef 1px;*/
+}
+
+.half{
+    width: 47%;
+}
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.add-btn {
+    width: 100%;
+    height: 25px;
+    font-size: 10pt;
+    padding: 0;
+}
+
+.good-item {
+    margin-top: 10px;
+}
+
+.add-info {
+    width: 100%;
+    height: 120px;
+}
+
+.add-info-good {
+    width: 100%;
+    height: 220px;
+}
+
+h8 {
+    font-size: 11pt;
+}
+
+.table-sub {
+    background-color: #f5f7f8;
+    display: none;
+}
+
+.table-selected {
+    background-color: #edf9fc;
+}
+
+h9{
+    display: block;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #68666a;
+}
+
+.tab-pane{
+    padding: 15px;
+}
+
+.nav-tabs a:link {
+  color: #b8b4af;
+}
+
+.nav-tabs a:hover {
+  color: #23a3ab;
+  border-bottom: .07em solid;
+}
+
+.login {
+    font-size: 65pt;
+    margin: auto;
+    margin-top: 20px;
+    text-align: center;
+    color: #169eb3;
+    margin-bottom: 20px;
 }

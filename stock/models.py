@@ -273,7 +273,7 @@ class Order(models.Model):
     stock = models.ForeignKey('Stock')
     matrix = models.ForeignKey('Matrix')
     isDonor = models.BooleanField()
-    date = models.DateField(blank=True)
+    date = models.DateField(auto_now_add=True, blank=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='0')
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)

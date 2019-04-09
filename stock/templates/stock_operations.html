@@ -97,7 +97,7 @@
                     {% for key, values in operations.items %}
                         <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
                             <td>{{ values.date }}</td>
-                            <td>{{ values.cause }}</td>
+                            <td>{{ values.operation }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>
                         </tr>
                     {% endfor %}
