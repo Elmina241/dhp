@@ -50,9 +50,12 @@ def stocks(request):
 def auth(request):
     users = User.objects.all()
     if request.user.is_authenticated():
-        return redirect('goods')
+        return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
+
+def main(request):
+    return render(request, "main-page.html", {"header": "Главная страница"})
 
 def logout(request):
     auth_logout(request)

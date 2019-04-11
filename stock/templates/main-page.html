@@ -1,0 +1,74 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <script>
+    </script>
+    <div class="container-fluid" style="max-width: 1200px;">
+        <div class="card-deck mb-3 text-center">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Перемещение</h4>
+                </div>
+                <div class="card-body">
+                    <p class="login"><span> <i class="fas fa-dolly"></i></span></p>
+                    <hr>
+                    <ul class="nav flex-column main-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Поставки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i> Требования</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Склад</h4>
+                </div>
+                <div class="card-body">
+                    <p class="login"><span> <i class="fas fa-boxes"></i></span></p>
+                    <hr>
+                    <ul class="nav flex-column main-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-box"></i> Остатки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-book"></i> Журнал учётных операций</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-truck"></i> Отгрузка</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-dolly-flatbed"></i> Поставки</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Справочник</h4>
+                </div>
+                <div class="card-body">
+                    <p class="login"><span><i class="fas fa-clipboard-list"></i></span></p>
+                    <hr>
+                    <ul class="nav flex-column main-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="far fa-clipboard"></i> Макеты товаров</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-cubes"></i> Товары</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-cogs"></i> Свойства</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="far fa-address-book"></i> Контрагенты</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
