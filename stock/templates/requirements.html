@@ -41,7 +41,7 @@
                     }
                 },
                 success: function onAjaxSuccess() {
-                    for (r in reqInfo[curReq]){
+                    for (r in reqInfo[curReq]) {
                         $("#goods-body").find("tr").eq(r).find("td").eq(2).html(goods[reqInfo[curReq][r].id]);
                     }
                     $("#editReqBtn").toggleClass('btn-success btn-primary');
@@ -106,13 +106,13 @@
 
 
         function changeStatus(obj, id) {
-            if (!reqs[id].isEdited && reqs[id].access != reqs[id].role && reqs[id].access !='0' && reqs[id].access !='3') {
+            if (!reqs[id].isEdited && reqs[id].access != reqs[id].role && reqs[id].access != '0' && reqs[id].access != '3') {
                 options = "<option value='0'>Запрос</option><option value='3'>Закрыт</option>";
             }
-            else if (reqs[id].isEdited && reqs[id].access == reqs[id].role){
+            else if (reqs[id].isEdited && reqs[id].access == reqs[id].role) {
                 options = "<option value='0'>Запрос</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
-            else if (reqs[id].access =='3'){
+            else if (reqs[id].access == '3') {
                 options = "<option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
             else {
@@ -147,26 +147,32 @@
     <div class="container-fluid">
         <input value="{{ count_data }}" id="countData" hidden/>
 
+
         <div class="card" style="margin-left: 30px;margin-right: 30px;">
             <div class="card-header">
                 <div class="filter">
-                    <div class="form-inline">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_req">
-                            Добавить перемещение
+                    <div class="form-inline" style="float: left">
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#add_req">
+                            Добавить требование
                         </button>
                         <span style="margin-left: 30px">Склад</span>
-                        <select class="form-control inline-el" onchange="loadReqs($(this).val())">
+                        <select class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
                             <option value="-1">Все</option>
                             {% for s in stocks %}
                                 <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
                             {% endfor %}
                         </select>
+
                     </div>
+                <div class="btn-group" style="float: right" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-primary btn-sm">Входящие</button>
+                            <button type="button" class="btn btn-primary btn-sm" disabled>Исходящие</button>
+                        </div>
                 </div>
             </div>
             <div class="count_table" style="padding-bottom: 0">
-                <table class="table table-bordered table-hover" style="margin-bottom: 0">
-                    <thead class="thead-light">
+                <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
+                    <thead class="thead" style="text-align: center">
                     <tr>
                         <th></th>
                         <th scope="col">Дата</th>
@@ -191,8 +197,8 @@
                 <input style="float: right" onclick="editReq()" type="button" id="editReqBtn" disabled
                        class="btn btn-primary btn-sm" value="Редактировать"/>
             </h6>
-            <table class="table table-bordered">
-                <thead class="thead-light">
+            <table class="table table-bordered table-sm">
+                <thead class="thead" style="text-align: center">
                 <tr>
                     <th scope="col">Артикул</th>
                     <th scope="col">Наименование</th>
@@ -204,7 +210,9 @@
                 </tr>
                 </thead>
                 <tbody id="goods-body">
-                <tr><td colspan="6" class="no-data">Нет записей</td></tr>
+                <tr>
+                    <td colspan="6" class="no-data">Нет записей</td>
+                </tr>
                 </tbody>
             </table>
         </div>

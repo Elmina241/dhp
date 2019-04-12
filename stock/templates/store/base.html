@@ -14,7 +14,21 @@
 <body>
 {% if request.user.username %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="btn-group">
+<div class="btn-group">
+        <div class="dropdown">
+            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                Перемещение
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="/stock/requirements/">Требования</a>
+                <a class="dropdown-item" href="/stock/supplies/">Поставки</a>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group" style="margin-left: 5px">
         <div class="dropdown">
             <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                data-toggle="dropdown"
@@ -23,10 +37,10 @@
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="/stock/requirements/">Перемещения</a>
+                <a class="dropdown-item" href="/stock/stock_operations/">Журнал учётных операций</a>
+                <a class="dropdown-item" href="/stock/stocks/">Остатки</a>
+                <a class="dropdown-item" href="/stock/supplies/">Отгрузка</a>
                 <a class="dropdown-item" href="/stock/supplies/">Поставки</a>
-                <a class="dropdown-item" href="/stock/stock_operations/">Журнал приходов/расходов</a>
-                <a class="dropdown-item" href="/stock/stocks/">Объекты оборота</a>
             </div>
         </div>
     </div>

@@ -227,7 +227,7 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"header": "Перемещение", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "requirements.html", {"header": "Требования", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
