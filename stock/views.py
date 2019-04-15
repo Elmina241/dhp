@@ -208,7 +208,8 @@ def requirements(request):
             'acceptor_id': r.acceptor.pk,
             'access': r.matrix.access,
             'role': role,
-            'isEdited': r.is_edited
+            'isEdited': r.is_edited,
+            'vin': r.vin
         }
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
@@ -361,8 +362,10 @@ def save_stock_operation(request):
             goods = json.loads(request.POST['goods'])
             m = Matrix(access = '0', cause = request.POST['cause'], cause_id = request.POST['id'])
             m.save()
-            p = Package(matrix = m, stock = demand.acceptor, date = datetime.datetime.now())
+            p = Package(matrix = m, vin= demand.acceptor.cur_vin, stock = demand.acceptor, date = datetime.datetime.now())
             p.save()
+            demand.acceptor.cur_vin = demand.acceptor.cur_vin + 1
+            demand.acceptor.save()
             for g in goods:
                 good_d = Demand_good.objects.get(pk = goods[g]['id'])
                 s = Stock_operation(
@@ -407,7 +410,7 @@ def stock_operations(request):
     for s in Stock_operation.objects.all():
         id = s.package.pk
         if id not in operations:
-            operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display()}
+            operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display()}
         operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
     return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
@@ -552,6 +555,7 @@ def save_demand(request):
                     access = '0'
             donor = None
             acceptor = None
+            vin = group.cur_vin
             if request.POST['donor'] != '':
                 donor = Stock.objects.get(pk=request.POST['donor'])
             if request.POST['acceptor'] != '':
@@ -560,8 +564,10 @@ def save_demand(request):
             goods = json.loads(request.POST['goods'])
             matrix = Matrix(access = access, cause = '0')
             matrix.save()
-            demand = Demand(consumer=consumer, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
+            demand = Demand(consumer=consumer, vin= vin, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
             demand.save()
+            group.cur_vin = group.cur_vin + 1
+            group.save()
             matrix.cause_id = demand.pk
             matrix.save()
             for g in goods:
@@ -578,8 +584,10 @@ def save_supply(request):
             consumer = Counterparty.objects.get(pk=request.POST['consumer'])
             acceptor = Stock.objects.get(pk=request.POST['acceptor'])
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
-            p = Package(stock= acceptor, matrix = matrix, date = date)
+            p = Package(stock= acceptor, vin = acceptor.cur_vin, matrix = matrix, date = date)
             p.save()
+            acceptor.cur_vin = acceptor.cur_vin + 1
+            acceptor.cur_vin.save()
             goods = json.loads(request.POST['goods'])
             for g in goods:
                 good = Goods.objects.get(pk=goods[g]['product'])

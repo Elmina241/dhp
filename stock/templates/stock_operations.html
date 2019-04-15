@@ -35,7 +35,7 @@
             code = "";
             for (row in operations) {
                 if (operations[row]['cause'] == group || group == "Все операции") {
-                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['date'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td></tr>";
+                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td></tr>";
                 }
             }
             if (code == "") code = "<tr><td colspan=3 align='center'>Нет записей</td></tr>";
@@ -88,6 +88,7 @@
                 <table class="table table-bordered table-hover" style="margin-bottom: 0">
                     <thead class="thead-light">
                     <tr>
+                        <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Основание</th>
                         <th scope="col">Склад</th>
@@ -96,6 +97,7 @@
                     <tbody id="op-body">
                     {% for key, values in operations.items %}
                         <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
+                            <td>{{ values.vin }}</td>
                             <td>{{ values.date }}</td>
                             <td>{{ values.operation }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>

@@ -147,6 +147,7 @@ class Counterparty(models.Model):
     is_provider = models.BooleanField()
     is_consumer = models.BooleanField()
     is_member = models.BooleanField()
+    cur_vin = models.IntegerField(default='0', blank=True)
     def __str__(self):
         return self.name
 
@@ -165,6 +166,7 @@ class Currency(models.Model):
 class Stock(models.Model):
     name = models.CharField(max_length=200)
     currency = models.ForeignKey('Currency', null=True)
+    cur_vin = models.IntegerField(default='0')
     def __str__(self):
         if self is None:
             return "-"
@@ -199,6 +201,8 @@ class Demand(models.Model):
     release_date = models.DateField(null=True)
     finish_date = models.DateField(null = True)
     is_edited = models.BooleanField(default=False)
+    vin = models.IntegerField(blank=True)
+    is_demand = models.BooleanField(default=True)
     #status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)
@@ -282,5 +286,6 @@ class Package(models.Model):
     stock = models.ForeignKey('Stock')
     matrix = models.ForeignKey('Matrix')
     date = models.DateField(blank=True)
+    vin = models.IntegerField(blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)

@@ -12,6 +12,7 @@
         var reqs = {};
         var reqInfo = {};
         var curReq = null;
+        var isInbox = false;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
@@ -26,6 +27,13 @@
             addGoodField();
             loadReqs("-1");
         });
+
+        function toggleReqs(btn, t) {
+            isInbox = t;
+            $(".reqBtn").prop('disabled', false);
+            btn.disabled = true;
+            loadReqs($("#curStock").val());
+        }
 
         function sendReq(goods) {
             var csrftoken = getCookie('csrftoken');
@@ -86,17 +94,23 @@
 
         function loadReqs(stock) {
             code = "";
+            if (isInbox) role = '1';
+            else role = '2';
             if (stock == "-1") {
                 for (r in reqs) {
-                    status = getStatus(reqs[r].access, reqs[r].id);
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
+                    if (role == reqs[r].role){
+                        status = getStatus(reqs[r].access, reqs[r].id);
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
+                }
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        status = getStatus(reqs[r].access, reqs[r].id);
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td></td><td>" + reqs[r].date + "</td><td>" + reqs[r].id + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
+                        if (role == reqs[r].role) {
+                            status = getStatus(reqs[r].access, reqs[r].id);
+                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
+                        }
                     }
                 }
             }
@@ -156,7 +170,7 @@
                             Добавить требование
                         </button>
                         <span style="margin-left: 30px">Склад</span>
-                        <select class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
+                        <select id="curStock" class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
                             <option value="-1">Все</option>
                             {% for s in stocks %}
                                 <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
@@ -165,8 +179,8 @@
 
                     </div>
                 <div class="btn-group" style="float: right" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-primary btn-sm">Входящие</button>
-                            <button type="button" class="btn btn-primary btn-sm" disabled>Исходящие</button>
+                            <button type="button" class="btn btn-primary btn-sm reqBtn" onclick="toggleReqs(this, true)">Входящие</button>
+                            <button type="button" class="btn btn-primary btn-sm reqBtn" onclick="toggleReqs(this, false)" disabled>Исходящие</button>
                         </div>
                 </div>
             </div>
@@ -174,9 +188,8 @@
                 <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
                     <thead class="thead" style="text-align: center">
                     <tr>
-                        <th></th>
+                        <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
-                        <th scope="col">Номер</th>
                         <th scope="col">Поставщик</th>
                         <th scope="col">Потребитель</th>
                         <th scope="col">Донор</th>
