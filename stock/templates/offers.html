@@ -96,8 +96,8 @@
 
         function loadReqs(stock) {
             code = "";
-            if (isInbox) role = '1';
-            else role = '2';
+            if (isInbox) role = '2';
+            else role = '1';
             if (stock == "-1") {
                 for (r in reqs) {
                     if (role == reqs[r].role){
@@ -169,7 +169,7 @@
                 <div class="filter">
                     <div class="form-inline" style="float: left">
                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#add_req">
-                            Добавить запрос
+                            Добавить предложение
                         </button>
                         <span style="margin-left: 30px">Склад</span>
                         <select id="curStock" class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
@@ -209,8 +209,8 @@
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
             <h6 class="card-header">
                 Номенклатура
-                <input style="float: right" onclick="editReq()" type="button" id="editReqBtn" disabled
-                       class="btn btn-primary btn-sm" value="Редактировать"/>
+                <!--<input style="float: right" onclick="editReq()" type="button" id="editReqBtn" disabled
+                       class="btn btn-primary btn-sm" value="Редактировать"/>-->
             </h6>
             <table class="table table-bordered table-sm">
                 <thead class="thead" style="text-align: center">
@@ -236,16 +236,20 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Создание запроса</h5>
+                    <h5>Создание предложения</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
                 <div class="modal-body create-form">
                     <div class="form-row">
                         <div class="form-group col-md-6"><h6>Поставщик</h6>
-                            <select class="form-control" id="provider" onchange="getStocks('donor')">
+                            <select class="form-control" id="provider" readonly onchange="getStocks('donor')">
                                 {% for c in counters %}
+                                    {% if c == counter %}
+                                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                    {% else %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select></div>
                         <div class="form-group col-md-6">
@@ -256,13 +260,9 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <h6>Потребитель</h6>
-                            <select class="form-control" id="consumer" readonly onchange="getStocks('acceptor')">
+                            <select class="form-control" id="consumer" onchange="getStocks('acceptor')">
                                 {% for c in counters %}
-                                    {% if c == counter %}
-                                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
-                                    {% else %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
-                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -282,7 +282,7 @@
                           onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
                     <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="counterBtn" onclick="saveDemand(true)" class="btn btn-primary"
+                        <input value="Сохранить" id="counterBtn" onclick="saveDemand(false)" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>

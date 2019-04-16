@@ -426,7 +426,7 @@ function saveModel() {
     });
 }
 
-function saveDemand() {
+function saveDemand(isDemand) {
     goods = {};
     $("#add_goods").find(".good-item").each(function (item) {
         goods[item] = {};
@@ -445,7 +445,8 @@ function saveDemand() {
             'donor': $("#donor").val(),
             'acceptor': $("#acceptor").val(),
             'date': $("#date").prop('value'),
-            'goods': JSON.stringify(goods)
+            'goods': JSON.stringify(goods),
+            'is_demand': isDemand
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

@@ -185,11 +185,10 @@ def supplies(request):
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
     return render(request, "supplies.html", {"header": "Поставки", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs)})
 
-
-def requirements(request):
+def offers(request):
     counter = User_group.objects.filter(user = request.user)[0]
     reqs = {}
-    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False):
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand = False):
         if r.consumer == counter.group:
             role = '2'
         else:
@@ -228,7 +227,51 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"header": "Требования", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "offers.html", {"header": "Предложения", "reqs": json.dumps(reqs), "counter": counter.group, "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+
+def requirements(request):
+    counter = User_group.objects.filter(user = request.user)[0]
+    reqs = {}
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand= True):
+        if r.consumer == counter.group:
+            role = '2'
+        else:
+            if r.provider == counter.group:
+                role = '1'
+            else:
+                role = '0'
+        reqs[str(r.pk)] = {
+            'id': r.pk,
+            'date': r.date.strftime('%d.%m.%Y'),
+            'consumer': str(r.consumer),
+            'provider': str(r.provider),
+            'donor': "-" if r.donor is None else str(r.donor),
+            'acceptor': str(r.acceptor),
+            'donor_id': "-" if r.donor is None else r.donor.pk,
+            'acceptor_id': r.acceptor.pk,
+            'access': r.matrix.access,
+            'role': role,
+            'isEdited': r.is_edited,
+            'vin': r.vin
+        }
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0])
+    goods = []
+    goods_inf = {}
+    i = 0
+    for g in Good_name.objects.all():
+        goods.append(g.article + ' ' + g.name)
+        goods_inf[i] = g.product.pk
+        i = i + 1
+    units = {}
+    for u in Goods_unit.objects.all():
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+    stocks = {}
+    for s in Counter_stock.objects.all():
+        stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
+    return render(request, "requirements.html", {"header": "Запросы", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "counter": counter.group, "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -564,7 +607,7 @@ def save_demand(request):
             goods = json.loads(request.POST['goods'])
             matrix = Matrix(access = access, cause = '0')
             matrix.save()
-            demand = Demand(consumer=consumer, vin= vin, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
+            demand = Demand(consumer=consumer, is_demand=json.loads(request.POST['is_demand']), vin= vin, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
             demand.save()
             group.cur_vin = group.cur_vin + 1
             group.save()
