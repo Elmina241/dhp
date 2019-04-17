@@ -1178,25 +1178,28 @@ function getDemandGoods(id, t = "d") {
             var rows = JSON.parse(data);
             i = 0;
             for (r in rows) {
-                reqInfo[id][i] = {
-                    id: r,
-                    article: rows[r]['article'],
-                    name: rows[r]['name'],
-                    amount: rows[r]['amount'],
-                    balance: rows[r]['balance']
+                if (rows[r]['article'] != undefined) {
+                    reqInfo[id][i] = {
+                        id: r,
+                        article: rows[r]['article'],
+                        name: rows[r]['name'],
+                        amount: rows[r]['amount'],
+                        balance: rows[r]['balance']
+                    }
+                    i++;
                 }
-                i++;
             }
             curReq = id;
             $("#editReqBtn").prop('disabled', reqs[id].isEdited);
-            $("#makeSupplyBtn").prop('disabled', reqs[id].role != '2');
+            $("#makeShipmentBtn").prop('disabled', false);
+            $("#makeSupplyBtn").prop('disabled', !rows['is_finished']);
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
         }
     });
 }
 
-function openSupply() {
+function openSupply(isDonor) {
     id = curReq;
     code = "";
     for (r in reqInfo[id]) {
@@ -1204,6 +1207,8 @@ function openSupply() {
     }
     $("#supply-body").html(code);
     $("#supply").modal();
+    if (isDonor) operation = 1;
+    else operation = 0;
     $("#supplyBtn").unbind('click');
     $("#supplyBtn").click(function () {
         var csrftoken = getCookie('csrftoken');
@@ -1220,9 +1225,10 @@ function openSupply() {
             url: 'save_stock_operation/',
             data: {
                 'id': id,
-                'operation': 0,
+                'operation': operation,
                 'cause': 1,
-                'goods': JSON.stringify(goods)
+                'goods': JSON.stringify(goods),
+                'isDonor': isDonor
             },
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

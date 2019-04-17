@@ -156,10 +156,10 @@ def props(request):
 def counterparties(request):
     return render(request, "counterparties.html", {"header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
-def supplies(request):
+def shipment(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
-    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(matrix__access='4'):
+    for r in Demand.objects.filter(provider=counter.group, matrix__access='4'):
         if r.consumer == counter.group:
             role = '2'
         else:
@@ -177,6 +177,37 @@ def supplies(request):
             'donor_id': "-" if r.donor is None else r.donor.pk,
             'acceptor_id': r.acceptor.pk,
             'role': role,
+            'vin': r.vin,
+            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+        }
+    stocks = {}
+    for s in Counter_stock.objects.all():
+        stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
+    return render(request, "shipment.html", {"header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs)})
+
+def supplies(request):
+    counter = User_group.objects.filter(user=request.user)[0]
+    reqs = {}
+    for r in Demand.objects.filter(consumer=counter.group, matrix__access='4'):
+        if r.consumer == counter.group:
+            role = '2'
+        else:
+            if r.provider == counter.group:
+                role = '1'
+            else:
+                role = '0'
+        reqs[str(r.pk)] = {
+            'id': r.pk,
+            'date': r.date.strftime('%d.%m.%Y'),
+            'consumer': str(r.consumer),
+            'provider': str(r.provider),
+            'donor': "-" if r.donor is None else str(r.donor),
+            'acceptor': str(r.acceptor),
+            'donor_id': "-" if r.donor is None else r.donor.pk,
+            'acceptor_id': r.acceptor.pk,
+            'role': role,
+            'vin': r.vin,
             'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
             'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
         }
@@ -188,7 +219,7 @@ def supplies(request):
 def offers(request):
     counter = User_group.objects.filter(user = request.user)[0]
     reqs = {}
-    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand = False):
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False, is_demand = False).exclude(matrix__access='4'):
         if r.consumer == counter.group:
             role = '2'
         else:
@@ -232,7 +263,7 @@ def offers(request):
 def requirements(request):
     counter = User_group.objects.filter(user = request.user)[0]
     reqs = {}
-    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand= True):
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand= True).exclude(matrix__access='4'):
         if r.consumer == counter.group:
             role = '2'
         else:
@@ -363,6 +394,9 @@ def get_demand_goods(request):
         if 'id' in request.POST:
             demand = Demand.objects.get(pk=request.POST['id'])
             data = {}
+            if request.POST['t'] == 's':
+                ord = Order.objects.filter(matrix=demand.matrix, isDonor=True)[0]
+                data['is_finished'] = ord.status is '2'
             for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
                 data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit)}
@@ -409,6 +443,7 @@ def save_stock_operation(request):
             p.save()
             demand.acceptor.cur_vin = demand.acceptor.cur_vin + 1
             demand.acceptor.save()
+            balance = 0
             for g in goods:
                 good_d = Demand_good.objects.get(pk = goods[g]['id'])
                 s = Stock_operation(
@@ -420,14 +455,20 @@ def save_stock_operation(request):
                 )
                 s.save()
                 good_d.balance = good_d.balance - int(goods[g]['amount'])
+                balance = balance + good_d.balance
                 good_d.save()
                 #добавление информации в склад
-                if Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good).count() == 0:
-                    rec = Stock_good(stock = demand.acceptor, good = good_d.good, unit = Goods_unit.objects.filter(product = good_d.good, isBase = True)[0].unit, amount = Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount']))
-                    rec.save()
+                if json.loads(request.POST['isDonor']) != True:
+                    if Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good).count() == 0:
+                        rec = Stock_good(stock = demand.acceptor, good = good_d.good, unit = Goods_unit.objects.filter(product = good_d.good, isBase = True)[0].unit, amount = Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount']))
+                        rec.save()
+                    else:
+                        rec = Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good)[0]
+                        rec.amount = rec.amount + Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
+                        rec.save()
                 else:
-                    rec = Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good)[0]
-                    rec.amount = rec.amount + Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
+                    rec = Stock_good.objects.filter(stock=demand.donor, good=good_d.good)[0]
+                    rec.amount = rec.amount - Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(goods[g]['amount'])
                     rec.save()
             return HttpResponse('ok')
 
