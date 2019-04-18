@@ -1192,6 +1192,7 @@ function getDemandGoods(id, t = "d") {
             curReq = id;
             $("#editReqBtn").prop('disabled', reqs[id].isEdited);
             $("#makeShipmentBtn").prop('disabled', false);
+            $("#endShipmentBtn").prop('disabled', false);
             $("#makeSupplyBtn").prop('disabled', !rows['is_finished']);
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
@@ -1239,6 +1240,25 @@ function openSupply(isDonor) {
                 document.location.href = "/stock/stock_operations/";
             }
         });
+    });
+}
+
+function endShipment() {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'finish_shipment/',
+        data: {
+            'id': curReq
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess() {
+            //document.location.href = "/stock/stock_operations/";
+        }
     });
 }
 

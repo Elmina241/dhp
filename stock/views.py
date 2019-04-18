@@ -160,27 +160,28 @@ def shipment(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
     for r in Demand.objects.filter(provider=counter.group, matrix__access='4'):
-        if r.consumer == counter.group:
-            role = '2'
-        else:
-            if r.provider == counter.group:
-                role = '1'
+        if Order.objects.filter(matrix = r.matrix, isDonor = True)[0].status != '2':
+            if r.consumer == counter.group:
+                role = '2'
             else:
-                role = '0'
-        reqs[str(r.pk)] = {
-            'id': r.pk,
-            'date': r.date.strftime('%d.%m.%Y'),
-            'consumer': str(r.consumer),
-            'provider': str(r.provider),
-            'donor': "-" if r.donor is None else str(r.donor),
-            'acceptor': str(r.acceptor),
-            'donor_id': "-" if r.donor is None else r.donor.pk,
-            'acceptor_id': r.acceptor.pk,
-            'role': role,
-            'vin': r.vin,
-            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
-        }
+                if r.provider == counter.group:
+                    role = '1'
+                else:
+                    role = '0'
+            reqs[str(r.pk)] = {
+                'id': r.pk,
+                'date': r.date.strftime('%d.%m.%Y'),
+                'consumer': str(r.consumer),
+                'provider': str(r.provider),
+                'donor': "-" if r.donor is None else str(r.donor),
+                'acceptor': str(r.acceptor),
+                'donor_id': "-" if r.donor is None else r.donor.pk,
+                'acceptor_id': r.acceptor.pk,
+                'role': role,
+                'vin': r.vin,
+                'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+                'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+            }
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
@@ -190,27 +191,28 @@ def supplies(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
     for r in Demand.objects.filter(consumer=counter.group, matrix__access='4'):
-        if r.consumer == counter.group:
-            role = '2'
-        else:
-            if r.provider == counter.group:
-                role = '1'
+        if Order.objects.filter(matrix=r.matrix, isDonor=False)[0].status != '2':
+            if r.consumer == counter.group:
+                role = '2'
             else:
-                role = '0'
-        reqs[str(r.pk)] = {
-            'id': r.pk,
-            'date': r.date.strftime('%d.%m.%Y'),
-            'consumer': str(r.consumer),
-            'provider': str(r.provider),
-            'donor': "-" if r.donor is None else str(r.donor),
-            'acceptor': str(r.acceptor),
-            'donor_id': "-" if r.donor is None else r.donor.pk,
-            'acceptor_id': r.acceptor.pk,
-            'role': role,
-            'vin': r.vin,
-            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
-        }
+                if r.provider == counter.group:
+                    role = '1'
+                else:
+                    role = '0'
+            reqs[str(r.pk)] = {
+                'id': r.pk,
+                'date': r.date.strftime('%d.%m.%Y'),
+                'consumer': str(r.consumer),
+                'provider': str(r.provider),
+                'donor': "-" if r.donor is None else str(r.donor),
+                'acceptor': str(r.acceptor),
+                'donor_id': "-" if r.donor is None else r.donor.pk,
+                'acceptor_id': r.acceptor.pk,
+                'role': role,
+                'vin': r.vin,
+                'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+                'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+            }
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
@@ -439,7 +441,11 @@ def save_stock_operation(request):
             goods = json.loads(request.POST['goods'])
             m = Matrix(access = '0', cause = request.POST['cause'], cause_id = request.POST['id'])
             m.save()
-            p = Package(matrix = m, vin= demand.acceptor.cur_vin, stock = demand.acceptor, date = datetime.datetime.now())
+            if json.loads(request.POST['isDonor']) == True:
+                stock = demand.donor
+            else:
+                stock = demand.acceptor
+            p = Package(matrix = m, vin= demand.acceptor.cur_vin, stock = stock, date = datetime.datetime.now())
             p.save()
             demand.acceptor.cur_vin = demand.acceptor.cur_vin + 1
             demand.acceptor.save()
@@ -467,9 +473,19 @@ def save_stock_operation(request):
                         rec.amount = rec.amount + Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
                         rec.save()
                 else:
-                    rec = Stock_good.objects.filter(stock=demand.donor, good=good_d.good)[0]
-                    rec.amount = rec.amount - Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(goods[g]['amount'])
-                    rec.save()
+                    if Stock_good.objects.filter(stock=demand.donor, good=good_d.good).count() != 0:
+                        rec = Stock_good.objects.filter(stock=demand.donor, good=good_d.good)[0]
+                        rec.amount = rec.amount - Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(goods[g]['amount'])
+                        rec.save()
+                if balance == 0:
+                    if json.loads(request.POST['isDonor']):
+                        for g in goods:
+                            good_d = Demand_good.objects.get(pk=goods[g]['id'])
+                            good_d.balance = good_d.amount
+                            good_d.save()
+                    ord = Order.objects.filter(matrix = demand.matrix, isDonor = json.loads(request.POST['isDonor']))[0]
+                    ord.status = '2'
+                    ord.save()
             return HttpResponse('ok')
 
 def stock_operations(request):
@@ -733,6 +749,53 @@ def edit_good(request):
                         prop.var = Property_var.objects.get(pk=props[p]['value'])
                         prop.save()
             return HttpResponse('ok')
+
+def finish_shipment(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            demand = Demand.objects.get(pk = request.POST['id'])
+            ord = Order.objects.filter(matrix = demand.matrix, isDonor = True)[0]
+            ord.status = '2'
+            ord.save()
+            goods = []
+            m = Matrix(access = '4', cause = '0')
+            m.save()
+            for g in Demand_good.objects.filter(matrix = demand.matrix):
+                if g.balance != 0:
+                    good = Demand_good(matrix = m, good = g.good, name = g.name, unit = g.unit, amount=g.balance, balance = g.balance)
+                    good.save()
+                    goods.append(good)
+                    g.amount = g.amount - g.balance
+                    g.save()
+                g.balance = g.amount
+                g.save()
+            if len(goods) == 0:
+                 m.delete()
+            else:
+                group = User_group.objects.filter(user=request.user)[0].group
+                vin = group.cur_vin
+                group.cur_vin = group.cur_vin + 1
+                group.save()
+                new_demand = Demand(
+                    matrix = m,
+                    consumer = demand.consumer,
+                    provider=demand.provider,
+                    donor=demand.donor,
+                    acceptor=demand.acceptor,
+                    is_closed = False,
+                    finish_date = demand.finish_date,
+                    is_edited = False,
+                    vin = vin,
+                    is_demand = demand.is_demand,
+                )
+                new_demand.save()
+                if new_demand.donor is not None:
+                    ord_donor = Order(stock = new_demand.donor, matrix = new_demand.matrix, isDonor = True, status = '0')
+                    ord_donor.save()
+                if new_demand.acceptor is not None:
+                    ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, isDonor=False, status='0')
+                    ord_acceptor.save()
+        return HttpResponse('ok')
 
 def edit_model(request):
     if request.method == 'POST':
