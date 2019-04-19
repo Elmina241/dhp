@@ -29,23 +29,34 @@
             $("#goods-body").html(code);
             $(".table-selected").removeClass("table-selected");
             $("#" + id).addClass("table-selected");
+            $("#tableName").text(operations[id]['operation'] + " № " + operations[id]['vin']);
+            if (operations[id]['operation'] == "Приход"){
+                $("#orderHeader").text("Приходный ордер № " + operations[id]['vin']);
+            }
+            else {
+                $("#orderHeader").text("Расходный ордер № " + operations[id]['vin']);
+            }
+            $("#ordDate").text('Дата: ' + operations[id]['date']);
+            $("#ordStock").text('Склад: ' + operations[id]['stock']);
+            $("#prods").html(code);
         }
 
         function changeOperGroup(group) {
+            stock = $("#stock").val();
             code = "";
             for (row in operations) {
-                if (operations[row]['cause'] == group || group == "Все операции") {
-                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td></tr>";
+                if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1")) {
+                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['stock'] + "</td></tr>";
                 }
             }
-            if (code == "") code = "<tr><td colspan=3 align='center'>Нет записей</td></tr>";
+            if (code == "") code = "<tr><td colspan=4 align='center' class='no-data'>Нет записей</td></tr>";
             goods = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
             $("#goods-body").html(goods);
             $("#op-body").html(code);
         }
 
     </script>
-    <div class="container-fluid">
+    <div class="container-fluid pg">
     <input id="tree_data" value="{{ tree }}" hidden>
     <input id="goods" value="{{ goods }}" hidden>
     <input id="goods_inf" value="{{ goods_inf }}" hidden>
@@ -56,28 +67,34 @@
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline">
-                        <button type="button" class="btn btn-success inline-el" data-toggle="modal"
+                        <button type="button" class="btn btn-success inline-el btn-sm" data-toggle="modal"
                                 data-target="#add_supply">
                             Поставка
                         </button>
-                        <button type="button" class="btn btn-danger inline-el" data-toggle="modal"
+                        <button type="button" class="btn btn-danger inline-el btn-sm" data-toggle="modal"
                                 data-target="#add_req">
                             Выбытие
                         </button>
-                        <button type="button" class="btn btn-warning inline-el" data-toggle="modal"
+                        <button type="button" class="btn btn-warning inline-el btn-sm" data-toggle="modal"
                                 data-target="#add_req">
                             Инвентаризация
                         </button>
+                        <span>Склад</span>
+                        <select id="stock" class="form-control inline-el form-control-sm" onchange="changeOperGroup($('#group option:selected').text())">
+                            <option value="-1">Все</option>
+                            {% for s in stocks %}
+                                <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
+                            {% endfor %}
+                        </select>
                         <div class="form-inline" style="position: absolute; right: 0">
                             <lable for="filter" class="col-form-label">Фильтр</lable>
-                            <select class="form-control col-sm-9" style="margin-left:10px;width:300px"
+                            <select class="form-control col-sm-9 form-control-sm" id="group" style="margin-left:10px;width:300px"
                                     id="filter"
                                     onchange="changeOperGroup($('option:selected', this).text())">
                                 <option value="0">Все операции</option>
-                                <option value="1">Перемещение</option>
-                                <option value="2">Оприходование</option>
-                                <option value="3">Выбытие</option>
-                                <option value="4">Инвентаризация</option>
+                                <option value="1">Приход</option>
+                                <option value="2">Расход</option>
+                                <option value="3">Коррекция</option>
                             </select>
                             <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
                         </div>
@@ -85,13 +102,14 @@
                 </div>
             </div>
             <div class="count_table" style="padding-bottom: 0">
-                <table class="table table-bordered table-hover" style="margin-bottom: 0">
-                    <thead class="thead-light">
+                <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
+                    <thead class="thead-light" style="text-align: center">
                     <tr>
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Основание</th>
                         <th scope="col">Склад</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody id="op-body">
@@ -101,6 +119,7 @@
                             <td>{{ values.date }}</td>
                             <td>{{ values.operation }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>
+                            <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt"></i> Ордер</span></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -109,8 +128,8 @@
 
         </div>
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
-            <table class="table table-bordered">
-                <thead class="thead-light">
+            <table class="table table-bordered table-sm">
+                <thead class="thead-light" style="text-align: center">
                 <tr>
                     <th scope="col">Артикул</th>
                     <th scope="col">Наименование</th>
@@ -185,6 +204,39 @@
                                onclick="setGoodName(inp);$('#tree-div').modal('hide');"
                                id="selectBtn" class="btn btn-primary"
                                style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="order" class="pg">
+        <div class="modal-dialog modal-lg pg1">
+            <div class="modal-content pg1">
+                <div class="modal-header pg">
+                    <h5 id="tableName" class="pg">Акт №</h5>
+                    <button class="close pg" data-dismiss="modal">x</button>
+                </div>
+                <div class="modal-body passport">
+                    <b><div id="orderHeader" class="text14">Приходный ордер №</div></b>
+                    <div id="ordDate" class="text12">Дата: 01.01.1999</div>
+                    <div id="ordStock" class="text12">Склад: Склад 1</div>
+                    <table class="table table-hover table-condensed table-bordered table-sm">
+                        <thead style="text-align: center">
+                        <tr>
+                            <th>Артикул</th>
+                            <th>Наименование</th>
+                            <th>Кол-во</th>
+                            <th>Ед. изм.</th>
+                            <th>Стоимость</th>
+                        </tr>
+                        </thead>
+                        <tbody id="prods">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer pg">
+                    <button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button>
                 </div>
             </div>
         </div>

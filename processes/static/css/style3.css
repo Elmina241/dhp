@@ -108,9 +108,8 @@ font-weight: 500;
   color: #007bff;
 }
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
+.sidebar .nav-link:hover{
+  color: #007bff;
 }
 
 .sidebar-heading {

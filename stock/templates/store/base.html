@@ -13,7 +13,7 @@
 </head>
 <body>
 {% if request.user.username %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark pg">
 <div class="btn-group">
         <div class="dropdown">
             <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -62,7 +62,7 @@
     </div>
     <div class="form-inline my-2 my-lg-0" style="position: absolute; right: 5px; display: block"><span class="navbar-text"><span style="font-size: 20pt; display: inline-block; vertical-align: middle; "><i class="fas fa-user-circle"></i></span><span style="display: inline-block; vertical-align: middle; width: 150px; line-height: 17px; margin-left: 10px">{{ request.user.username }} <a href="/stock/logout/" style="font-size: 11px">Выйти</a></span></span></div>
 </nav>
-<div class="header-panel">
+<div class="header-panel pg">
 <h4 class="header">{{ header }}</h4>
 </div>
 {% elif request.path != "/stock/" %}

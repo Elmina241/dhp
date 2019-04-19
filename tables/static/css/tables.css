@@ -1,5 +1,5 @@
 body {
-    font: 10pt Arial, Helvetica, sans-serif; /* Шрифт на веб-странице */
+    /*font: 10pt Arial, Helvetica, sans-serif; /* Шрифт на веб-странице */
     /*background: #e1dfb9; /* Цвет фона */
 }
 h2 {
@@ -53,6 +53,10 @@ h2 {
 
 #line {
   color: #fff; /* Цвет текста */
-  display: : inline-block;
+  display: inline-block;
   float: left;
+}
+
+.row {
+    margin-right: 0;
 }

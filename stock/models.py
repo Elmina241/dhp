@@ -150,6 +150,8 @@ class Counterparty(models.Model):
     cur_vin = models.IntegerField(default='0', blank=True)
     def __str__(self):
         return self.name
+    def has_stock(self, stock):
+        return Counter_stock.objects.filter(counter = self, stock = stock).count() != 0
 
 class Counter_stock(models.Model):
     counter = models.ForeignKey('Counterparty')

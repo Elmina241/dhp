@@ -490,6 +490,7 @@ def save_stock_operation(request):
 
 def stock_operations(request):
     tree = {}
+    counter = User_group.objects.filter(user=request.user)[0].group
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
@@ -508,11 +509,12 @@ def stock_operations(request):
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
     operations = {}
     for s in Stock_operation.objects.all():
-        id = s.package.pk
-        if id not in operations:
-            operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display()}
-        operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
-    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+        if counter.has_stock(s.package.stock):
+            id = s.package.pk
+            if id not in operations:
+                operations[id] = {"date": s.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display(), "stock_id": s.package.stock.pk}
+            operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
+    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter = counter), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def get_good_inf(request):
