@@ -9,6 +9,7 @@
         var units = null;
         var stocks = null;
         var operations = null;
+        var isSupply = true;
         $(document).ready(function () {
             operations = JSON.parse($("#operations_json").prop("value"));
             goods = JSON.parse($("#goods").prop("value"));
@@ -19,7 +20,22 @@
             units = JSON.parse($("#units").prop("value"));
             stocks = JSON.parse($("#stock_data").prop("value"));
             addGoodField();
+            getStocks('acceptor');
         });
+
+        function openModalSupply(){
+            if (isSupply){
+                $("#supplyTitle").text("Создание поставки");
+                $("#counterLabel").text("Потребитель");
+                $("#dateLabel").text("Дата поставки");
+            }
+            else {
+                $("#supplyTitle").text("Выбытие");
+                $("#counterLabel").text("Поставщик");
+                $("#dateLabel").text("Дата выбытия");
+            }
+            $("#add_supply").modal();
+        }
 
         function getOperationGoods(id) {
             code = "";
@@ -67,12 +83,10 @@
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline">
-                        <button type="button" class="btn btn-success inline-el btn-sm" data-toggle="modal"
-                                data-target="#add_supply">
+                        <button type="button" class="btn btn-success inline-el btn-sm" onclick="isSupply=true;openModalSupply()">
                             Поставка
                         </button>
-                        <button type="button" class="btn btn-danger inline-el btn-sm" data-toggle="modal"
-                                data-target="#add_req">
+                        <button type="button" class="btn btn-danger inline-el btn-sm" onclick="isSupply=false;openModalSupply()">
                             Выбытие
                         </button>
                         <button type="button" class="btn btn-warning inline-el btn-sm" data-toggle="modal"
@@ -151,17 +165,21 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Создание поставки</h5>
+                    <h5 id="supplyTitle">Создание поставки</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
                 <div class="modal-body create-form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <h6>Потребитель</h6>
-                            <select class="form-control" id="consumer" onchange="getStocks('acceptor')">
+                            <h6 id="counterLabel">Потребитель</h6>
+                            <select class="form-control" id="consumer" readonly onchange="getStocks('acceptor')">
                                 {% for c in counters %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
+                                    {% if c == counter %}
+                                        <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                    {% else %}
+                                        <option value="{{ c.id }}">{{ c.name }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -171,7 +189,7 @@
                             </select>
                         </div>
                     </div>
-                    <h6>Дата поступления</h6>
+                    <h6 id="dateLabel">Дата поступления</h6>
                     <input type="date" class="form-control" id="date"/>
                     <hr>
                     <h6>Товары</h6>

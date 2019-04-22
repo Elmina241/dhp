@@ -461,6 +461,7 @@ function saveDemand(isDemand) {
 
 function saveSupply() {
     goods = {};
+    var operation = isSupply ? '0' : '1';
     $("#add_goods").find(".good-item").each(function (item) {
         goods[item] = {};
         goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
@@ -476,7 +477,8 @@ function saveSupply() {
             'consumer': $("#consumer").val(),
             'acceptor': $("#acceptor").val(),
             'date': $("#date").prop('value'),
-            'goods': JSON.stringify(goods)
+            'goods': JSON.stringify(goods),
+            'operation': operation
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
