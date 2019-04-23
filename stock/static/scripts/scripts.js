@@ -1159,6 +1159,38 @@ function openGood(id, obj) {
     });
 }
 
+function getStockGoods(id){
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'get_stock_goods/',
+        data: {
+            'id': id
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            inventoryGoods = {};
+            var rows = JSON.parse(data);
+            i = 0;
+            code = "";
+            for (r in rows) {
+                code = code + "<tr><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' type='number' value='" + rows[r].cost + "'/></td><td></td>";
+                    inventoryGoods[r] = {
+                        id: r,
+                        amount: rows[r]['amount'],
+                        cost: rows[r]['cost']
+                    }
+            }
+            $("#inventoryProds").html(code);
+            $("#inventory").modal();
+        }
+    });
+}
+
 function getDemandGoods(id, t = "d") {
     var csrftoken = getCookie('csrftoken');
     $.ajax({

@@ -187,6 +187,15 @@ def shipment(request):
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
     return render(request, "shipment.html", {"header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs)})
 
+def get_stock_goods(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            stock = Stock.objects.get(pk=request.POST['id'])
+            goods = {}
+            for g in Stock_good.objects.filter(stock=stock):
+                goods[str(g.pk)] = {'id': g.pk, 'article': g.good.get_article(), 'name': g.good.get_name(), 'unit': str(g.unit), 'amount': g.amount, 'cost': g.cost}
+            return HttpResponse(json.dumps(goods))
+
 def supplies(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
@@ -496,6 +505,9 @@ def stock_operations(request):
     add_children_g(g, tree[0])
     goods = []
     goods_inf = {}
+    goods_json = {}
+    for r in Goods.objects.all():
+        goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": r.get_unit()}
     i = 0
     for g in Good_name.objects.all():
         goods.append(g.article + ' ' + g.name)
@@ -514,7 +526,7 @@ def stock_operations(request):
             if id not in operations:
                 operations[id] = {"date": s.package.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display(), "stock_id": s.package.stock.pk}
             operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
-    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "counter": counter, "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter = counter), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter, "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter = counter), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def get_good_inf(request):

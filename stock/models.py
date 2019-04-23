@@ -91,6 +91,10 @@ class Goods(models.Model):
                         return names.local
                     else:
                         return names.transit
+    def get_unit(self):
+        if Goods_unit.objects.filter(product=self, isBase=True).count() != 0:
+            return str(Goods_unit.objects.filter(product=self, isBase=True)[0].unit)
+        return "-"
 
 class Good_name(models.Model):
     product = models.ForeignKey('Goods')

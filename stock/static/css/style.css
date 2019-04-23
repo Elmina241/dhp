@@ -277,3 +277,7 @@ h9 {
     margin-bottom: 15pt;
     margin-top: 10pt;
 }
+
+.short-input {
+    max-width: 100px;
+}

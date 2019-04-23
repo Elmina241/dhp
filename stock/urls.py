@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^supplies/get_demand_goods/$', views.get_demand_goods, name='get_demand_goods'),
     url(r'^shipment/save_date/$', views.save_date, name='save_date'),
     url(r'^stock_operations/save_supply/$', views.save_supply, name='save_supply'),
+    url(r'^stock_operations/get_stock_goods/$', views.get_stock_goods, name='get_stock_goods'),
     url(r'^goods/save_good/$', views.save_good, name='save_good'),
     url(r'^goods/edit_good/$', views.edit_good, name='edit_good'),
     url(r'^goods_models/save_group/$', views.save_group, name='save_group$'),
