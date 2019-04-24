@@ -1159,6 +1159,33 @@ function openGood(id, obj) {
     });
 }
 
+function saveInventory(stock){
+    $("#inventoryProds tr").each(function(item){
+        id = $(this).prop('id');
+        if (inventoryGoods[id]==undefined) inventoryGoods[id] = {};
+        inventoryGoods[id].amount = $("[name='amount']", this).val();
+        inventoryGoods[id].cost = $("[name='cost']", this).val();
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_inventory/',
+        data: {
+            'stock': stock,
+            'inventory_goods': JSON.stringify(inventoryGoods),
+            'date': $("#inventoryDate").prop('value')
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function getStockGoods(id){
     var csrftoken = getCookie('csrftoken');
     $.ajax({
@@ -1178,7 +1205,7 @@ function getStockGoods(id){
             i = 0;
             code = "";
             for (r in rows) {
-                code = code + "<tr><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' type='number' value='" + rows[r].cost + "'/></td><td></td>";
+                code = code + "<tr id='"+ r +"'><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' name='amount' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' name='cost' type='number' value='" + rows[r].cost + "'/></td><td></td>";
                     inventoryGoods[r] = {
                         id: r,
                         amount: rows[r]['amount'],
@@ -1380,7 +1407,7 @@ function getUnits(obj) {
 
 function setNameId(id, obj) {
     obj.name = goods_inf[id];
-    getUnits(obj);
+    if (obj.parentElement.parentElement.parentElement.nextElementSibling != null) getUnits(obj);
 }
 
 function setGoodName(obj) {

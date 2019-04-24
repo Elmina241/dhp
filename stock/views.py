@@ -507,7 +507,7 @@ def stock_operations(request):
     goods_inf = {}
     goods_json = {}
     for r in Goods.objects.all():
-        goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": r.get_unit()}
+        goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     i = 0
     for g in Good_name.objects.all():
         goods.append(g.article + ' ' + g.name)
@@ -728,6 +728,39 @@ def save_supply(request):
                         rec = Stock_good.objects.filter(stock=acceptor, good=good)[0]
                         rec.amount = rec.amount - Goods_unit.objects.filter(product=good, unit=Unit.objects.get(pk=goods[g]['unit']))[0].coeff * int(goods[g]['num'])
                         rec.save()
+            return HttpResponse('ok')
+
+def save_inventory(request):
+    if request.method == 'POST':
+        if 'stock' in request.POST:
+            stock = Stock.objects.get(pk=request.POST['stock'])
+            goods = json.loads(request.POST['inventory_goods'])
+            matrix = Matrix(access='0', cause='2')
+            matrix.save()
+            date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
+            p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=date)
+            p.save()
+            stock.cur_vin = stock.cur_vin + 1
+            stock.save()
+            for g in goods:
+                good = Goods.objects.get(pk=g)
+                if Stock_good.objects.filter(stock = stock, good = good).count() == 0:
+                    s_g = Stock_good(stock = stock, good = good, unit = good.get_unit(), amount=goods[g]['amount'], cost=goods[g]['cost'])
+                    s_g.save()
+                else:
+                    s_g = Stock_good.objects.filter(stock = stock, good = good)[0]
+                    s_g.amount = goods[g]['amount']
+                    s_g.cost = goods[g]['cost']
+                    s_g.save()
+                s = Stock_operation(
+                    package=p,
+                    good=good,
+                    operation='2',
+                    unit=s_g.unit,
+                    amount=s_g.amount,
+                    cost = s_g.cost
+                )
+                s.save()
             return HttpResponse('ok')
 
 def edit_good(request):

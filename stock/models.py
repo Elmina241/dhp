@@ -93,7 +93,7 @@ class Goods(models.Model):
                         return names.transit
     def get_unit(self):
         if Goods_unit.objects.filter(product=self, isBase=True).count() != 0:
-            return str(Goods_unit.objects.filter(product=self, isBase=True)[0].unit)
+            return Goods_unit.objects.filter(product=self, isBase=True)[0].unit
         return "-"
 
 class Good_name(models.Model):
@@ -229,13 +229,10 @@ class Stock_operation(models.Model):
         ('1', 'Расход'),
         ('2', 'Коррекция'),
     )
-    #stock = models.ForeignKey('Stock', blank=True, null=True)
     package = models.ForeignKey('Package')
     good = models.ForeignKey('Goods')
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
     date = models.DateField(auto_now_add=True, blank=True)
-    #cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
-    #cause_id = models.IntegerField(default=0, null = True)
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
     cost = models.FloatField(default=0, blank=True)

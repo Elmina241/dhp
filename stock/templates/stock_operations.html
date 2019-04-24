@@ -62,7 +62,7 @@
 
         function addProd(){
             id = $("#newProd").prop('name');
-            code = "<tr><td>" + goods_json[id].article + "</td><td>" + goods_json[id].name + "</td><td>" + goods_json[id].unit + "</td><td><input type='number' class='form-control form-control-sm short-input' /></td><td><input type='number' class='form-control form-control-sm short-input' /></td><td align=\"center\"><span style='font-size: 16pt'><i class=\"fas fa-trash-alt\"></i></span></td></tr>";
+            code = "<tr id='" + id + "'><td>" + goods_json[id].article + "</td><td>" + goods_json[id].name + "</td><td>" + goods_json[id].unit + "</td><td><input type='number' name='amount' class='form-control form-control-sm short-input' /></td><td><input type='number' name='cost' class='form-control form-control-sm short-input' /></td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class=\"fas fa-trash-alt\"></i></span></td></tr>";
             $(code).appendTo("#inventoryProds");
         }
 
@@ -286,7 +286,10 @@
                     <button class="close" data-dismiss="modal">x</button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-bordered table-sm" style="text-align: center">
+                    <h6 id="dateLabel">Дата инвентаризации</h6>
+                    <input type="date" class="form-control short-input" id="inventoryDate"/>
+                    <hr>
+                    <table class="table table-bordered table-sm small-table" style="text-align: center">
                         <thead style="text-align: center" class="thead-light">
                         <tr>
                             <th>Артикул</th>
@@ -319,7 +322,7 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="inventoryBtn" type="button" class="btn btn-info" onclick="">Сохранить</button>
+                    <button id="inventoryBtn" type="button" class="btn btn-info" onclick="saveInventory($('#stock').val())">Сохранить</button>
                 </div>
             </div>
         </div>
