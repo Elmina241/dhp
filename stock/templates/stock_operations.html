@@ -42,7 +42,13 @@
 
         function getOperationGoods(id) {
             code = "";
+            var diffr = "";
+            var repProds = "";
             for (row in operations[id]) {
+                if (operations[id]['operation'] == "Коррекция") {
+                    diffr = "<td>" + operations[id][row]['diffr'] + "</td>";
+                    if (!isNaN(row)) repProds = repProds + "<tr><td>" + operations[id][row]["article"] + "</td><td>" + operations[id][row]["name"] + "</td><td>" + operations[id][row]["amount"] + "</td><td>" + operations[id][row]["unit"] + "</td><td>" + operations[id][row]["cost"] + "</td>" + diffr + "</tr>";
+                }
                 if (!isNaN(row)) code = code + "<tr><td>" + operations[id][row]["article"] + "</td><td>" + operations[id][row]["name"] + "</td><td>" + operations[id][row]["amount"] + "</td><td>" + operations[id][row]["unit"] + "</td><td>" + operations[id][row]["cost"] + "</td></tr>";
             }
             $("#goods-body").html(code);
@@ -52,8 +58,15 @@
             if (operations[id]['operation'] == "Приход") {
                 $("#orderHeader").text("Приходный ордер № " + operations[id]['vin']);
             }
-            else {
+            else if (operations[id]['operation'] == "Расход"){
                 $("#orderHeader").text("Расходный ордер № " + operations[id]['vin']);
+            }
+            else {
+                $("#reportHeader").text("Инвентаризационный акт № " + operations[id]['vin']);
+                $("#repDate").text('Дата: ' + operations[id]['date']);
+                $("#repStock").text('Склад: ' + operations[id]['stock']);
+                $("#repProds").html(repProds);
+                $("#reportName").text(operations[id]['operation'] + " № " + operations[id]['vin']);
             }
             $("#ordDate").text('Дата: ' + operations[id]['date']);
             $("#ordStock").text('Склад: ' + operations[id]['stock']);
@@ -71,12 +84,12 @@
             code = "";
             for (row in operations) {
                 if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1")) {
-                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['stock'] + "</td></tr>";
+                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\"></i> Ордер</span></td></tr>";
                 }
             }
             if (code == "") code = "<tr><td colspan=4 align='center' class='no-data'>Нет записей</td></tr>";
-            goods = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
-            $("#goods-body").html(goods);
+            goodsCode = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
+            $("#goods-body").html(goodsCode);
             $("#op-body").html(code);
         }
 
@@ -147,7 +160,11 @@
                             <td>{{ values.date }}</td>
                             <td>{{ values.operation }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>
-                            <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt"></i> Ордер</span></td>
+                            {% if values.operation == "Коррекция" %}
+                                <td><span onclick="$('#report').modal()"><i class="fas fa-file-alt"></i> Акт</span></td>
+                            {% else %}
+                                <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt"></i> Ордер</span></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -221,7 +238,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="tree-div">
+    <!--<div class="modal fade" id="tree-div">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -241,7 +258,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="modal fade" id="order" class="pg">
         <div class="modal-dialog modal-lg pg1">
@@ -278,6 +295,42 @@
         </div>
     </div>
 
+    <div class="modal fade" id="report" class="pg">
+        <div class="modal-dialog modal-lg pg1">
+            <div class="modal-content pg1">
+                <div class="modal-header pg">
+                    <h5 id="reportName" class="pg">Акт №</h5>
+                    <button class="close pg" data-dismiss="modal">x</button>
+                </div>
+                <div class="modal-body passport">
+                    <b>
+                        <div id="reportHeader" class="text14">Инвентаризационный акт №</div>
+                    </b>
+                    <div id="repDate" class="text12">Дата: 01.01.1999</div>
+                    <div id="repStock" class="text12">Склад: Склад 1</div>
+                    <table class="table table-hover table-condensed table-bordered table-sm">
+                        <thead style="text-align: center">
+                        <tr>
+                            <th>Артикул</th>
+                            <th>Наименование</th>
+                            <th>Кол-во</th>
+                            <th>Ед. изм.</th>
+                            <th>Цена</th>
+                            <th>Разница</th>
+                        </tr>
+                        </thead>
+                        <tbody id="repProds">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer pg">
+                    <button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="inventory">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -296,7 +349,7 @@
                             <th>Наименование</th>
                             <th>Ед. изм.</th>
                             <th>Кол-во</th>
-                            <th>Стоимость</th>
+                            <th>Цена</th>
                             <th></th>
                         </tr>
                         </thead>

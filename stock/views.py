@@ -193,7 +193,7 @@ def get_stock_goods(request):
             stock = Stock.objects.get(pk=request.POST['id'])
             goods = {}
             for g in Stock_good.objects.filter(stock=stock):
-                goods[str(g.pk)] = {'id': g.pk, 'article': g.good.get_article(), 'name': g.good.get_name(), 'unit': str(g.unit), 'amount': g.amount, 'cost': g.cost}
+                goods[str(g.good.pk)] = {'id': g.good.pk, 'article': g.good.get_article(), 'name': g.good.get_name(), 'unit': str(g.unit), 'amount': g.amount, 'cost': g.cost/g.amount}
             return HttpResponse(json.dumps(goods))
 
 def supplies(request):
@@ -526,6 +526,8 @@ def stock_operations(request):
             if id not in operations:
                 operations[id] = {"date": s.package.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display(), "stock_id": s.package.stock.pk}
             operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
+            if s.operation == '2':
+                operations[id][str(s.good.pk)]['diffr'] = s.amount - float(s.last_value)
     return render(request, "stock_operations.html", {"header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter, "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter = counter), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
@@ -745,12 +747,14 @@ def save_inventory(request):
             for g in goods:
                 good = Goods.objects.get(pk=g)
                 if Stock_good.objects.filter(stock = stock, good = good).count() == 0:
-                    s_g = Stock_good(stock = stock, good = good, unit = good.get_unit(), amount=goods[g]['amount'], cost=goods[g]['cost'])
+                    s_g = Stock_good(stock = stock, good = good, unit = good.get_unit(), amount=goods[g]['amount'], cost=float(goods[g]['cost']) * float(goods[g]['amount']))
+                    last_value = 0
                     s_g.save()
                 else:
                     s_g = Stock_good.objects.filter(stock = stock, good = good)[0]
+                    last_value = s_g.amount
                     s_g.amount = goods[g]['amount']
-                    s_g.cost = goods[g]['cost']
+                    s_g.cost = float(goods[g]['cost']) * float(goods[g]['amount'])
                     s_g.save()
                 s = Stock_operation(
                     package=p,
@@ -758,7 +762,8 @@ def save_inventory(request):
                     operation='2',
                     unit=s_g.unit,
                     amount=s_g.amount,
-                    cost = s_g.cost
+                    cost = goods[g]['cost'],
+                    last_value = last_value
                 )
                 s.save()
             return HttpResponse('ok')

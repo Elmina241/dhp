@@ -236,6 +236,7 @@ class Stock_operation(models.Model):
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
     cost = models.FloatField(default=0, blank=True)
+    last_value = models.FloatField(default=0, blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.good)
     def get_good_name(self):
