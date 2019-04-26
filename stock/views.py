@@ -356,6 +356,16 @@ def get_prod_info(request):
                 units[str(g)] = {'amount': base_amm * coeff, "unit": str(g.unit)}
             data['names'] = names
             data['units'] = units
+            expecting = {}
+            for d in Demand_good.objects.filter(good = good, matrix__access='4'):
+                if (d.get_demand().donor == stock or d.get_demand().acceptor == stock) and d.get_demand().is_closed == False:
+                    operation = 'Отгрузка' if d.get_demand().donor == stock else 'Поставка'
+                    expecting[str(d.pk)] = {'vin': d.get_demand().vin, 'date': d.get_demand().finish_date.strftime('%d.%m.%Y'), 'amount': d.balance, 'operation': operation}
+            data['expecting'] = expecting
+            history = {}
+            for o in Stock_operation.objects.filter(good = good, package__stock= stock).exclude(operation='2'):
+                history[str(o.pk)] = {'vin': o.package.vin, 'date': o.package.date.strftime('%d.%m.%Y'), 'operation': o.get_operation_display(), 'amount': o.amount, 'unit': str(o.unit)}
+            data['history'] = history
             return HttpResponse(json.dumps(data))
 
 

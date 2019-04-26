@@ -1084,79 +1084,110 @@ function addGBranch(code, branch) {
 }
 
 function openGood(id, obj) {
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'get_prod_info/',
-        data: {
-            'id': id,
-            'stock': $("#stock").val()
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    $(obj.firstElementChild).toggleClass("fa-caret-down fa-caret-up");
+    $("#product-info").remove();
+    if ($(obj.firstElementChild).hasClass("fa-caret-up")) {
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'get_prod_info/',
+            data: {
+                'id': id,
+                'stock': $("#stock").val()
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                data = JSON.parse(data);
+                names = " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
+                    "<div class=\"form-row\">\n" +
+                    "                        <div class=\"form-group col-md-6\">\n" +
+                    "                            <h9>Артикул</h9><h8>\n" + data['names']['article'] +
+                    "                        </h8></div>\n" +
+                    "                        <div class=\"form-group col-md-6\">\n" +
+                    "                            <h9>Наименование</h9><h8>\n" + data['names']['name'] +
+                    "                        </h8></div>\n" +
+                    "                    </div>\n" +
+                    "\n" +
+                    "                    <div class=\"form-row\">\n" +
+                    "                        <div class=\"form-group col-md-6\">\n" +
+                    "                            <h9>Штрихкод</h9><h8>\n" + data['names']['barcode'] +
+                    "                        </h8></div>\n" +
+                    "                        <div class=\"form-group col-md-6\">\n" +
+                    "                            <h9>Оригинальное</h9><h8>\n" + data['names']['original'] +
+                    "                        </h8></div>\n" +
+                    "                    </div>\n" +
+                    "                    <div class=\"form-row\">\n" +
+                    "                        <div class=\"form-group col-md-6\">\n" +
+                    "                            <h9>Локальное</h9><h8>\n" + data['names']['local'] +
+                    "                        </h8></div>\n" +
+                    "                        <div class=\"form-group col-md-6\">\n" +
+                    "                            <h9>Транзитное</h9><h8>\n" + data['names']['transit'] +
+                    "                        </h8></div>\n" +
+                    "                    </div></div>";
+                units = " <div class='tab-pane fade' id='units' role='tabpanel' aria-labelledby='units-tab'>" +
+                    "<table>\n" +
+                    "<table class=\"table table-bordered\">\n" +
+                    "                            <thead class=\"thead\">\n" +
+                    "                            <tr>\n" +
+                    "                                <th scope=\"col\">Количество</th>\n" +
+                    "                                <th scope=\"col\">Ед. изм.</th>\n" +
+                    "                            </thead>\n" +
+                    "                            <tbody>\n";
+                for (u in data['units']) {
+                    units = units + "<tr><td>" + data['units'][u].amount + "</td><td>" + data['units'][u].unit + "</td></tr>"
+                }
+                units = units + "</tbody></table></div>";
+
+                expecting = " <div class='tab-pane fade' id='expecting' role='tabpanel' aria-labelledby='expecting-tab'>" +
+                    "<table>\n" +
+                    "<table class=\"table table-bordered\">\n" +
+                    "                            <thead class=\"thead\">\n" +
+                    "                            <tr>\n" +
+                    "                                <th scope=\"col\">ВИН</th>\n" +
+                    "                                <th scope=\"col\">Дата</th><th scope='col'>Операция</th><th scope='col'>Количество</th>\n" +
+                    "                            </thead>\n" +
+                    "                            <tbody>\n";
+                for (u in data['expecting']) {
+                    expecting = expecting + "<tr><td>" + data['expecting'][u].vin + "</td><td>" + data['expecting'][u].date + "</td><td>" + data['expecting'][u].operation + "</td><td>" + data['expecting'][u].amount + "</td></tr>";
+                }
+                expecting = expecting + "</tbody></table></div>";
+
+                prodHistory = " <div class='tab-pane fade' id='history' role='tabpanel' aria-labelledby='history-tab'>" +
+                    "<table>\n" +
+                    "<table class=\"table table-bordered\">\n" +
+                    "                            <thead class=\"thead\">\n" +
+                    "                            <tr>\n" +
+                    "                                <th scope=\"col\">ВИН</th>\n" +
+                    "                                <th scope=\"col\">Дата</th><th scope='col'>Операция</th><th scope='col'>Ед.изм.</th><th scope='col'>Количество</th>\n" +
+                    "                            </thead>\n" +
+                    "                            <tbody>\n";
+                for (u in data['history']) {
+                    prodHistory = prodHistory + "<tr><td>" + data['history'][u].vin + "</td><td>" + data['history'][u].date + "</td><td>" + data['history'][u].operation + "</td><td>" + data['history'][u].unit + "</td><td>" + data['history'][u].amount + "</td></tr>";
+                }
+                prodHistory = prodHistory + "</tbody></table></div>";
+
+                code = "<tr id='product-info'><td colspan='6'><div class='add-info-good'>" +
+                    "<ul class=\"nav nav-tabs\" id=\"myTab\" role=\"tablist\">\n" +
+                    "  <li class=\"nav-item\">\n" +
+                    "    <a class=\"nav-link active\" id=\"names-tab\" data-toggle=\"tab\" href=\"#names\" role=\"tab\" aria-controls=\"home\" aria-selected=\"true\">Имена</a>\n" +
+                    "  </li>" +
+                    "<li class=\"nav-item\">\n" +
+                    "    <a class=\"nav-link\" id=\"units-tab\" data-toggle=\"tab\" href=\"#units\" role=\"tab\" aria-controls=\"units\" aria-selected=\"false\">Единицы измерения</a>\n" +
+                    "  </li><li class=\"nav-item\">\n" +
+                    "    <a class=\"nav-link\" id=\"expecting-tab\" data-toggle=\"tab\" href=\"#expecting\" role=\"tab\" aria-controls=\"expecting\" aria-selected=\"false\">Поступления/Отпуски</a>\n" +
+                    "  </li><li class=\"nav-item\">\n" +
+                    "    <a class=\"nav-link\" id=\"history-tab\" data-toggle=\"tab\" href=\"#history\" role=\"tab\" aria-controls=\"history\" aria-selected=\"false\">Приходы/Расходы</a>\n" +
+                    "  </li></ul>\n" +
+                    "<div class=\"tab-content\" id=\"myTabContent\">\n" + names + units + expecting + prodHistory +
+                    "</div></div></tr>";
+                $(obj.parentElement.parentElement).after(code);
             }
-        },
-        success: function onAjaxSuccess(data) {
-            data = JSON.parse(data);
-            names = " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
-                "<div class=\"form-row\">\n" +
-                "                        <div class=\"form-group col-md-6\">\n" +
-                "                            <h9>Артикул</h9><h8>\n" + data['names']['article'] +
-                "                        </h8></div>\n" +
-                "                        <div class=\"form-group col-md-6\">\n" +
-                "                            <h9>Наименование</h9><h8>\n" + data['names']['name'] +
-                "                        </h8></div>\n" +
-                "                    </div>\n" +
-                "\n" +
-                "                    <div class=\"form-row\">\n" +
-                "                        <div class=\"form-group col-md-6\">\n" +
-                "                            <h9>Штрихкод</h9><h8>\n" + data['names']['barcode'] +
-                "                        </h8></div>\n" +
-                "                        <div class=\"form-group col-md-6\">\n" +
-                "                            <h9>Оригинальное</h9><h8>\n" + data['names']['original'] +
-                "                        </h8></div>\n" +
-                "                    </div>\n" +
-                "                    <div class=\"form-row\">\n" +
-                "                        <div class=\"form-group col-md-6\">\n" +
-                "                            <h9>Локальное</h9><h8>\n" + data['names']['local'] +
-                "                        </h8></div>\n" +
-                "                        <div class=\"form-group col-md-6\">\n" +
-                "                            <h9>Транзитное</h9><h8>\n" + data['names']['transit'] +
-                "                        </h8></div>\n" +
-                "                    </div></div>";
-            units = " <div class='tab-pane fade' id='units' role='tabpanel' aria-labelledby='units-tab'>" +
-                "<table>\n" +
-                "<table class=\"table table-bordered\">\n" +
-                "                            <thead class=\"thead\">\n" +
-                "                            <tr>\n" +
-                "                                <th scope=\"col\">Количество</th>\n" +
-                "                                <th scope=\"col\">Ед. изм.</th>\n" +
-                "                            </thead>\n" +
-                "                            <tbody>\n";
-            for (u in data['units']) {
-                units = units + "<tr><td>" + data['units'][u].amount + "</td><td>" + data['units'][u].unit + "</td></tr>"
-            }
-            units = units + "</tbody></table></div>";
-            code = "<tr><td colspan='6'><div class='add-info-good'>" +
-                "<ul class=\"nav nav-tabs\" id=\"myTab\" role=\"tablist\">\n" +
-                "  <li class=\"nav-item\">\n" +
-                "    <a class=\"nav-link active\" id=\"names-tab\" data-toggle=\"tab\" href=\"#names\" role=\"tab\" aria-controls=\"home\" aria-selected=\"true\">Имена</a>\n" +
-                "  </li>" +
-                "<li class=\"nav-item\">\n" +
-                "    <a class=\"nav-link\" id=\"units-tab\" data-toggle=\"tab\" href=\"#units\" role=\"tab\" aria-controls=\"units\" aria-selected=\"false\">Единицы измерения</a>\n" +
-                "  </li><li class=\"nav-item\">\n" +
-                "    <a class=\"nav-link\" id=\"profile-tab\" data-toggle=\"tab\" href=\"#profile\" role=\"tab\" aria-controls=\"profile\" aria-selected=\"false\">Поступления/Отпуски</a>\n" +
-                "  </li><li class=\"nav-item\">\n" +
-                "    <a class=\"nav-link\" id=\"profile-tab\" data-toggle=\"tab\" href=\"#profile\" role=\"tab\" aria-controls=\"profile\" aria-selected=\"false\">Приходы/Расходы</a>\n" +
-                "  </li></ul>\n" +
-                "<div class=\"tab-content\" id=\"myTabContent\">\n" + names + units +
-                "  <div class=\"tab-pane fade\" id=\"profile\" role=\"tabpanel\" aria-labelledby=\"profile-tab\">...</div>\n" +
-                "  <div class=\"tab-pane fade\" id=\"contact\" role=\"tabpanel\" aria-labelledby=\"contact-tab\">...</div>\n" +
-                "</div></div></tr>";
-            $(obj.parentElement.parentElement).after(code);
-        }
-    });
+        });
+    }
 }
 
 function saveInventory(stock){

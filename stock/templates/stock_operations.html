@@ -91,6 +91,7 @@
             goodsCode = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
             $("#goods-body").html(goodsCode);
             $("#op-body").html(code);
+            $("#openInventoryBtn").prop("disabled", stock == '-1');
         }
 
     </script>
@@ -114,8 +115,8 @@
                                 onclick="isSupply=false;openModalSupply()">
                             Выбытие
                         </button>
-                        <button type="button" class="btn btn-warning inline-el btn-sm"
-                                onclick="getStockGoods($('#stock').val())">
+                        <button type="button" id="openInventoryBtn" class="btn btn-warning inline-el btn-sm"
+                                onclick="getStockGoods($('#stock').val())" disabled>
                             Инвентаризация
                         </button>
                         <span>Склад</span>

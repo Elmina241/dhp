@@ -222,6 +222,8 @@ class Demand_good(models.Model):
     balance = models.IntegerField(default=0)
     def __str__(self):
         return str(self.demand) + ' ' + str(self.good)
+    def get_demand(self):
+        return Demand.objects.filter(matrix = self.matrix)[0]
 
 class Stock_operation(models.Model):
     OPERATION_CHOICES = (
