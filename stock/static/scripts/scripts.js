@@ -1449,3 +1449,42 @@ function setGoodName(obj) {
         }
     }
 }
+
+function Pagination(max, table, nav){
+    this.maxRecs = max;
+    this.tableBody = table;
+    var self = this;
+    this.trCount = 0;
+    this.nav = nav;
+    this.pageNum = 0;
+    this.curPage = 1;
+
+    this.initPagination = function(){
+        self.trCount = $("#" + self.tableBody + " tr").length;
+        if (self.trCount > self.maxRecs){
+            $("#" + self.tableBody + " tr:gt(" + (self.maxRecs - 1) + ")").hide();
+        }
+        self.pageNum = Math.ceil(self.trCount / self.maxRecs);
+        var paginationCode = "<li class='page-item disabled'><span class='page-link'>Предыдущая</span></li>";
+        for (i = 0; i < self.pageNum; i++){
+            if (i ==0) paginationCode = paginationCode + "<li class='page-item active' onclick='self.goToPage(" + (i+1) + ")'><a class='page-link' href='#'>1</a></li>";
+            else paginationCode = paginationCode + "<li class='page-item' onclick='pag.goToPage(" + (i+1) + ")'><a class='page-link' href='#'>" + (i+1) + "</a></li>";
+        }
+        paginationCode = paginationCode + "<li class='page-item'><span class='page-link'>Следующая</span></li>";
+        $("#"+self.nav).html(paginationCode);
+    }
+
+    this.goToPage = function(page){
+        $("#"+self.nav + " li").removeClass("active");
+        $("#"+self.nav).find('li').eq(page).addClass("active");
+        $("#" + self.tableBody + " tr").hide();
+        firstTr = (page - 1) * self.maxRecs;
+        lastTr = (page * self.maxRecs) - 1;
+        if (firstTr == 0) $("#" + self.tableBody + " tr:lt(" + (lastTr + 1) + ")").show();
+        else $("#" + self.tableBody + " tr:gt(" + (firstTr -1) + "):lt(" + (lastTr + 1) + ")").show();
+        self.curPage = page;
+    }
+
+    this.initPagination();
+
+}

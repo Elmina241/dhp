@@ -12,6 +12,7 @@
         var isSupply = true;
         var inventoryGoods = null;
         var goods_json = null;
+        var pag = null;
         $(document).ready(function () {
             operations = JSON.parse($("#operations_json").prop("value"));
             goods = JSON.parse($("#goods").prop("value"));
@@ -24,6 +25,7 @@
             stocks = JSON.parse($("#stock_data").prop("value"));
             addGoodField();
             getStocks('acceptor');
+            pag = new Pagination(10, "op-body", "operationNav");
         });
 
         function openModalSupply() {
@@ -58,7 +60,7 @@
             if (operations[id]['operation'] == "Приход") {
                 $("#orderHeader").text("Приходный ордер № " + operations[id]['vin']);
             }
-            else if (operations[id]['operation'] == "Расход"){
+            else if (operations[id]['operation'] == "Расход") {
                 $("#orderHeader").text("Расходный ордер № " + operations[id]['vin']);
             }
             else {
@@ -73,7 +75,7 @@
             $("#prods").html(code);
         }
 
-        function addProd(){
+        function addProd() {
             id = $("#newProd").prop('name');
             code = "<tr id='" + id + "'><td>" + goods_json[id].article + "</td><td>" + goods_json[id].name + "</td><td>" + goods_json[id].unit + "</td><td><input type='number' name='amount' class='form-control form-control-sm short-input' /></td><td><input type='number' name='cost' class='form-control form-control-sm short-input' /></td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class=\"fas fa-trash-alt\"></i></span></td></tr>";
             $(code).appendTo("#inventoryProds");
@@ -92,6 +94,7 @@
             $("#goods-body").html(goodsCode);
             $("#op-body").html(code);
             $("#openInventoryBtn").prop("disabled", stock == '-1');
+            pag = new Pagination(10, "op-body", "operationNav");
         }
 
     </script>
@@ -164,7 +167,8 @@
                             {% if values.operation == "Коррекция" %}
                                 <td><span onclick="$('#report').modal()"><i class="fas fa-file-alt"></i> Акт</span></td>
                             {% else %}
-                                <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt"></i> Ордер</span></td>
+                                <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt"></i> Ордер</span>
+                                </td>
                             {% endif %}
                         </tr>
                     {% endfor %}
@@ -172,7 +176,25 @@
                 </table>
             </div>
 
+
         </div>
+    <nav aria-label="..." style="margin-top: 5px; margin-right: 30px">
+                <ul class="pagination pagination-sm justify-content-end" id="operationNav">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active" aria-current="page">
+      <span class="page-link">
+        2
+      </span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
             <table class="table table-bordered table-sm">
                 <thead class="thead-light" style="text-align: center">
@@ -360,29 +382,31 @@
                     </table>
                     <hr>
                     <div class='form-row good-item inline-el'>
-                       <div class='form-inline'>
-                                Добавить товар
-                                <div class='autocomplete inline-el' style='width:335px;'>
-                                    <input id='newProd' style='width:335px;'
-                                           class='form-control form-control-sm  goodInp' type='text' name='myCountry'>
-                                </div>
-                                <button class='btn btn-outline-info'
-                                        onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;'
-                                        data-toggle='modal' data-target='#tree-div'><span style='font-size: 15px;'
-                                                                                          onclick=''><i
-                                        class='fas fa-stream'></i></span></button>
-                                <button class='btn btn-success inline-el btn-sm' onclick="addProd()">Добавить</button>
+                        <div class='form-inline'>
+                            Добавить товар
+                            <div class='autocomplete inline-el' style='width:335px;'>
+                                <input id='newProd' style='width:335px;'
+                                       class='form-control form-control-sm  goodInp' type='text' name='myCountry'>
                             </div>
+                            <button class='btn btn-outline-info'
+                                    onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;'
+                                    data-toggle='modal' data-target='#tree-div'><span style='font-size: 15px;'
+                                                                                      onclick=''><i
+                                    class='fas fa-stream'></i></span></button>
+                            <button class='btn btn-success inline-el btn-sm' onclick="addProd()">Добавить</button>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="inventoryBtn" type="button" class="btn btn-info" onclick="saveInventory($('#stock').val())">Сохранить</button>
+                    <button id="inventoryBtn" type="button" class="btn btn-info"
+                            onclick="saveInventory($('#stock').val())">Сохранить
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-<div class="modal fade" id="tree-div">
+    <div class="modal fade" id="tree-div">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">

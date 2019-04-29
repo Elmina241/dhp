@@ -218,10 +218,15 @@ h9 {
     position: relative;
     margin: 10px 0 15px;
     line-height: 1;
+    text-decoration: none;
 }
 
 .main-menu a:hover {
-    color: #23a3ab;
+    color: #23a3ab!important;
+}
+
+.main-menu a:visited {
+    color: #333;
 }
 
 .nav-link i {

@@ -87,6 +87,10 @@
             else if (s == '4') {
                 status = "<td>Выполнение</td><td></td>";
             }
+            else if (reqs[id].isEdited){
+                status = "<td>Уточнение</td><td><span style='font-size: 17px;'\n" +
+                    "                          onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></td>";
+            }
             else {
                 status = "<td>Запрос</td><td><span style='font-size: 17px;'\n" +
                     "                          onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></td>";
@@ -126,10 +130,13 @@
                 options = "<option value='0'>Запрос</option><option value='3'>Закрыт</option>";
             }
             else if (reqs[id].isEdited && reqs[id].access == reqs[id].role) {
-                options = "<option value='0'>Запрос</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
+                options = "<option value='0'>Уточнение</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
             else if (reqs[id].access == '3') {
                 options = "<option value='2'>Отказ</option><option value='3'>Закрыт</option>";
+            }
+            else if (reqs[id].isEdited){
+                options = "<option value='0'>Уточнение</option><option value='1'>Выполнение</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
             else {
                 options = "<option value='0'>Запрос</option><option value='1'>Выполнение</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
