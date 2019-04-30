@@ -1467,14 +1467,21 @@ function Pagination(max, table, nav){
         self.pageNum = Math.ceil(self.trCount / self.maxRecs);
         var paginationCode = "<li class='page-item disabled'><span class='page-link'>Предыдущая</span></li>";
         for (i = 0; i < self.pageNum; i++){
-            if (i ==0) paginationCode = paginationCode + "<li class='page-item active' onclick='self.goToPage(" + (i+1) + ")'><a class='page-link' href='#'>1</a></li>";
-            else paginationCode = paginationCode + "<li class='page-item' onclick='pag.goToPage(" + (i+1) + ")'><a class='page-link' href='#'>" + (i+1) + "</a></li>";
+            if (i ==0) paginationCode = paginationCode + "<li class='page-item active'><a class='page-link' href='#'>1</a></li>";
+            else paginationCode = paginationCode + "<li class='page-item'><a class='page-link' href='#'>" + (i+1) + "</a></li>";
         }
         paginationCode = paginationCode + "<li class='page-item'><span class='page-link'>Следующая</span></li>";
         $("#"+self.nav).html(paginationCode);
-    }
+        $("#"+self.nav + " li").each(function(item){
+           $(this).click({item: item}, function(eventObject){
+                self.goToPage(eventObject.data.item);
+           });
+        });
+    };
 
     this.goToPage = function(page){
+        if (page == 0) page = self.curPage - 1;
+        if (page == (self.pageNum + 1)) page = self.curPage + 1;
         $("#"+self.nav + " li").removeClass("active");
         $("#"+self.nav).find('li').eq(page).addClass("active");
         $("#" + self.tableBody + " tr").hide();
@@ -1483,7 +1490,37 @@ function Pagination(max, table, nav){
         if (firstTr == 0) $("#" + self.tableBody + " tr:lt(" + (lastTr + 1) + ")").show();
         else $("#" + self.tableBody + " tr:gt(" + (firstTr -1) + "):lt(" + (lastTr + 1) + ")").show();
         self.curPage = page;
-    }
+        if (self.curPage == self.pageNum) {
+            $("#"+self.nav + " li").last().addClass("disabled");
+            $("#"+self.nav + " li").last().off();
+            $("#"+self.nav + " li").first().removeClass("disabled");
+            $("#"+self.nav + " li").first().off();
+            $("#"+self.nav + " li").first().on('click', function(){
+                self.goToPage(0);
+            });
+        }
+        else if (self.curPage == 1) {
+            $("#"+self.nav + " li").first().addClass("disabled");
+            $("#"+self.nav + " li").first().off();
+            $("#"+self.nav + " li").last().removeClass("disabled");
+            $("#"+self.nav + " li").last().off();
+            $("#"+self.nav + " li").last().on('click', function(){
+                self.goToPage(self.pageNum);
+            });
+        }
+        else {
+            $("#"+self.nav + " li").first().removeClass("disabled");
+            $("#"+self.nav + " li").last().removeClass("disabled");
+            $("#"+self.nav + " li").first().off();
+            $("#"+self.nav + " li").first().on('click', function(){
+                self.goToPage(0);
+            });
+            $("#"+self.nav + " li").last().off();
+            $("#"+self.nav + " li").last().on('click', function(){
+                self.goToPage(self.pageNum);
+            });
+        }
+    };
 
     this.initPagination();
 
