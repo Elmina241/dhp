@@ -15,11 +15,11 @@
                     <div class="card-header">
                         <div class="filter">
                             <div class="form-inline">
-                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#add_prop">Добавить свойство</button>
+                        <button type="button" class="btn btn-success btn-sm"  data-toggle="modal" data-target="#add_prop">Добавить свойство</button>
 
                                 <div class="form-inline" style="position: absolute; right: 0">
                                 <lable for="filter" class="col-form-label">Поиск</lable>
-                                <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px" id="filter"
+                                <input type="search" class="form-control form-control-sm col-sm-9" style="margin-left:10px;width:300px" id="filter"
                                        onchange=""/>
                                 <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
                                 </div>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="goods_table">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-sm">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Код</th>
@@ -42,7 +42,7 @@
                                 <tr id="{{ p.id }}">
                                     <td>{{ p.id }}</td>
                                     <td>{{ p.name }}</td>
-                                    <td><span style='font-size: 17px;'
+                                    <td><span
                           onclick="pr.getInf({{ p.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
                                     <td><span onclick='delProp(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td>
                                 </tr>

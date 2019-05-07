@@ -20,12 +20,13 @@
             goods_inf = JSON.parse($("#goods_inf").prop("value"));
             tree = JSON.parse($("#tree_data").prop("value"));
             tr = new GTree(tree, "goods");
-            document.getElementById("1").click();
+            $("#1")[0].click();
             units = JSON.parse($("#units").prop("value"));
             stocks = JSON.parse($("#stock_data").prop("value"));
             addGoodField();
             getStocks('acceptor');
             pag = new Pagination(10, "op-body", "operationNav");
+            pag2 = new Pagination(10, "goods-body", "operationNav2");
         });
 
         function openModalSupply() {
@@ -73,6 +74,7 @@
             $("#ordDate").text('Дата: ' + operations[id]['date']);
             $("#ordStock").text('Склад: ' + operations[id]['stock']);
             $("#prods").html(code);
+            pag2 = new Pagination(10, "goods-body", "operationNav2");
         }
 
         function addProd() {
@@ -124,7 +126,7 @@
                         </button>
                         <span>Склад</span>
                         <select id="stock" class="form-control inline-el form-control-sm"
-                                onchange="changeOperGroup($('#group option:selected').text())">
+                                onchange="changeOperGroup($('#operGroup option:selected').text())">
                             <option value="-1">Все</option>
                             {% for s in stocks %}
                                 <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
@@ -132,11 +134,10 @@
                         </select>
                         <div class="form-inline" style="position: absolute; right: 0">
                             <lable for="filter" class="col-form-label">Фильтр</lable>
-                            <select class="form-control col-sm-9 form-control-sm" id="group"
+                            <select class="form-control col-sm-9 form-control-sm" id="operGroup"
                                     style="margin-left:10px;width:300px"
-                                    id="filter"
                                     onchange="changeOperGroup($('option:selected', this).text())">
-                                <option value="0">Все операции</option>
+                                <option value="0" selected>Все операции</option>
                                 <option value="1">Приход</option>
                                 <option value="2">Расход</option>
                                 <option value="3">Коррекция</option>
@@ -213,6 +214,23 @@
                 </tbody>
             </table>
         </div>
+    <nav aria-label="..." style="margin-top: 5px; margin-right: 30px">
+                <ul class="pagination pagination-sm justify-content-end" id="operationNav2">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active" aria-current="page">
+      <span class="page-link">
+        2
+      </span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
     </div>
 
 

@@ -28,6 +28,8 @@
             loadReqs("-1");
             getStocks('acceptor');
             getStocks('donor');
+            pag = new Pagination(10, "req-body", "reqNav");
+            pag2 = new Pagination(10, "goods-body", "goodsNav");
         });
 
         function toggleReqs(btn, t) {
@@ -106,7 +108,7 @@
                 for (r in reqs) {
                     if (role == reqs[r].role){
                         status = getStatus(reqs[r].access, reqs[r].id);
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                 }
                 }
             }
@@ -115,13 +117,15 @@
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
                         if (role == reqs[r].role) {
                             status = getStatus(reqs[r].access, reqs[r].id);
-                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "</tr>";
+                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                         }
                     }
                 }
             }
             if (code == "") code = "<tr><td colspan='9' class='no-data'>Нет записей</td></tr>";
             $("#req-body").html(code);
+            pag = new Pagination(10, "req-body", "reqNav");
+            pag2 = new Pagination(10, "goods-body", "goodsNav");
         }
 
 
@@ -205,6 +209,7 @@
                         <th scope="col">Акцептор</th>
                         <th scope="col">Статус</th>
                         <th scope="col"></th>
+                        <th scope="col">Создатель</th>
                     </tr>
                     </thead>
                     <tbody id="req-body">
@@ -213,6 +218,10 @@
                 </table>
             </div>
         </div>
+    <nav aria-label="..." style="margin-top: 5px; margin-right: 30px">
+                <ul class="pagination pagination-sm justify-content-end" id="reqNav">
+                </ul>
+            </nav>
         <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
             <h6 class="card-header">
                 Номенклатура
@@ -238,6 +247,10 @@
                 </tbody>
             </table>
         </div>
+    <nav aria-label="..." style="margin-top: 5px; margin-right: 30px">
+                <ul class="pagination pagination-sm justify-content-end" id="goodsNav">
+                </ul>
+            </nav>
     </div>
     <div class="modal fade" id="add_req">
         <div class="modal-dialog modal-lg">

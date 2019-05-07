@@ -41,7 +41,7 @@
             <div class="left-column goods-tree-container">
 
                 <div class="card">
-                    <div class="card-header" style="height: 62px">
+                    <div class="card-header" style="height: 55px">
                         <h5>Группы</h5>
                     </div>
                     <ul id="tree" class="goods_tree">
@@ -58,13 +58,13 @@
                     <div class="card-header">
                         <div class="filter">
                             <div class="form-inline">
-                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                         data-target="#add_model">Добавить МЦ
                                 </button>
 
                                 <div class="form-inline" style="position: absolute; right: 0">
                                     <lable for="filter" class="col-form-label">Поиск</lable>
-                                    <input type="search" class="form-control col-sm-9"
+                                    <input type="search" class="form-control form-control-sm col-sm-9"
                                            style="margin-left:10px;width:300px" id="filter"
                                            oninput="searchGood($(this).prop('value'));"/>
                                     <img src="{% static "img/spinner.gif" %}" id="loader"
@@ -74,8 +74,8 @@
                         </div>
                     </div>
                     <div class="goods_table">
-                        <table class="table table-bordered">
-                            <thead class="thead">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead thead-light">
                             <tr>
                                 <th scope="col">Код</th>
                                 <th scope="col">Название</th>

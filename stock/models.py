@@ -209,6 +209,7 @@ class Demand(models.Model):
     is_edited = models.BooleanField(default=False)
     vin = models.IntegerField(blank=True)
     is_demand = models.BooleanField(default=True)
+    user = models.ForeignKey('auth.User', blank=True)
     #status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)

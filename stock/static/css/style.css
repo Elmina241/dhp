@@ -291,3 +291,7 @@ h9 {
     vertical-align: middle;
     padding: 0;
 }
+
+.table-sm thead{
+    text-align: center;
+}

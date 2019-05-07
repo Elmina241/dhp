@@ -179,6 +179,7 @@ def shipment(request):
                 'acceptor_id': r.acceptor.pk,
                 'role': role,
                 'vin': r.vin,
+                'user': "-" if r.user is None else str(r.user),
                 'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
                 'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
             }
@@ -219,6 +220,7 @@ def supplies(request):
                 'acceptor_id': r.acceptor.pk,
                 'role': role,
                 'vin': r.vin,
+                'user': "-" if r.user is None else str(r.user),
                 'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
                 'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
             }
@@ -249,6 +251,7 @@ def offers(request):
             'acceptor_id': r.acceptor.pk,
             'access': r.matrix.access,
             'role': role,
+            'user': "-" if r.user is None else str(r.user),
             'isEdited': r.is_edited,
             'vin': r.vin
         }
@@ -293,6 +296,7 @@ def requirements(request):
             'acceptor_id': r.acceptor.pk,
             'access': r.matrix.access,
             'role': role,
+            'user': "-" if r.user is None else str(r.user),
             'isEdited': r.is_edited,
             'vin': r.vin
         }
@@ -690,7 +694,7 @@ def save_demand(request):
             goods = json.loads(request.POST['goods'])
             matrix = Matrix(access = access, cause = '0')
             matrix.save()
-            demand = Demand(consumer=consumer, is_demand=json.loads(request.POST['is_demand']), vin= vin, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date)
+            demand = Demand(consumer=consumer, is_demand=json.loads(request.POST['is_demand']), vin= vin, matrix = matrix, provider=provider, donor=donor, acceptor=acceptor, finish_date=date, user=request.user)
             demand.save()
             group.cur_vin = group.cur_vin + 1
             group.save()
@@ -857,6 +861,7 @@ def finish_shipment(request):
                     is_edited = False,
                     vin = vin,
                     is_demand = demand.is_demand,
+                    user=request.user
                 )
                 new_demand.save()
                 if new_demand.donor is not None:

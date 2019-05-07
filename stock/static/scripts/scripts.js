@@ -1142,6 +1142,17 @@ function openGood(id, obj) {
                 }
                 units = units + "</tbody></table></div>";
 
+                expNav = "<nav style=\"margin-top: 5px; margin-right: 0px\">\n" +
+                    "                <ul class=\"pagination pagination-sm justify-content-end\" id=\"expectingNav\">\n" +
+                    "                </ul>\n" +
+                    "            </nav>";
+
+                 histNav = "<nav style=\"margin-top: 5px; margin-right: 0px\">\n" +
+                    "                <ul class=\"pagination pagination-sm justify-content-end\" id=\"historyNav\">\n" +
+                    "                </ul>\n" +
+                    "            </nav>";
+
+
                 expecting = " <div class='tab-pane fade' id='expecting' role='tabpanel' aria-labelledby='expecting-tab'>" +
                     "<table>\n" +
                     "<table class=\"table table-bordered\">\n" +
@@ -1150,11 +1161,11 @@ function openGood(id, obj) {
                     "                                <th scope=\"col\">ВИН</th>\n" +
                     "                                <th scope=\"col\">Дата</th><th scope='col'>Операция</th><th scope='col'>Количество</th>\n" +
                     "                            </thead>\n" +
-                    "                            <tbody>\n";
+                    "                            <tbody id='expectingBody'>\n";
                 for (u in data['expecting']) {
                     expecting = expecting + "<tr><td>" + data['expecting'][u].vin + "</td><td>" + data['expecting'][u].date + "</td><td>" + data['expecting'][u].operation + "</td><td>" + data['expecting'][u].amount + "</td></tr>";
                 }
-                expecting = expecting + "</tbody></table></div>";
+                expecting = expecting + "</tbody></table>" + expNav + "</div>";
 
                 prodHistory = " <div class='tab-pane fade' id='history' role='tabpanel' aria-labelledby='history-tab'>" +
                     "<table>\n" +
@@ -1164,11 +1175,11 @@ function openGood(id, obj) {
                     "                                <th scope=\"col\">ВИН</th>\n" +
                     "                                <th scope=\"col\">Дата</th><th scope='col'>Операция</th><th scope='col'>Ед.изм.</th><th scope='col'>Количество</th>\n" +
                     "                            </thead>\n" +
-                    "                            <tbody>\n";
+                    "                            <tbody id='historyBody'>\n";
                 for (u in data['history']) {
                     prodHistory = prodHistory + "<tr><td>" + data['history'][u].vin + "</td><td>" + data['history'][u].date + "</td><td>" + data['history'][u].operation + "</td><td>" + data['history'][u].unit + "</td><td>" + data['history'][u].amount + "</td></tr>";
                 }
-                prodHistory = prodHistory + "</tbody></table></div>";
+                prodHistory = prodHistory + "</tbody></table>" + histNav + "</div>";
 
                 code = "<tr id='product-info'><td colspan='6'><div class='add-info-good'>" +
                     "<ul class=\"nav nav-tabs\" id=\"myTab\" role=\"tablist\">\n" +
@@ -1185,6 +1196,8 @@ function openGood(id, obj) {
                     "<div class=\"tab-content\" id=\"myTabContent\">\n" + names + units + expecting + prodHistory +
                     "</div></div></tr>";
                 $(obj.parentElement.parentElement).after(code);
+                pag = new Pagination(3, "expectingBody", "expectingNav");
+                pag2 = new Pagination(3, "historyBody", "historyNav");
             }
         });
     }
@@ -1288,6 +1301,7 @@ function getDemandGoods(id, t = "d") {
             $("#makeSupplyBtn").prop('disabled', !rows['is_finished']);
             $(".table-selected").removeClass("table-selected");
             $("#l-" + id).addClass("table-selected");
+            pag2 = new Pagination(10, "goods-body", "goodsNav");
         }
     });
 }
@@ -1477,6 +1491,7 @@ function Pagination(max, table, nav){
                 self.goToPage(eventObject.data.item);
            });
         });
+        self.goToPage(1);
     };
 
     this.goToPage = function(page){
@@ -1499,16 +1514,18 @@ function Pagination(max, table, nav){
                 self.goToPage(0);
             });
         }
-        else if (self.curPage == 1) {
+        if (self.curPage == 1) {
             $("#"+self.nav + " li").first().addClass("disabled");
             $("#"+self.nav + " li").first().off();
-            $("#"+self.nav + " li").last().removeClass("disabled");
-            $("#"+self.nav + " li").last().off();
-            $("#"+self.nav + " li").last().on('click', function(){
-                self.goToPage(self.pageNum);
-            });
+            if (self.curPage != self.pageNum) {
+                $("#" + self.nav + " li").last().removeClass("disabled");
+                $("#" + self.nav + " li").last().off();
+                $("#" + self.nav + " li").last().on('click', function () {
+                    self.goToPage(self.pageNum);
+                });
+            }
         }
-        else {
+        else if (self.curPage != self.pageNum){
             $("#"+self.nav + " li").first().removeClass("disabled");
             $("#"+self.nav + " li").last().removeClass("disabled");
             $("#"+self.nav + " li").first().off();

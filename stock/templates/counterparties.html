@@ -34,11 +34,11 @@
                     <div class="card-header">
                         <div class="filter">
                             <div class="form-inline">
-                        <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#add_counter">Добавить контрагента</button>
+                        <button type="button" class="btn btn-success btn-sm"  data-toggle="modal" data-target="#add_counter">Добавить контрагента</button>
 
                                 <div class="form-inline" style="position: absolute; right: 0">
                                 <lable for="filter" class="col-form-label">Поиск</lable>
-                                <input type="search" class="form-control col-sm-9" style="margin-left:10px;width:300px" id="filter"
+                                <input type="search" class="form-control form-control-sm col-sm-9" style="margin-left:10px;width:300px" id="filter"
                                        onchange=""/>
                                 <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
                                 </div>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="count_table">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered table-sm">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Код</th>
@@ -62,7 +62,7 @@
                                     <td>{{ c.id }}</td>
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.get_kind_display }}</td>
-                                    <td><span style='font-size: 17px;'
+                                    <td><span
                           onclick="pr.getInf({{ c.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
                                     <td><span onclick='delCounter(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td>
                                 </tr>
