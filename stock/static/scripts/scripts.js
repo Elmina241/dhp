@@ -1542,3 +1542,17 @@ function Pagination(max, table, nav){
     this.initPagination();
 
 }
+
+function openModalSupply() {
+            if (isSupply) {
+                $("#supplyTitle").text("Создание поставки");
+                $("#counterLabel").text("Потребитель");
+                $("#dateLabel").text("Дата поставки");
+            }
+            else {
+                $("#supplyTitle").text("Выбытие");
+                $("#counterLabel").text("Поставщик");
+                $("#dateLabel").text("Дата выбытия");
+            }
+            $("#add_supply").modal();
+        }

@@ -15,6 +15,7 @@
         var pag = null;
         $(document).ready(function () {
             operations = JSON.parse($("#operations_json").prop("value"));
+            /**************/
             goods = JSON.parse($("#goods").prop("value"));
             goods_json = JSON.parse($("#goods_json").prop("value"));
             goods_inf = JSON.parse($("#goods_inf").prop("value"));
@@ -25,23 +26,11 @@
             stocks = JSON.parse($("#stock_data").prop("value"));
             addGoodField();
             getStocks('acceptor');
+            /***********/
             pag = new Pagination(10, "op-body", "operationNav");
             pag2 = new Pagination(10, "goods-body", "operationNav2");
         });
 
-        function openModalSupply() {
-            if (isSupply) {
-                $("#supplyTitle").text("Создание поставки");
-                $("#counterLabel").text("Потребитель");
-                $("#dateLabel").text("Дата поставки");
-            }
-            else {
-                $("#supplyTitle").text("Выбытие");
-                $("#counterLabel").text("Поставщик");
-                $("#dateLabel").text("Дата выбытия");
-            }
-            $("#add_supply").modal();
-        }
 
         function getOperationGoods(id) {
             code = "";

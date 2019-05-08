@@ -199,8 +199,8 @@ class User_group(models.Model):
 class Demand(models.Model):
     date = models.DateField(auto_now_add=True)
     matrix = models.ForeignKey('Matrix')
-    consumer = models.ForeignKey('Counterparty', related_name="consumer")
-    provider = models.ForeignKey('Counterparty', related_name="provider")
+    consumer = models.ForeignKey('Counterparty', related_name="consumer", null=True)
+    provider = models.ForeignKey('Counterparty', related_name="provider", null=True)
     donor = models.ForeignKey('Stock', related_name="donor", null=True)
     acceptor = models.ForeignKey('Stock', related_name="acceptor", null=True)
     is_closed = models.BooleanField(default=False)

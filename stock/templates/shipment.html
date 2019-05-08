@@ -2,14 +2,34 @@
 {% block content %}
     {% load staticfiles %}
     <script>
+    var goods_inf = null;
+        var inp = null;
+        var tr = null;
+        var goods = null;
+        var units = null;
+        var stocks = null;
+        var goods_json = null;
+
         var selected = 0;
         var inp = null;
         var reqs = {};
         var reqInfo = {};
         var curReq = null;
+        var isSupply = false;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
+            goods = JSON.parse($("#goods").prop("value"));
+            goods_json = JSON.parse($("#goods_json").prop("value"));
+            goods_inf = JSON.parse($("#goods_inf").prop("value"));
+            tree = JSON.parse($("#tree_data").prop("value"));
+            tr = new GTree(tree, "goods");
+            $("#1")[0].click();
+            units = JSON.parse($("#units").prop("value"));
+            stocks = JSON.parse($("#stock_data").prop("value"));
+            addGoodField();
+            getStocks('acceptor');
+
             reqs = JSON.parse($("#reqs").prop("value"));
             loadReqs("-1");
             pag = new Pagination(10, "req-body", "reqNav");
@@ -113,11 +133,22 @@
 
     </script>
     <input value="{{ reqs }}" id="reqs" hidden/>
+     <input id="tree_data" value="{{ tree }}" hidden>
+        <input id="goods" value="{{ goods }}" hidden>
+        <input id="goods_inf" value="{{ goods_inf }}" hidden>
+        <input value="{{ stockData }}" id="stock_data" hidden/>
+        <input value="{{ units }}" id="units" hidden/>
+    <input id="goods_json" value="{{ goods_json }}" hidden>
     <div class="container-fluid">
 
         <div class="card" style="margin-left: 30px;margin-right: 30px;">
             <div class="card-header">
-                <div class="filter">
+            <div class="form-inline">
+            <button type="button" class="btn btn-success btn-sm"
+                               data-toggle="modal" data-target="#add_supply">
+                            Создать отгрузку
+                        </button>
+                <div class="filter inline-el">
                     <div class="form-inline">
                         <span>Склад</span>
                         <select class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
@@ -128,6 +159,7 @@
                         </select>
                     </div>
                 </div>
+            </div>
             </div>
             <div class="count_table" style="padding-bottom: 0">
                 <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
@@ -213,6 +245,73 @@
                         <input value="Оформить"
                                onclick=""
                                id="supplyBtn" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add_supply">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="supplyTitle">Создание отгрузки</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <h6 id="counterLabel">Контрагент</h6>
+                            <select class="form-control" id="consumer" readonly onchange="getStocks('acceptor')">
+                                {% for c in counters %}
+                                    {% if c == counter %}
+                                        <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                    {% else %}
+                                        <option value="{{ c.id }}">{{ c.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <h6>Склад</h6>
+                            <select class="form-control" id="acceptor">
+                            </select>
+                        </div>
+                    </div>
+                    <h6 id="dateLabel">Дата отгрузки</h6>
+                    <input type="date" class="form-control" id="date"/>
+                    <hr>
+                    <h6>Товары</h6>
+                    <div id="add_goods">
+                    </div>
+                    <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                          onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
+                    <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="counterBtn" onclick="saveSupply()" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tree-div">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Товары</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body">
+                    <ul id="tree" class="goods_tree">
+
+                    </ul>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Выбрать"
+                               onclick="setGoodName(inp);$('#tree-div').modal('hide');"
+                               id="selectBtn" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
