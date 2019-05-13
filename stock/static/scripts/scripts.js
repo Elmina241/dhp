@@ -1464,6 +1464,26 @@ function setGoodName(obj) {
     }
 }
 
+function PeriodFilter(table, column, select, pagination) {
+    this.period = 0;
+    this.column = column;
+    this.table = table;
+    this.select = $("#"+ select);
+    var self = this;
+
+    this.initFilter = function(){
+        self.select.click(function(){
+            self.period = $(self.select).val();
+            self.changePeriod();
+        });
+    };
+
+    this.changePeriod = function(){
+
+    };
+
+}
+
 function Pagination(max, table, nav){
     this.maxRecs = max;
     this.tableBody = table;
@@ -1503,7 +1523,10 @@ function Pagination(max, table, nav){
         firstTr = (page - 1) * self.maxRecs;
         lastTr = (page * self.maxRecs) - 1;
         if (firstTr == 0) $("#" + self.tableBody + " tr:lt(" + (lastTr + 1) + ")").show();
-        else $("#" + self.tableBody + " tr:gt(" + (firstTr -1) + "):lt(" + (lastTr + 1) + ")").show();
+        else {
+            $("#" + self.tableBody + " tr:gt(" + (firstTr -1) + ")").show();
+            $("#" + self.tableBody + " tr:gt(" + lastTr + ")").hide();
+        }
         self.curPage = page;
         if (self.curPage == self.pageNum) {
             $("#"+self.nav + " li").last().addClass("disabled");
@@ -1521,7 +1544,7 @@ function Pagination(max, table, nav){
                 $("#" + self.nav + " li").last().removeClass("disabled");
                 $("#" + self.nav + " li").last().off();
                 $("#" + self.nav + " li").last().on('click', function () {
-                    self.goToPage(self.pageNum);
+                    self.goToPage(self.pageNum+1);
                 });
             }
         }
@@ -1534,7 +1557,7 @@ function Pagination(max, table, nav){
             });
             $("#"+self.nav + " li").last().off();
             $("#"+self.nav + " li").last().on('click', function(){
-                self.goToPage(self.pageNum);
+                self.goToPage(self.pageNum+1);
             });
         }
     };
