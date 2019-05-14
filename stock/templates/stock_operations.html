@@ -74,13 +74,14 @@
 
         function changeOperGroup(group) {
             stock = $("#stock").val();
+            period = $("#period").val();
             code = "";
             for (row in operations) {
-                if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1")) {
+                if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1") && checkDatePeriod(operations[row]['date'], period)) {
                     code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\"></i> Ордер</span></td></tr>";
                 }
             }
-            if (code == "") code = "<tr><td colspan=4 align='center' class='no-data'>Нет записей</td></tr>";
+            if (code == "") code = "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
             goodsCode = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
             $("#goods-body").html(goodsCode);
             $("#op-body").html(code);
@@ -120,6 +121,15 @@
                             {% for s in stocks %}
                                 <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
                             {% endfor %}
+                        </select>
+                    <span>Период</span>
+                        <select id="period" class="form-control inline-el form-control-sm"
+                                onchange="changeOperGroup($('#operGroup option:selected').text())">
+                            <option value="0">Все</option>
+                            <option value="1">День</option>
+                            <option value="2">Неделя</option>
+                            <option value="3">Месяц</option>
+                            <option value="4">Год</option>
                         </select>
                         <div class="form-inline" style="position: absolute; right: 0">
                             <lable for="filter" class="col-form-label">Фильтр</lable>

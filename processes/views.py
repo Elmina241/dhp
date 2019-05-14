@@ -1008,18 +1008,18 @@ def add_comp(request, kneading_id):
                                 if mat.ammount + comp.ammount < float(request.POST['amm']):
                                     res = str(mat.ammount + comp.ammount)
                                 else:
-                                    mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
+                                    #mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
                                     #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                    mat.save()
+                                    #mat.save()
                             else:
                                 if mat.ammount < float(request.POST['amm']):
                                     res = str(mat.ammount)
                                 else:
-                                    mat.ammount = mat.ammount - float(request.POST['amm'])
+                                    #mat.ammount = mat.ammount - float(request.POST['amm'])
                                     #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                    mat.save()
+                                    #mat.save()
                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             if res == "ok":
                 comp.ammount = request.POST['amm']

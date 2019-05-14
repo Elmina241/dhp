@@ -1464,24 +1464,32 @@ function setGoodName(obj) {
     }
 }
 
-function PeriodFilter(table, column, select, pagination) {
-    this.period = 0;
-    this.column = column;
-    this.table = table;
-    this.select = $("#"+ select);
-    var self = this;
+function parseDate(string){
+    return new Date(string.substr(6, 4), string.substr(3,2) - 1, string.substr(0,2));
+}
 
-    this.initFilter = function(){
-        self.select.click(function(){
-            self.period = $(self.select).val();
-            self.changePeriod();
-        });
-    };
-
-    this.changePeriod = function(){
-
-    };
-
+function checkDatePeriod(dateSring, period){
+    var date = parseDate(dateSring);
+    var now = new Date();
+    if (period == 0) return true;
+    else if (period == 1){
+        return date.getFullYear() == now.getFullYear() && date.getMonth() == now.getMonth() && date.getDate() == now.getDate();
+    }
+    else if (period == 2){
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 7);
+        return date > startDate;
+    }
+    else if (period == 3){
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 31);
+        return date > startDate;
+    }
+    else {
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 365);
+        return date > startDate;
+    }
 }
 
 function Pagination(max, table, nav){
