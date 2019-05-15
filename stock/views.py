@@ -561,7 +561,8 @@ def save_stock_operation(request):
             return HttpResponse('ok')
 
 def stock_operations(request):
-    counter = User_group.objects.filter(user=request.user)[0].group
+    user = request.user
+    counter = User_group.objects.filter(user=user)[0].group
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()

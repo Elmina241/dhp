@@ -1008,18 +1008,18 @@ def add_comp(request, kneading_id):
                                 if mat.ammount + comp.ammount < float(request.POST['amm']):
                                     res = str(mat.ammount + comp.ammount)
                                 else:
-                                    #mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
+                                    mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
                                     #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                    #mat.save()
+                                    mat.save()
                             else:
                                 if mat.ammount < float(request.POST['amm']):
                                     res = str(mat.ammount)
                                 else:
-                                    #mat.ammount = mat.ammount - float(request.POST['amm'])
+                                    mat.ammount = mat.ammount - float(request.POST['amm'])
                                     #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                    #mat.save()
+                                    mat.save()
                 #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             if res == "ok":
                 comp.ammount = request.POST['amm']
@@ -1213,15 +1213,14 @@ def print_passport(request, kneading_id):
     comps = {}
     processes = Kneading.objects.filter(list__formula = kneading.list.formula, batch_num = kneading.batch_num, start_date__year = kneading.start_date.year, isFinished = True)
     for p in processes:
-        if Batch.objects.filter(kneading = p).count() != 0:
-            amount = amount + p.list.ammount
-            batch_t = Batch.objects.filter(kneading = p)[0]
-            components = Batch_comp.objects.filter(batch = batch_t)
-            for c in components:
-                if c.mat.id in comps:
-                    comps[c.mat.id]["ammount"] = comps[c.mat.id]["ammount"] + (c.ammount / 100 * batch_t.kneading.list.ammount)
-                else:
-                    comps[c.mat.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * batch_t.kneading.list.ammount}
+        amount = amount + p.list.ammount
+        batch_t = Batch.objects.filter(kneading = p)[0]
+        components = Batch_comp.objects.filter(batch = batch_t)
+        for c in components:
+            if c.mat.id in comps:
+                comps[c.mat.id]["ammount"] = comps[c.mat.id]["ammount"] + (c.ammount / 100 * batch_t.kneading.list.ammount)
+            else:
+                comps[c.mat.id] = {"code": c.mat.code, "name": c.mat, "ammount": c.ammount / 100 * batch_t.kneading.list.ammount}
     #Получение состава
     #components = Batch_comp.objects.filter(batch = batch)
     #for c in components:

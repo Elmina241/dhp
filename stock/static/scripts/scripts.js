@@ -426,37 +426,45 @@ function saveModel() {
     });
 }
 
+function validateDemand(){
+    var err = true;
+    err = err && ($("#date").val() != "");
+    return err;
+}
+
 function saveDemand(isDemand) {
-    goods = {};
-    $("#add_goods").find(".good-item").each(function (item) {
-        goods[item] = {};
-        goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
-        //goods[item]['name'] = $(this).find("select").eq(0).val();
-        goods[item]['unit'] = $(this).find("select").eq(0).val();
-        goods[item]['num'] = $(this).find("input").eq(1).prop("value");
-    });
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'save_demand/',
-        data: {
-            'consumer': $("#consumer").val(),
-            'provider': $("#provider").val(),
-            'donor': $("#donor").val(),
-            'acceptor': $("#acceptor").val(),
-            'date': $("#date").prop('value'),
-            'goods': JSON.stringify(goods),
-            'is_demand': isDemand
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    if (!validateDemand()) {
+        goods = {};
+        $("#add_goods").find(".good-item").each(function (item) {
+            goods[item] = {};
+            goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
+            //goods[item]['name'] = $(this).find("select").eq(0).val();
+            goods[item]['unit'] = $(this).find("select").eq(0).val();
+            goods[item]['num'] = $(this).find("input").eq(1).prop("value");
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_demand/',
+            data: {
+                'consumer': $("#consumer").val(),
+                'provider': $("#provider").val(),
+                'donor': $("#donor").val(),
+                'acceptor': $("#acceptor").val(),
+                'date': $("#date").prop('value'),
+                'goods': JSON.stringify(goods),
+                'is_demand': isDemand
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
-        }
-    });
+        });
+    }
 }
 
 function saveSupply() {
