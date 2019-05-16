@@ -261,6 +261,7 @@
 
                 </div>
                 <div class="modal-body create-form">
+                <form id="form">
                     <div class="form-row">
                         <div class="form-group col-md-6"><h6>Поставщик</h6>
                             <select class="form-control" id="provider" onchange="getStocks('donor')">
@@ -293,7 +294,7 @@
                         </div>
                     </div>
                     <h6>Ожидаемая дата поступления</h6>
-                    <input type="date" class="form-control" id="date"/>
+                    <input type="date" class="form-control" id="date" required/>
                     <hr>
                     <h6>Товары</h6>
                     <div id="add_goods">
@@ -301,10 +302,12 @@
                     <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
                     <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
+                    </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="saveDemand(true)" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
+
             </div>
         </div>
     </div>

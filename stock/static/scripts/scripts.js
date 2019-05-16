@@ -433,7 +433,7 @@ function validateDemand(){
 }
 
 function saveDemand(isDemand) {
-    if (!validateDemand()) {
+    if ($('#form')[0].checkValidity()) {
         goods = {};
         $("#add_goods").find(".good-item").each(function (item) {
             goods[item] = {};
@@ -465,38 +465,46 @@ function saveDemand(isDemand) {
             }
         });
     }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function saveSupply() {
-    goods = {};
-    var operation = isSupply ? '0' : '1';
-    $("#add_goods").find(".good-item").each(function (item) {
-        goods[item] = {};
-        goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
-        //obj = this.nextElementSibling;
-        goods[item]['unit'] = $(this).find("select").eq(0).val();
-        goods[item]['num'] = $(this).find("input").eq(1).prop("value");
-    });
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'save_supply/',
-        data: {
-            'consumer': $("#consumer").val(),
-            'acceptor': $("#acceptor").val(),
-            'date': $("#date").prop('value'),
-            'goods': JSON.stringify(goods),
-            'operation': operation
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    if ($('#form')[0].checkValidity()) {
+        goods = {};
+        var operation = isSupply ? '0' : '1';
+        $("#add_goods").find(".good-item").each(function (item) {
+            goods[item] = {};
+            goods[item]['product'] = $(this).find(".goodInp").eq(0).prop("name");
+            //obj = this.nextElementSibling;
+            goods[item]['unit'] = $(this).find("select").eq(0).val();
+            goods[item]['num'] = $(this).find("input").eq(1).prop("value");
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_supply/',
+            data: {
+                'consumer': $("#consumer").val(),
+                'acceptor': $("#acceptor").val(),
+                'date': $("#date").prop('value'),
+                'goods': JSON.stringify(goods),
+                'operation': operation
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
-        }
-    });
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function saveGood() {
@@ -1424,7 +1432,7 @@ function addGoodField() {
         "                        <h7>Товар</h7>\n" +
         "                            <div class='form-inline'>\n" +
         "                        <div class='autocomplete' style='width:335px;'>\n" +
-        "                            <input id='myInput' style='width:335px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry'>\n" +
+        "                            <input id='myInput' style='width:335px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry' required>\n" +
         "                        </div>\n" +
         "                        <button class='btn btn-outline-info'\n" +
         "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;'\n" +
@@ -1434,7 +1442,7 @@ function addGoodField() {
         "                            <h7>Ед. изм.</h7> <select class='form-control form-control-sm'>\n" +
         "                        </select></div><div class='form-group col-md-3'>\n" +
         "                            <h7>Количество</h7>\n" +
-        "                            <input type='number' class='form-control form-control-sm' id='date'/>\n" +
+        "                            <input type='number' class='form-control form-control-sm' id='date' required/>\n" +
         "                    </div>";
     $(code).appendTo("#add_goods");
     autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
