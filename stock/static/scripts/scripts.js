@@ -1,63 +1,73 @@
 function sendProp() {
-    var data = null;
-    var t = $('#type').prop('value');
-    if (t == 0) {
-        data = {'from': $('#from').prop('value'), 'to': $('#to').prop('value')};
-    }
-    else if (t == 2) {
-        data = [];
-        tbody = document.getElementById("elems");
-        for (i = 1; i < tbody.rows.length; i++) {
-            var tr = $("#elems tr").eq(i);
-            data.push(tr.find("td").eq(0).text());
+    if ($('#form')[0].checkValidity()) {
+        var data = null;
+        var t = $('#type').prop('value');
+        if (t == 0) {
+            data = {'from': $('#from').prop('value'), 'to': $('#to').prop('value')};
         }
-    }
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'send_prop/',
-        data: {
-            'name': $('#name').prop('value'),
-            'type': t,
-            'data': JSON.stringify(data)
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        else if (t == 2) {
+            data = [];
+            tbody = document.getElementById("elems");
+            for (i = 1; i < tbody.rows.length; i++) {
+                var tr = $("#elems tr").eq(i);
+                data.push(tr.find("td").eq(0).text());
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
         }
-    });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'send_prop/',
+            data: {
+                'name': $('#name').prop('value'),
+                'type': t,
+                'data': JSON.stringify(data)
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
+            }
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function sendCounter() {
-    stocks = [];
-    $("#stocks").find("select").each(function (item) {
-        stocks.push($("option:selected", this).val());
-    });
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'send_counter/',
-        data: {
-            'name': $('#name').prop('value'),
-            'kind': $('#kind').val(),
-            'stocks': JSON.stringify(stocks),
-            'isProv': $("#isProv").prop('checked'),
-            'isCons': $("#isCons").prop('checked'),
-            'isMember': $("#isMember").prop('checked')
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    if ($('#form')[0].checkValidity()) {
+        stocks = [];
+        $("#stocks").find("select").each(function (item) {
+            stocks.push($("option:selected", this).val());
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'send_counter/',
+            data: {
+                'name': $('#name').prop('value'),
+                'kind': $('#kind').val(),
+                'stocks': JSON.stringify(stocks),
+                'isProv': $("#isProv").prop('checked'),
+                'isCons': $("#isCons").prop('checked'),
+                'isMember': $("#isMember").prop('checked')
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
-        }
-    });
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function editProp(id) {
@@ -388,42 +398,47 @@ function editModel(id) {
 }
 
 function saveModel() {
-    units = [];
-    $("#additional_unit").find("select").each(function (item) {
-        units.push($("option:selected", this).val());
-    });
-    props = {};
-    $("#additional_prop").find("select").each(function (item) {
-        if (!$(this).hasClass("default")) {
-            props[item] = {};
-            props[item]['prop'] = $("option:selected", this).val();
-            props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
-            props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
-            props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
-            if (props[item]['isDefault'] == true) {
-                props[item]['default'] = $(this.parentElement).find(".default").eq(0).prop("value");
+    if ($('#form')[0].checkValidity()) {
+        units = [];
+        $("#additional_unit").find("select").each(function (item) {
+            units.push($("option:selected", this).val());
+        });
+        props = {};
+        $("#additional_prop").find("select").each(function (item) {
+            if (!$(this).hasClass("default")) {
+                props[item] = {};
+                props[item]['prop'] = $("option:selected", this).val();
+                props[item]['hidden'] = $(this.parentElement).find(".visible").eq(0).prop("checked");
+                props[item]['uneditable'] = $(this.parentElement).find(".editable").eq(0).prop("checked");
+                props[item]['isDefault'] = $(this.parentElement).find(".isDefault").eq(0).prop("checked");
+                if (props[item]['isDefault'] == true) {
+                    props[item]['default'] = $(this.parentElement).find(".default").eq(0).prop("value");
+                }
             }
-        }
-    });
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'save_model/',
-        data: {
-            'name': $('#name').prop('value'),
-            'group': $("#group option:selected").val(),
-            'units': JSON.stringify(units),
-            'props': JSON.stringify(props)
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_model/',
+            data: {
+                'name': $('#name').prop('value'),
+                'group': $("#group option:selected").val(),
+                'units': JSON.stringify(units),
+                'props': JSON.stringify(props)
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
-        }
-    });
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function validateDemand(){
@@ -508,48 +523,53 @@ function saveSupply() {
 }
 
 function saveGood() {
-    units = {};
-    $("#units").find(".unit").each(function (item) {
-        id = $(this).prop('id');
-        units[id] = {};
-        units[id]['coeff'] = $(this).find(":input[type='number']").eq(0).prop("value");
-        units[id]['applicable'] = !$(this).find(":input[type='checkbox']").eq(0).prop("checked");
-        units[id]['isBase'] = $(this).find(":input[type='radio']").eq(0).prop("checked");
-    });
-    props = {};
-    $("#props").find(".prop").each(function (item) {
-        id = $(this).prop('id');
-        props[id] = {};
-        props[id]['value'] = $(this).find(".value").eq(0).val();
-        props[id]['visible'] = !$(this).find(".visible").eq(0).prop("checked");
-        props[id]['editable'] = !$(this).find(".editable").eq(0).prop("checked");
-        props[id]['applicable'] = !$(this).find(".applicable").eq(0).prop("checked");
-    });
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'save_good/',
-        data: {
-            'name': $('#name').prop('value'),
-            'model': $("#model option:selected").val(),
-            'counter': $("#counter option:selected").val(),
-            'article': $('#article').prop('value'),
-            'barcode': $('#barcode').prop('value'),
-            'original': $('#original').prop('value'),
-            'local': $('#local').prop('value'),
-            'transit': $('#transit').prop('value'),
-            'units': JSON.stringify(units),
-            'props': JSON.stringify(props)
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    if ($('#form')[0].checkValidity()) {
+        units = {};
+        $("#units").find(".unit").each(function (item) {
+            id = $(this).prop('id');
+            units[id] = {};
+            units[id]['coeff'] = $(this).find(":input[type='number']").eq(0).prop("value");
+            units[id]['applicable'] = !$(this).find(":input[type='checkbox']").eq(0).prop("checked");
+            units[id]['isBase'] = $(this).find(":input[type='radio']").eq(0).prop("checked");
+        });
+        props = {};
+        $("#props").find(".prop").each(function (item) {
+            id = $(this).prop('id');
+            props[id] = {};
+            props[id]['value'] = $(this).find(".value").eq(0).val();
+            props[id]['visible'] = !$(this).find(".visible").eq(0).prop("checked");
+            props[id]['editable'] = !$(this).find(".editable").eq(0).prop("checked");
+            props[id]['applicable'] = !$(this).find(".applicable").eq(0).prop("checked");
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_good/',
+            data: {
+                'name': $('#name').prop('value'),
+                'model': $("#model option:selected").val(),
+                'counter': $("#counter option:selected").val(),
+                'article': $('#article').prop('value'),
+                'barcode': $('#barcode').prop('value'),
+                'original': $('#original').prop('value'),
+                'local': $('#local').prop('value'),
+                'transit': $('#transit').prop('value'),
+                'units': JSON.stringify(units),
+                'props': JSON.stringify(props)
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
-        }
-    });
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function editGood(id) {
@@ -960,7 +980,7 @@ function getModelInfo() {
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']) {
-        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el'/></div></div>";
+        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el' required/></div></div>";
         code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
@@ -981,10 +1001,10 @@ function getPropCode(t, value = "", choises = null) {
     var code = "";
     switch (t) {
         case 0:
-            code = "<input type='number' class='form-control inline-el value' value='" + value + "'/>";
+            code = "<input type='number' class='form-control inline-el value' value='" + value + "' required/>";
             break;
         case 1:
-            code = "<input type='text' class='form-control inline-el value' value='" + value + "'/>";
+            code = "<input type='text' class='form-control inline-el value' value='" + value + "' required/>";
             break;
         case 2:
             code = "<select class='form-control inline-el value'>";

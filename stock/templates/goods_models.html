@@ -153,9 +153,10 @@
 
                 </div>
                 <div class="modal-body create-form">
+                <form id="form">
                     <h6>Наименование</h6>
                     <div class="col-6" style="padding:0">
-                        <input type="text" class="form-control" id="name"/>
+                        <input type="text" class="form-control" id="name" required/>
                     </div>
                     <h6>Узел в иерархии</h6>
                     <div class="col-6" style="padding:0">
@@ -175,6 +176,7 @@
                     </div>
                     <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addProp()"><i class='fas fa-plus-circle'></i></span>
+                </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="saveModel" onclick="saveModel()" class="btn btn-primary"
                                style="float: right"/></div>

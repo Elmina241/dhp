@@ -81,8 +81,9 @@
 
                 </div>
                 <div class="modal-body create-form">
+                    <form id="form">
                     <h6>Наименование</h6>
-                    <input type="text" class="form-control" id="name"/>
+                    <input type="text" class="form-control" id="name" required/>
                     <h6>Вид</h6>
                     <select class="form-control" name="kind" id="kind" onchange="changeType($(this).val())">
                         <option selected value="0">Организация</option>
@@ -97,6 +98,7 @@
                         <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addStock()"><i class='fas fa-plus-circle'></i></span>
                     </div>
+                    </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="sendCounter()" class="btn btn-primary"
                                style="float: right"/></div>

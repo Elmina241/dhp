@@ -61,8 +61,9 @@
 
                 </div>
                 <div class="modal-body create-form">
+                    <form id="form">
                     <h6>Наименование</h6>
-                    <input type="text" class="form-control" id="name"/>
+                    <input type="text" class="form-control" id="name" required/>
                     <h6>Тип свойства</h6>
                     <select class="form-control" name="type" id="type" onchange="getProps($(this).val());">
                         <option selected value="0">Число</option>
@@ -70,6 +71,7 @@
                         <option value="2">Множество</option>
                     </select>
                     <div id="charVal"></div>
+                    </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="packBtn" onclick="sendProp()" class="btn btn-primary"
                                style="float: right"/></div>

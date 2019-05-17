@@ -118,6 +118,7 @@
 
                 </div>
                 <div class="modal-body create-form">
+                <form id="form">
                     <h6>Макет</h6>
                     <div class="col-6" style="padding:0">
                         <select class="form-control" id="model" onchange="getModelInfo()">
@@ -131,7 +132,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="article">Артикул</label>
-                            <input type="text" class="form-control" id="article">
+                            <input type="text" class="form-control" id="article" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="name">Наименование</label>
@@ -178,6 +179,7 @@
                     <h6>Свойства</h6>
                     <div style='display:block' id="props">
                     </div>
+                </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="saveModel" onclick="saveGood()" class="btn btn-primary"
                                style="float: right"/></div>
