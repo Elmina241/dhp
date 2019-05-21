@@ -5,6 +5,7 @@
         var tr = null;
         var tree = {};
         var goods = null;
+        var goodInfo = {};
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
             goods = JSON.parse($("#goods_json").prop("value"));
@@ -48,6 +49,15 @@
                                         <option value="{{ s.pk }}">{{ s.name }}</option>
                                     {% endfor %}
                                 </select>
+                            <span>Период</span>
+                        <select id="period" class="form-control inline-el form-control-sm"
+                                onchange="changePeriod()">
+                            <option value="0">Все</option>
+                            <option value="1">День</option>
+                            <option value="2">Неделя</option>
+                            <option value="3">Месяц</option>
+                            <option value="4">Год</option>
+                        </select>
 
                                 <div class="form-inline" style="position: absolute; right: 0">
                                     <lable for="filter" class="col-form-label">Поиск</lable>

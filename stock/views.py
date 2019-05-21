@@ -41,6 +41,8 @@ def stocks(request):
             if str(s.pk) not in goods_json[str(g.pk)]:
                 goods_json[str(g.pk)][str(s.pk)] = {}
             for r in Stock_good.objects.filter(stock = s, good__model__group = g):
+                goods_json["1"][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(), "name": r.good.get_name(),
+                                                               "amount": r.amount, "unit": str(r.unit), "cost": r.cost}
                 goods_json[str(g.pk)][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(),"name": r.good.get_name(), "amount": r.amount, "unit": str(r.unit), "cost": r.cost}
     return render(request, "stocks.html",
                   {"header": "Склад", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
@@ -467,7 +469,7 @@ def get_demand_goods(request):
                     data['is_finished'] = ord.status is '2'
             for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
-                data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit), 'b_amount': b_amount, 'b_unit': str(Goods_unit.objects.filter(product = d.good, isBase = True)[0].unit)}
+                data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
                 if request.POST['t'] == 's':
                     data[str(d.pk)]['balance'] = d.balance
             return HttpResponse(json.dumps(data))

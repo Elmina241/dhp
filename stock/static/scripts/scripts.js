@@ -441,7 +441,7 @@ function saveModel() {
     }
 }
 
-function validateDemand(){
+function validateDemand() {
     var err = true;
     err = err && ($("#date").val() != "");
     return err;
@@ -774,7 +774,7 @@ function changeGroup(t) {
 
     $("#goods-body").html("");
     for (m in data) {
-        if (data[m].group == tr.selected) {
+        if (data[m].group == tr.selected || tr.selected == 1) {
             id = t == "goods" ? data[m].article : data[m].id
             $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='delObj(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
         }
@@ -1138,6 +1138,7 @@ function openGood(id, obj) {
             },
             success: function onAjaxSuccess(data) {
                 data = JSON.parse(data);
+                var period = $("#period").val();
                 names = " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
                     "<div class=\"form-row\">\n" +
                     "                        <div class=\"form-group col-md-6\">\n" +
@@ -1183,7 +1184,7 @@ function openGood(id, obj) {
                     "                </ul>\n" +
                     "            </nav>";
 
-                 histNav = "<nav style=\"margin-top: 5px; margin-right: 0px\">\n" +
+                histNav = "<nav style=\"margin-top: 5px; margin-right: 0px\">\n" +
                     "                <ul class=\"pagination pagination-sm justify-content-end\" id=\"historyNav\">\n" +
                     "                </ul>\n" +
                     "            </nav>";
@@ -1213,9 +1214,11 @@ function openGood(id, obj) {
                     "                            </thead>\n" +
                     "                            <tbody id='historyBody'>\n";
                 for (u in data['history']) {
-                    prodHistory = prodHistory + "<tr><td>" + data['history'][u].vin + "</td><td>" + data['history'][u].date + "</td><td>" + data['history'][u].operation + "</td><td>" + data['history'][u].unit + "</td><td>" + data['history'][u].amount + "</td></tr>";
+                    if (checkDatePeriod(data['history'][u].date, period)) prodHistory = prodHistory + "<tr><td>" + data['history'][u].vin + "</td><td>" + data['history'][u].date + "</td><td>" + data['history'][u].operation + "</td><td>" + data['history'][u].unit + "</td><td>" + data['history'][u].amount + "</td></tr>";
                 }
                 prodHistory = prodHistory + "</tbody></table>" + histNav + "</div>";
+
+                goodInfo = data['history'];
 
                 code = "<tr id='product-info'><td colspan='6'><div class='add-info-good'>" +
                     "<ul class=\"nav nav-tabs\" id=\"myTab\" role=\"tablist\">\n" +
@@ -1239,10 +1242,10 @@ function openGood(id, obj) {
     }
 }
 
-function saveInventory(stock){
-    $("#inventoryProds tr").each(function(item){
+function saveInventory(stock) {
+    $("#inventoryProds tr").each(function (item) {
         id = $(this).prop('id');
-        if (inventoryGoods[id]==undefined) inventoryGoods[id] = {};
+        if (inventoryGoods[id] == undefined) inventoryGoods[id] = {};
         inventoryGoods[id].amount = $("[name='amount']", this).val();
         inventoryGoods[id].cost = $("[name='cost']", this).val();
     });
@@ -1266,7 +1269,7 @@ function saveInventory(stock){
     });
 }
 
-function getStockGoods(id){
+function getStockGoods(id) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -1285,12 +1288,12 @@ function getStockGoods(id){
             i = 0;
             code = "";
             for (r in rows) {
-                code = code + "<tr id='"+ r +"'><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' name='amount' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' name='cost' type='number' value='" + rows[r].cost + "'/></td><td></td>";
-                    inventoryGoods[r] = {
-                        id: r,
-                        amount: rows[r]['amount'],
-                        cost: rows[r]['cost']
-                    }
+                code = code + "<tr id='" + r + "'><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' name='amount' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' name='cost' type='number' value='" + rows[r].cost + "'/></td><td></td>";
+                inventoryGoods[r] = {
+                    id: r,
+                    amount: rows[r]['amount'],
+                    cost: rows[r]['cost']
+                }
             }
             $("#inventoryProds").html(code);
             $("#inventory").modal();
@@ -1500,23 +1503,23 @@ function setGoodName(obj) {
     }
 }
 
-function parseDate(string){
-    return new Date(string.substr(6, 4), string.substr(3,2) - 1, string.substr(0,2));
+function parseDate(string) {
+    return new Date(string.substr(6, 4), string.substr(3, 2) - 1, string.substr(0, 2));
 }
 
-function checkDatePeriod(dateSring, period){
+function checkDatePeriod(dateSring, period) {
     var date = parseDate(dateSring);
     var now = new Date();
     if (period == 0) return true;
-    else if (period == 1){
+    else if (period == 1) {
         return date.getFullYear() == now.getFullYear() && date.getMonth() == now.getMonth() && date.getDate() == now.getDate();
     }
-    else if (period == 2){
+    else if (period == 2) {
         startDate = new Date();
         startDate.setDate(startDate.getDate() - 7);
         return date > startDate;
     }
-    else if (period == 3){
+    else if (period == 3) {
         startDate = new Date();
         startDate.setDate(startDate.getDate() - 31);
         return date > startDate;
@@ -1528,7 +1531,7 @@ function checkDatePeriod(dateSring, period){
     }
 }
 
-function Pagination(max, table, nav){
+function Pagination(max, table, nav) {
     this.maxRecs = max;
     this.tableBody = table;
     var self = this;
@@ -1537,71 +1540,71 @@ function Pagination(max, table, nav){
     this.pageNum = 0;
     this.curPage = 1;
 
-    this.initPagination = function(){
+    this.initPagination = function () {
         self.trCount = $("#" + self.tableBody + " tr").length;
-        if (self.trCount > self.maxRecs){
+        if (self.trCount > self.maxRecs) {
             $("#" + self.tableBody + " tr:gt(" + (self.maxRecs - 1) + ")").hide();
         }
         self.pageNum = Math.ceil(self.trCount / self.maxRecs);
         var paginationCode = "<li class='page-item disabled'><span class='page-link'>Предыдущая</span></li>";
-        for (i = 0; i < self.pageNum; i++){
-            if (i ==0) paginationCode = paginationCode + "<li class='page-item active'><a class='page-link' href='#'>1</a></li>";
-            else paginationCode = paginationCode + "<li class='page-item'><a class='page-link' href='#'>" + (i+1) + "</a></li>";
+        for (i = 0; i < self.pageNum; i++) {
+            if (i == 0) paginationCode = paginationCode + "<li class='page-item active'><a class='page-link' href='#'>1</a></li>";
+            else paginationCode = paginationCode + "<li class='page-item'><a class='page-link' href='#'>" + (i + 1) + "</a></li>";
         }
         paginationCode = paginationCode + "<li class='page-item'><span class='page-link'>Следующая</span></li>";
-        $("#"+self.nav).html(paginationCode);
-        $("#"+self.nav + " li").each(function(item){
-           $(this).click({item: item}, function(eventObject){
+        $("#" + self.nav).html(paginationCode);
+        $("#" + self.nav + " li").each(function (item) {
+            $(this).click({item: item}, function (eventObject) {
                 self.goToPage(eventObject.data.item);
-           });
+            });
         });
         self.goToPage(1);
     };
 
-    this.goToPage = function(page){
+    this.goToPage = function (page) {
         if (page == 0) page = self.curPage - 1;
         if (page == (self.pageNum + 1)) page = self.curPage + 1;
-        $("#"+self.nav + " li").removeClass("active");
-        $("#"+self.nav).find('li').eq(page).addClass("active");
+        $("#" + self.nav + " li").removeClass("active");
+        $("#" + self.nav).find('li').eq(page).addClass("active");
         $("#" + self.tableBody + " tr").hide();
         firstTr = (page - 1) * self.maxRecs;
         lastTr = (page * self.maxRecs) - 1;
         if (firstTr == 0) $("#" + self.tableBody + " tr:lt(" + (lastTr + 1) + ")").show();
         else {
-            $("#" + self.tableBody + " tr:gt(" + (firstTr -1) + ")").show();
+            $("#" + self.tableBody + " tr:gt(" + (firstTr - 1) + ")").show();
             $("#" + self.tableBody + " tr:gt(" + lastTr + ")").hide();
         }
         self.curPage = page;
         if (self.curPage == self.pageNum) {
-            $("#"+self.nav + " li").last().addClass("disabled");
-            $("#"+self.nav + " li").last().off();
-            $("#"+self.nav + " li").first().removeClass("disabled");
-            $("#"+self.nav + " li").first().off();
-            $("#"+self.nav + " li").first().on('click', function(){
+            $("#" + self.nav + " li").last().addClass("disabled");
+            $("#" + self.nav + " li").last().off();
+            $("#" + self.nav + " li").first().removeClass("disabled");
+            $("#" + self.nav + " li").first().off();
+            $("#" + self.nav + " li").first().on('click', function () {
                 self.goToPage(0);
             });
         }
         if (self.curPage == 1) {
-            $("#"+self.nav + " li").first().addClass("disabled");
-            $("#"+self.nav + " li").first().off();
+            $("#" + self.nav + " li").first().addClass("disabled");
+            $("#" + self.nav + " li").first().off();
             if (self.curPage != self.pageNum) {
                 $("#" + self.nav + " li").last().removeClass("disabled");
                 $("#" + self.nav + " li").last().off();
                 $("#" + self.nav + " li").last().on('click', function () {
-                    self.goToPage(self.pageNum+1);
+                    self.goToPage(self.pageNum + 1);
                 });
             }
         }
-        else if (self.curPage != self.pageNum){
-            $("#"+self.nav + " li").first().removeClass("disabled");
-            $("#"+self.nav + " li").last().removeClass("disabled");
-            $("#"+self.nav + " li").first().off();
-            $("#"+self.nav + " li").first().on('click', function(){
+        else if (self.curPage != self.pageNum) {
+            $("#" + self.nav + " li").first().removeClass("disabled");
+            $("#" + self.nav + " li").last().removeClass("disabled");
+            $("#" + self.nav + " li").first().off();
+            $("#" + self.nav + " li").first().on('click', function () {
                 self.goToPage(0);
             });
-            $("#"+self.nav + " li").last().off();
-            $("#"+self.nav + " li").last().on('click', function(){
-                self.goToPage(self.pageNum+1);
+            $("#" + self.nav + " li").last().off();
+            $("#" + self.nav + " li").last().on('click', function () {
+                self.goToPage(self.pageNum + 1);
             });
         }
     };
@@ -1611,15 +1614,27 @@ function Pagination(max, table, nav){
 }
 
 function openModalSupply() {
-            if (isSupply) {
-                $("#supplyTitle").text("Создание поставки");
-                $("#counterLabel").text("Потребитель");
-                $("#dateLabel").text("Дата поставки");
-            }
-            else {
-                $("#supplyTitle").text("Выбытие");
-                $("#counterLabel").text("Поставщик");
-                $("#dateLabel").text("Дата выбытия");
-            }
-            $("#add_supply").modal();
-        }
+    if (isSupply) {
+        $("#supplyTitle").text("Создание поставки");
+        $("#counterLabel").text("Потребитель");
+        $("#dateLabel").text("Дата поставки");
+    }
+    else {
+        $("#supplyTitle").text("Выбытие");
+        $("#counterLabel").text("Поставщик");
+        $("#dateLabel").text("Дата выбытия");
+    }
+    $("#add_supply").modal();
+}
+
+function changePeriod(){
+    var period = $("#period").val();
+    var code = "";
+    for (u in goodInfo) {
+        if (checkDatePeriod(goodInfo[u].date, period)) code = code + "<tr><td>" + goodInfo[u].vin + "</td><td>" + goodInfo[u].date + "</td><td>" + goodInfo[u].operation + "</td><td>" + goodInfo[u].unit + "</td><td>" + goodInfo[u].amount + "</td></tr>";
+    }
+    if (code == "") code = "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
+    $("#historyBody").html(code);
+    pag2 = new Pagination(3, "historyBody", "historyNav");
+}
+
