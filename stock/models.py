@@ -95,6 +95,11 @@ class Goods(models.Model):
         if Goods_unit.objects.filter(product=self, isBase=True).count() != 0:
             return Goods_unit.objects.filter(product=self, isBase=True)[0].unit
         return "-"
+    def get_base_amount(self, amount, unit):
+        u = Goods_unit.objects.filter(unit = unit, product = self)[0]
+        coeff = u.coeff
+        return amount / coeff
+
 
 class Good_name(models.Model):
     product = models.ForeignKey('Goods')
@@ -235,7 +240,7 @@ class Stock_operation(models.Model):
     package = models.ForeignKey('Package')
     good = models.ForeignKey('Goods')
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
-    date = models.DateField(auto_now_add=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
     unit = models.ForeignKey('tables.Unit')
     amount = models.IntegerField(default=0)
     cost = models.FloatField(default=0, blank=True)
@@ -292,7 +297,7 @@ class Order(models.Model):
 class Package(models.Model):
     stock = models.ForeignKey('Stock')
     matrix = models.ForeignKey('Matrix')
-    date = models.DateField(blank=True)
+    date = models.DateTimeField(blank=True)
     vin = models.IntegerField(blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)

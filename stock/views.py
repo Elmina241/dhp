@@ -862,7 +862,7 @@ def save_inventory(request):
             goods = json.loads(request.POST['inventory_goods'])
             matrix = Matrix(access='0', cause='2')
             matrix.save()
-            date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
+            date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%Y-%m-%d %H:%M")
             p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=date)
             p.save()
             stock.cur_vin = stock.cur_vin + 1
@@ -876,15 +876,24 @@ def save_inventory(request):
                 else:
                     s_g = Stock_good.objects.filter(stock = stock, good = good)[0]
                     last_value = s_g.amount
-                    s_g.amount = goods[g]['amount']
-                    s_g.cost = float(goods[g]['cost']) * float(goods[g]['amount'])
+                    amount = float(goods[g]['amount'])
+                    for h in Stock_operation.objects.filter(good = good, package__stock = stock, package__date__gte = date):
+                        if h.operation == '0':
+                            last_value = last_value - good.get_base_amount(h.amount, h.unit)
+                            amount = amount + good.get_base_amount(h.amount, h.unit)
+                        else:
+                            if h.operation == '1':
+                                last_value = last_value + good.get_base_amount(h.amount, h.unit)
+                                amount = amount - good.get_base_amount(h.amount, h.unit)
+                    s_g.amount = amount
+                    s_g.cost = float(goods[g]['cost']) * amount
                     s_g.save()
                 s = Stock_operation(
                     package=p,
                     good=good,
                     operation='2',
                     unit=s_g.unit,
-                    amount=s_g.amount,
+                    amount=float(goods[g]['amount']),
                     cost = goods[g]['cost'],
                     last_value = last_value
                 )

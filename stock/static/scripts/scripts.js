@@ -1256,7 +1256,8 @@ function saveInventory(stock) {
         data: {
             'stock': stock,
             'inventory_goods': JSON.stringify(inventoryGoods),
-            'date': $("#inventoryDate").prop('value')
+            'date': $("#inventoryDate").prop('value'),
+            'time': $("#inventoryTime").prop('value')
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

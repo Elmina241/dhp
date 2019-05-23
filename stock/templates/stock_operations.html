@@ -243,6 +243,7 @@
 
                 </div>
                 <div class="modal-body create-form">
+                <form id="form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <h6 id="counterLabel">Потребитель</h6>
@@ -271,6 +272,7 @@
                     <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
                     <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
+                </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="saveSupply()" class="btn btn-primary"
                                style="float: right"/></div>
@@ -379,8 +381,12 @@
                     <button class="close" data-dismiss="modal">x</button>
                 </div>
                 <div class="modal-body">
-                    <h6 id="dateLabel">Дата инвентаризации</h6>
-                    <input type="date" class="form-control short-input" id="inventoryDate"/>
+                    <div class="form-inline">
+                    <h6 id="dateLabel">Дата </h6>
+                    <input type="date" class="form-control short-input inline-el" id="inventoryDate"/>
+                    <h6 id="dateLabel" class="">Время</h6>
+                    <input type="time" class="form-control short-input inline-el" id="inventoryTime"/>
+                        </div>
                     <hr>
                     <table class="table table-bordered table-sm small-table" style="text-align: center">
                         <thead style="text-align: center" class="thead-light">
