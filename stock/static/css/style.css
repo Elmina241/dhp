@@ -221,8 +221,22 @@ h9 {
     text-decoration: none;
 }
 
+.nav-link.disabled{
+    font-weight: 600;
+    color: #c9c9c9 !important;
+    padding: 0 0 0 30px;
+    position: relative;
+    margin: 10px 0 15px;
+    line-height: 1;
+    text-decoration: none;
+}
+
 .main-menu a:hover {
     color: #23a3ab!important;
+}
+
+.nav-link.disabled:hover {
+    color: #C9C9C9!important;
 }
 
 .main-menu a:visited {

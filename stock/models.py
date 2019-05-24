@@ -200,6 +200,11 @@ class User_group(models.Model):
     group = models.ForeignKey('Counterparty')
     def __str__(self):
         return str(self.user)
+    def get_permissions(self):
+        permissions = {}
+        for p in User_permission.objects.filter(user = self.user):
+            permissions[p.section.pk] = p.is_allowed
+        return permissions
 
 class Demand(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -218,6 +223,18 @@ class Demand(models.Model):
     #status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)
+
+class Section(models.Model):
+    name = models.CharField(max_length=200)
+    def __str__(self):
+        return str(self.pk) + " " + self.name
+
+class User_permission(models.Model):
+    user = models.ForeignKey('auth.User')
+    section = models.ForeignKey('Section')
+    is_allowed = models.BooleanField(default=True)
+    def __str__(self):
+        return str(self.user) + " " + str(self.section)
 
 class Demand_good(models.Model):
     matrix = models.ForeignKey('Matrix')
