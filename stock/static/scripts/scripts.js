@@ -1101,8 +1101,25 @@ function STree(tree) {
             code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
                 "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
         }
-        if (code == "") code = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
+        if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
         $("#goods-body").html(code);
+    }
+
+    this.searchProd = function (text) {
+        code = "";
+        if (text == "") {
+            self.changeStockGroup();
+        }
+        else {
+            for (r in goods[self.selected][stock]) {
+                if (goods[self.selected][stock][r].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[self.selected][stock][r].code.toUpperCase().indexOf(text.toUpperCase()) != -1) {
+                    code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
+                        "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+                }
+            }
+            if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
+            $("#goods-body").html(code);
+        }
     }
 }
 
@@ -1202,6 +1219,7 @@ function openGood(id, obj) {
                 for (u in data['expecting']) {
                     expecting = expecting + "<tr><td>" + data['expecting'][u].vin + "</td><td>" + data['expecting'][u].date + "</td><td>" + data['expecting'][u].operation + "</td><td>" + data['expecting'][u].amount + "</td></tr>";
                 }
+                if ($.isEmptyObject(data['expecting'])) expecting = expecting + "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
                 expecting = expecting + "</tbody></table>" + expNav + "</div>";
 
                 prodHistory = " <div class='tab-pane fade' id='history' role='tabpanel' aria-labelledby='history-tab'>" +
@@ -1216,6 +1234,7 @@ function openGood(id, obj) {
                 for (u in data['history']) {
                     if (checkDatePeriod(data['history'][u].date, period)) prodHistory = prodHistory + "<tr><td>" + data['history'][u].vin + "</td><td>" + data['history'][u].date + "</td><td>" + data['history'][u].operation + "</td><td>" + data['history'][u].unit + "</td><td>" + data['history'][u].amount + "</td></tr>";
                 }
+                if ($.isEmptyObject(data['history'])) prodHistory = prodHistory + "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
                 prodHistory = prodHistory + "</tbody></table>" + histNav + "</div>";
 
                 goodInfo = data['history'];
@@ -1403,7 +1422,7 @@ function endShipment() {
             }
         },
         success: function onAjaxSuccess() {
-            //document.location.href = "/stock/stock_operations/";
+            document.location.reload();
         }
     });
 }

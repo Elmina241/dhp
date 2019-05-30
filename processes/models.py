@@ -4,15 +4,15 @@ from tables.models import Composition, Compl_comp, Material, Formula, Reactor, C
 
 #Макет загрузочного листа. Объём компонентов в процентах
 class Model_list(models.Model):
-    formula = models.ForeignKey('tables.Formula')
+    formula = models.ForeignKey('tables.Formula', on_delete=models.CASCADE)
     def __str__(self):
         return self.formula.get_name()
 
 class Model_component(models.Model):
-    list = models.ForeignKey('Model_list')
+    list = models.ForeignKey('Model_list', on_delete=models.CASCADE)
     #compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
-    formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True)
-    mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
+    formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True, on_delete=models.CASCADE)
     ammount = models.FloatField()
     min = models.FloatField(blank=True, default = 0, null=True)
     max = models.FloatField(blank=True, default=0, null=True)
@@ -21,18 +21,18 @@ class Model_component(models.Model):
 
 #Загрузочный лист
 class Loading_list(models.Model):
-    formula = models.ForeignKey('tables.Formula')
+    formula = models.ForeignKey('tables.Formula', on_delete=models.CASCADE)
     ammount = models.FloatField()
     def __str__(self):
         return self.formula.get_name()
 
 class List_component(models.Model):
-    list = models.ForeignKey('Loading_list')
-    compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True)
-    formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True)
-    r_cont = models.ForeignKey('Reactor_content', blank=True, default = None, null=True)
-    t_cont = models.ForeignKey('Tank_content', blank=True, default = None, null=True)
-    mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True)
+    list = models.ForeignKey('Loading_list', on_delete=models.CASCADE)
+    compl = models.ForeignKey('tables.Compl_comp', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    r_cont = models.ForeignKey('Reactor_content', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    t_cont = models.ForeignKey('Tank_content', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True, on_delete=models.CASCADE)
     min = models.FloatField(blank=True, default = None, null=True)
     max = models.FloatField(blank=True, default = None, null=True)
     ammount = models.FloatField()
@@ -42,11 +42,11 @@ class List_component(models.Model):
 
 #Процесс смешения
 class Kneading(models.Model):
-    list = models.ForeignKey('Loading_list')
+    list = models.ForeignKey('Loading_list', on_delete=models.CASCADE)
     batch_num = models.FloatField(default = 0)
     start_date = models.DateField()
     finish_date = models.DateField()
-    reactor = models.ForeignKey('tables.Reactor')
+    reactor = models.ForeignKey('tables.Reactor', on_delete=models.CASCADE)
     isValid = models.BooleanField(default = False)
     isFinished = models.BooleanField(default = False)
     def __str__(self):
@@ -61,15 +61,15 @@ class Kneading(models.Model):
 
 #Партия
 class Batch(models.Model):
-    kneading = models.OneToOneField('Kneading')
+    kneading = models.OneToOneField('Kneading', on_delete=models.CASCADE)
     finish_date = models.DateField(auto_now_add=True)
     def __str__(self):
         return str(self.id)
 
 #Состав партии
 class Batch_comp(models.Model):
-    batch = models.ForeignKey('Batch')
-    mat = models.ForeignKey('tables.Material')
+    batch = models.ForeignKey('Batch', on_delete=models.CASCADE)
+    mat = models.ForeignKey('tables.Material', on_delete=models.CASCADE)
     ammount = models.FloatField()
     def __str__(self):
         return self.mat.name
@@ -81,9 +81,9 @@ class State(models.Model):
         return self.name
 
 class State_log(models.Model):
-    kneading = models.ForeignKey('Kneading')
+    kneading = models.ForeignKey('Kneading', on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    state = models.ForeignKey('State')
+    state = models.ForeignKey('State', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.id) + ' ' + self.state.name + ' ' + str(self.date)
     def get_state(self):
@@ -92,8 +92,8 @@ class State_log(models.Model):
 # Модели для характеристик партии
 
 class Kneading_char(models.Model):
-    kneading = models.ForeignKey('Kneading')
-    characteristic = models.ForeignKey('tables.Characteristic')
+    kneading = models.ForeignKey('Kneading', on_delete=models.CASCADE)
+    characteristic = models.ForeignKey('tables.Characteristic', on_delete=models.CASCADE)
     def __str__(self):
         return self.characteristic.name
     def get_name(self):
@@ -105,27 +105,27 @@ class Kneading_char_number(Kneading_char):
         return self.get_name()
 
 class Kneading_char_var(models.Model):
-    kneading_char = models.ForeignKey('Kneading_char')
-    char_var = models.ForeignKey('tables.Set_var')
+    kneading_char = models.ForeignKey('Kneading_char', on_delete=models.CASCADE)
+    char_var = models.ForeignKey('tables.Set_var', on_delete=models.CASCADE)
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
 
 class Month_plan(models.Model):
     month = models.CharField(max_length=10)
-    prod = models.ForeignKey('tables.Product')
+    prod = models.ForeignKey('tables.Product', on_delete=models.CASCADE)
     num = models.FloatField()
     def __str__(self):
         return self.month + ' ' + str(self.prod)
 
 #Модели для содержимого хранилищ
 class Reactor_content(models.Model):
-    reactor = models.ForeignKey('tables.Reactor')
+    reactor = models.ForeignKey('tables.Reactor', on_delete=models.CASCADE)
     content_type = models.FloatField(default = 3)
     reserved = models.FloatField(default = 0)
     amount = models.FloatField()
     date = models.DateField(auto_now_add=True)
-    batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
-    kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
+    batch = models.ForeignKey('Batch', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.reactor.code + ' ' + self.reactor.name + ' ' + self.content_type
     def to_str(self):
@@ -140,13 +140,13 @@ class Reactor_content(models.Model):
                 return self.kneading.list.formula.pk
 
 class Tank_content(models.Model):
-    tank = models.ForeignKey('tables.Tank')
+    tank = models.ForeignKey('tables.Tank', on_delete=models.CASCADE)
     content_type = models.FloatField(default = 3)
     amount = models.FloatField()
     reserved = models.FloatField(default = 0)
     date = models.DateField(auto_now_add=True)
-    batch = models.ForeignKey('Batch', blank=True, default = None, null=True)
-    kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True)
+    batch = models.ForeignKey('Batch', blank=True, default = None, null=True, on_delete=models.CASCADE)
+    kneading = models.ForeignKey('Kneading', blank=True, default = None, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.tank.code + ' ' + self.tank.name + ' ' + self.content_type
     def to_str(self):
@@ -154,10 +154,10 @@ class Tank_content(models.Model):
 
 class Pack_process(models.Model):
     date = models.DateField()
-    product = models.ForeignKey('tables.Product')
+    product = models.ForeignKey('tables.Product', on_delete=models.CASCADE)
     amount = models.IntegerField()
-    reactor = models.ForeignKey('tables.Reactor', null=True)
-    tank = models.ForeignKey('tables.Tank', null=True)
+    reactor = models.ForeignKey('tables.Reactor', null=True, on_delete=models.CASCADE)
+    tank = models.ForeignKey('tables.Tank', null=True, on_delete=models.CASCADE)
     finished = models.BooleanField(default = False)
     def __str__(self):
         return str(date) + " " + str(product)

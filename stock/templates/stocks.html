@@ -63,7 +63,7 @@
                                     <lable for="filter" class="col-form-label">Поиск</lable>
                                     <input type="search" class="form-control form-control-sm col-sm-9"
                                            style="margin-left:10px;width:300px" id="filter"
-                                           oninput="searchGood($(this).prop('value'));"/>
+                                           oninput="tr.searchProd($(this).prop('value'));"/>
                                     <img src="{% static "img/spinner.gif" %}" id="loader"
                                          style="width: 30px; display:none">
                                 </div>

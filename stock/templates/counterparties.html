@@ -3,9 +3,11 @@
     {% load staticfiles %}
     <script>
         var stocks = null;
+        var counters = null;
         $(document).ready(function () {
             changeType(0);
             stocks = JSON.parse(JSON.parse($("#stockData").prop("value")));
+            counters = JSON.parse($("#countData").prop("value"));
             addStock();
         });
         function getAllStocks() {
@@ -16,6 +18,11 @@
             code = code + "</select>";
             return code;
         }
+        function e_addStock() {
+            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getAllStocks() + "<span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+            var additionalStock = $("#e_stocks");
+            $(code).appendTo(additionalStock);
+        }
         function addStock() {
             var code = "<div class='form-inline' style='margin-top:10px;'> - " + getAllStocks() + "<span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             var additionalStock = $("#stocks");
@@ -24,6 +31,23 @@
         function changeType(t){
             if (t == '2') $("#stock").show();
             else $("#stock").hide();
+        }
+        function getCounterInf(id){
+            $("#e_stocks").html("");
+            $("#e_stock").hide();
+            $("#e_name").prop("value", counters[id]['name']);
+            $("#e_kind").prop("value", counters[id]['kind']);
+            $("#e_isProv").prop("checked", counters[id]['is_provider']);
+            $("#e_isCons").prop("checked", counters[id]['is_consumer']);
+            $("#e_isMember").prop("checked", counters[id]['is_member']);
+            if (counters[id]['kind'] == '2'){
+                $("#e_stock").show();
+                for (s in counters[id]['stocks']){
+                    e_addStock();
+                    $("select").last().prop('value', s);
+                }
+            }
+            $("#edit_counter").modal();
         }
     </script>
     <div class="container-fluid">
@@ -63,7 +87,7 @@
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.get_kind_display }}</td>
                                     <td><span
-                          onclick="pr.getInf({{ c.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
+                          onclick="getCounterInf({{ c.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
                                     <td><span onclick='delCounter(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td>
                                 </tr>
                             {% endfor %}
@@ -76,7 +100,7 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Создание свойства</h5>
+                    <h5>Создание контрагента</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
@@ -107,26 +131,35 @@
         </div>
     </div>
 
-     <div class="modal fade" id="inf_prop">
+     <div class="modal fade" id="edit_counter">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Редактирование свойства</h5>
+                    <h5>Редактирование контрагента</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
                 <div class="modal-body create-form">
+                    <form id="form">
                     <h6>Наименование</h6>
-                    <input type="text" class="form-control" id="e_name"/>
-                    <h6>Тип свойства</h6>
-                    <select class="form-control" name="type" id="e_type" disabled>
-                        <option value="0">Число</option>
-                        <option value="1">Текст</option>
-                        <option value="2">Множество</option>
+                    <input type="text" class="form-control" id="e_name" required/>
+                    <h6>Вид</h6>
+                    <select class="form-control" name="e_kind" id="e_kind" readonly="">
+                        <option selected value="0">Организация</option>
+                        <option value="1">Физлицо</option>
+                        <option value="2">Административная группа</option>
                     </select>
-                    <div id="e_charVal"></div>
+                    <div class='form-inline' style="margin-top: 10px"><input type='checkbox' class='form-control' style="margin-right: 10px" id="e_isProv"> Поставщик <input type='checkbox' class='form-control inline-el' id="e_isCons"> Потребитель <input type='checkbox' class='form-control inline-el' id="e_isMember"> Участник</div>
+                    <div id="e_stock">
+                    <h6>Субъекты оборота</h6>
+                    <div id="e_stocks">
+                     </div>
+                        <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                          onclick="e_addStock()"><i class='fas fa-plus-circle'></i></span>
+                    </div>
+                    </form>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="editBtn" class="btn btn-primary"
+                        <input value="Сохранить" id="counterBtn" onclick="e_sendCounter()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>

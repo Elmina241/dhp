@@ -51,7 +51,7 @@ def stocks(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -156,7 +156,12 @@ def props(request):
 
 
 def counterparties(request):
-    return render(request, "counterparties.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
+    counter_data = {}
+    for c in Counterparty.objects.all():
+        counter_data[str(c.pk)] = {'name': c.name, 'kind': c.kind, 'is_provider': c.is_provider, 'is_consumer': c.is_consumer, 'is_member': c.is_member, 'stocks': {}}
+        for s in Counter_stock.objects.filter(counter = c):
+            counter_data[str(c.pk)]['stocks'][str(s.stock.pk)] = {'name': s.stock.name}
+    return render(request, "counterparties.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "count_data": json.dumps(counter_data), "header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
 def shipment(request):
     tree = {}
@@ -404,7 +409,7 @@ def get_prod_info(request):
             data['units'] = units
             expecting = {}
             for d in Demand_good.objects.filter(good = good, matrix__access='4'):
-                if (d.get_demand().donor == stock or d.get_demand().acceptor == stock) and d.get_demand().is_closed == False:
+                if (d.get_demand().donor == stock or d.get_demand().acceptor == stock) and d.get_demand().is_closed == False and d.balance != 0:
                     operation = 'Отгрузка' if d.get_demand().donor == stock else 'Поставка'
                     expecting[str(d.pk)] = {'vin': d.get_demand().vin, 'date': d.get_demand().finish_date.strftime('%d.%m.%Y'), 'amount': d.balance, 'operation': operation}
             data['expecting'] = expecting
@@ -539,17 +544,23 @@ def save_stock_operation(request):
                 good_d.save()
                 #добавление информации в склад
                 if json.loads(request.POST['isDonor']) != True:
+                    amount = Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
                     if Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good).count() == 0:
-                        rec = Stock_good(stock = demand.acceptor, good = good_d.good, unit = Goods_unit.objects.filter(product = good_d.good, isBase = True)[0].unit, amount = Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount']))
+                        rec = Stock_good(stock = demand.acceptor, good = good_d.good, unit = Goods_unit.objects.filter(product = good_d.good, isBase = True)[0].unit, amount = amount)
                         rec.save()
                     else:
                         rec = Stock_good.objects.filter(stock = demand.acceptor, good = good_d.good)[0]
-                        rec.amount = rec.amount + Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
+                        cost = (rec.cost / rec.amount) * amount
+                        rec.amount = rec.amount + amount
+                        rec.cost = int(rec.cost + cost)
                         rec.save()
                 else:
                     if Stock_good.objects.filter(stock=demand.donor, good=good_d.good).count() != 0:
+                        amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(goods[g]['amount'])
                         rec = Stock_good.objects.filter(stock=demand.donor, good=good_d.good)[0]
-                        rec.amount = rec.amount - Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(goods[g]['amount'])
+                        cost = (rec.cost / rec.amount) * amount
+                        rec.amount = rec.amount - amount
+                        rec.cost = int(rec.cost - cost)
                         rec.save()
                 if balance == 0:
                     if json.loads(request.POST['isDonor']):

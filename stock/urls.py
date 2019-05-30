@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from . import views
 
-app_name = 'stock'
+#app_name = 'stock'
 
 urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),

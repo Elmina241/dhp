@@ -5,14 +5,14 @@ import datetime
 #Классы модели МЦ
 class Product_model(models.Model):
     name = models.CharField(max_length=200)
-    group = models.ForeignKey('Model_group')
+    group = models.ForeignKey('Model_group', on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 
 
 class Model_unit(models.Model):
-    model = models.ForeignKey('Product_model')
-    unit = models.ForeignKey('tables.Unit')
+    model = models.ForeignKey('Product_model', on_delete=models.CASCADE)
+    unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
     def __str__(self):
         return self.unit.name
 
@@ -36,14 +36,14 @@ class Property_range(Property):
 
 
 class Property_var(models.Model):
-    prop = models.ForeignKey('Property')
+    prop = models.ForeignKey('Property', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     def __str__(self):
         return self.name
 
 class Model_property(models.Model):
-    model = models.ForeignKey('Product_model')
-    prop = models.ForeignKey('Property')
+    model = models.ForeignKey('Product_model', on_delete=models.CASCADE)
+    prop = models.ForeignKey('Property', on_delete=models.CASCADE)
     visible = models.BooleanField()
     editable = models.BooleanField()
     isDefault = models.BooleanField()
@@ -61,15 +61,15 @@ class Default_number(Model_property):
         return self.number
 
 class Default_var(Model_property):
-    var = models.ForeignKey('Property_var')
+    var = models.ForeignKey('Property_var', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.var)
 
 #Модели МЦ
 
 class Goods(models.Model):
-    model = models.ForeignKey('Product_model')
-    producer = models.ForeignKey('Counterparty', null=True, default=None)
+    model = models.ForeignKey('Product_model', on_delete=models.CASCADE)
+    producer = models.ForeignKey('Counterparty', null=True, default=None, on_delete=models.CASCADE)
     def __str__(self):
         return self.model.name
     def get_name(self):
@@ -102,7 +102,7 @@ class Goods(models.Model):
 
 
 class Good_name(models.Model):
-    product = models.ForeignKey('Goods')
+    product = models.ForeignKey('Goods', on_delete=models.CASCADE)
     article = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     barcode = models.CharField(max_length=200)
@@ -113,8 +113,8 @@ class Good_name(models.Model):
         return self.name
 
 class Goods_property(models.Model):
-    product = models.ForeignKey('Goods')
-    property = models.ForeignKey('Property')
+    product = models.ForeignKey('Goods', on_delete=models.CASCADE)
+    property = models.ForeignKey('Property', on_delete=models.CASCADE)
     applicable = models.BooleanField()
     visible = models.BooleanField()
     editable = models.BooleanField()
@@ -122,8 +122,8 @@ class Goods_property(models.Model):
         return str(self.product) + " " + str(self.property)
 
 class Goods_unit(models.Model):
-    product = models.ForeignKey('Goods')
-    unit = models.ForeignKey('tables.Unit')
+    product = models.ForeignKey('Goods', on_delete=models.CASCADE)
+    unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
     applicable = models.BooleanField()
     isBase = models.BooleanField()
     coeff = models.FloatField()
@@ -141,7 +141,7 @@ class Goods_string(Goods_property):
         return self.text
 
 class Goods_var(Goods_property):
-    var = models.ForeignKey('Property_var')
+    var = models.ForeignKey('Property_var', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.var)
 
@@ -163,8 +163,8 @@ class Counterparty(models.Model):
         return Counter_stock.objects.filter(counter = self, stock = stock).count() != 0
 
 class Counter_stock(models.Model):
-    counter = models.ForeignKey('Counterparty')
-    stock = models.ForeignKey('Stock')
+    counter = models.ForeignKey('Counterparty', on_delete=models.CASCADE)
+    stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.counter) + ' ' + str(self.stock)
 
@@ -176,7 +176,7 @@ class Currency(models.Model):
 
 class Stock(models.Model):
     name = models.CharField(max_length=200)
-    currency = models.ForeignKey('Currency', null=True)
+    currency = models.ForeignKey('Currency', null=True, on_delete=models.CASCADE)
     cur_vin = models.IntegerField(default='0')
     def __str__(self):
         if self is None:
@@ -196,8 +196,8 @@ class Base(models.Model):
         #return self.name
 
 class User_group(models.Model):
-    user = models.ForeignKey('auth.User')
-    group = models.ForeignKey('Counterparty')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    group = models.ForeignKey('Counterparty', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.user)
     def get_permissions(self):
@@ -208,18 +208,18 @@ class User_group(models.Model):
 
 class Demand(models.Model):
     date = models.DateField(auto_now_add=True)
-    matrix = models.ForeignKey('Matrix')
-    consumer = models.ForeignKey('Counterparty', related_name="consumer", null=True)
-    provider = models.ForeignKey('Counterparty', related_name="provider", null=True)
-    donor = models.ForeignKey('Stock', related_name="donor", null=True)
-    acceptor = models.ForeignKey('Stock', related_name="acceptor", null=True)
+    matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
+    consumer = models.ForeignKey('Counterparty', on_delete=models.CASCADE,  related_name="consumer", null=True)
+    provider = models.ForeignKey('Counterparty', on_delete=models.CASCADE,  related_name="provider", null=True)
+    donor = models.ForeignKey('Stock', related_name="donor", null=True, on_delete=models.CASCADE)
+    acceptor = models.ForeignKey('Stock', related_name="acceptor", null=True, on_delete=models.CASCADE)
     is_closed = models.BooleanField(default=False)
     release_date = models.DateField(null=True)
     finish_date = models.DateField(null = True)
     is_edited = models.BooleanField(default=False)
     vin = models.IntegerField(blank=True)
     is_demand = models.BooleanField(default=True)
-    user = models.ForeignKey('auth.User', blank=True)
+    user = models.ForeignKey('auth.User', blank=True, on_delete=models.CASCADE)
     #status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='3')
     def __str__(self):
         return str(self.pk) + " " + str(self.date)
@@ -230,17 +230,17 @@ class Section(models.Model):
         return str(self.pk) + " " + self.name
 
 class User_permission(models.Model):
-    user = models.ForeignKey('auth.User')
-    section = models.ForeignKey('Section')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    section = models.ForeignKey('Section', on_delete=models.CASCADE)
     is_allowed = models.BooleanField(default=True)
     def __str__(self):
         return str(self.user) + " " + str(self.section)
 
 class Demand_good(models.Model):
-    matrix = models.ForeignKey('Matrix')
-    good = models.ForeignKey('Goods')
+    matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
+    good = models.ForeignKey('Goods', on_delete=models.CASCADE)
     name = models.CharField(max_length=500)
-    unit = models.ForeignKey('tables.Unit')
+    unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     balance = models.IntegerField(default=0)
     def __str__(self):
@@ -254,11 +254,11 @@ class Stock_operation(models.Model):
         ('1', 'Расход'),
         ('2', 'Коррекция'),
     )
-    package = models.ForeignKey('Package')
-    good = models.ForeignKey('Goods')
+    package = models.ForeignKey('Package', on_delete=models.CASCADE)
+    good = models.ForeignKey('Goods', on_delete=models.CASCADE)
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
     date = models.DateTimeField(auto_now_add=True, blank=True)
-    unit = models.ForeignKey('tables.Unit')
+    unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     cost = models.FloatField(default=0, blank=True)
     last_value = models.FloatField(default=0, blank=True)
@@ -267,10 +267,13 @@ class Stock_operation(models.Model):
     def get_good_name(self):
         return Demand_good.objects.filter(demand__pk = self.cause_id, good = self.good)[0].name
 
+    class Meta:
+        ordering = ['-date']
+
 class Stock_good(models.Model):
-    stock = models.ForeignKey('Stock')
-    good = models.ForeignKey('Goods')
-    unit = models.ForeignKey('tables.Unit')
+    stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
+    good = models.ForeignKey('Goods', on_delete=models.CASCADE)
+    unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     cost = models.FloatField(default=0, blank=True)
     def __str__(self):
@@ -303,8 +306,8 @@ class Order(models.Model):
         ('1', 'Заполнение'),
         ('2', 'Завершено')
     )
-    stock = models.ForeignKey('Stock')
-    matrix = models.ForeignKey('Matrix')
+    stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
+    matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
     isDonor = models.BooleanField()
     date = models.DateField(auto_now_add=True, blank=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='0')
@@ -312,8 +315,8 @@ class Order(models.Model):
         return str(self.stock) + ' ' + str(self.matrix)
 
 class Package(models.Model):
-    stock = models.ForeignKey('Stock')
-    matrix = models.ForeignKey('Matrix')
+    stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
+    matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
     date = models.DateTimeField(blank=True)
     vin = models.IntegerField(blank=True)
     def __str__(self):

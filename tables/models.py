@@ -21,12 +21,12 @@ class Unit(models.Model):
 class Material(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
-    group = models.ForeignKey('Material_group')
-    prefix = models.ForeignKey('Prefix')
+    group = models.ForeignKey('Material_group', on_delete=models.CASCADE)
+    prefix = models.ForeignKey('Prefix', on_delete=models.CASCADE)
     mark = models.CharField(max_length=80)
     ammount = models.FloatField()
     reserved = models.FloatField(default = 0)
-    unit = models.ForeignKey('Unit')
+    unit = models.ForeignKey('Unit', on_delete=models.CASCADE)
     concentration = models.FloatField()
     price = models.FloatField()
     def __str__(self):
@@ -65,12 +65,12 @@ class Product_mark(models.Model):
 class Product(models.Model):
     code = models.CharField(max_length=13)
     name = models.CharField(max_length=80)
-    group = models.ForeignKey('Product_group')
-    use = models.ForeignKey('Product_use')
+    group = models.ForeignKey('Product_group', on_delete=models.CASCADE)
+    use = models.ForeignKey('Product_use', on_delete=models.CASCADE)
     option = models.CharField(max_length=80)
     detail = models.CharField(max_length=80)
-    mark = models.ForeignKey('Product_mark')
-    production = models.OneToOneField('Production', null=True)
+    mark = models.ForeignKey('Product_mark', on_delete=models.CASCADE)
+    production = models.OneToOneField('Production', null=True, on_delete=models.CASCADE)
     def __str__(self):
         opt = ' (' + self.mark.name + ', ' + ('' if self.production is None else (self.production.container.mat.name + " " + self.production.container.group.name + ', ')) + ('' if self.production is None else (self.production.cap.group.name + ', ')) + ('0' if self.production is None else str(self.production.compAmount)) + ' кг.' + ')'
         full_name =  ('' if self.production is None or self.production.composition.form is None else self.production.composition.form.name) + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail) + opt
@@ -100,8 +100,8 @@ class Composition(models.Model):
     certificate = models.CharField(max_length=80, null = True)
     declaration = models.CharField(max_length=80, null = True)
     cur_batch = models.FloatField(default = 1)
-    group = models.ForeignKey('Composition_group')
-    form = models.ForeignKey('Product_form', null=True)
+    group = models.ForeignKey('Composition_group', on_delete=models.CASCADE)
+    form = models.ForeignKey('Product_form', null=True, on_delete=models.CASCADE)
     isFinal = models.BooleanField(default = True)
     def __str__(self):
         return self.name
@@ -140,8 +140,8 @@ class Composition(models.Model):
 
 
 class Components(models.Model):
-    comp = models.ForeignKey('Composition')
-    mat = models.ForeignKey('Material')
+    comp = models.ForeignKey('Composition', on_delete=models.CASCADE)
+    mat = models.ForeignKey('Material', on_delete=models.CASCADE)
     min = models.FloatField()
     max = models.FloatField()
 
@@ -164,10 +164,10 @@ class Container_mat(models.Model):
 
 class Container(models.Model):
     code = models.CharField(max_length=80)
-    group = models.ForeignKey('Container_group')
+    group = models.ForeignKey('Container_group', on_delete=models.CASCADE)
     form = models.CharField(max_length=80)
-    colour = models.ForeignKey('Colour')
-    mat = models.ForeignKey('Container_mat')
+    colour = models.ForeignKey('Colour', on_delete=models.CASCADE)
+    mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE)
     def __str__(self):
         return 'Нет' if self.code == 'Т000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
@@ -180,10 +180,10 @@ class Cap_group(models.Model):
 
 class Cap(models.Model):
     code = models.CharField(max_length=80)
-    group = models.ForeignKey('Cap_group')
+    group = models.ForeignKey('Cap_group', on_delete=models.CASCADE)
     form = models.CharField(max_length=80)
-    colour = models.ForeignKey('Colour')
-    mat = models.ForeignKey('Container_mat')
+    colour = models.ForeignKey('Colour', on_delete=models.CASCADE)
+    mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE)
     def __str__(self):
         return 'Нет' if self.code == 'У000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
@@ -201,10 +201,10 @@ class Boxing_mat(models.Model):
 
 class Boxing(models.Model):
     code = models.CharField(max_length=80)
-    group = models.ForeignKey('Box_group', null=True)
+    group = models.ForeignKey('Box_group', null=True, on_delete=models.CASCADE)
     form = models.CharField(max_length=80)
-    colour = models.ForeignKey('Colour', null=True)
-    mat = models.ForeignKey('Boxing_mat', null=True)
+    colour = models.ForeignKey('Colour', null=True, on_delete=models.CASCADE)
+    mat = models.ForeignKey('Boxing_mat', null=True, on_delete=models.CASCADE)
     def __str__(self):
         return 'Нет' if self.code == 'Я000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
@@ -217,8 +217,8 @@ class Sticker_part(models.Model):
 
 class Sticker(models.Model):
     code = models.CharField(max_length=80)
-    product = models.ForeignKey('Product')
-    part = models.ForeignKey('Sticker_part')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    part = models.ForeignKey('Sticker_part', on_delete=models.CASCADE)
     def __str__(self):
         return 'Нет' if self.code == '0000Э' else "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name + ' ' + self.product.mark.name + ' ' + ('' if self.product.option == 'отсутствует' else self.product.option)
 
@@ -226,21 +226,21 @@ class Sticker(models.Model):
 #Модели для производства
 
 class Production(models.Model):
-    composition = models.ForeignKey('Composition')
-    container = models.ForeignKey('Container')
-    cap = models.ForeignKey('Cap')
-    sticker = models.ForeignKey('Sticker')
-    boxing = models.ForeignKey('Boxing')
+    composition = models.ForeignKey('Composition', on_delete=models.CASCADE)
+    container = models.ForeignKey('Container', on_delete=models.CASCADE)
+    cap = models.ForeignKey('Cap', on_delete=models.CASCADE)
+    sticker = models.ForeignKey('Sticker', on_delete=models.CASCADE)
+    boxing = models.ForeignKey('Boxing', on_delete=models.CASCADE)
     compAmount = models.FloatField(default = 0)
-    compUnit = models.ForeignKey('Unit', null = True)
+    compUnit = models.ForeignKey('Unit', null = True, on_delete=models.CASCADE)
     contAmount = models.FloatField(default = 0)
-    contUnit = models.ForeignKey('Unit', null = True, related_name="cont_unit")
+    contUnit = models.ForeignKey('Unit', null = True, related_name="cont_unit", on_delete=models.CASCADE)
     capAmount = models.FloatField(default = 0)
-    capUnit = models.ForeignKey('Unit', null = True, related_name="cap_unit")
+    capUnit = models.ForeignKey('Unit', null = True, related_name="cap_unit", on_delete=models.CASCADE)
     stickerAmount = models.FloatField(default = 0)
-    stickerUnit = models.ForeignKey('Unit', null = True, related_name="sticker_unit")
+    stickerUnit = models.ForeignKey('Unit', null = True, related_name="sticker_unit", on_delete=models.CASCADE)
     boxingAmount = models.FloatField(default = 0)
-    boxingUnit = models.ForeignKey('Unit', null = True, related_name="boxing_unit")
+    boxingUnit = models.ForeignKey('Unit', null = True, related_name="boxing_unit", on_delete=models.CASCADE)
     def __str__(self):
         return self.product.name
     def get_boxing_amm(self):
@@ -281,7 +281,7 @@ class Tank(models.Model):
 class Formula(models.Model):
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80, null=True)
-    composition = models.ForeignKey('Composition')
+    composition = models.ForeignKey('Composition', on_delete=models.CASCADE)
     cur_batch = models.FloatField(default = 1)
     def __str__(self):
         return self.composition.name + (' ' if self.name is None else (' ' + self.name))
@@ -294,21 +294,21 @@ class Formula(models.Model):
 
 
 class Formula_component(models.Model):
-    formula = models.ForeignKey('Formula')
-    mat = models.ForeignKey('Material')
+    formula = models.ForeignKey('Formula', on_delete=models.CASCADE)
+    mat = models.ForeignKey('Material', on_delete=models.CASCADE)
     ammount = models.FloatField()
     def __str__(self):
         return self.mat.name
 
 #Составной компонент
 class Compl_comp(models.Model):
-    formula = models.ForeignKey('Formula', blank=True, default = None, null=True)
+    formula = models.ForeignKey('Formula', blank=True, default = None, null=True, on_delete=models.CASCADE)
     code = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
     ammount = models.FloatField()
     reserved = models.FloatField(default = 0)
     store_amount = models.FloatField(default = 0)
-    form = models.ForeignKey('Product_form', blank=True, null=True)
+    form = models.ForeignKey('Product_form', blank=True, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
     def get_name(self):
@@ -316,8 +316,8 @@ class Compl_comp(models.Model):
 
 #Составляющая составного компонента
 class Compl_comp_comp(models.Model):
-    compl = models.ForeignKey('Compl_comp')
-    mat = models.ForeignKey('Material')
+    compl = models.ForeignKey('Compl_comp', on_delete=models.CASCADE)
+    mat = models.ForeignKey('Material', on_delete=models.CASCADE)
     ammount = models.FloatField()
     def __str__(self):
         return self.mat.name
@@ -332,9 +332,9 @@ class Characteristic_type(models.Model):
 
 class Characteristic(models.Model):
     name = models.CharField(max_length=80)
-    char_type = models.ForeignKey('Characteristic_type', default=1)
+    char_type = models.ForeignKey('Characteristic_type', default=1, on_delete=models.CASCADE)
     is_general = models.BooleanField(default = True)
-    group = models.ForeignKey('Char_group')
+    group = models.ForeignKey('Char_group', on_delete=models.CASCADE)
     def __str__(self):
         return ('' if self.group.name == 'отсутствует' else self.group.name + ': ') + self.name
     def get_group(self):
@@ -351,8 +351,8 @@ class Set_var(models.Model):
         return self.name
 
 class Characteristic_set_var(models.Model):
-    char_set = models.ForeignKey('Characteristic')
-    char_var = models.ForeignKey('Set_var')
+    char_set = models.ForeignKey('Characteristic', on_delete=models.CASCADE)
+    char_var = models.ForeignKey('Set_var', on_delete=models.CASCADE)
     def __str__(self):
         return self.char_var.name
 
@@ -370,8 +370,8 @@ class Characteristic_number(Characteristic):
 
 
 class Composition_char(models.Model):
-    comp = models.ForeignKey('Composition')
-    characteristic = models.ForeignKey('Characteristic')
+    comp = models.ForeignKey('Composition', on_delete=models.CASCADE)
+    characteristic = models.ForeignKey('Characteristic', on_delete=models.CASCADE)
     def __str__(self):
         return self.characteristic.name
     def get_name(self):
@@ -389,15 +389,15 @@ class Comp_char_number(Composition_char):
         return self.get_name()
 
 class Comp_char_var(models.Model):
-    comp_char = models.ForeignKey('Composition_char')
-    char_var = models.ForeignKey('Set_var')
+    comp_char = models.ForeignKey('Composition_char', on_delete=models.CASCADE)
+    char_var = models.ForeignKey('Set_var', on_delete=models.CASCADE)
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
 
 #Характеристики реактивов
 class Material_char(models.Model):
-    mat = models.ForeignKey('Material')
-    characteristic = models.ForeignKey('Characteristic')
+    mat = models.ForeignKey('Material', on_delete=models.CASCADE)
+    characteristic = models.ForeignKey('Characteristic', on_delete=models.CASCADE)
     def __str__(self):
         return self.characteristic.name
     def get_name(self):
@@ -409,8 +409,8 @@ class Mat_char_number(Material_char):
         return self.get_name()
 
 class Mat_char_var(models.Model):
-    mat_char = models.ForeignKey('Material_char')
-    char_var = models.ForeignKey('Set_var')
+    mat_char = models.ForeignKey('Material_char', on_delete=models.CASCADE)
+    char_var = models.ForeignKey('Set_var', on_delete=models.CASCADE)
     def __str__(self):
         return self.mat_char.get_name() + ' ' + self.char_var.name
 
@@ -422,7 +422,7 @@ class Comp_prop_number(Composition_char):
         return self.get_name()
 
 class Comp_prop_var(models.Model):
-    comp_prop = models.ForeignKey('Composition_char')
-    char_var = models.ForeignKey('Set_var')
+    comp_prop = models.ForeignKey('Composition_char', on_delete=models.CASCADE)
+    char_var = models.ForeignKey('Set_var', on_delete=models.CASCADE)
     def __str__(self):
         return self.comp_char.get_name() + ' ' + self.char_var.name
