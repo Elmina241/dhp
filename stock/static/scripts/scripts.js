@@ -907,7 +907,7 @@ function getProps(selType) {
             $("#charVal").html(
                 "<div class='card' style='margin-top: 10px'>" +
                 "<div class='card-header'>" +
-                "<button class='btn btn-success btn-sm' onclick='addEl();' data-target='#newComp'>Добавить элемент множества</button>" +
+                "<button class='btn btn-success btn-sm' onclick='addEl();return false;' data-target='#newComp'>Добавить элемент множества</button>" +
                 "</div>" +
                 "<table class='table table-sm' id='elems'>" +
                 "<thead><tr><th style='text-align: center'>Значение</th><th></th></tr></thead><tbody></tbody></table>" +
@@ -980,7 +980,7 @@ function getModelInfo() {
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']) {
-        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' class='form-control inline-el' required/></div></div>";
+        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' step='0.001' class='form-control inline-el' required/></div></div>";
         code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
@@ -1001,7 +1001,7 @@ function getPropCode(t, value = "", choises = null) {
     var code = "";
     switch (t) {
         case 0:
-            code = "<input type='number' class='form-control inline-el value' value='" + value + "' required/>";
+            code = "<input type='number' step='0.001' class='form-control inline-el value' value='" + value + "' required/>";
             break;
         case 1:
             code = "<input type='text' class='form-control inline-el value' value='" + value + "' required/>";

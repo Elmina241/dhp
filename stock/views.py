@@ -93,7 +93,7 @@ def goods(request):
         for p in Model_property.objects.filter(model=m):
             models[str(m.pk)]["props"][str(p.prop.pk)] = {"name": p.prop.name, "type": p.prop.prop_type,
                                                           "visible": p.visible, "editable": p.editable, "default": "",
-                                                          "choises": None}
+                                                          "choises": {}}
             if p.isDefault:
                 if p.prop.prop_type == 0:
                     try:
@@ -109,8 +109,9 @@ def goods(request):
                     else:
                         models[str(m.pk)]["props"][str(p.prop.pk)]["default"] = p.default_var.var.id
                         models[str(m.pk)]["props"][str(p.prop.pk)]["choises"] = {}
-                        for v in Property_var.objects.filter(prop=p.prop):
-                            models[str(m.pk)]["props"][str(p.prop.pk)]["choises"][str(v.pk)] = v.name
+            if p.prop.prop_type == 2:
+                for v in Property_var.objects.filter(prop=p.prop):
+                    models[str(m.pk)]["props"][str(p.prop.pk)]["choises"][str(v.pk)] = v.name
     return render(request, "goods.html",
                   {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Материальные ценности", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
                    "models": Product_model.objects.all(), "model_json": json.dumps(models),
