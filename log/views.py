@@ -61,7 +61,7 @@ def movement(request):
 
 def accepting(request):
     acts = {}
-    for a in Acceptance.objects.all():
+    for a in Acceptance.objects.order_by("-id"):
         if a.code not in acts:
             acts[a.code] = {"date": a.date.strftime('%d.%m.%Y')}
     return render(request, "accepting.html",

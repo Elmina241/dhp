@@ -11,7 +11,7 @@
             addStock();
         });
         function getAllStocks() {
-            code = "<select class='form-control inline-el stock'>";
+            code = "<select class='form-control inline-el stock short-input'>";
             for (p in stocks) {
                 code = code + "<option value='" + stocks[p].pk + "'>" + stocks[p].fields.name + "</option>";
             }
