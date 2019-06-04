@@ -184,13 +184,13 @@ function getInf(id) {
                 if (inf.props[i].isDefault) {
                     code = "<h6 class='addDefault'>Значение по умолчанию ";
                     if (inf.props[i].default_type == "0") {
-                        code = code + "<input type='number' value=" + inf.props[i].default + " class='form-control default' />";
+                        code = code + "<input type='number' value=" + inf.props[i].default + " class='form-control form-control-sm default' />";
                     }
                     else if (inf.props[i].default_type == "1") {
-                        code = code + "<input type='text' value=" + inf.props[i].default + " class='form-control default' />";
+                        code = code + "<input type='text' value=" + inf.props[i].default + " class='form-control form-control-sm default' />";
                     }
                     else {
-                        code = code + "<select class='form-control default'>";
+                        code = code + "<select class='form-control form-control-sm default'>";
                         for (p in propVars) {
                             if (propVars[p].fields.prop == inf.props[i].id) {
                                 if (propVars[p].pk = inf.props[i].default) {
@@ -244,7 +244,7 @@ function getGoodInf(id) {
             $("#e_counter option[value=" + inf.counter + "]").prop('selected', true);
             var code = "";
             for (u in inf.units) {
-                code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + inf['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' value='" + inf.units[u].value + "' class='form-control inline-el'/></div></div>";
+                code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + inf['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' value='" + inf.units[u].value + "' class='form-control form-control-sm inline-el'/></div></div>";
                 if (inf.units[u].isBase) checked = "checked";
                 else checked = "";
                 code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='radio' name='e_isBase' class='form-control' " + checked + "/><span class='inline-el'> Базовая</span></div></div>";
@@ -863,13 +863,13 @@ function getDefault(sel) {
     id = $("option:selected", sel).val();
     code = "<h6 class='addDefault'>Значение по умолчанию ";
     if (t == "0") {
-        code = code + "<input type='number' class='form-control default' />";
+        code = code + "<input type='number' class='form-control form-control-sm default' />";
     }
     else if (t == "1") {
-        code = code + "<input type='text' class='form-control default' />";
+        code = code + "<input type='text' class='form-control form-control-sm default' />";
     }
     else {
-        code = code + "<select class='form-control default'>";
+        code = code + "<select class='form-control form-control-sm default'>";
         for (p in propVars) {
             if (propVars[p].fields.prop == id) {
                 code = code + "<option value='" + propVars[p].pk + "'>" + propVars[p].fields.name + "</option>";
@@ -980,7 +980,7 @@ function getModelInfo() {
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']) {
-        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' step='0.001' class='form-control inline-el' required/></div></div>";
+        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' step='0.001' class='form-control form-control-sm inline-el' required/></div></div>";
         code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
@@ -1001,13 +1001,13 @@ function getPropCode(t, value = "", choises = null) {
     var code = "";
     switch (t) {
         case 0:
-            code = "<input type='number' step='0.001' class='form-control inline-el value' value='" + value + "' required/>";
+            code = "<input type='number' step='0.001' class='form-control form-control-sm inline-el value' value='" + value + "' required/>";
             break;
         case 1:
-            code = "<input type='text' class='form-control inline-el value' value='" + value + "' required/>";
+            code = "<input type='text' class='form-control inline-el form-control-sm value' value='" + value + "' required/>";
             break;
         case 2:
-            code = "<select class='form-control inline-el value'>";
+            code = "<select class='form-control form-control-sm inline-el value'>";
             for (c in choises) {
                 if (c == value) {
                     code = code + "<option value='" + c + "' selected>" + choises[c] + "</option>";
@@ -1308,7 +1308,7 @@ function getStockGoods(id) {
             i = 0;
             code = "";
             for (r in rows) {
-                code = code + "<tr id='" + r + "'><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' name='amount' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' name='cost' type='number' value='" + rows[r].cost + "'/></td><td></td>";
+                code = code + "<tr id='" + r + "'><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].unit + "</td><td><input class='form-control form-control-sm short-input' name='amount' type='number' value='" + rows[r].amount + "'/></td><td><input class='form-control form-control-sm short-input' name='cost' type='number' value='" + rows[r].cost.toFixed(1) + "'/></td><td></td>";
                 inventoryGoods[r] = {
                     id: r,
                     amount: rows[r]['amount'],

@@ -84,25 +84,6 @@
                             </tr>
                             </thead>
                             <tbody id="goods-body">
-                            {% if goods %}
-                                {% for g in goods %}
-                                    <tr id="{{ g.pk }}">
-                                        <td>{{ g.pk }}</td>
-                                        <td onclick="getInf({{ g.pk }})">{{ g }}</td>
-                                        <td style="text-align: right">
-                                            <button class="btn btn-danger" onclick="delGood(this.parentElement)">
-                                                Удалить
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td></td>
-                                    <td class="no-data text-right">Нет записей</td>
-                                    <td></td>
-                                </tr>
-                            {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -122,7 +103,7 @@
                 <form id="form">
                     <h6>Макет</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="model" onchange="getModelInfo()">
+                        <select class="form-control form-control-sm" id="model" onchange="getModelInfo()">
                             {% for m in models %}
                                 <option value="{{ m.pk }}">{{ m.name }}</option>
                             {% endfor %}
@@ -133,39 +114,39 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="article">Артикул</label>
-                            <input type="text" class="form-control" id="article" required>
+                            <input type="text" class="form-control form-control-sm" id="article" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="name">Наименование</label>
-                            <input type="text" class="form-control" id="name">
+                            <input type="text" class="form-control form-control-sm" id="name">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="barcode">Штрихкод</label>
-                            <input type="text" class="form-control" id="barcode">
+                            <input type="text" class="form-control form-control-sm" id="barcode">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="original">Оригинальное</label>
-                            <input type="text" class="form-control" id="original">
+                            <input type="text" class="form-control form-control-sm" id="original">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="local">Локальное</label>
-                            <input type="text" class="form-control" id="local">
+                            <input type="text" class="form-control form-control-sm" id="local">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="transit">Транзитное</label>
-                            <input type="text" class="form-control" id="transit">
+                            <input type="text" class="form-control form-control-sm" id="transit">
                         </div>
                     </div>
 
                     <hr>
                     <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="counter">
+                        <select class="form-control form-control-sm" id="counter">
                             {% for c in counters %}
                                 <option value="{{ c.pk }}">{{ c.name }}</option>
                             {% endfor %}
@@ -200,7 +181,7 @@
                 <div class="modal-body create-form">
                     <h6>Макет</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="e_model" readonly>
+                        <select class="form-control form-control-sm" id="e_model" readonly>
                             {% for m in models %}
                                 <option value="{{ m.pk }}">{{ m.name }}</option>
                             {% endfor %}
@@ -211,32 +192,32 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="article">Артикул</label>
-                            <input type="text" class="form-control" id="e_article">
+                            <input type="text" class="form-control form-control-sm" id="e_article">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="name">Наименование</label>
-                            <input type="text" class="form-control" id="e_name">
+                            <input type="text" class="form-control form-control-sm" id="e_name">
                         </div>
                     </div>
                 <div id="names" style="display:none">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="barcode">Штрихкод</label>
-                            <input type="text" class="form-control" id="e_barcode">
+                            <input type="text" class="form-control form-control-sm" id="e_barcode">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="original">Оригинальное</label>
-                            <input type="text" class="form-control" id="e_original">
+                            <input type="text" class="form-control form-control-sm" id="e_original">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="local">Локальное</label>
-                            <input type="text" class="form-control" id="e_local">
+                            <input type="text" class="form-control form-control-sm" id="e_local">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="transit">Транзитное</label>
-                            <input type="text" class="form-control" id="e_transit">
+                            <input type="text" class="form-control form-control-sm" id="e_transit">
                         </div>
                     </div>
                 </div>
@@ -244,7 +225,7 @@
                     <hr>
                     <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">
-                        <select class="form-control" id="e_counter">
+                        <select class="form-control form-control-sm" id="e_counter">
                             {% for c in counters %}
                                 <option value="{{ c.pk }}">{{ c.name }}</option>
                             {% endfor %}

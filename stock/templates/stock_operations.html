@@ -102,19 +102,19 @@
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline">
-                        <button type="button" class="btn btn-success inline-el btn-sm"
+                        <!--<button type="button" class="btn btn-success inline-el btn-sm"
                                 onclick="isSupply=true;openModalSupply()">
                             Поставка
                         </button>
                         <button type="button" class="btn btn-danger inline-el btn-sm"
                                 onclick="isSupply=false;openModalSupply()">
                             Выбытие
-                        </button>
-                        <button type="button" id="openInventoryBtn" class="btn btn-warning inline-el btn-sm"
+                        </button>-->
+                        <button type="button" id="openInventoryBtn" class="btn btn-warning btn-sm"
                                 onclick="getStockGoods($('#stock').val())" disabled>
                             Инвентаризация
                         </button>
-                        <span>Склад</span>
+                        <span class="inline-el">Склад</span>
                         <select id="stock" class="form-control inline-el form-control-sm"
                                 onchange="changeOperGroup($('#operGroup option:selected').text())">
                             <option value="-1">Все</option>
