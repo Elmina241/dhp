@@ -21,7 +21,9 @@ def goods_models(request):
     for m in Product_model.objects.all():
         model_json[str(m.pk)] = {"id": m.pk, "name": m.name, "group": m.group.pk}
     return render(request, "goods_models.html",
-                  {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Макеты материальных ценностей", "models": Product_model.objects.all(),
+                  {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
+                   "header": "Макеты материальных ценностей", "models": Product_model.objects.all(),
                    "prop_vars": json.dumps(serializers.serialize("json", Property_var.objects.all())),
                    "tree": json.dumps(tree), "model_json": json.dumps(model_json),
                    "props": json.dumps(serializers.serialize("json", Property.objects.all())),
@@ -46,6 +48,7 @@ def stocks(request):
                 goods_json[str(g.pk)][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(),"name": r.good.get_name(), "amount": r.amount, "unit": str(r.unit), "cost": r.cost}
     return render(request, "stocks.html",
                   {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Склад", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
                    "models": Product_model.objects.all(), "stocks": Stock.objects.all(),
                    "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
 
@@ -57,7 +60,7 @@ def auth(request):
         return render(request, "login.html", {"users": users})
 
 def main(request):
-    return render(request, "main-page.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Главная страница"})
+    return render(request, "main-page.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Главная страница"})
 
 def logout(request):
     auth_logout(request)
@@ -114,6 +117,7 @@ def goods(request):
                     models[str(m.pk)]["props"][str(p.prop.pk)]["choises"][str(v.pk)] = v.name
     return render(request, "goods.html",
                   {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Материальные ценности", "tree": json.dumps(tree), "counters": Counterparty.objects.all(),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
                    "models": Product_model.objects.all(), "model_json": json.dumps(models),
                    "goods_json": json.dumps(goods_json), "goods": Goods.objects.all(), 'username': request.user.username})
 
@@ -153,7 +157,7 @@ def props(request):
                     vals.append(v.name)
                 prop_data[str(p.id)] = {'name': p.name, 'type': 2, 'vals': vals}
     return render(request, "props.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Свойства материальных ценностей", "props": Property.objects.all(),
-                                          "prop_data": json.dumps(prop_data)})
+                                          "user_group": str(User_group.objects.filter(user=request.user)[0].group), "prop_data": json.dumps(prop_data)})
 
 
 def counterparties(request):
@@ -162,7 +166,7 @@ def counterparties(request):
         counter_data[str(c.pk)] = {'name': c.name, 'kind': c.kind, 'is_provider': c.is_provider, 'is_consumer': c.is_consumer, 'is_member': c.is_member, 'stocks': {}}
         for s in Counter_stock.objects.filter(counter = c):
             counter_data[str(c.pk)]['stocks'][str(s.stock.pk)] = {'name': s.stock.name}
-    return render(request, "counterparties.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "count_data": json.dumps(counter_data), "header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
+    return render(request, "counterparties.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "count_data": json.dumps(counter_data), "header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
 def shipment(request):
     tree = {}
@@ -214,7 +218,7 @@ def shipment(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "shipment.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "shipment.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def get_stock_goods(request):
     if request.method == 'POST':
@@ -275,7 +279,7 @@ def supplies(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "supplies.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Поставки", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "supplies.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Поставки", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def offers(request):
     counter = User_group.objects.filter(user = request.user)[0]
@@ -320,7 +324,7 @@ def offers(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "offers.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Предложения", "reqs": json.dumps(reqs), "counter": counter.group, "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "offers.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Предложения", "reqs": json.dumps(reqs), "counter": counter.group, "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def requirements(request):
     counter = User_group.objects.filter(user = request.user)[0]
@@ -365,7 +369,7 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Заказы", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "counter": counter.group, "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "requirements.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Заказы", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "counter": counter.group, "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -606,7 +610,7 @@ def stock_operations(request):
             operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
             if s.operation == '2':
                 operations[id][str(s.good.pk)]['diffr'] = s.amount - float(s.last_value)
-    return render(request, "stock_operations.html", {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter, "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter = counter), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "stock_operations.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Журнал приходов/расходов", "operations": operations, "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter, "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter = counter), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def get_good_inf(request):

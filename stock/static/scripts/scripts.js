@@ -343,13 +343,14 @@ function addRows(table, data) {
 }
 
 
-function addBranch(code, branch) {
-    menu = "<span style='font-size: 15px; color: yellowgreen; display: none' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue; display: none' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red; display: none' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
+function addBranch(code, branch, t="model") {
+    menu = "";
+    if (t == "model") menu = "<span style='font-size: 15px; color: yellowgreen; display: none' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue; display: none' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red; display: none' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
     code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + menu + "</span>";
     if (branch["nodes"] != undefined) {
         code = code + "<ul>";
         for (br in branch["nodes"]) {
-            code = addBranch(code, branch["nodes"][br]);
+            code = addBranch(code, branch["nodes"][br], t);
         }
         code = code + "</ul>";
     }
@@ -629,27 +630,29 @@ function Tree(tree, t) {
 
     this.makeTree = function () {
         code = "";
-        code = code + addBranch(code, this.tree[0]["nodes"][1]);
+        code = code + addBranch(code, this.tree[0]["nodes"][1], self.t);
         $(code).appendTo("#tree");
     };
 
     this.updEvent = function () {
         $("#tree li").unbind('mouseover');
         $("#tree li").unbind('mouseout');
-        $("#tree li").mouseover(function (event) {
-            id = $(this).prop("id");
-            $("#a" + id).show();
-            $("#e" + id).show();
-            $("#d" + id).show();
-            event.stopPropagation();
-        });
-        $("#tree li").mouseout(function (event) {
-            id = $(this).prop("id");
-            $("#a" + id).hide();
-            $("#e" + id).hide();
-            $("#d" + id).hide();
-            event.stopPropagation();
-        });
+        if (self.t != 'goods') {
+            $("#tree li").mouseover(function (event) {
+                id = $(this).prop("id");
+                $("#a" + id).show();
+                $("#e" + id).show();
+                $("#d" + id).show();
+                event.stopPropagation();
+            });
+            $("#tree li").mouseout(function (event) {
+                id = $(this).prop("id");
+                $("#a" + id).hide();
+                $("#e" + id).hide();
+                $("#d" + id).hide();
+                event.stopPropagation();
+            });
+        }
     };
 
     this.saveGroup = function (obj, id = null) {
@@ -732,7 +735,6 @@ function Tree(tree, t) {
     };
 
     this.init();
-    this.updEvent();
     $("#tree li").each(function (event) {
         id = $(this).prop("id");
         $("#a" + id).hide();
@@ -740,6 +742,7 @@ function Tree(tree, t) {
         $("#d" + id).hide();
         //event.stopPropagation();
     });
+    this.updEvent();
     $("#tree li").click(function (event) {
         id = $(this).prop("id");
         self.selected = id;
@@ -775,8 +778,8 @@ function changeGroup(t) {
     $("#goods-body").html("");
     for (m in data) {
         if (data[m].group == tr.selected || tr.selected == 1) {
-            id = t == "goods" ? data[m].article : data[m].id
-            $("<tr id=" + data[m].id + "><td>" + id + "</td><td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='delObj(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
+            id = t == "goods" ? "<td>" + data[m].article + "</td>" : ""
+            $("<tr id=" + data[m].id + ">" + id + "<td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='gInf(" + data[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delObj(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data' align='center' colspan='3'>Нет записей</td></tr>");

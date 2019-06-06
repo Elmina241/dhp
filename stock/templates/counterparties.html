@@ -77,7 +77,6 @@
                                 <th scope="col">Наименование</th>
                                 <th scope="col">Вид</th>
                                 <th scope="col"></th>
-                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody id="count-body">
@@ -87,8 +86,7 @@
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.get_kind_display }}</td>
                                     <td><span
-                          onclick="getCounterInf({{ c.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
-                                    <td><span onclick='delCounter(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td>
+                          onclick="getCounterInf({{ c.id }})"><i class='fas fa-edit' title="Редактировать"></i></span><span onclick='delCounter(this.parentElement)'><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

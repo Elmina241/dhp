@@ -30,9 +30,8 @@
                         <table class="table table-bordered table-sm">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Код</th>
+                                <!--<th scope="col">Код</th>-->
                                 <th scope="col">Название</th>
-                                <th scope="col"></th>
                                 <th scope="col"></th>
 
                             </tr>
@@ -40,11 +39,10 @@
                             <tbody id="goods-body">
                             {% for p in props %}
                                 <tr id="{{ p.id }}">
-                                    <td>{{ p.id }}</td>
+                                    <!--<td>{{ p.id }}</td>-->
                                     <td>{{ p.name }}</td>
                                     <td><span
-                          onclick="pr.getInf({{ p.id }})"><i class='fas fa-edit'></i> Редактировать</span></td>
-                                    <td><span onclick='delProp(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td>
+                          onclick="pr.getInf({{ p.id }})"><i class='fas fa-edit' title="Редактировать"></i></span><span onclick='delProp(this.parentElement)'><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
