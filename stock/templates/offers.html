@@ -30,6 +30,7 @@
             getStocks('donor');
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
+            $('#date').val(new Date().toDateInputValue());
         });
 
         function toggleReqs(btn, t) {
@@ -257,7 +258,7 @@
                 <form id="form">
                     <div class="form-row">
                         <div class="form-group col-md-6"><h6>Поставщик</h6>
-                            <select class="form-control" id="provider" readonly onchange="getStocks('donor')">
+                            <select class="form-control" id="provider" disabled onchange="getStocks('donor')">
                                 {% for c in counters %}
                                     {% if c == counter %}
                                     <option value="{{ c.id }}" selected>{{ c.name }}</option>
@@ -294,7 +295,7 @@
                     </div>
                     <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
-                    <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
+                    <button class="btn add-btn btn-outline-success" onclick="addGoodField();return false;">Добавить</button>
                 </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="saveDemand(false)" class="btn btn-primary"

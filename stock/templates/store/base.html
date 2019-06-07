@@ -24,7 +24,10 @@
 {% if request.user.username %}
     <input id="permissions" value="{{ permissions }}" hidden>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark pg">
-<div class="btn-group">
+<a class="btn btn-info" href="/stock/" role="button">
+                Главная
+            </a>
+<div class="btn-group" style="margin-left: 5px">
         <div class="dropdown">
             <a class="btn btn-info dropdown-toggle p2" href="#" role="button" id="dropdownMenuLink"
                data-toggle="dropdown"

@@ -1040,6 +1040,12 @@ function GTree(tree, t) {
         $("#tree li").click(function (event) {
             event.stopPropagation();
         });
+        $("#tree li").each(function(item){
+            id = $(this).prop("id");
+            if (id[0] == 'g') {
+                $(this).addClass("good-li");
+            }
+        });
     };
 
     this.makeTree = function () {
@@ -1064,6 +1070,9 @@ function GTree(tree, t) {
             $("#selectBtn").prop("disabled", true);
         }
         //event.stopPropagation();
+    });
+    $("#tree li").dblclick(function (event) {
+        $("#selectBtn").click();
     });
 }
 
@@ -1481,14 +1490,14 @@ function addGoodField() {
         "                            <input id='myInput' style='width:335px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry' required>\n" +
         "                        </div>\n" +
         "                        <button class='btn btn-outline-info'\n" +
-        "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;'\n" +
+        "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;return false;'\n" +
         "                                data-toggle='modal' data-target='#tree-div'><span\n" +
         "                                style='font-size: 15px;' onclick=''><i class='fas fa-stream'></i></span></button></div></div>\n" +
         "                        <div class='form-group col-md-3'>\n" +
         "                            <h7>Ед. изм.</h7> <select class='form-control form-control-sm'>\n" +
         "                        </select></div><div class='form-group col-md-3'>\n" +
         "                            <h7>Количество</h7>\n" +
-        "                            <input type='number' class='form-control form-control-sm' id='date' required/>\n" +
+        "                            <div class='form-inline'><input type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove()' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
         "                    </div>";
     $(code).appendTo("#add_goods");
     autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
@@ -1660,4 +1669,12 @@ function changePeriod(){
     $("#historyBody").html(code);
     pag2 = new Pagination(3, "historyBody", "historyNav");
 }
+
+Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+});
+
+
 
