@@ -44,18 +44,20 @@
         }
 
 
-        function addUnit() {
+        function addUnit(isAdditional = false) {
             unitNum++;
             var code = "<div class='form-inline' style='margin-top:10px;'> - " + getMUnits() +
                 "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
-            var additionalUnit = $("#additional_unit");
+            if (isAdditional) additionalUnit = $("#e_additional_unit");
+            else var additionalUnit = $("#additional_unit");
             $(code).appendTo(additionalUnit);
         }
 
-        function addProp() {
+        function addProp(isAdditional = false) {
             propNum++;
             var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox'  onclick='addDefault(this)' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
-            var additionalProp = $("#additional_prop");
+           if (isAdditional) var additionalProp = $("#e_additional_prop");
+           else var additionalProp = $("#additional_prop");
             $(code).appendTo(additionalProp);
         }
     </script>
@@ -188,9 +190,13 @@
                     <h6>Единицы измерения</h6>
                     <div id="e_additional_unit">
                     </div>
+                <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                          onclick="addUnit(true)"><i class='fas fa-plus-circle'></i></span>
                     <h6>Свойства</h6>
                     <div style='display:block' id="e_additional_prop">
                     </div>
+                <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                          onclick="addProp(true)"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="editBtn" onclick="" class="btn btn-primary"
                                style="float: right"/></div>

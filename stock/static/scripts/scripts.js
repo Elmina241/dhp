@@ -70,6 +70,69 @@ function sendCounter() {
     }
 }
 
+function saveStock(id) {
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_stock/',
+            data: {
+                'id': id,
+                'name': $('#e_name').prop('value'),
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
+            }
+        });
+}
+
+function delStock(id) {
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'del_stock/',
+            data: {
+                'id': id,
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
+            }
+        });
+}
+
+function sendStock() {
+    if ($('#form')[0].checkValidity()) {
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'send_stock/',
+            data: {
+                'name': $('#name').prop('value'),
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
+            }
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
+}
+
 function editProp(id) {
     var data = null;
     var t = $('#e_type').prop('value');
@@ -127,7 +190,8 @@ function searchModel(text) {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-                $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ")'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delModel(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+               // $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
             }
         }
         if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td align='center' class='no-data' colspan='3'>Нет записей</td></tr>");
@@ -141,8 +205,10 @@ function searchGood(text) {
     else {
         $("#goods-body").html("");
         for (g in goods) {
-            if (goods[g].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-                $("<tr onclick='getGoodInf(" + goods[g].id + ")'><td>" + goods[g].article + "</td><td>" + goods[g].name + "</td><td><button class='btn btn-danger' onclick='delGood(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
+            if (goods[g].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[g].article.toUpperCase().indexOf(text.toUpperCase()) != -1) {
+                id = "<td>" + goods[g].article + "</td>";
+                $("<tr id=" + goods[g].id + ">" + id + "<td  onclick='getGoodInf(" + goods[g].id + ")'>" + goods[g].name + "</td><td><span onclick='getGoodInf(" + data[g].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delGood(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+                //$("<tr onclick='getGoodInf(" + goods[g].id + ")'><td>" + goods[g].article + "</td><td>" + goods[g].name + "</td><td><button class='btn btn-danger' onclick='delGood(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
             }
         }
         if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data' align='center' colspan='3'>Нет записей</td></tr>");
@@ -778,7 +844,7 @@ function changeGroup(t) {
     $("#goods-body").html("");
     for (m in data) {
         if (data[m].group == tr.selected || tr.selected == 1) {
-            id = t == "goods" ? "<td>" + data[m].article + "</td>" : ""
+            id = t == "goods" ? "<td>" + data[m].article + "</td>" : "";
             $("<tr id=" + data[m].id + ">" + id + "<td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='gInf(" + data[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delObj(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
         }
     }

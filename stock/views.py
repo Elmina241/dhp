@@ -54,7 +54,7 @@ def stocks(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -167,6 +167,10 @@ def counterparties(request):
         for s in Counter_stock.objects.filter(counter = c):
             counter_data[str(c.pk)]['stocks'][str(s.stock.pk)] = {'name': s.stock.name}
     return render(request, "counterparties.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "count_data": json.dumps(counter_data), "header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
+
+def storages(request):
+    return render(request, "storages.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Склады", "stocks": Stock.objects.all()})
+
 
 def shipment(request):
     tree = {}
@@ -388,6 +392,23 @@ def send_prop(request):
                     for d in data:
                         p = Property_var(prop=prop, name=d)
                         p.save()
+            return HttpResponse('ok')
+
+def send_stock(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            name = request.POST['name']
+            stock = Stock(name = name)
+            stock.save()
+            return HttpResponse('ok')
+
+def save_stock(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            stock = Stock.objects.get(pk=request.POST['id'])
+            name = request.POST['name']
+            stock.name = name
+            stock.save()
             return HttpResponse('ok')
 
 def get_prod_info(request):
@@ -1085,6 +1106,11 @@ def del_counter(request):
 def del_prop(request):
     if request.method == 'POST':
         Property.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
+
+def del_stock(request):
+    if request.method == 'POST':
+        Stock.objects.get(pk=request.POST['id']).delete()
         return HttpResponse("ok")
 
 def save_status(request):

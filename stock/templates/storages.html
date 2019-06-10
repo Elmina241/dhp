@@ -1,0 +1,93 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <script>
+        $(document).ready(function () {
+        });
+        function editStock(tr){
+            var id = $(tr).prop('id');
+            var name = $(tr).find("td").eq(1).text();
+            $("#e_name").prop("value", name);
+            $("#editStockBtn").unbind('click');
+            $("#editStockBtn").click(function () {
+                saveStock(id);
+            });
+            $("#edit_stock").modal();
+        }
+    </script>
+    <div class="container-fluid">
+                <div class="card" style="margin-left: 30px;margin-right: 30px;">
+                    <div class="card-header">
+                        <div class="filter">
+                            <div class="form-inline">
+                        <button type="button" class="btn btn-success btn-sm"  data-toggle="modal" data-target="#add_stock">Добавить склад</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="count_table">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Код</th>
+                                <th scope="col">Наименование</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="count-body">
+                            {% for s in stocks %}
+                                <tr id="{{ s.id }}">
+                                    <td>{{ s.id }}</td>
+                                    <td>{{ s.name }}</td>
+                                    <td><span
+                          onclick="editStock(this.parentElement.parentElement)"><i class='fas fa-edit' title="Редактировать"></i></span><span onclick='delStock({{ s.id }})'><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_stock">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Создание склада</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <form id="form">
+                    <h6>Наименование</h6>
+                    <input type="text" class="form-control" id="name" required/>
+                    </form>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="counterBtn" onclick="sendStock()" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="modal fade" id="edit_stock">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Редактирование склада</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <form id="form">
+                    <h6>Наименование</h6>
+                    <input type="text" class="form-control" id="e_name" required/>
+                    </form>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="editStockBtn" onclick="" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
