@@ -172,7 +172,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Редактирование макета</h5>
+                    <h5 id="modalHeader">Редактирование макета</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
@@ -190,12 +190,12 @@
                     <h6>Единицы измерения</h6>
                     <div id="e_additional_unit">
                     </div>
-                <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                <span class="plus" style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addUnit(true)"><i class='fas fa-plus-circle'></i></span>
                     <h6>Свойства</h6>
                     <div style='display:block' id="e_additional_prop">
                     </div>
-                <span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                <span class="plus" style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addProp(true)"><i class='fas fa-plus-circle'></i></span>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="editBtn" onclick="" class="btn btn-primary"

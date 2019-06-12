@@ -190,7 +190,7 @@ function searchModel(text) {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-            $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ")'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delModel(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ", false)'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delModel(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
                // $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
             }
         }
@@ -215,7 +215,7 @@ function searchGood(text) {
     }
 }
 
-function getInf(id) {
+function getInf(id, isEdit = true) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -278,12 +278,21 @@ function getInf(id) {
                 editModel(id);
             });
             $("#inf_model").modal();
-
+            if (isEdit){
+                $("#editBtn").show();
+                $(".plus").show();
+                $("#modalHeader").text("Редактирование макета");
+            }
+            else {
+                $("#editBtn").hide();
+                $(".plus").hide();
+                $("#modalHeader").text("Просмотр макета");
+            }
         }
     });
 }
 
-function getGoodInf(id) {
+function getGoodInf(id, isEdit = true) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -329,6 +338,16 @@ function getGoodInf(id) {
             $("#editBtn").click(function () {
                 editGood(id);
             });
+            if (isEdit){
+                $("#editBtn").show();
+                $(".plus").show();
+                $("#modalHeader").text("Редактирование МЦ");
+            }
+            else {
+                $("#editBtn").hide();
+                $(".plus").hide();
+                $("#modalHeader").text("Просмотр МЦ");
+            }
             $("#inf_good").modal();
 
         }
@@ -824,8 +843,8 @@ function Tree(tree, t) {
 function changeGroup(t) {
     if (t == "goods") {
         data = goods;
-        gInf = function (id) {
-            getGoodInf(id);
+        gInf = function (id, isEdit = true) {
+            getGoodInf(id, isEdit);
         };
         delObj = function (obj) {
             delGood(obj);
@@ -833,8 +852,8 @@ function changeGroup(t) {
     }
     else {
         data = models;
-        gInf = function (id) {
-            getInf(id);
+        gInf = function (id, isEdit = true) {
+            getInf(id, isEdit);
         };
         delObj = function (obj) {
             delModel(obj);
@@ -845,7 +864,7 @@ function changeGroup(t) {
     for (m in data) {
         if (data[m].group == tr.selected || tr.selected == 1) {
             id = t == "goods" ? "<td>" + data[m].article + "</td>" : "";
-            $("<tr id=" + data[m].id + ">" + id + "<td  onclick='gInf(" + data[m].id + ")'>" + data[m].name + "</td><td><span onclick='gInf(" + data[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delObj(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + data[m].id + ">" + id + "<td  onclick='gInf(" + data[m].id + ", false)'>" + data[m].name + "</td><td><span onclick='gInf(" + data[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delObj(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data' align='center' colspan='3'>Нет записей</td></tr>");
