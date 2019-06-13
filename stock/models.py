@@ -73,24 +73,15 @@ class Goods(models.Model):
     def __str__(self):
         return self.model.name
     def get_name(self):
-        return Good_name.objects.filter(product = self)[0].name
-    def get_article(self):
-        return Good_name.objects.filter(product = self)[0].article
-    def get_name_type(self, t):
-        names = Good_name.objects.filter(product = self)[0]
-        if t == '0':
-            return names.name
+        if Good_name.objects.filter(product = self, name_type='0', area='0').count() != 0:
+            return Good_name.objects.filter(product = self, name_type='0', area='0')[0].name
         else:
-            if t == '1':
-                return names.barcode
-            else:
-                if t == '2':
-                    return names.original
-                else:
-                    if t == '3':
-                        return names.local
-                    else:
-                        return names.transit
+            return '-'
+    def get_article(self):
+        if Good_name.objects.filter(product = self, name_type='1', area='0').count():
+            return Good_name.objects.filter(product = self, name_type='1', area='0')[0].name
+        else:
+            return '-'
     def get_unit(self):
         if Goods_unit.objects.filter(product=self, isBase=True).count() != 0:
             return Goods_unit.objects.filter(product=self, isBase=True)[0].unit
@@ -103,12 +94,19 @@ class Goods(models.Model):
 
 class Good_name(models.Model):
     product = models.ForeignKey('Goods', on_delete=models.CASCADE)
-    article = models.CharField(max_length=200)
+    TYPE_CHOICES = (
+        ('0', 'Наименование'),
+        ('1', 'Артикул'),
+        ('2', 'Штрихкод'),
+    )
+    AREA_CHOICES = (
+        ('0', 'Локальное'),
+        ('1', 'Транзитное'),
+        ('2', 'Оригинальное'),
+    )
+    name_type = models.CharField(choices=TYPE_CHOICES, max_length=20)
+    area = models.CharField(choices=AREA_CHOICES, max_length=20)
     name = models.CharField(max_length=200)
-    barcode = models.CharField(max_length=200)
-    original = models.CharField(max_length=200)
-    local = models.CharField(max_length=200)
-    transit = models.CharField(max_length=200)
     def __str__(self):
         return self.name
 

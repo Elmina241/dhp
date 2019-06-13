@@ -54,7 +54,7 @@ def stocks(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -86,8 +86,8 @@ def goods(request):
     add_children(g, tree[0])
     goods_json = {}
     for m in Goods.objects.all():
-        names = Good_name.objects.filter(product=m)[0]
-        goods_json[str(m.pk)] = {"id": m.pk, "name": names.name, "article": names.article, "group": m.model.group.pk}
+        #names = Good_name.objects.filter(product=m)[0]
+        goods_json[str(m.pk)] = {"id": m.pk, "name": m.get_name(), "article": m.get_article(), "group": m.model.group.pk}
     models = {}
     for m in Product_model.objects.all():
         models[str(m.pk)] = {"units": {}, "props": {}}
@@ -183,9 +183,9 @@ def shipment(request):
     for r in Goods.objects.all():
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     i = 0
-    for g in Good_name.objects.all():
-        goods.append(g.article + ' ' + g.name)
-        goods_inf[i] = g.product.pk
+    for g in Goods.objects.all():
+        goods.append(g.get_article() + ' ' + g.get_name())
+        goods_inf[i] = g.pk
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
@@ -244,9 +244,9 @@ def supplies(request):
     for r in Goods.objects.all():
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     i = 0
-    for g in Good_name.objects.all():
-        goods.append(g.article + ' ' + g.name)
-        goods_inf[i] = g.product.pk
+    for g in Goods.objects.all():
+        goods.append(g.get_article() + ' ' + g.get_name())
+        goods_inf[i] = g.pk
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
@@ -318,9 +318,9 @@ def offers(request):
     goods = []
     goods_inf = {}
     i = 0
-    for g in Good_name.objects.all():
-        goods.append(g.article + ' ' + g.name)
-        goods_inf[i] = g.product.pk
+    for g in Goods.objects.all():
+        goods.append(g.get_article() + ' ' + g.get_name())
+        goods_inf[i] = g.pk
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
@@ -363,9 +363,9 @@ def requirements(request):
     goods = []
     goods_inf = {}
     i = 0
-    for g in Good_name.objects.all():
-        goods.append(g.article + ' ' + g.name)
-        goods_inf[i] = g.product.pk
+    for g in Goods.objects.all():
+        goods.append(g.get_article() + ' ' + g.get_name())
+        goods_inf[i] = g.pk
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
@@ -417,15 +417,10 @@ def get_prod_info(request):
             stock = Stock.objects.get(pk = request.POST['stock'])
             good = Stock_good.objects.get(pk = request.POST['id']).good
             data = {}
-            n = Good_name.objects.filter(product = good)[0]
             names = {}
             units = {}
-            names['name'] = '-' if n.name == "" else n.name
-            names['article'] = n.article
-            names['barcode'] = '-' if n.barcode == "" else n.barcode
-            names['original'] = '-' if n.original == "" else n.original
-            names['local'] = '-' if n.local == "" else n.local
-            names['transit'] = '-' if n.transit == "" else n.transit
+            for n in Good_name.objects.filter(product = good):
+                names[str(n.pk)] = {'type': n.name_type, 'area': n.area, 'name': n.name}
             s_g = Stock_good.objects.get(pk = request.POST['id'])
             base_amm = s_g.amount / Goods_unit.objects.filter(product = good, unit = s_g.unit)[0].coeff
             for g in  Goods_unit.objects.filter(product = good):
@@ -500,7 +495,7 @@ def get_demand_goods(request):
                     data['is_finished'] = ord.status is '2'
             for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
-                data[str(d.pk)] = {'article': Good_name.objects.filter(product = d.good)[0].article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
+                data[str(d.pk)] = {'article': d.good.get_article(), 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
                 if request.POST['t'] == 's':
                     data[str(d.pk)]['balance'] = d.balance
             return HttpResponse(json.dumps(data))
@@ -612,9 +607,9 @@ def stock_operations(request):
     for r in Goods.objects.all():
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     i = 0
-    for g in Good_name.objects.all():
-        goods.append(g.article + ' ' + g.name)
-        goods_inf[i] = g.product.pk
+    for g in Goods.objects.all():
+        goods.append(g.get_article() + ' ' + g.get_name())
+        goods_inf[i] = g.pk
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
@@ -639,14 +634,9 @@ def get_good_inf(request):
         if 'id' in request.POST:
             good = Goods.objects.get(pk=request.POST['id'])
             data = {}
-            names = Good_name.objects.filter(product=good)[0]
-            data['name'] = names.name
-            data['article'] = names.article
-            data['barcode'] = names.barcode
-            data['original'] = names.original
-            data['local'] = names.local
-            data['transit'] = names.transit
-            data['model'] = good.model.pk
+            data['names'] = {}
+            for n in Good_name.objects.filter(product = good):
+                data['names'][str(n.pk)] = {'type': n.name_type, 'area': n.area, 'name': n.name}
             data['counter'] = good.producer.pk
             units = {}
             for u in Goods_unit.objects.filter(product=good):
@@ -718,22 +708,17 @@ def save_model(request):
 
 def save_good(request):
     if request.method == 'POST':
-        if 'name' in request.POST:
+        if 'model' in request.POST:
             model = Product_model.objects.get(pk=request.POST['model'])
             counter = Counterparty.objects.get(pk=request.POST['counter'])
-            name = request.POST['name']
-            article = request.POST['article']
-            barcode = request.POST['barcode']
-            original = request.POST['original']
-            local = request.POST['local']
-            transit = request.POST['transit']
+            names = json.loads(request.POST['names'])
             units = json.loads(request.POST['units'])
             props = json.loads(request.POST['props'])
             good = Goods(model=model, producer=counter)
             good.save()
-            names = Good_name(product=good, name=name, article=article, barcode=barcode, original=original, local=local,
-                              transit=transit)
-            names.save()
+            for n in names:
+                name = Good_name(product=good, name=names[n]['name'], area=names[n]['area'], name_type=names[n]['type'])
+                name.save()
             for u in units:
                 unit = Unit.objects.get(pk=u)
                 m = Goods_unit(product=good, unit=unit, applicable=units[u]['applicable'], isBase=units[u]['isBase'],
@@ -939,27 +924,18 @@ def save_inventory(request):
 
 def edit_good(request):
     if request.method == 'POST':
-        if 'name' in request.POST:
+        if 'id' in request.POST:
             good = Goods.objects.get(pk=request.POST['id'])
             counter = Counterparty.objects.get(pk=request.POST['counter'])
-            name = request.POST['name']
-            article = request.POST['article']
-            barcode = request.POST['barcode']
-            original = request.POST['original']
-            local = request.POST['local']
-            transit = request.POST['transit']
+            names = json.loads(request.POST['names'])
             units = json.loads(request.POST['units'])
             props = json.loads(request.POST['props'])
             good.producer = counter
             good.save()
-            names = Good_name.objects.filter(product = good)[0]
-            names.name=name
-            names.article=article
-            names.barcode=barcode
-            names.original=original
-            names.local=local
-            names.transit=transit
-            names.save()
+            Good_name.objects.filter(product = good).delete()
+            for n in names:
+                name = Good_name(product=good, name=names[n]['name'], area=names[n]['area'], name_type=names[n]['type'])
+                name.save()
             for u in units:
                 unit = Goods_unit.objects.get(pk=u)
                 unit.isBase = units[u]['isBase']

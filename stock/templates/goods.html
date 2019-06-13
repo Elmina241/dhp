@@ -25,6 +25,27 @@
             document.getElementById("1").click();
         });
 
+        function addName(tr) {
+            var code = "<tr class='name'>\n" +
+                "                            <td><input type=\"text\" class=\"form-control form-control-sm\"  required/></td>\n" +
+                "                            <td>\n" +
+                "                                <select class=\"form-control form-control-sm type\">\n" +
+                "                                    <option value=\"0\">Наименование</option>\n" +
+                "                                    <option value=\"1\">Артикул</option>\n" +
+                "                                    <option value=\"2\">Штрихкод</option>\n" +
+                "                                </select>\n" +
+                "                            </td>\n" +
+                "                            <td>\n" +
+                "                                <select class=\"form-control form-control-sm area\">\n" +
+                "                                    <option value=\"0\">Локальное</option>\n" +
+                "                                    <option value=\"1\">Транзитное</option>\n" +
+                "                                    <option value=\"2\">Оригинальное</option>\n" +
+                "                                </select>\n" +
+                "                            </td><td style='padding-top: 12px'><span onclick='this.parentElement.parentElement.remove()'><i class='fas fa-trash-alt'></i></span></td>\n" +
+                "                        </tr>";
+            $(tr.parentElement.parentElement).before(code);
+        }
+
     </script>
     {% if tree %}
         <input id="tree_data" value="{{ tree }}" hidden>
@@ -111,37 +132,32 @@
                     </div>
                     <hr>
                     <h6>Имена</h6>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="article">Артикул</label>
-                            <input type="text" class="form-control form-control-sm" id="article" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="name">Наименование</label>
-                            <input type="text" class="form-control form-control-sm" id="name">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="barcode">Штрихкод</label>
-                            <input type="text" class="form-control form-control-sm" id="barcode">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="original">Оригинальное</label>
-                            <input type="text" class="form-control form-control-sm" id="original">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="local">Локальное</label>
-                            <input type="text" class="form-control form-control-sm" id="local">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="transit">Транзитное</label>
-                            <input type="text" class="form-control form-control-sm" id="transit">
-                        </div>
-                    </div>
+                    <table class="table table-sm table-bordered" id="names">
+                        <thead>
+                        <tr><th>Имя</th><th>Тип</th><th>Область</th><td></td></tr>
+                        </thead>
+                        <tbody>
+                        <tr class="name">
+                            <td><input type="text" class="form-control form-control-sm" required/></td>
+                            <td>
+                                <select class="form-control form-control-sm type">
+                                    <option value="0">Наименование</option>
+                                    <option value="1">Артикул</option>
+                                    <option value="2">Штрихкод</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control form-control-sm area">
+                                    <option value="0">Локальное</option>
+                                    <option value="1">Транзитное</option>
+                                    <option value="2">Оригинальное</option>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr><td colspan="4"><button onclick="addName(this)" class="btn btn-sm btn-outline-success add-btn" style="float: right">Добавить</button></td></tr>
+                        </tbody>
+                    </table>
 
                     <hr>
                     <h6>Производитель</h6>
@@ -189,39 +205,13 @@
                     </div>
                     <hr>
                     <h6>Имена</h6>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="article">Артикул</label>
-                            <input type="text" class="form-control form-control-sm" id="e_article">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="name">Наименование</label>
-                            <input type="text" class="form-control form-control-sm" id="e_name">
-                        </div>
-                    </div>
-                <div id="names" style="display:none">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="barcode">Штрихкод</label>
-                            <input type="text" class="form-control form-control-sm" id="e_barcode">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="original">Оригинальное</label>
-                            <input type="text" class="form-control form-control-sm" id="e_original">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="local">Локальное</label>
-                            <input type="text" class="form-control form-control-sm" id="e_local">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="transit">Транзитное</label>
-                            <input type="text" class="form-control form-control-sm" id="e_transit">
-                        </div>
-                    </div>
-                </div>
-    <div class="form-row"><hr class="half"><span style='font-size: 20px;' onclick="openClose('names', this.firstChild)"><i class='fas fa-angle-down'></i></span><hr class="half"></div>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                        <tr><th>Имя</th><th>Тип</th><th>Область</th><td></td></tr>
+                        </thead>
+                        <tbody id="e_names">
+                        </tbody>
+                    </table>
                     <hr>
                     <h6>Производитель</h6>
                     <div class="col-6" style="padding:0">

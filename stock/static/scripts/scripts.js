@@ -309,12 +309,7 @@ function getGoodInf(id, isEdit = true) {
             inf = JSON.parse(data);
             $("#e_units").html("");
             $("#e_props").html("");
-            $("#e_name").prop("value", inf.name);
-            $("#e_article").prop("value", inf.article);
-            $("#e_barcode").prop("value", inf.barcode);
-            $("#e_original").prop("value", inf.original);
-            $("#e_local").prop("value", inf.local);
-            $("#e_transit").prop("value", inf.transit);
+            $("#e_names").html("");
             $("#e_model option[value=" + inf.model + "]").prop('selected', true);
             $("#e_counter option[value=" + inf.counter + "]").prop('selected', true);
             var code = "";
@@ -325,6 +320,28 @@ function getGoodInf(id, isEdit = true) {
                 code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='radio' name='e_isBase' class='form-control' " + checked + "/><span class='inline-el'> Базовая</span></div></div>";
             }
             $(code).appendTo("#e_units");
+            code = "";
+            for (n in inf.names) {
+                code = code + "<tr class='name'>\n" +
+                "                            <td><input type=\"text\" class=\"form-control form-control-sm\" value='" + inf.names[n].name + "'  required/></td>\n" +
+                "                            <td>\n" +
+                "                                <select class=\"form-control form-control-sm type\" >\n" +
+                "                                    <option value=\"0\" "+ (inf.names[n].type == 0 ? "selected" : "")  +">Наименование</option>\n" +
+                "                                    <option value=\"1\" "+ (inf.names[n].type == 1 ? "selected" : "")  +">Артикул</option>\n" +
+                "                                    <option value=\"2\" "+ (inf.names[n].type == 2 ? "selected" : "")  +">Штрихкод</option>\n" +
+                "                                </select>\n" +
+                "                            </td>\n" +
+                "                            <td>\n" +
+                "                                <select class=\"form-control form-control-sm area\" value='" + inf.names[n].area + "' >\n" +
+                "                                    <option value=\"0\"  "+ (inf.names[n].area == 0 ? "selected" : "")  +">Локальное</option>\n" +
+                "                                    <option value=\"1\"  "+ (inf.names[n].area == 1 ? "selected" : "")  +">Транзитное</option>\n" +
+                "                                    <option value=\"2\"  "+ (inf.names[n].area == 2 ? "selected" : "")  +">Оригинальное</option>\n" +
+                "                                </select>\n" +
+                "                            </td><td style='padding-top: 12px'><span onclick='this.parentElement.parentElement.remove()'><i class='fas fa-trash-alt'></i></span></td>\n" +
+                "                        </tr>";
+            }
+            code = code + "<tr><td colspan='4'><button onclick='addName(this)' class='btn btn-sm btn-outline-success add-btn' style='float: right'>Добавить</button></td></tr>";
+            $(code).appendTo("#e_names");
             code = "";
             for (p in inf.props) {
                 code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + inf['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(inf['props'][p]['type'], inf['props'][p]['value'], inf['props'][p]['choises']) + "</div></div>";
@@ -618,6 +635,13 @@ function saveGood() {
             units[id]['applicable'] = !$(this).find(":input[type='checkbox']").eq(0).prop("checked");
             units[id]['isBase'] = $(this).find(":input[type='radio']").eq(0).prop("checked");
         });
+        names = {};
+        $("#names").find(".name").each(function (item) {
+            names[item] = {};
+            names[item]['name'] = $(this).find(":input[type='text']").eq(0).prop("value");
+            names[item]['type'] = $(this).find(".type").eq(0).prop("value");
+            names[item]['area'] = $(this).find(".area").eq(0).prop("value");
+        });
         props = {};
         $("#props").find(".prop").each(function (item) {
             id = $(this).prop('id');
@@ -635,11 +659,7 @@ function saveGood() {
                 'name': $('#name').prop('value'),
                 'model': $("#model option:selected").val(),
                 'counter': $("#counter option:selected").val(),
-                'article': $('#article').prop('value'),
-                'barcode': $('#barcode').prop('value'),
-                'original': $('#original').prop('value'),
-                'local': $('#local').prop('value'),
-                'transit': $('#transit').prop('value'),
+                'names': JSON.stringify(names),
                 'units': JSON.stringify(units),
                 'props': JSON.stringify(props)
             },
@@ -672,6 +692,13 @@ function editGood(id) {
         props[id] = {};
         props[id]['value'] = $(this).find(".value").eq(0).val();
     });
+    names = {};
+    $("#e_names").find(".name").each(function (item) {
+        names[item] = {};
+        names[item]['name'] = $(this).find(":input[type='text']").eq(0).prop("value");
+        names[item]['type'] = $(this).find(".type").eq(0).prop("value");
+        names[item]['area'] = $(this).find(".area").eq(0).prop("value");
+    });
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
@@ -680,11 +707,7 @@ function editGood(id) {
             'id': id,
             'name': $('#e_name').prop('value'),
             'counter': $("#e_counter option:selected").val(),
-            'article': $('#e_article').prop('value'),
-            'barcode': $('#e_barcode').prop('value'),
-            'original': $('#e_original').prop('value'),
-            'local': $('#e_local').prop('value'),
-            'transit': $('#e_transit').prop('value'),
+            'names': JSON.stringify(names),
             'units': JSON.stringify(units),
             'props': JSON.stringify(props)
         },
