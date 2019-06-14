@@ -276,6 +276,7 @@
                         <div class="form-group col-md-6">
                             <h6>Потребитель</h6>
                             <select class="form-control" id="consumer" onchange="getStocks('acceptor')">
+                            <option value="-1">-----</option>
                                 {% for c in counters %}
                                     <option value="{{ c.id }}">{{ c.name }}</option>
                                 {% endfor %}

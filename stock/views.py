@@ -420,7 +420,7 @@ def get_prod_info(request):
             names = {}
             units = {}
             for n in Good_name.objects.filter(product = good):
-                names[str(n.pk)] = {'type': n.name_type, 'area': n.area, 'name': n.name}
+                names[str(n.pk)] = {'type': n.get_name_type_display(), 'area': n.get_area_display(), 'name': n.name}
             s_g = Stock_good.objects.get(pk = request.POST['id'])
             base_amm = s_g.amount / Goods_unit.objects.filter(product = good, unit = s_g.unit)[0].coeff
             for g in  Goods_unit.objects.filter(product = good):

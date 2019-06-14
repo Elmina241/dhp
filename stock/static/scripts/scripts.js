@@ -859,6 +859,14 @@ function Tree(tree, t) {
         $(this).children("span").eq(0).addClass('active');
         $("#group option[value=" + id + "]").prop('selected', true);
         changeGroup(self.t);
+        if (self.t == 'goods'){
+            $("#model").find("option").show();
+            $("#model").find("option").prop("selected", false);
+            if (self.selected != 1) {
+                $("#model").find("[name="+ self.selected + "]").prop('selected', true);
+                $("#model").find("[name!="+ self.selected + "]").hide();
+            }
+        }
         //event.stopPropagation();
     });
 }
@@ -1276,32 +1284,14 @@ function openGood(id, obj) {
             success: function onAjaxSuccess(data) {
                 data = JSON.parse(data);
                 var period = $("#period").val();
-                names = " <div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'>" +
-                    "<div class=\"form-row\">\n" +
-                    "                        <div class=\"form-group col-md-6\">\n" +
-                    "                            <h9>Артикул</h9><h8>\n" + data['names']['article'] +
-                    "                        </h8></div>\n" +
-                    "                        <div class=\"form-group col-md-6\">\n" +
-                    "                            <h9>Наименование</h9><h8>\n" + data['names']['name'] +
-                    "                        </h8></div>\n" +
-                    "                    </div>\n" +
-                    "\n" +
-                    "                    <div class=\"form-row\">\n" +
-                    "                        <div class=\"form-group col-md-6\">\n" +
-                    "                            <h9>Штрихкод</h9><h8>\n" + data['names']['barcode'] +
-                    "                        </h8></div>\n" +
-                    "                        <div class=\"form-group col-md-6\">\n" +
-                    "                            <h9>Оригинальное</h9><h8>\n" + data['names']['original'] +
-                    "                        </h8></div>\n" +
-                    "                    </div>\n" +
-                    "                    <div class=\"form-row\">\n" +
-                    "                        <div class=\"form-group col-md-6\">\n" +
-                    "                            <h9>Локальное</h9><h8>\n" + data['names']['local'] +
-                    "                        </h8></div>\n" +
-                    "                        <div class=\"form-group col-md-6\">\n" +
-                    "                            <h9>Транзитное</h9><h8>\n" + data['names']['transit'] +
-                    "                        </h8></div>\n" +
-                    "                    </div></div>";
+                var code = "<div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'><table class=\"table table-sm table-bordered\">\n" +
+                    "                        <thead>\n" +
+                    "                        <tr><th>Имя</th><th>Тип</th><th>Область</th></tr>\n" +
+                    "                        </thead><tbody>";
+                for (n in data.names) {
+                    code = code + "<tr><td>" + data.names[n].name + "</td><td>" + data.names[n].type + "</td><td>" + data.names[n].area + "</td></tr>";
+                }
+                names = code + "</tbody></table></div>";
                 units = " <div class='tab-pane fade' id='units' role='tabpanel' aria-labelledby='units-tab'>" +
                     "<table>\n" +
                     "<table class=\"table table-bordered\">\n" +
@@ -1579,7 +1569,7 @@ function getStocks(counter) {
         select = $("#acceptor");
         id = $("#consumer").val();
     }
-    code = "";
+    code = "<option value='-1'>-----</option>";
     for (s in stocks) {
         if (stocks[s].counter == id) {
             code = code + "<option value='" + stocks[s].pk + "'>" + stocks[s].stock + "</option>";

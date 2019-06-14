@@ -126,7 +126,7 @@
                     <div class="col-6" style="padding:0">
                         <select class="form-control form-control-sm" id="model" onchange="getModelInfo()">
                             {% for m in models %}
-                                <option value="{{ m.pk }}">{{ m.name }}</option>
+                                <option value="{{ m.pk }}" name="{{ m.group.pk }}">{{ m.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
