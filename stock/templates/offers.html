@@ -82,6 +82,20 @@
             }
         }
 
+        function editStock(obj){
+            id = {{ user_group_pk }};
+            var code = "<div class='form-inline'><select id='editStock' class='form-control form-control-sm'>";
+            var curStock = $.trim($(obj.previousElementSibling).text());
+            for (s in stocks) {
+                if (stocks[s].counter == id) {
+                    if (stocks[s].stock == curStock) code = code + "<option value='" + stocks[s].pk + "' selected>" + stocks[s].stock + "</option>";
+                    else code = code + "<option value='" + stocks[s].pk + "'>" + stocks[s].stock + "</option>";
+                }
+            }
+            code = code + "</select> <span class='inline-el' onclick='saveChangedStock(this, false)'><i class='fas fa-check'></i></span></div>";
+            $(obj.parentElement).html(code);
+        }
+
         function getStatus(s, id) {
             var status = "";
             if (s == '3') {
@@ -101,11 +115,12 @@
             code = "";
             if (isInbox) role = '2';
             else role = '1';
+            var editBtn = isInbox ? "<span onclick='editStock(this)'><i class='fas fa-edit'></i></span>" : "";
             if (stock == "-1") {
                 for (r in reqs) {
                     if (role == reqs[r].role){
                         status = getStatus(reqs[r].access, reqs[r].id);
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                 }
                 }
             }
@@ -114,7 +129,7 @@
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
                         if (role == reqs[r].role) {
                             status = getStatus(reqs[r].access, reqs[r].id);
-                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                         }
                     }
                 }

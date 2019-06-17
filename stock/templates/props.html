@@ -7,6 +7,14 @@
             getProps("0");
             pr = new Property($("#propData").prop("value"));
         });
+        function confirmDel(name, obj) {
+            $("#delBtn").unbind();
+            $("#delBtn").click(function(){
+                delProp(obj);
+            });
+            $("#del-name").text(name);
+            $("#del_modal").modal();
+        }
     </script>
     <div class="container-fluid">
     <input value="{{ prop_data }}" id="propData" hidden/>
@@ -36,7 +44,7 @@
                                     <!--<td>{{ p.id }}</td>-->
                                     <td>{{ p.name }}</td>
                                     <td><span
-                          onclick="pr.getInf({{ p.id }})"><i class='fas fa-edit' title="Редактировать"></i></span><span onclick='delProp(this.parentElement)'><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
+                          onclick="pr.getInf({{ p.id }})"><i class='fas fa-edit' title="Редактировать"></i></span><span onclick="confirmDel('{{ p.name }}', this.parentElement)"><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -92,6 +100,23 @@
                     <div id="e_charVal"></div>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="editBtn" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="del_modal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Удаление свойства</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <h6>Удалить <span id="del-name"></span>?</h6>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Удалить" id="delBtn" onclick="" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>

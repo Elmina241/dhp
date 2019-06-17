@@ -64,7 +64,7 @@ class Batch(models.Model):
     kneading = models.OneToOneField('Kneading', on_delete=models.CASCADE)
     finish_date = models.DateField(auto_now_add=True)
     def __str__(self):
-        return str(self.id)
+        return str(self.id) + " " + str(self.kneading.pk) + " " + str(self.kneading)
 
 #Состав партии
 class Batch_comp(models.Model):

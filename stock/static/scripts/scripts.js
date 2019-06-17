@@ -190,7 +190,7 @@ function searchModel(text) {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-            $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ", false)'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delModel(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ", false)'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='confirmDel(\"" + models[m].name + "\", this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
                // $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
             }
         }
@@ -207,7 +207,7 @@ function searchGood(text) {
         for (g in goods) {
             if (goods[g].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[g].article.toUpperCase().indexOf(text.toUpperCase()) != -1) {
                 id = "<td>" + goods[g].article + "</td>";
-                $("<tr id=" + goods[g].id + ">" + id + "<td  onclick='getGoodInf(" + goods[g].id + ")'>" + goods[g].name + "</td><td><span onclick='getGoodInf(" + data[g].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delGood(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+                $("<tr id=" + goods[g].id + ">" + id + "<td  onclick='getGoodInf(" + goods[g].id + ")'>" + goods[g].name + "</td><td><span onclick='getGoodInf(" + data[g].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='confirmDel(\"" + goods[g].name + "\" ,this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
                 //$("<tr onclick='getGoodInf(" + goods[g].id + ")'><td>" + goods[g].article + "</td><td>" + goods[g].name + "</td><td><button class='btn btn-danger' onclick='delGood(this.parentElement)'>Удалить</button></td></tr>").appendTo("#goods-body");
             }
         }
@@ -344,7 +344,7 @@ function getGoodInf(id, isEdit = true) {
             $(code).appendTo("#e_names");
             code = "";
             for (p in inf.props) {
-                code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + inf['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(inf['props'][p]['type'], inf['props'][p]['value'], inf['props'][p]['choises']) + "</div></div>";
+                code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + inf['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(inf['props'][p]['type'], inf['props'][p]['value'], inf['props'][p]['choises'], inf['props'][p]['editable']) + "</div></div>";
             }
             $(code).appendTo("#e_props");
             $("#e_props").find(".prop").each(function (item) {
@@ -877,8 +877,8 @@ function changeGroup(t) {
         gInf = function (id, isEdit = true) {
             getGoodInf(id, isEdit);
         };
-        delObj = function (obj) {
-            delGood(obj);
+        delObj = function (name, obj) {
+            confirmDel(name, obj);
         }
     }
     else {
@@ -886,8 +886,8 @@ function changeGroup(t) {
         gInf = function (id, isEdit = true) {
             getInf(id, isEdit);
         };
-        delObj = function (obj) {
-            delModel(obj);
+        delObj = function (name, obj) {
+            confirmDel(name, obj);
         }
     }
 
@@ -895,7 +895,7 @@ function changeGroup(t) {
     for (m in data) {
         if (data[m].group == tr.selected || tr.selected == 1) {
             id = t == "goods" ? "<td>" + data[m].article + "</td>" : "";
-            $("<tr id=" + data[m].id + ">" + id + "<td  onclick='gInf(" + data[m].id + ", false)'>" + data[m].name + "</td><td><span onclick='gInf(" + data[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delObj(this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+            $("<tr id=" + data[m].id + ">" + id + "<td  onclick='gInf(" + data[m].id + ", false)'>" + data[m].name + "</td><td><span onclick='gInf(" + data[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='delObj(\"" + data[m].name + "\", this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
         }
     }
     if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td class='no-data' align='center' colspan='3'>Нет записей</td></tr>");
@@ -916,6 +916,7 @@ function delModel(obj) {
         },
         success: function onAjaxSuccess(data) {
             $(obj.parentElement).remove();
+            $("#del_modal").modal('toggle');
         }
     });
 };
@@ -935,6 +936,7 @@ function delCounter(obj) {
         },
         success: function onAjaxSuccess(data) {
             $(obj.parentElement).remove();
+            $("#del_modal").modal('toggle');
         }
     });
 };
@@ -954,6 +956,7 @@ function delProp(obj) {
         },
         success: function onAjaxSuccess(data) {
             $(obj.parentElement).remove();
+            $("#del_modal").modal('toggle');
         }
     });
 };
@@ -973,6 +976,7 @@ function delGood(obj) {
         },
         success: function onAjaxSuccess(data) {
             $(obj.parentElement).remove();
+            $("#del_modal").modal('toggle');
         }
     });
 };
@@ -1116,17 +1120,18 @@ function getModelInfo() {
     $(code).appendTo("#props");
 }
 
-function getPropCode(t, value = "", choises = null) {
+function getPropCode(t, value = "", choises = null, editable = true) {
     var code = "";
+    var disabled = editable ? "" : "disabled";
     switch (t) {
         case 0:
-            code = "<input type='number' step='0.001' class='form-control form-control-sm inline-el value' value='" + value + "' required/>";
+            code = "<input type='number' step='0.001' class='form-control form-control-sm inline-el value' value='" + value + "' required " + disabled + "/>";
             break;
         case 1:
-            code = "<input type='text' class='form-control inline-el form-control-sm value' value='" + value + "' required/>";
+            code = "<input type='text' class='form-control inline-el form-control-sm value' value='" + value + "' required " + disabled + "/>";
             break;
         case 2:
-            code = "<select class='form-control form-control-sm inline-el value'>";
+            code = "<select class='form-control form-control-sm inline-el value'" + disabled + ">";
             for (c in choises) {
                 if (c == value) {
                     code = code + "<option value='" + c + "' selected>" + choises[c] + "</option>";
@@ -1533,6 +1538,30 @@ function endShipment() {
         },
         success: function onAjaxSuccess() {
             document.location.reload();
+        }
+    });
+}
+
+function saveChangedStock(obj, isDonor) {
+    stock = $("#editStock").val();
+    id = obj.parentElement.parentElement.parentElement.id.substr(2);
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_changed_stock/',
+        data: {
+            'id': id,
+            'stock': stock,
+            'is_donor': isDonor
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            var code = "<span class='stock'>" + $("#editStock option:selected").text() + "</span><span class='inline-el' onclick='editStock(this)'><i class='fas fa-edit'></i></span>";
+            $(obj.parentElement.parentElement).html(code);
         }
     });
 }

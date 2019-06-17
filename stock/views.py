@@ -328,7 +328,7 @@ def offers(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "offers.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Предложения", "reqs": json.dumps(reqs), "counter": counter.group, "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "offers.html", {"user_group_pk": User_group.objects.filter(user=request.user)[0].group.pk, "user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Предложения", "reqs": json.dumps(reqs), "counter": counter.group, "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def requirements(request):
     counter = User_group.objects.filter(user = request.user)[0]
@@ -373,7 +373,7 @@ def requirements(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "requirements.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Заказы", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "counter": counter.group, "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "requirements.html", {"user_group_pk": User_group.objects.filter(user=request.user)[0].group.pk, "user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Заказы", "reqs": json.dumps(reqs), "tree": json.dumps(tree), 'stocks': Counter_stock.objects.filter(counter = counter.group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "counter": counter.group, "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 
 def send_prop(request):
@@ -400,6 +400,18 @@ def send_stock(request):
             name = request.POST['name']
             stock = Stock(name = name)
             stock.save()
+            return HttpResponse('ok')
+
+def save_changed_stock(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            req = Demand.objects.get(pk=request.POST['id'])
+            stock = Stock.objects.get(pk=request.POST['stock'])
+            if request.POST['is_donor'] == 'true':
+                req.donor = stock
+            else:
+                req.acceptor = stock
+            req.save()
             return HttpResponse('ok')
 
 def save_stock(request):
@@ -1040,9 +1052,13 @@ def edit_model(request):
                                             var=Property_var.objects.get(pk=props[p]['default']))
                             d.save()
                 else:
-                    m = Model_property(model=model, prop=prop, visible=not props[p]['hidden'],
+                    d = Model_property(model=model, prop=prop, visible=not props[p]['hidden'],
                                        editable=not props[p]['uneditable'], isDefault=props[p]['isDefault'])
-                    m.save()
+                    d.save()
+                for g_p in Goods_property.objects.filter(product__model = model, property = prop):
+                    g_p.visible = d.visible
+                    g_p.editable = d.editable
+                    g_p.save()
             return HttpResponse('ok')
 
 
