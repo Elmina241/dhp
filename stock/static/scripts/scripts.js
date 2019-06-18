@@ -424,6 +424,52 @@ function addGoods(table, rows) {
     $(row).appendTo(tableBody);
 }
 
+function addGoodsReq(table, data) {
+    var rows = JSON.parse(data);
+    var row = "";
+    for (r in rows) {
+        row = row + "<tr id=id-" + r + "><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].amount + "</td><td>" + rows[r].unit + "</td>";
+        row = row + "</tr>";
+    }
+    colNum = $("#" + table).parent().find("th").length;
+    var tableBody = $("#" + table);
+    $(tableBody).html("");
+    if (row == "") row = "<tr><td colspan='" + colNum + "' class='no-data'>Нет записей</td></tr>";
+    $(row).appendTo(tableBody);
+}
+
+function addGoodsOp(table, data) {
+    var rows = JSON.parse(data);
+    var row = "";
+    for (r in rows) {
+        if (rows[r].article != undefined) {
+            row = row + "<tr id=id-" + r + "><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].amount + "</td><td>" + rows[r].unit + "</td><td>" + rows[r].cost + "</td>";
+            row = row + "</tr>";
+        }
+    }
+    colNum = $("#" + table).parent().find("th").length;
+    var tableBody = $("#" + table);
+    $(tableBody).html("");
+    if (row == "") row = "<tr><td colspan='" + colNum + "' class='no-data'>Нет записей</td></tr>";
+    $(row).appendTo(tableBody);
+}
+
+function addGoodsSh(table, data) {
+    var rows = JSON.parse(data);
+    var row = "";
+    for (r in rows) {
+        if (rows[r].article != undefined) {
+            row = row + "<tr id=id-" + r + "><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].amount + "</td><td>" + rows[r].unit + "</td><td>" + rows[r].balance + "</td>";
+            row = row + "</tr>";
+        }
+    }
+    colNum = $("#" + table).parent().find("th").length;
+    var tableBody = $("#" + table);
+    $(tableBody).html("");
+    if (row == "") row = "<tr><td colspan='" + colNum + "' class='no-data'>Нет записей</td></tr>";
+    $(row).appendTo(tableBody);
+}
+
 function addRows(table, data) {
     var rows = JSON.parse(data);
     row = "";
@@ -1455,7 +1501,8 @@ function getDemandGoods(id, t = "d") {
         },
         success: function onAjaxSuccess(data) {
             //$("#goods-body").html("");
-            addRows("goods-body", data);
+            if (t == "d") addGoodsReq("goods-body", data);
+            else addGoodsSh("goods-body", data);
             reqInfo[id] = {};
             var rows = JSON.parse(data);
             i = 0;

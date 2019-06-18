@@ -942,7 +942,7 @@ def edit_good(request):
             counter = Counterparty.objects.get(pk=request.POST['counter'])
             names = json.loads(request.POST['names'])
             units = json.loads(request.POST['units'])
-            props = json.loads(request.POST['props'])
+            properties = json.loads(request.POST['props'])
             good.producer = counter
             good.save()
             Good_name.objects.filter(product = good).delete()
@@ -954,18 +954,18 @@ def edit_good(request):
                 unit.isBase = units[u]['isBase']
                 unit.coeff = units[u]['coeff']
                 unit.save()
-            for p in props:
+            for p in properties:
                 prop = Goods_property.objects.get(pk=p)
                 if prop.property.prop_type == 0:
-                    prop.number = props[p]['value']
-                    prop.save()
+                    prop.property_num.number = properties[p]['value']
+                    prop.property_num.number.save()
                 else:
                     if prop.property.prop_type == 1:
-                        prop.text = props[p]['value']
-                        prop.save()
+                        prop.goods_string.text = properties[p]['value']
+                        prop.goods_string.save()
                     else:
-                        prop.var = Property_var.objects.get(pk=props[p]['value'])
-                        prop.save()
+                        prop.goods_var.var = Property_var.objects.get(pk=properties[p]['value'])
+                        prop.goods_var.save()
             return HttpResponse('ok')
 
 def finish_shipment(request):
@@ -1074,9 +1074,10 @@ def edit_model(request):
                                                  text="")
                                 d.save()
                             else:
+                                var = Property_var.objects.filter(prop = prop).first()
                                 d = Goods_var(product=g, property=prop, applicable=True,
                                               visible= not props[p]['hidden'], editable=not props[p]['uneditable'],
-                                              var=Property_var.objects.get(pk=1))
+                                              var=var)
                                 d.save()
             return HttpResponse('ok')
 
