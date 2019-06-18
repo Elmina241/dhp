@@ -310,6 +310,11 @@ function getGoodInf(id, isEdit = true) {
             $("#e_units").html("");
             $("#e_props").html("");
             $("#e_names").html("");
+            var pk = id;
+            $("#editBtn").unbind('click');
+            $("#editBtn").click(function () {
+                editGood(pk);
+            });
             $("#e_model option[value=" + inf.model + "]").prop('selected', true);
             $("#e_counter option[value=" + inf.counter + "]").prop('selected', true);
             var code = "";
@@ -351,10 +356,7 @@ function getGoodInf(id, isEdit = true) {
                 id = $(this).prop("id");
                 $(this).find("input").eq(0).prop("disabled", !inf.props[id].editable);
             });
-            $("#editBtn").unbind('click');
-            $("#editBtn").click(function () {
-                editGood(id);
-            });
+
             if (isEdit){
                 $("#editBtn").show();
                 $(".plus").show();
@@ -679,6 +681,7 @@ function saveGood() {
 }
 
 function editGood(id) {
+    var pk = id;
     units = {};
     $("#e_units").find(".unit").each(function (item) {
         id = $(this).prop('id');
@@ -704,7 +707,7 @@ function editGood(id) {
         type: "POST",
         url: 'edit_good/',
         data: {
-            'id': id,
+            'id': pk,
             'name': $('#e_name').prop('value'),
             'counter': $("#e_counter option:selected").val(),
             'names': JSON.stringify(names),
