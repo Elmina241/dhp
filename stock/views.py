@@ -655,6 +655,7 @@ def get_good_inf(request):
                 if u.applicable:
                     units[str(u.pk)] = {"name": u.unit.name,"value": u.coeff, "isBase": u.isBase}
             data["units"] = units
+            data["model"] = good.model.pk
             props = {}
             for p in Goods_property.objects.filter(product=good):
                 if p.applicable and p.visible:
@@ -1059,6 +1060,24 @@ def edit_model(request):
                     g_p.visible = d.visible
                     g_p.editable = d.editable
                     g_p.save()
+                for g in Goods.objects.filter(model=model):
+                    if Goods_property.objects.filter(product = g, property = prop).count() == 0:
+                        if prop.prop_type == 0:
+                            d = Property_num(product=g, property=prop, applicable=True,
+                                             visible=not props[p]['hidden'], editable= not props[p]['uneditable'],
+                                             number=0)
+                            d.save()
+                        else:
+                            if prop.prop_type == 1:
+                                d = Goods_string(product=g, property=prop, applicable=True,
+                                                 visible=not props[p]['hidden'], editable= not props[p]['uneditable'],
+                                                 text="")
+                                d.save()
+                            else:
+                                d = Goods_var(product=g, property=prop, applicable=True,
+                                              visible= not props[p]['hidden'], editable=not props[p]['uneditable'],
+                                              var=Property_var.objects.get(pk=1))
+                                d.save()
             return HttpResponse('ok')
 
 
