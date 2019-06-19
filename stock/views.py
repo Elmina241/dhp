@@ -54,7 +54,7 @@ def stocks(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -273,7 +273,7 @@ def supplies(request):
                 'donor': "-" if r.donor is None else str(r.donor),
                 'acceptor': "-" if r.acceptor is None else str(r.acceptor),
                 'donor_id': "-" if r.donor is None else r.donor.pk,
-                'acceptor_id': r.acceptor.pk,
+                'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
                 'role': role,
                 'vin': r.vin,
                 'user': "-" if r.user is None else str(r.user),
@@ -302,9 +302,9 @@ def offers(request):
             'consumer': str(r.consumer),
             'provider': str(r.provider),
             'donor': "-" if r.donor is None else str(r.donor),
-            'acceptor': str(r.acceptor),
+            'acceptor': "-" if r.acceptor is None else str(r.acceptor),
             'donor_id': "-" if r.donor is None else r.donor.pk,
-            'acceptor_id': r.acceptor.pk,
+            'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
             'access': r.matrix.access,
             'role': role,
             'user': "-" if r.user is None else str(r.user),
@@ -349,7 +349,7 @@ def requirements(request):
             'donor': "-" if r.donor is None else str(r.donor),
             'acceptor': str(r.acceptor),
             'donor_id': "-" if r.donor is None else r.donor.pk,
-            'acceptor_id': r.acceptor.pk,
+            'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
             'access': r.matrix.access,
             'role': role,
             'user': "-" if r.user is None else str(r.user),
@@ -773,9 +773,9 @@ def save_demand(request):
             donor = None
             acceptor = None
             vin = group.cur_vin
-            if request.POST['donor'] != '':
+            if request.POST['donor'] != '' and request.POST['donor'] != '-1':
                 donor = Stock.objects.get(pk=request.POST['donor'])
-            if request.POST['acceptor'] != '':
+            if request.POST['acceptor'] != '' and request.POST['acceptor'] != '-1':
                 acceptor = Stock.objects.get(pk=request.POST['acceptor'])
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
             goods = json.loads(request.POST['goods'])

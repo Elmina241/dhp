@@ -1648,7 +1648,7 @@ function getStocks(counter) {
         select = $("#acceptor");
         id = $("#consumer").val();
     }
-    code = "<option value='-1'>-----</option>";
+    code = "<option value=''>-----</option>";
     for (s in stocks) {
         if (stocks[s].counter == id) {
             code = code + "<option value='" + stocks[s].pk + "'>" + stocks[s].stock + "</option>";
