@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^counterparties/$', views.counterparties, name='counterparties'),
     url(r'^counterparties/send_counter/$', views.send_counter, name='send_counter'),
     url(r'^counterparties/del_counter/$', views.del_counter, name='del_counter'),
+    url(r'^counterparties/edit_counter/$', views.edit_counter, name='edit_counter'),
     url(r'^props/send_prop/$', views.send_prop, name='send_prop'),
     url(r'^props/edit_prop/$', views.edit_prop, name='edit_prop'),
     url(r'^props/del_prop/$', views.del_prop, name='del_prop'),

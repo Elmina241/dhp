@@ -70,6 +70,40 @@ function sendCounter() {
     }
 }
 
+function editCounter(id) {
+    if ($('#form2')[0].checkValidity()) {
+        stocks = [];
+        $("#e_stocks").find("select").each(function (item) {
+            stocks.push($("option:selected", this).val());
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'edit_counter/',
+            data: {
+                'id': id,
+                'name': $('#e_name').prop('value'),
+                'kind': $('#e_kind').val(),
+                'stocks': JSON.stringify(stocks),
+                'isProv': $("#e_isProv").prop('checked'),
+                'isCons': $("#e_isCons").prop('checked'),
+                'isMember': $("#e_isMember").prop('checked')
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
+            }
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
+}
+
 function saveStock(id) {
         var csrftoken = getCookie('csrftoken');
         $.ajax({
@@ -243,6 +277,7 @@ function getInf(id, isEdit = true) {
             for (i in temp) {
                 e_addProp();
                 $("option[value=" + inf.props[i].id + "]", $("#e_additional_prop").find("select").last()).prop('selected', true);
+                $("#e_additional_prop").find("select").last().prop('disabled', true);
                 obj = $("#e_additional_prop").find("select").last()[0];
                 $(obj.parentElement).find(".visible").eq(0).prop("checked", !inf.props[i].visible);
                 $(obj.parentElement).find(".editable").eq(0).prop("checked", !inf.props[i].editable);
@@ -1281,7 +1316,7 @@ function STree(tree) {
         code = "";
         for (r in goods[self.selected][stock]) {
             code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+                "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
         }
         if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
         $("#goods-body").html(code);
@@ -1296,7 +1331,7 @@ function STree(tree) {
             for (r in goods[self.selected][stock]) {
                 if (goods[self.selected][stock][r].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[self.selected][stock][r].code.toUpperCase().indexOf(text.toUpperCase()) != -1) {
                     code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                        "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+                        "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
                 }
             }
             if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
@@ -1567,7 +1602,7 @@ function openSupply(isDonor) {
                 }
             },
             success: function onAjaxSuccess() {
-                document.location.href = "/stock/stock_operations/";
+                window.location.reload();
             }
         });
     });
@@ -1661,20 +1696,18 @@ function getStocks(counter) {
 function addGoodField() {
     code = "<div class='form-row good-item'>\n" +
         "                        <div class='form-group col-md-6'>\n" +
-        "                        <h7>Товар</h7>\n" +
         "                            <div class='form-inline'>\n" +
         "                        <div class='autocomplete' style='width:335px;'>\n" +
-        "                            <input id='myInput' style='width:335px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry' required>\n" +
+        "                            <input id='myInput' placeholder='Наименование товара' style='width:335px;' class='form-control form-control-sm  goodInp' type='text' name='myCountry' required>\n" +
         "                        </div>\n" +
         "                        <button class='btn btn-outline-info'\n" +
         "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;return false;'\n" +
         "                                data-toggle='modal' data-target='#tree-div'><span\n" +
         "                                style='font-size: 15px;' onclick=''><i class='fas fa-stream'></i></span></button></div></div>\n" +
         "                        <div class='form-group col-md-3'>\n" +
-        "                            <h7>Ед. изм.</h7> <select class='form-control form-control-sm'>\n" +
+        "                           <select class='form-control form-control-sm' required><option value='' readonly>Ед.изм.</option>\n" +
         "                        </select></div><div class='form-group col-md-3'>\n" +
-        "                            <h7>Количество</h7>\n" +
-        "                            <div class='form-inline'><input type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove()' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
+        "                            <div class='form-inline'><input placeholder='Кол-во' type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove()' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
         "                    </div>";
     $(code).appendTo("#add_goods");
     autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
@@ -1687,7 +1720,7 @@ function addDots() {
 
 function getUnits(obj) {
     id = obj.name;
-    select = obj.parentElement.parentElement.parentElement.nextElementSibling.childNodes[3];
+    select = obj.parentElement.parentElement.parentElement.nextElementSibling.childNodes[1];
     code = "<select class='form-control form-control-sm unit'>";
     for (u in units) {
         if (units[u].product == id && units[u].applicable) {

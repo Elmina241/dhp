@@ -283,7 +283,7 @@ def supplies(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "supplies.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Поставки", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "supplies.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Поступления", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def offers(request):
     counter = User_group.objects.filter(user = request.user)[0]
@@ -299,6 +299,8 @@ def offers(request):
         reqs[str(r.pk)] = {
             'id': r.pk,
             'date': r.date.strftime('%d.%m.%Y'),
+            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y'),
             'consumer': str(r.consumer),
             'provider': str(r.provider),
             'donor': "-" if r.donor is None else str(r.donor),
@@ -344,6 +346,8 @@ def requirements(request):
         reqs[str(r.pk)] = {
             'id': r.pk,
             'date': r.date.strftime('%d.%m.%Y'),
+            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y'),
             'consumer': str(r.consumer),
             'provider': str(r.provider),
             'donor': "-" if r.donor is None else str(r.donor),
@@ -463,6 +467,23 @@ def send_counter(request):
             data = json.loads(request.POST['stocks'])
             for d in data:
                 p = Counter_stock(counter=c, stock=Stock.objects.get(pk = d))
+                p.save()
+            return HttpResponse('ok')
+
+def edit_counter(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            counter = Counterparty.objects.get(pk= request.POST['id'])
+            counter.name = request.POST['name']
+            counter.kind = request.POST['kind']
+            counter.is_provider = json.loads(request.POST['isProv'])
+            counter.is_consumer = json.loads(request.POST['isCons'])
+            counter.is_member = json.loads(request.POST['isMember'])
+            counter.save()
+            Counter_stock.objects.filter(counter=counter).delete()
+            data = json.loads(request.POST['stocks'])
+            for d in data:
+                p = Counter_stock(counter=counter, stock=Stock.objects.get(pk = d))
                 p.save()
             return HttpResponse('ok')
 
@@ -849,12 +870,16 @@ def save_planned_supply(request):
                 acceptor = Stock.objects.get(pk=request.POST['acceptor'])
                 donor = None
                 is_demand = True
+                release_date = None
+                finish_date = date
             else:
                 provider = Counterparty.objects.get(pk=request.POST['consumer'])
                 consumer = None
                 donor = Stock.objects.get(pk=request.POST['acceptor'])
                 acceptor = None
                 is_demand = False
+                release_date = date
+                finish_date = None
             new_demand = Demand(
                 matrix=matrix,
                 consumer=consumer,
@@ -862,7 +887,8 @@ def save_planned_supply(request):
                 donor=donor,
                 acceptor=acceptor,
                 is_closed=False,
-                finish_date=date,
+                release_date = release_date,
+                finish_date=finish_date,
                 is_edited=False,
                 vin=vin,
                 is_demand=is_demand,

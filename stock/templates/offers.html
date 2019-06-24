@@ -38,6 +38,8 @@
             $(".reqBtn").prop('disabled', false);
             btn.disabled = true;
             loadReqs($("#curStock").val());
+            if (isInbox) $("#addReqBtn").hide();
+            else $("#addReqBtn").show();
         }
 
         function sendReq(goods) {
@@ -120,7 +122,7 @@
                 for (r in reqs) {
                     if (role == reqs[r].role){
                         status = getStatus(reqs[r].access, reqs[r].id);
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].consumer + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td><td>" + reqs[r].finish_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                 }
                 }
             }
@@ -129,7 +131,7 @@
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
                         if (role == reqs[r].role) {
                             status = getStatus(reqs[r].access, reqs[r].id);
-                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].consumer + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td><td>" + reqs[r].finish_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                         }
                     }
                 }
@@ -188,10 +190,10 @@
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline" style="float: left">
-                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#add_req">
+                        <button type="button" id="addReqBtn" class="btn btn-success btn-sm" data-toggle="modal" data-target="#add_req" style="margin-right: 30px">
                             Добавить предложение
                         </button>
-                        <span style="margin-left: 30px">Склад</span>
+                        <span>Склад</span>
                         <select id="curStock" class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
                             <option value="-1">Все</option>
                             {% for s in stocks %}
@@ -213,9 +215,11 @@
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Поставщик</th>
-                        <th scope="col">Потребитель</th>
                         <th scope="col">Донор</th>
+                        <th scope="col">Дата отгрузки</th>
+                        <th scope="col">Получатель</th>
                         <th scope="col">Акцептор</th>
+                        <th scope="col">Дата поставки</th>
                         <th scope="col">Статус</th>
                         <th scope="col"></th>
                         <th scope="col">Создатель</th>
@@ -289,7 +293,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <h6>Потребитель</h6>
+                            <h6>Получатель</h6>
                             <select class="form-control" id="consumer" onchange="getStocks('acceptor')" required>
                             <option value="">-----</option>
                                 {% for c in counters %}

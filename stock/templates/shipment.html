@@ -93,12 +93,12 @@
                 //условие отображения кнопки
                 id = $(this).prop('id').substr(2);
                 if (id != ""){
-                td = $(this).find('td').eq(5).html();
+                td = $(this).find('td').eq(3).html();
                 if (reqs[id].role == '1'){
-                    $(this).find('td').eq(5).html(td + btn);
+                    $(this).find('td').eq(3).html(td + btn);
                     btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
-                    td = $(this).find('td').eq(6).html();
-                    $(this).find('td').eq(6).html(td + btn);
+                    td = $(this).find('td').eq(5).html();
+                    $(this).find('td').eq(5).html(td + btn);
                 }
                 }
             });
@@ -108,13 +108,13 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
                     }
                 }
             }
@@ -168,10 +168,9 @@
                     <tr>
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
-                        <th scope="col">Потребитель</th>
                         <th scope="col">Донор</th>
-                        <th scope="col">Акцептор</th>
                         <th scope="col">Ожидаемая дата отпуска</th>
+                        <th scope="col">Акцептор</th>
                         <th scope="col">Ожидаемая дата поставки</th>
                         <th scope="col">Создатель</th>
                     </tr>
@@ -236,7 +235,7 @@
                         <tr>
                             <th scope="col">Артикул</th>
                             <th scope="col">Наименование</th>
-                            <th scope="col">Огрузка, кол-во</th>
+                            <th scope="col">Кол-во</th>
                         </tr>
                         </thead>
                         <tbody id="supply-body">
@@ -289,7 +288,7 @@
                     </div>
                     <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
                           onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
-                    <button class="btn add-btn btn-outline-success" onclick="addGoodField()return false;">Добавить</button>
+                    <button class="btn add-btn btn-outline-success" onclick="addGoodField();return false;">Добавить</button>
                     </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="saveSupply()" class="btn btn-primary"

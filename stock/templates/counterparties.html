@@ -47,6 +47,10 @@
                     $("select").last().prop('value', s);
                 }
             }
+            $("#editBtn").unbind();
+            $("#editBtn").click(function(){
+                editCounter(id);
+            });
             $("#edit_counter").modal();
         }
         function confirmDel(name, obj) {
@@ -141,7 +145,7 @@
 
                 </div>
                 <div class="modal-body create-form">
-                    <form id="form">
+                    <form id="form2">
                     <h6>Наименование</h6>
                     <input type="text" class="form-control" id="e_name" required/>
                     <h6>Вид</h6>
@@ -160,7 +164,7 @@
                     </div>
                     </form>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="counterBtn" onclick="e_sendCounter()" class="btn btn-primary"
+                        <input value="Сохранить" id="editBtn" onclick="editCounter()" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
