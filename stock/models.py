@@ -304,6 +304,12 @@ class Order(models.Model):
         ('1', 'Заполнение'),
         ('2', 'Завершено')
     )
+    CAUSE_CHOICES = (
+        ('0', 'Перемещение'),
+        ('1', 'Производство'),
+        ('2', 'Списание')
+    )
+    cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
     stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
     matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
     isDonor = models.BooleanField()

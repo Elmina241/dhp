@@ -108,13 +108,13 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
                     }
                 }
             }
@@ -282,6 +282,12 @@
                     </div>
                     <h6 id="dateLabel">Дата отгрузки</h6>
                     <input type="date" class="form-control" id="date" required/>
+                    <h6>Основание</h6>
+                            <select class="form-control" id="cause" required>
+                                {% for key, values in causes.items %}
+                                    <option value="{{ key }}">{{ values.name }}</option>
+                                {% endfor %}
+                            </select>
                     <hr>
                     <h6>Товары</h6>
                     <div id="add_goods">

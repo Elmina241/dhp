@@ -54,7 +54,7 @@ def stocks(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -188,41 +188,46 @@ def shipment(request):
         goods_inf[i] = g.pk
         i = i + 1
     units = {}
+    causes = {}
+    for c in Order.CAUSE_CHOICES:
+        causes[c[0]] = {'name': c[1]}
     for u in Goods_unit.objects.all():
-        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
     for r in Demand.objects.filter(provider=counter.group, matrix__access='4'):
-        if Order.objects.filter(matrix = r.matrix, isDonor = True)[0].status != '2':
-            if r.consumer == counter.group:
-                role = '2'
-            else:
-                if r.provider == counter.group:
-                    role = '1'
+        if Order.objects.filter(matrix=r.matrix, isDonor=True).count() !=0:
+            if Order.objects.filter(matrix = r.matrix, isDonor = True)[0].status != '2':
+                if r.consumer == counter.group:
+                    role = '2'
                 else:
-                    role = '0'
-            reqs[str(r.pk)] = {
-                'id': r.pk,
-                'date': r.date.strftime('%d.%m.%Y'),
-                'consumer': "-" if r.consumer is None else str(r.consumer),
-                'provider': "-" if r.provider is None else str(r.provider),
-                'donor': "-" if r.donor is None else str(r.donor),
-                'acceptor': "-" if r.acceptor is None else str(r.acceptor),
-                'donor_id': "-" if r.donor is None else r.donor.pk,
-                'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
-                'role': role,
-                'vin': r.vin,
-                'user': "-" if r.user is None else str(r.user),
-                'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-                'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
-            }
+                    if r.provider == counter.group:
+                        role = '1'
+                    else:
+                        role = '0'
+                reqs[str(r.pk)] = {
+                    'id': r.pk,
+                    'date': r.date.strftime('%d.%m.%Y'),
+                    'consumer': "-" if r.consumer is None else str(r.consumer),
+                    'provider': "-" if r.provider is None else str(r.provider),
+                    'donor': "-" if r.donor is None else str(r.donor),
+                    'acceptor': "-" if r.acceptor is None else str(r.acceptor),
+                    'donor_id': "-" if r.donor is None else r.donor.pk,
+                    'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
+                    'role': role,
+                    'vin': r.vin,
+                    'cause': Order.objects.filter(matrix = r.matrix, isDonor = True)[0].get_cause_display(),
+                    'user': "-" if r.user is None else str(r.user),
+                    'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+                    'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+                }
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "shipment.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "shipment.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'causes': causes, 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def get_stock_goods(request):
     if request.method == 'POST':
@@ -250,7 +255,7 @@ def supplies(request):
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
-        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
@@ -326,7 +331,7 @@ def offers(request):
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
-        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
@@ -373,7 +378,7 @@ def requirements(request):
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
-        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
@@ -594,8 +599,8 @@ def save_stock_operation(request):
                 )
                 s.save()
                 good_d.balance = good_d.balance - int(goods[g]['amount'])
-                balance = balance + good_d.balance
                 good_d.save()
+                balance = balance + good_d.balance
                 #добавление информации в склад
                 if json.loads(request.POST['isDonor']) != True:
                     amount = Goods_unit.objects.filter(product = good_d.good, unit = good_d.unit)[0].coeff * int(goods[g]['amount'])
@@ -646,7 +651,7 @@ def stock_operations(request):
         i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
-        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name}
+        units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
@@ -894,12 +899,16 @@ def save_planned_supply(request):
                 is_demand=is_demand,
                 user=request.user
             )
+            if 'cause' in request.POST:
+                cause = request.POST['cause']
+            else:
+                cause = '0'
             new_demand.save()
             if new_demand.donor is not None:
-                ord_donor = Order(stock=new_demand.donor, matrix=new_demand.matrix, isDonor=True, status='0')
+                ord_donor = Order(stock=new_demand.donor, matrix=new_demand.matrix, cause=cause, isDonor=True, status='0')
                 ord_donor.save()
             if new_demand.acceptor is not None:
-                ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, isDonor=False, status='0')
+                ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause=cause, isDonor=False, status='0')
                 ord_acceptor.save()
             consumer = Counterparty.objects.get(pk=request.POST['consumer'])
             acceptor = Stock.objects.get(pk=request.POST['acceptor'])

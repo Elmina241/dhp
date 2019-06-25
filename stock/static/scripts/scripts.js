@@ -674,6 +674,7 @@ function saveDemand(isDemand) {
 function saveSupply() {
     if ($('#form')[0].checkValidity()) {
         goods = {};
+        cause = $("#cause").val();
         var operation = isSupply ? '0' : '1';
         $("#add_goods").find(".good-item").each(function (item) {
             goods[item] = {};
@@ -691,7 +692,8 @@ function saveSupply() {
                 'acceptor': $("#acceptor").val(),
                 'date': $("#date").prop('value'),
                 'goods': JSON.stringify(goods),
-                'operation': operation
+                'operation': operation,
+                'cause': $("#cause").val()
             },
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1724,7 +1726,8 @@ function getUnits(obj) {
     code = "<select class='form-control form-control-sm unit'>";
     for (u in units) {
         if (units[u].product == id && units[u].applicable) {
-            code = code + "<option value='" + units[u].pk + "'>" + units[u].unit + "</option>";
+            if (units[u].is_base) code = code + "<option value='" + units[u].pk + "' selected>" + units[u].unit + "</option>";
+            else code = code + "<option value='" + units[u].pk + "'>" + units[u].unit + "</option>";
         }
     }
     code = code + "</select>";
