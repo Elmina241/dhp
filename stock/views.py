@@ -54,7 +54,7 @@ def stocks(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -184,9 +184,11 @@ def shipment(request):
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     i = 0
     for g in Goods.objects.all():
-        goods.append(g.get_article() + ' ' + g.get_name())
-        goods_inf[i] = g.pk
-        i = i + 1
+        for t in Good_name.AREA_CHOICES:
+            if g.get_full_name(t[0]) != "":
+                goods.append(g.get_full_name(t[0]))
+                i = i +1
+                goods_inf[i] = t[0] + '_' + str(g.pk)
     units = {}
     causes = {}
     for c in Order.CAUSE_CHOICES:
@@ -253,6 +255,9 @@ def supplies(request):
         goods.append(g.get_article() + ' ' + g.get_name())
         goods_inf[i] = g.pk
         i = i + 1
+    causes = {}
+    for c in Order.CAUSE_CHOICES:
+        causes[c[0]] = {'name': c[1]}
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
@@ -262,33 +267,35 @@ def supplies(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
     for r in Demand.objects.filter(consumer=counter.group, matrix__access='4'):
-        if Order.objects.filter(matrix=r.matrix, isDonor=False)[0].status != '2':
-            if r.consumer == counter.group:
-                role = '2'
-            else:
-                if r.provider == counter.group:
-                    role = '1'
+        if Order.objects.filter(matrix=r.matrix, isDonor=False).count() != 0:
+            if Order.objects.filter(matrix=r.matrix, isDonor=False)[0].status != '2':
+                if r.consumer == counter.group:
+                    role = '2'
                 else:
-                    role = '0'
-            reqs[str(r.pk)] = {
-                'id': r.pk,
-                'date': r.date.strftime('%d.%m.%Y'),
-                'consumer': "-" if r.consumer is None else str(r.consumer),
-                'provider': "-" if r.provider is None else str(r.provider),
-                'donor': "-" if r.donor is None else str(r.donor),
-                'acceptor': "-" if r.acceptor is None else str(r.acceptor),
-                'donor_id': "-" if r.donor is None else r.donor.pk,
-                'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
-                'role': role,
-                'vin': r.vin,
-                'user': "-" if r.user is None else str(r.user),
-                'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-                'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
-            }
+                    if r.provider == counter.group:
+                        role = '1'
+                    else:
+                        role = '0'
+                reqs[str(r.pk)] = {
+                    'id': r.pk,
+                    'date': r.date.strftime('%d.%m.%Y'),
+                    'consumer': "-" if r.consumer is None else str(r.consumer),
+                    'provider': "-" if r.provider is None else str(r.provider),
+                    'donor': "-" if r.donor is None else str(r.donor),
+                    'acceptor': "-" if r.acceptor is None else str(r.acceptor),
+                    'donor_id': "-" if r.donor is None else r.donor.pk,
+                    'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
+                    'role': role,
+                    'vin': r.vin,
+                    'cause': Order.objects.filter(matrix=r.matrix, isDonor=False)[0].get_cause_display(),
+                    'user': "-" if r.user is None else str(r.user),
+                    'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
+                    'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+                }
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "supplies.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Поступления", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "supplies.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), 'causes': causes, "header": "Поступления", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def offers(request):
     counter = User_group.objects.filter(user = request.user)[0]

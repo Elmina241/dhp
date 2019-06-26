@@ -1721,7 +1721,7 @@ function addDots() {
 }
 
 function getUnits(obj) {
-    id = obj.name;
+    id = obj.name.substr(2);
     select = obj.parentElement.parentElement.parentElement.nextElementSibling.childNodes[1];
     code = "<select class='form-control form-control-sm unit'>";
     for (u in units) {
@@ -1741,8 +1741,8 @@ function setNameId(id, obj) {
 
 function setGoodName(obj) {
     for (g in goods_inf) {
-        if (goods_inf[g] == tr.selected) {
-            obj.value = goods[g];
+        if (goods_inf[g] == ("0_" + tr.selected)) {
+            obj.value = goods[parseInt(g) + 1];
             setNameId(g, obj);
         }
     }

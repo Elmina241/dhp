@@ -90,6 +90,15 @@ class Goods(models.Model):
         u = Goods_unit.objects.filter(unit = unit, product = self)[0]
         coeff = u.coeff
         return amount / coeff
+    def get_full_name(self, t):
+        name = ""
+        if Good_name.objects.filter(product = self, name_type='1', area=t).count() != 0:
+            name = name + Good_name.objects.filter(product = self, name_type='1', area=t)[0].name
+        if Good_name.objects.filter(product=self, name_type='0', area=t).count() != 0:
+            name = name + " " + Good_name.objects.filter(product=self, name_type='0', area=t)[0].name
+        if Good_name.objects.filter(product = self, name_type='2', area=t).count() != 0:
+            name = name + " " + Good_name.objects.filter(product = self, name_type='2', area=t)[0].name
+        return name
 
 
 class Good_name(models.Model):
