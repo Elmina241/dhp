@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^goods/$', views.goods, name='goods'),
     url(r'^stocks/$', views.stocks, name='stocks'),
     url(r'^storages/$', views.storages, name='storages'),
+    url(r'^inventory/$', views.inventory, name='inventory'),
     url(r'^storages/send_stock/$', views.send_stock, name='send_stock'),
     url(r'^storages/save_stock/$', views.save_stock, name='save_stock'),
     url(r'^storages/del_stock/$', views.del_stock, name='del_stock'),

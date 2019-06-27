@@ -1742,7 +1742,7 @@ function setNameId(id, obj) {
 function setGoodName(obj) {
     for (g in goods_inf) {
         if (goods_inf[g] == ("0_" + tr.selected)) {
-            obj.value = goods[parseInt(g) + 1];
+            obj.value = goods[g];
             setNameId(g, obj);
         }
     }

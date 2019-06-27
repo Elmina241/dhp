@@ -52,9 +52,19 @@ def stocks(request):
                    "models": Product_model.objects.all(), "stocks": Stock.objects.all(),
                    "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
 
+def inventory(request):
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children(g, tree[0])
+    return render(request, "inventory.html",
+                  {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Инвентаризация", "tree": json.dumps(tree),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
+                   "stocks": Stock.objects.all()})
+
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -171,24 +181,29 @@ def counterparties(request):
 def storages(request):
     return render(request, "storages.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Склады", "stocks": Stock.objects.all()})
 
+def get_goods_inf():
+    goods_inf = {}
+    goods_inf['goods'] = []
+    goods_inf['goods_inf'] = {}
+    i = 0
+    for g in Goods.objects.all():
+        for t in Good_name.AREA_CHOICES:
+            if g.get_full_name(t[0]) != "":
+                goods_inf['goods'].append(g.get_full_name(t[0]))
+                goods_inf['goods_inf'][i] = t[0] + '_' + str(g.pk)
+                i = i + 1
+    return goods_inf
 
 def shipment(request):
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    goods = []
-    goods_inf = {}
+    goods = get_goods_inf()['goods']
+    goods_inf = get_goods_inf()['goods_inf']
     goods_json = {}
     for r in Goods.objects.all():
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
-    i = 0
-    for g in Goods.objects.all():
-        for t in Good_name.AREA_CHOICES:
-            if g.get_full_name(t[0]) != "":
-                goods.append(g.get_full_name(t[0]))
-                i = i +1
-                goods_inf[i] = t[0] + '_' + str(g.pk)
     units = {}
     causes = {}
     for c in Order.CAUSE_CHOICES:
@@ -245,16 +260,11 @@ def supplies(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    goods = []
-    goods_inf = {}
+    goods = get_goods_inf()['goods']
+    goods_inf = get_goods_inf()['goods_inf']
     goods_json = {}
     for r in Goods.objects.all():
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
-    i = 0
-    for g in Goods.objects.all():
-        goods.append(g.get_article() + ' ' + g.get_name())
-        goods_inf[i] = g.pk
-        i = i + 1
     causes = {}
     for c in Order.CAUSE_CHOICES:
         causes[c[0]] = {'name': c[1]}
@@ -329,13 +339,8 @@ def offers(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    goods = []
-    goods_inf = {}
-    i = 0
-    for g in Goods.objects.all():
-        goods.append(g.get_article() + ' ' + g.get_name())
-        goods_inf[i] = g.pk
-        i = i + 1
+    goods = get_goods_inf()['goods']
+    goods_inf = get_goods_inf()['goods_inf']
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
@@ -376,13 +381,8 @@ def requirements(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    goods = []
-    goods_inf = {}
-    i = 0
-    for g in Goods.objects.all():
-        goods.append(g.get_article() + ' ' + g.get_name())
-        goods_inf[i] = g.pk
-        i = i + 1
+    goods = get_goods_inf()['goods']
+    goods_inf = get_goods_inf()['goods_inf']
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
@@ -540,7 +540,7 @@ def get_demand_goods(request):
                     data['is_finished'] = ord.status is '2'
             for d in Demand_good.objects.filter(matrix=demand.matrix):
                 b_amount = Goods_unit.objects.filter(product = d.good, unit = d.unit)[0].coeff * d.amount
-                data[str(d.pk)] = {'article': d.good.get_article(), 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
+                data[str(d.pk)] = {'article': d.article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
                 if request.POST['t'] == 's':
                     data[str(d.pk)]['balance'] = d.balance
             return HttpResponse(json.dumps(data))
@@ -646,16 +646,11 @@ def stock_operations(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    goods = []
-    goods_inf = {}
+    goods = get_goods_inf()['goods']
+    goods_inf = get_goods_inf()['goods_inf']
     goods_json = {}
     for r in Goods.objects.all():
         goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
-    i = 0
-    for g in Goods.objects.all():
-        goods.append(g.get_article() + ' ' + g.get_name())
-        goods_inf[i] = g.pk
-        i = i + 1
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name, 'is_base': u.isBase}
@@ -821,8 +816,10 @@ def save_demand(request):
             matrix.cause_id = demand.pk
             matrix.save()
             for g in goods:
-                good = Goods.objects.get(pk=goods[g]['product'])
-                d = Demand_good(matrix=matrix, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name())
+                t = goods[g]['product'][0]
+                id = goods[g]['product'][2:]
+                good = Goods.objects.get(pk=id)
+                d = Demand_good(matrix=matrix, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name(t), article=good.get_article(t))
                 d.save()
             return HttpResponse('ok')
 
@@ -842,7 +839,9 @@ def save_supply(request):
             ord.save()
             goods = json.loads(request.POST['goods'])
             for g in goods:
-                good = Goods.objects.get(pk=goods[g]['product'])
+                t = goods[g]['product'][0]
+                id = goods[g]['product'][2:]
+                good = Goods.objects.get(pk=id)
                 s = Stock_operation(
                     package=p,
                     good=good,
@@ -927,8 +926,10 @@ def save_planned_supply(request):
             #ord.save()
             goods = json.loads(request.POST['goods'])
             for g in goods:
-                g_m = Goods.objects.get(pk=goods[g]['product'])
-                good = Demand_good(matrix=matrix, good=g_m, name=g_m.get_name(), unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'])
+                t = goods[g]['product'][0]
+                id = goods[g]['product'][2:]
+                g_m = Goods.objects.get(pk=id)
+                good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(t), name=g_m.get_name(t), unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'])
                 good.save()
             return HttpResponse('ok')
 

@@ -72,14 +72,14 @@ class Goods(models.Model):
     producer = models.ForeignKey('Counterparty', null=True, default=None, on_delete=models.CASCADE)
     def __str__(self):
         return self.model.name
-    def get_name(self):
-        if Good_name.objects.filter(product = self, name_type='0', area='0').count() != 0:
-            return Good_name.objects.filter(product = self, name_type='0', area='0')[0].name
+    def get_name(self, t='0'):
+        if Good_name.objects.filter(product = self, name_type='0', area=t).count() != 0:
+            return Good_name.objects.filter(product = self, name_type='0', area=t)[0].name
         else:
             return '-'
-    def get_article(self):
-        if Good_name.objects.filter(product = self, name_type='1', area='0').count():
-            return Good_name.objects.filter(product = self, name_type='1', area='0')[0].name
+    def get_article(self, t='0'):
+        if Good_name.objects.filter(product = self, name_type='1', area=t).count():
+            return Good_name.objects.filter(product = self, name_type='1', area=t)[0].name
         else:
             return '-'
     def get_unit(self):
@@ -247,6 +247,7 @@ class Demand_good(models.Model):
     matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
     good = models.ForeignKey('Goods', on_delete=models.CASCADE)
     name = models.CharField(max_length=500)
+    article = models.CharField(max_length=200, default = '-')
     unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     balance = models.IntegerField(default=0)
@@ -334,3 +335,17 @@ class Package(models.Model):
     vin = models.IntegerField(blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.matrix)
+
+class Inventory(models.Model):
+    date = models.DateTimeField(blank=True, auto_now_add=True)
+    stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
+    is_finished = models.BooleanField()
+    def __str__(self):
+        return str(self.date) + ' ' + str(self.stock)
+
+class Inventory_good(models.Model):
+    good = models.ForeignKey('Goods', on_delete=models.CASCADE)
+    inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
+    def __str__(self):
+        return str(self.inventory) + ' ' + str(self.good)
