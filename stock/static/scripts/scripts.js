@@ -1239,6 +1239,7 @@ function GTree(tree, t) {
     this.t = t;
     this.tree = tree;
     this.selected = 1;
+    this.selectedName = "";
     var self = this;
     this.init = function () {
         $('#tree').html("");
@@ -1265,6 +1266,7 @@ function GTree(tree, t) {
     $("#tree li").click(function (event) {
         id = $(this).prop("id");
         self.selected = id;
+        self.selectedName = $(this.childNodes[1]).text();
         $("#tree span").removeClass('active');
         obj = $(this).children("span");
         $(this).children("span").eq(0).addClass('active');
@@ -1280,6 +1282,8 @@ function GTree(tree, t) {
     });
     $("#tree li").dblclick(function (event) {
         $("#selectBtn").click();
+        $("#selectInvBtn").click();
+        event.stopPropagation();
     });
 }
 

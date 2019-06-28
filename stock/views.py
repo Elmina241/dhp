@@ -56,15 +56,17 @@ def inventory(request):
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
-    add_children(g, tree[0])
+    add_children_g(g, tree[0])
+    goods = get_goods_inf()['goods']
+    goods_inf = get_goods_inf()['goods_inf']
     return render(request, "inventory.html",
                   {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Инвентаризация", "tree": json.dumps(tree),
-                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
-                   "stocks": Stock.objects.all()})
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf),
+                   "stocks": Counter_stock.objects.filter(counter = User_group.objects.filter(user=request.user)[0].group)})
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
