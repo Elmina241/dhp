@@ -59,9 +59,21 @@ def inventory(request):
     add_children_g(g, tree[0])
     goods = get_goods_inf()['goods']
     goods_inf = get_goods_inf()['goods_inf']
+    inventory_goods = {}
+    for i in Inventory.objects.filter(is_finished=False):
+        inventory_goods[str(i.pk)] = {'date': i.date.strftime('%d.%m.%Y'), 'stock': str(i.stock), 'stock_id': i.stock.pk}
+        for g in Inventory_good.objects.filter(inventory=i):
+            if Stock_good.objects.filter(stock = i.stock, good = g.good).count() != 0:
+                s_g = Stock_good.objects.filter(stock = i.stock, good = g.good)[0]
+                amount = s_g.amount
+                price = s_g.cost / s_g.amount
+            else:
+                amount = 0
+                price = 0
+            inventory_goods[str(i.pk)][str(g.good.pk)] = {'article': g.good.get_article(), 'name': g.good.get_name(), 'unit': str(g.good.get_unit()), 'price': price, 'amount': amount}
     return render(request, "inventory.html",
                   {"permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Инвентаризация", "tree": json.dumps(tree),
-                   "user_group": str(User_group.objects.filter(user=request.user)[0].group), "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf),
+                   'inventories': Inventory.objects.filter(is_finished=False), "user_group": str(User_group.objects.filter(user=request.user)[0].group), "goods": json.dumps(goods), "inventory_goods": json.dumps(inventory_goods), "goods_inf": json.dumps(goods_inf),
                    "stocks": Counter_stock.objects.filter(counter = User_group.objects.filter(user=request.user)[0].group)})
 
 def auth(request):
@@ -935,6 +947,36 @@ def save_planned_supply(request):
                 good.save()
             return HttpResponse('ok')
 
+def send_inventory(request):
+    if request.method == 'POST':
+        if 'stock' in request.POST:
+            stock = Stock.objects.get(pk=request.POST['stock'])
+            goods = json.loads(request.POST['inventory_goods'])
+            date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d")
+            inv = Inventory(stock = stock, date = date, is_finished=False)
+            inv.save()
+            for g in goods:
+                t = g[0]
+                id = g[2:]
+                if t == 'g':
+                    good = Goods.objects.get(pk=id)
+                    if Inventory_good.objects.filter(inventory=inv, good=good).count() == 0:
+                        i_g = Inventory_good(good=good, inventory=inv, amount=0)
+                        i_g.save()
+                elif t == 'm':
+                    model = Product_model.objects.get(pk=id)
+                    for good in Goods.objects.filter(model=model):
+                        if Inventory_good.objects.filter(inventory=inv, good=good).count() == 0:
+                            i_g = Inventory_good(good=good, inventory=inv, amount=0)
+                            i_g.save()
+                else:
+                    for model in Product_model.objects.filter(group__pk=id):
+                        for good in Goods.objects.filter(model=model):
+                            if Inventory_good.objects.filter(inventory=inv, good=good).count() == 0:
+                                i_g = Inventory_good(good=good, inventory=inv, amount=0)
+                                i_g.save()
+            return HttpResponse('ok')
+
 def save_inventory(request):
     if request.method == 'POST':
         if 'stock' in request.POST:
@@ -942,7 +984,13 @@ def save_inventory(request):
             goods = json.loads(request.POST['inventory_goods'])
             matrix = Matrix(access='0', cause='2')
             matrix.save()
-            date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%Y-%m-%d %H:%M")
+            if 'type' in request.POST:
+                date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%d.%m.%Y %H:%M")
+                inv = Inventory.objects.get(pk=request.POST['inventory'])
+                inv.is_finished = True
+                inv.save()
+            else:
+                date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%Y-%m-%d %H:%M")
             p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=date)
             p.save()
             stock.cur_vin = stock.cur_vin + 1

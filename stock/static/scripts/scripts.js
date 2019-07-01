@@ -1494,6 +1494,63 @@ function saveInventory(stock) {
     });
 }
 
+function sendPlannedInventory() {
+    var inventoryGoods = {}
+    $("#makeInventoryProds tr").each(function (item) {
+        id = $(this).prop('id').slice(2);
+        if (inventoryGoods[id] == undefined) inventoryGoods[id] = {};
+        inventoryGoods[id].amount = $("[name='amount']", this).val();
+        inventoryGoods[id].cost = $("[name='price']", this).val();
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_inventory/',
+        data: {
+            'stock': inventory_goods[curInv].stock_id,
+            'inventory_goods': JSON.stringify(inventoryGoods),
+            'date': inventory_goods[curInv].date,
+            'time': $("#inventoryTime").prop('value'),
+            'type': 'p',
+            'inventory': curInv
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
+function sendInventoryPlan() {
+    var inventoryGoods = [];
+    $("#inventoryProds tr").each(function (item) {
+        id = $(this).prop('id');
+        inventoryGoods.push(id);
+    });
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'send_inventory/',
+        data: {
+            'stock': $("#inv-stock").val(),
+            'inventory_goods': JSON.stringify(inventoryGoods),
+            'date': $("#inventoryDate").prop('value')
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
+}
+
 function getStockGoods(id) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({

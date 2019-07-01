@@ -10,13 +10,15 @@
         var stocks = null;
         var operations = null;
         var isSupply = true;
-        var inventoryGoods = null;
+        var inventory_goods = null;
         var goods_json = null;
         var pag = null;
+        var curInv = null;
         $(document).ready(function () {
             goods = JSON.parse($("#goods").prop("value"));
             //goods_json = JSON.parse($("#goods_json").prop("value"));
             goods_inf = JSON.parse($("#goods_inf").prop("value"));
+            inventory_goods = JSON.parse($("#inventory_goods").prop("value"));
             tree = JSON.parse($("#tree_data").prop("value"));
             tr = new GTree(tree, "goods");
             $("#1")[0].click();
@@ -30,20 +32,41 @@
             if (tr.selected[0] == 'm'){
                 code = "<tr id='m_" + tr.selected.substr(2) + "'><td>" + tr.selectedName + "</td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class='fas fa-trash-alt'></i></span></td></tr>";
             }
-            else {
+            else if (tr.selected[0] == 'g'){
                 for (g in goods_inf) {
                     if (goods_inf[g] == ("0_" + tr.selected)) {
-                        code = "<tr id='g_" + goods_inf[g] + "'><td>" + goods[g] + "</td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class='fas fa-trash-alt'></i></span></td></tr>";
+                        code = "<tr id='g_" + tr.selected + "'><td>" + goods[g] + "</td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class='fas fa-trash-alt'></i></span></td></tr>";
                     }
                 }
+            }
+            else {
+                code = "<tr id='f_" + tr.selected + "'><td>" + tr.selectedName + "</td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class='fas fa-trash-alt'></i></span></td></tr>";
             }
             $(code).appendTo("#inventoryProds");
         }
 
-        function addProd() {
-            id = $("#newProd").prop('name');
-            code = "<tr id='" + id + "'><td>" + goods_json[id].article + "</td><td>" + goods_json[id].name + "</td><td>" + goods_json[id].unit + "</td><td><input type='number' name='amount' class='form-control form-control-sm short-input' /></td><td><input type='number' name='cost' class='form-control form-control-sm short-input' /></td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class=\"fas fa-trash-alt\"></i></span></td></tr>";
-            $(code).appendTo("#inventoryProds");
+        function getProds(id) {
+            $(".table-selected").removeClass("table-selected");
+            $("#tr-"+id).addClass("table-selected");
+            var code = "";
+            for (g in inventory_goods[id]){
+                if (inventory_goods[id][g].name != undefined) code = code + "<tr><td>" + inventory_goods[id][g].article + "</td><td>" + inventory_goods[id][g].name + "</td></tr>";
+            }
+            $("#goods-body").html(code);
+            pag2 = new Pagination(10, "goods-body", "operationNav2");
+        }
+
+        function openInventory(id) {
+            curInv = id;
+            var code = "";
+            $("#date-info").text(inventory_goods[id]['date']);
+            $("#stock-info").text(inventory_goods[id]['stock']);
+            for (g in inventory_goods[id]){
+                if (inventory_goods[id][g].name != undefined) code = code + "<tr id='i-" + g + "'><td>" + inventory_goods[id][g].article + "</td><td>" + inventory_goods[id][g].name + "</td><td>" + inventory_goods[id][g].unit + "</td><td><input class='form-control form-control-sm amount' name='amount' value='" + inventory_goods[id][g].amount + "'/></td><td><input class='form-control form-control-sm price' name='price' value='" + inventory_goods[id][g].price.toFixed(2) + "'/></td></tr>";
+            }
+            $("#makeInventoryProds").html(code);
+            $("#make-inventory").modal();
+
         }
 
     </script>
@@ -53,7 +76,7 @@
         <input id="goods_inf" value="{{ goods_inf }}" hidden>
         <input value="{{ stockData }}" id="stock_data" hidden/>
         <input value="{{ units }}" id="units" hidden/>
-        <input id="operations_json" value="{{ operations_json }}" hidden>
+        <input id="inventory_goods" value="{{ inventory_goods }}" hidden>
         <input id="goods_json" value="{{ goods_json }}" hidden>
         <div class="card" style="margin-left: 30px;margin-right: 30px;">
             <div class="card-header">
@@ -94,11 +117,11 @@
                     </thead>
                     <tbody id="op-body">
                     {% for i in inventories %}
-                        <tr id="{{ i.pk }}" onclick="getOperationGoods('{{ i.pk }}')">
+                        <tr id="tr-{{ i.pk }}" onclick="getProds('{{ i.pk }}')">
                             <td>{{ i.pk }}</td>
-                            <td>{{ i.date }}</td>
-                            <td>{{ values.stock|default_if_none:"-" }}</td>
-                            <td><span onclick=""><i class="fas fa-file-alt"></i> Инвентаризация</span></td>
+                            <td>{{ i.date|date:"d.m.Y" }}</td>
+                            <td>{{ i.stock|default_if_none:"-" }}</td>
+                            <td><button type="button" class="btn btn-sm btn-outline-info" onclick="openInventory({{ i.pk }})">Инвентаризация</button></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -192,7 +215,7 @@
                 </div>
                 <div class="modal-footer">
                     <button id="inventoryBtn" type="button" class="btn btn-info"
-                            onclick="saveInventory()">Сохранить
+                            onclick="sendInventoryPlan()">Сохранить
                     </button>
                 </div>
             </div>
@@ -216,6 +239,45 @@
                                onclick="addItemToInventory();$('#tree-div').modal('hide');"
                                id="selectInvBtn" class="btn btn-primary"
                                style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="make-inventory">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Инвентаризация</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+                </div>
+                <div class="modal-body">
+                    <h6>Склад: <span id="stock-info"></span></h6>
+                    <div class="form-inline">
+                    <h6 id="dateLabel">Дата: <span id="date-info"></span></h6>
+                    <h6 id="dateLabel" class="inline-el">Время: </h6>
+                    <input type="time" class="form-control short-input form-control-sm inline-el" id="inventoryTime"/>
+                        </div>
+                    <hr>
+                    <table class="table table-bordered table-sm small-table" style="text-align: center">
+                        <thead style="text-align: center" class="thead-light">
+                        <tr>
+                            <th>Артикул</th>
+                            <th>Наименование</th>
+                            <th>Ед. изм.</th>
+                            <th>Кол-во</th>
+                            <th>Цена</th>
+                        </tr>
+                        </thead>
+                        <tbody id="makeInventoryProds">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="inventoryBtn" type="button" class="btn btn-info"
+                            onclick="sendPlannedInventory()">Сохранить
+                    </button>
                 </div>
             </div>
         </div>
