@@ -105,42 +105,42 @@ function editCounter(id) {
 }
 
 function saveStock(id) {
-        var csrftoken = getCookie('csrftoken');
-        $.ajax({
-            type: "POST",
-            url: 'save_stock/',
-            data: {
-                'id': id,
-                'name': $('#e_name').prop('value'),
-            },
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-            success: function onAjaxSuccess(data) {
-                window.location.reload();
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'save_stock/',
+        data: {
+            'id': id,
+            'name': $('#e_name').prop('value'),
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-        });
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
 }
 
 function delStock(id) {
-        var csrftoken = getCookie('csrftoken');
-        $.ajax({
-            type: "POST",
-            url: 'del_stock/',
-            data: {
-                'id': id,
-            },
-            beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            },
-            success: function onAjaxSuccess(data) {
-                window.location.reload();
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'del_stock/',
+        data: {
+            'id': id,
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-        });
+        },
+        success: function onAjaxSuccess(data) {
+            window.location.reload();
+        }
+    });
 }
 
 function sendStock() {
@@ -224,8 +224,8 @@ function searchModel(text) {
         $("#goods-body").html("");
         for (m in models) {
             if (models[m].name.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-            $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ", false)'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='confirmDel(\"" + models[m].name + "\", this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
-               // $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
+                $("<tr id=" + models[m].id + "><td  onclick='getInf(" + models[m].id + ", false)'>" + models[m].name + "</td><td><span onclick='getInf(" + models[m].id + ")'><i title='Редактировать' class='fas fa-edit menu-btn'></i></span><span onclick='confirmDel(\"" + models[m].name + "\", this.parentElement)'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></td></tr>").appendTo("#goods-body");
+                // $("<tr onclick='getInf(" + models[m].id + ")'><td>" + models[m].id + "</td><td>" + models[m].name + "</td><td><span onclick='delModel(this.parentElement)'><i class='fas fa-trash-alt menu-btn'></i> Удалить</span></td></tr>").appendTo("#goods-body");
             }
         }
         if ($("#goods-body tr").length == 0) $("#goods-body").html("<tr><td align='center' class='no-data' colspan='3'>Нет записей</td></tr>");
@@ -313,7 +313,7 @@ function getInf(id, isEdit = true) {
                 editModel(id);
             });
             $("#inf_model").modal();
-            if (isEdit){
+            if (isEdit) {
                 $("#editBtn").show();
                 $(".plus").show();
                 $("#modalHeader").text("Редактирование макета");
@@ -363,22 +363,22 @@ function getGoodInf(id, isEdit = true) {
             code = "";
             for (n in inf.names) {
                 code = code + "<tr class='name'>\n" +
-                "                            <td><input type=\"text\" class=\"form-control form-control-sm\" value='" + inf.names[n].name + "'  required/></td>\n" +
-                "                            <td>\n" +
-                "                                <select class=\"form-control form-control-sm type\" >\n" +
-                "                                    <option value=\"0\" "+ (inf.names[n].type == 0 ? "selected" : "")  +">Наименование</option>\n" +
-                "                                    <option value=\"1\" "+ (inf.names[n].type == 1 ? "selected" : "")  +">Артикул</option>\n" +
-                "                                    <option value=\"2\" "+ (inf.names[n].type == 2 ? "selected" : "")  +">Штрихкод</option>\n" +
-                "                                </select>\n" +
-                "                            </td>\n" +
-                "                            <td>\n" +
-                "                                <select class=\"form-control form-control-sm area\" value='" + inf.names[n].area + "' >\n" +
-                "                                    <option value=\"0\"  "+ (inf.names[n].area == 0 ? "selected" : "")  +">Локальное</option>\n" +
-                "                                    <option value=\"1\"  "+ (inf.names[n].area == 1 ? "selected" : "")  +">Транзитное</option>\n" +
-                "                                    <option value=\"2\"  "+ (inf.names[n].area == 2 ? "selected" : "")  +">Оригинальное</option>\n" +
-                "                                </select>\n" +
-                "                            </td><td style='padding-top: 12px'><span onclick='this.parentElement.parentElement.remove()'><i class='fas fa-trash-alt'></i></span></td>\n" +
-                "                        </tr>";
+                    "                            <td><input type=\"text\" class=\"form-control form-control-sm\" value='" + inf.names[n].name + "'  required/></td>\n" +
+                    "                            <td>\n" +
+                    "                                <select class=\"form-control form-control-sm type\" >\n" +
+                    "                                    <option value=\"0\" " + (inf.names[n].type == 0 ? "selected" : "") + ">Наименование</option>\n" +
+                    "                                    <option value=\"1\" " + (inf.names[n].type == 1 ? "selected" : "") + ">Артикул</option>\n" +
+                    "                                    <option value=\"2\" " + (inf.names[n].type == 2 ? "selected" : "") + ">Штрихкод</option>\n" +
+                    "                                </select>\n" +
+                    "                            </td>\n" +
+                    "                            <td>\n" +
+                    "                                <select class=\"form-control form-control-sm area\" value='" + inf.names[n].area + "' >\n" +
+                    "                                    <option value=\"0\"  " + (inf.names[n].area == 0 ? "selected" : "") + ">Локальное</option>\n" +
+                    "                                    <option value=\"1\"  " + (inf.names[n].area == 1 ? "selected" : "") + ">Транзитное</option>\n" +
+                    "                                    <option value=\"2\"  " + (inf.names[n].area == 2 ? "selected" : "") + ">Оригинальное</option>\n" +
+                    "                                </select>\n" +
+                    "                            </td><td style='padding-top: 12px'><span onclick='this.parentElement.parentElement.remove()'><i class='fas fa-trash-alt'></i></span></td>\n" +
+                    "                        </tr>";
             }
             code = code + "<tr><td colspan='4'><button onclick='addName(this)' class='btn btn-sm btn-outline-success add-btn' style='float: right'>Добавить</button></td></tr>";
             $(code).appendTo("#e_names");
@@ -392,7 +392,7 @@ function getGoodInf(id, isEdit = true) {
                 $(this).find("input").eq(0).prop("disabled", !inf.props[id].editable);
             });
 
-            if (isEdit){
+            if (isEdit) {
                 $("#editBtn").show();
                 $(".plus").show();
                 $("#modalHeader").text("Редактирование МЦ");
@@ -528,7 +528,7 @@ function addRows(table, data) {
 }
 
 
-function addBranch(code, branch, t="model") {
+function addBranch(code, branch, t = "model") {
     menu = "";
     if (t == "model") menu = "<span style='font-size: 15px; color: yellowgreen; display: none' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue; display: none' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red; display: none' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
     code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + menu + "</span>";
@@ -945,12 +945,12 @@ function Tree(tree, t) {
         $(this).children("span").eq(0).addClass('active');
         $("#group option[value=" + id + "]").prop('selected', true);
         changeGroup(self.t);
-        if (self.t == 'goods'){
+        if (self.t == 'goods') {
             $("#model").find("option").show();
             $("#model").find("option").prop("selected", false);
             if (self.selected != 1) {
-                $("#model").find("[name="+ self.selected + "]").prop('selected', true);
-                $("#model").find("[name!="+ self.selected + "]").hide();
+                $("#model").find("[name=" + self.selected + "]").prop('selected', true);
+                $("#model").find("[name!=" + self.selected + "]").hide();
             }
         }
         //event.stopPropagation();
@@ -1034,6 +1034,27 @@ function delProp(obj) {
         url: 'del_prop/',
         data: {
             'id': $(obj.parentElement).prop("id")
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            $(obj.parentElement).remove();
+            $("#del_modal").modal('toggle');
+        }
+    });
+};
+
+function delInventory(obj) {
+    id = $(obj.parentElement).prop("id").slice(3);
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'del_inventory/',
+        data: {
+            'id': $(obj.parentElement).prop("id").slice(3)
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1248,7 +1269,7 @@ function GTree(tree, t) {
         $("#tree li").click(function (event) {
             event.stopPropagation();
         });
-        $("#tree li").each(function(item){
+        $("#tree li").each(function (item) {
             id = $(this).prop("id");
             if (id[0] == 'g') {
                 $(this).addClass("good-li");
@@ -1495,34 +1516,39 @@ function saveInventory(stock) {
 }
 
 function sendPlannedInventory() {
-    var inventoryGoods = {}
-    $("#makeInventoryProds tr").each(function (item) {
-        id = $(this).prop('id').slice(2);
-        if (inventoryGoods[id] == undefined) inventoryGoods[id] = {};
-        inventoryGoods[id].amount = $("[name='amount']", this).val();
-        inventoryGoods[id].cost = $("[name='price']", this).val();
-    });
-    var csrftoken = getCookie('csrftoken');
-    $.ajax({
-        type: "POST",
-        url: 'save_inventory/',
-        data: {
-            'stock': inventory_goods[curInv].stock_id,
-            'inventory_goods': JSON.stringify(inventoryGoods),
-            'date': inventory_goods[curInv].date,
-            'time': $("#inventoryTime").prop('value'),
-            'type': 'p',
-            'inventory': curInv
-        },
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    if ($('#form')[0].checkValidity()) {
+        var inventoryGoods = {}
+        $("#makeInventoryProds tr").each(function (item) {
+            id = $(this).prop('id').slice(2);
+            if (inventoryGoods[id] == undefined) inventoryGoods[id] = {};
+            inventoryGoods[id].amount = $("[name='amount']", this).val();
+            inventoryGoods[id].cost = $("[name='price']", this).val();
+        });
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'save_inventory/',
+            data: {
+                'stock': inventory_goods[curInv].stock_id,
+                'inventory_goods': JSON.stringify(inventoryGoods),
+                'date': inventory_goods[curInv].date,
+                'time': $("#inventoryTime").prop('value'),
+                'type': 'p',
+                'inventory': curInv
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                window.location.reload();
             }
-        },
-        success: function onAjaxSuccess(data) {
-            window.location.reload();
-        }
-    });
+        });
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#form").click().remove();
+    }
 }
 
 function sendInventoryPlan() {
@@ -1933,7 +1959,7 @@ function openModalSupply() {
     $("#add_supply").modal();
 }
 
-function changePeriod(){
+function changePeriod() {
     var period = $("#period").val();
     var code = "";
     for (u in goodInfo) {
@@ -1944,10 +1970,10 @@ function changePeriod(){
     pag2 = new Pagination(3, "historyBody", "historyNav");
 }
 
-Date.prototype.toDateInputValue = (function() {
+Date.prototype.toDateInputValue = (function () {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0,10);
+    return local.toJSON().slice(0, 10);
 });
 
 

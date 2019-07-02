@@ -68,6 +68,14 @@
             $("#make-inventory").modal();
 
         }
+        function confirmDel(name, obj) {
+            $("#delBtn").unbind();
+            $("#delBtn").click(function(){
+                delInventory(obj);
+            });
+            $("#del-name").text(name);
+            $("#del_modal").modal();
+        }
 
     </script>
     <div class="container-fluid pg">
@@ -93,14 +101,14 @@
                         <button type="button" id="openInventoryBtn"  data-toggle='modal' data-target='#add-inventory' class="btn btn-success btn-sm" >
                             Добавить
                         </button>
-                        <span class="inline-el">Склад</span>
+                        <!--<span class="inline-el">Склад</span>
                         <select id="stock" class="form-control inline-el form-control-sm"
                                 onchange="changeOperGroup($('#operGroup option:selected').text())">
                             <option value="-1">Все</option>
-                            {% for s in stocks %}
-                                <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
-                            {% endfor %}
-                        </select>
+                            {#  {% for s in stocks %} #}
+                                <option value="{#{{ s.stock.pk }}">{{ s.stock }}</option>#}
+                            {#{% endfor %}#}
+                        </select>-->
 
                     </div>
                 </div>
@@ -121,7 +129,8 @@
                             <td>{{ i.pk }}</td>
                             <td>{{ i.date|date:"d.m.Y" }}</td>
                             <td>{{ i.stock|default_if_none:"-" }}</td>
-                            <td><button type="button" class="btn btn-sm btn-outline-info" onclick="openInventory({{ i.pk }})">Инвентаризация</button></td>
+                            <td><span
+                          onclick="openInventory({{ i.pk }})"><i class='fas fa-edit' title="Инвентаризация"></i></span><span onclick="confirmDel('{{ i.pk }}', this.parentElement)"><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -252,11 +261,12 @@
                     <button class="close" data-dismiss="modal">x</button>
                 </div>
                 <div class="modal-body">
+                    <form id="form">
                     <h6>Склад: <span id="stock-info"></span></h6>
                     <div class="form-inline">
                     <h6 id="dateLabel">Дата: <span id="date-info"></span></h6>
                     <h6 id="dateLabel" class="inline-el">Время: </h6>
-                    <input type="time" class="form-control short-input form-control-sm inline-el" id="inventoryTime"/>
+                    <input type="time" class="form-control short-input form-control-sm inline-el" id="inventoryTime" required/>
                         </div>
                     <hr>
                     <table class="table table-bordered table-sm small-table" style="text-align: center">
@@ -273,11 +283,30 @@
 
                         </tbody>
                     </table>
+                        </form>
                 </div>
+
                 <div class="modal-footer">
                     <button id="inventoryBtn" type="button" class="btn btn-info"
                             onclick="sendPlannedInventory()">Сохранить
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="del_modal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Удаление инвентаризации</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <h6>Удалить <span id="del-name"></span>?</h6>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Удалить" id="delBtn" onclick="" class="btn btn-primary"
+                               style="float: right"/></div>
                 </div>
             </div>
         </div>

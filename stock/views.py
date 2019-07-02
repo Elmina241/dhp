@@ -76,9 +76,10 @@ def inventory(request):
                    'inventories': Inventory.objects.filter(is_finished=False), "user_group": str(User_group.objects.filter(user=request.user)[0].group), "goods": json.dumps(goods), "inventory_goods": json.dumps(inventory_goods), "goods_inf": json.dumps(goods_inf),
                    "stocks": Counter_stock.objects.filter(counter = User_group.objects.filter(user=request.user)[0].group)})
 
+
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -970,12 +971,17 @@ def send_inventory(request):
                             i_g = Inventory_good(good=good, inventory=inv, amount=0)
                             i_g.save()
                 else:
-                    for model in Product_model.objects.filter(group__pk=id):
-                        for good in Goods.objects.filter(model=model):
-                            if Inventory_good.objects.filter(inventory=inv, good=good).count() == 0:
-                                i_g = Inventory_good(good=good, inventory=inv, amount=0)
-                                i_g.save()
+                    save_group_inventory(id, inv)
             return HttpResponse('ok')
+
+def save_group_inventory(group, inventory):
+    for model in Product_model.objects.filter(group__pk=group):
+        for good in Goods.objects.filter(model=model):
+            if Inventory_good.objects.filter(inventory=inventory, good=good).count() == 0:
+                i_g = Inventory_good(good=good, inventory=inventory, amount=0)
+                i_g.save()
+    for child_group in Model_group.objects.filter(parent=group):
+        save_group_inventory(child_group.pk, inventory)
 
 def save_inventory(request):
     if request.method == 'POST':
@@ -1211,6 +1217,11 @@ def del_counter(request):
 def del_prop(request):
     if request.method == 'POST':
         Property.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
+
+def del_inventory(request):
+    if request.method == 'POST':
+        Inventory.objects.get(pk=request.POST['id']).delete()
         return HttpResponse("ok")
 
 def del_stock(request):

@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^inventory/$', views.inventory, name='inventory'),
     url(r'^inventory/send_inventory/$', views.send_inventory, name='send_inventory'),
     url(r'^inventory/save_inventory/$', views.save_inventory, name='save_inventory'),
+    url(r'^inventory/del_inventory/$', views.del_inventory, name='del_inventory'),
     url(r'^storages/send_stock/$', views.send_stock, name='send_stock'),
     url(r'^storages/save_stock/$', views.save_stock, name='save_stock'),
     url(r'^storages/del_stock/$', views.del_stock, name='del_stock'),
