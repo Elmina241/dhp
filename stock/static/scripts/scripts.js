@@ -1287,14 +1287,15 @@ function GTree(tree, t) {
     $("#tree li").click(function (event) {
         id = $(this).prop("id");
         self.selected = id;
-        self.selectedName = $(this.childNodes[1]).text();
+        if (this.childNodes[1] == undefined) self.selectedName = $(this.childNodes[0]).text();
+        else self.selectedName = $(this.childNodes[1]).text();
         $("#tree span").removeClass('active');
         obj = $(this).children("span");
         $(this).children("span").eq(0).addClass('active');
         $("#group option[value=" + id + "]").prop('selected', true);
         if (id[0] == 'g') {
             $("#selectBtn").prop("disabled", false);
-            self.selected = id.substring(2);
+            if ($("#selectInvBtn") == undefined) self.selected = id.substring(2);
         }
         else {
             $("#selectBtn").prop("disabled", true);

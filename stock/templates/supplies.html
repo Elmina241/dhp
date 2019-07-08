@@ -53,13 +53,13 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>"  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>"  + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td></tr>";
                     }
                 }
             }
@@ -113,8 +113,8 @@
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Акцептор</th>
-                        <th scope="col">Ожидаемая дата поставки</th>
-                        <th scope="col">Донор</th>
+                        <th scope="col">Ожидаемая дата получения</th>
+                        <th scope="col">Отправитель</th>
                         <th scope="col">Ожидаемая дата отпуска</th>
                         <th scope="col">Создатель</th>
                     </tr>
@@ -221,7 +221,7 @@
                             </select>
                         </div>
                     </div>
-                    <h6 id="dateLabel">Дата поставки</h6>
+                    <h6 id="dateLabel">Дата получения</h6>
                     <input type="date" class="form-control" id="date" required/>
                 <h6>Основание</h6>
                             <select class="form-control" id="cause" required>

@@ -79,7 +79,7 @@ def inventory(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('main')
     else:
         return render(request, "login.html", {"users": users})
@@ -245,8 +245,8 @@ def shipment(request):
                     'date': r.date.strftime('%d.%m.%Y'),
                     'consumer': "-" if r.consumer is None else str(r.consumer),
                     'provider': "-" if r.provider is None else str(r.provider),
-                    'donor': "-" if r.donor is None else str(r.donor),
-                    'acceptor': "-" if r.acceptor is None else str(r.acceptor),
+                    'donor': "" if r.donor is None else str(r.donor),
+                    'acceptor': "" if r.acceptor is None else str(r.acceptor),
                     'donor_id': "-" if r.donor is None else r.donor.pk,
                     'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
                     'role': role,
@@ -259,7 +259,7 @@ def shipment(request):
     stocks = {}
     for s in Counter_stock.objects.all():
         stocks[str(s.pk)] = {'pk': s.stock.pk, 'counter': s.counter.pk, 'stock': s.stock.name}
-    return render(request, "shipment.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Отгрузка", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'causes': causes, 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+    return render(request, "shipment.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Отпуск", 'stocks': Counter_stock.objects.filter(counter = counter.group), 'causes': causes, 'reqs': json.dumps(reqs), "tree": json.dumps(tree), "goods": json.dumps(goods), "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter.group, "units": json.dumps(units), "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 
 def get_stock_goods(request):
     if request.method == 'POST':
@@ -306,8 +306,8 @@ def supplies(request):
                     'date': r.date.strftime('%d.%m.%Y'),
                     'consumer': "-" if r.consumer is None else str(r.consumer),
                     'provider': "-" if r.provider is None else str(r.provider),
-                    'donor': "-" if r.donor is None else str(r.donor),
-                    'acceptor': "-" if r.acceptor is None else str(r.acceptor),
+                    'donor': "" if r.donor is None else str(r.donor),
+                    'acceptor': "" if r.acceptor is None else str(r.acceptor),
                     'donor_id': "-" if r.donor is None else r.donor.pk,
                     'acceptor_id': "-" if r.acceptor is None else r.acceptor.pk,
                     'role': role,

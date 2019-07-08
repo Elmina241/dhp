@@ -108,13 +108,13 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " "  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
                     }
                 }
             }
@@ -147,7 +147,7 @@
             <div class="form-inline">
             <button type="button" class="btn btn-success btn-sm"
                                data-toggle="modal" data-target="#add_supply">
-                            Создать отгрузку
+                            Создать отпуск
                         </button>
                 <div class="filter inline-el">
                     <div class="form-inline">
@@ -168,10 +168,10 @@
                     <tr>
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
-                        <th scope="col">Донор</th>
+                        <th scope="col">Отправитель</th>
                         <th scope="col">Ожидаемая дата отпуска</th>
-                        <th scope="col">Акцептор</th>
-                        <th scope="col">Ожидаемая дата поставки</th>
+                        <th scope="col">Получатель</th>
+                        <th scope="col">Ожидаемая дата получения</th>
                         <th scope="col">Создатель</th>
                     </tr>
                     </thead>
@@ -189,9 +189,9 @@
             <h6 class="card-header">
                 Номенклатура
                 <input style="float: right; margin-left: 10px"  type="button" id="endShipmentBtn" onclick="endShipment()" disabled
-                       class="btn btn-danger btn-sm" value="Завершить отгрузку"/>
+                       class="btn btn-danger btn-sm" value="Завершить отпуск"/>
                 <input style="float: right"  type="button" id="makeShipmentBtn" onclick="openSupply(true)" disabled
-                       class="btn btn-primary btn-sm" value="Отгрузить"/>
+                       class="btn btn-primary btn-sm" value="Отпустить"/>
 
             </h6>
             <table class="table table-bordered table-sm">
@@ -225,7 +225,7 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>Отгрузка</h5>
+                    <h5>Отпуск</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>
@@ -255,7 +255,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 id="supplyTitle">Создание отгрузки</h5>
+                    <h5 id="supplyTitle">Создание отпуска</h5>
                     <button class="close" data-dismiss="modal">x</button>
 
                 </div>

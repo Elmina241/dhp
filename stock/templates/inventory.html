@@ -33,6 +33,7 @@
                 code = "<tr id='m_" + tr.selected.substr(2) + "'><td>" + tr.selectedName + "</td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class='fas fa-trash-alt'></i></span></td></tr>";
             }
             else if (tr.selected[0] == 'g'){
+                tr.selected = tr.selected.substr(2);
                 for (g in goods_inf) {
                     if (goods_inf[g] == ("0_" + tr.selected)) {
                         code = "<tr id='g_" + tr.selected + "'><td>" + goods[g] + "</td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class='fas fa-trash-alt'></i></span></td></tr>";
