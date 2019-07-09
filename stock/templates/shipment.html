@@ -88,7 +88,7 @@
         }
 
         function addEditBtns() {
-            var btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this, 0)\"><i class='fas fa-edit'></i></span>";
+            var btn = "<span style=' float:right' onclick=\"changeDate(this, 0)\"><i class='fas fa-edit'></i></span>";
             $("#req-body tr").each(function (item) {
                 //условие отображения кнопки
                 id = $(this).prop('id').substr(2);
@@ -96,7 +96,7 @@
                 td = $(this).find('td').eq(3).html();
                 if (reqs[id].role == '1'){
                     $(this).find('td').eq(3).html(td + btn);
-                    btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
+                    btn = "<span style=' float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
                     td = $(this).find('td').eq(5).html();
                     $(this).find('td').eq(5).html(td + btn);
                 }
@@ -108,13 +108,13 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " "  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " "  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td><td><i title='Завершить отпуск' class='far fa-check-square' onclick='endShipment(" + r + ")'></i></td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td><td><i title='Завершить отпуск' class='far fa-check-square' onclick='endShipment(" + r + ")'></i></td></tr>";
                     }
                 }
             }
@@ -173,6 +173,7 @@
                         <th scope="col">Получатель</th>
                         <th scope="col">Ожидаемая дата получения</th>
                         <th scope="col">Создатель</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody id="req-body">

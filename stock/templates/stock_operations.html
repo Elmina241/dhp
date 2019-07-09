@@ -79,7 +79,7 @@
             code = "";
             for (row in operations) {
                 if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1") && checkDatePeriod(operations[row]['date'], period)) {
-                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span></td></tr>";
+                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span></td></tr>";
                 }
             }
             if (code == "") code = "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
@@ -154,6 +154,7 @@
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Операция</th>
+                        <th scope="col">Основание</th>
                         <th scope="col">Склад</th>
                         <th scope="col"></th>
                     </tr>
@@ -164,6 +165,7 @@
                             <td>{{ values.vin }}</td>
                             <td>{{ values.date }}</td>
                             <td>{{ values.operation }}</td>
+                            <td>{{ values.cause }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>
                             {% if values.operation == "Коррекция" %}
                                 <td><span onclick="$('#report').modal()"><i class="fas fa-file-alt" title="Акт"></i></span></td>

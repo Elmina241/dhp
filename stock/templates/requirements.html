@@ -37,7 +37,8 @@
         function toggleReqs(btn, t) {
             isInbox = t;
             $(".reqBtn").prop('disabled', false);
-            btn.disabled = true;
+            $(".toggle").toggleClass('active');
+            //$(btn).addClass('active');
             loadReqs($("#curStock").val());
             if (isInbox) $("#addReqBtn").hide();
             else $("#addReqBtn").show();
@@ -143,7 +144,7 @@
                     }
                 }
             }
-            if (code == "") code = "<tr><td colspan='9' class='no-data'>Нет записей</td></tr>";
+            if (code == "") code = "<tr><td colspan='11' class='no-data'>Нет записей</td></tr>";
             $("#req-body").html(code);
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
@@ -192,6 +193,7 @@
     <input value="{{ stockData }}" id="stock_data" hidden/>
     <input value="{{ units }}" id="units" hidden/>
     <input value="{{ reqs }}" id="reqs" hidden/>
+    <div style="position: fixed; top: 69px; left: 120px"><span onclick="toggleReqs(this, true)" class="toggle">Входящие</span> / <span onclick="toggleReqs(this, false)" class="toggle active">Исходящие</span></div>
     <div class="container-fluid">
         <input value="{{ count_data }}" id="countData" hidden/>
 
@@ -212,10 +214,10 @@
                         </select>
 
                     </div>
-                <div class="btn-group" style="float: right" role="group" aria-label="Basic example">
+                <!--<div class="btn-group" style="float: right" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-primary btn-sm reqBtn" onclick="toggleReqs(this, true)">Входящие</button>
                             <button type="button" class="btn btn-primary btn-sm reqBtn" onclick="toggleReqs(this, false)" disabled>Исходящие</button>
-                        </div>
+                        </div>-->
                 </div>
             </div>
             <div class="count_table" style="padding-bottom: 0">

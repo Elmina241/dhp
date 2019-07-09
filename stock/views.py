@@ -676,8 +676,13 @@ def stock_operations(request):
     for s in Stock_operation.objects.all():
         if counter.has_stock(s.package.stock):
             id = s.package.pk
+            if s.package.matrix.cause_id is None or Demand.objects.filter(pk=s.package.matrix.cause_id).count() == 0:
+                cause = 'Инвентаризация'
+            else:
+                demand = Demand.objects.get(pk=s.package.matrix.cause_id)
+                cause = Order.objects.filter(matrix=demand.matrix)[0].get_cause_display()
             if id not in operations:
-                operations[id] = {"date": s.package.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": s.package.matrix.get_cause_display(), "stock_id": s.package.stock.pk}
+                operations[id] = {"date": s.package.date.strftime('%d.%m.%Y'), "operation": s.get_operation_display(), "vin": s.package.vin, "stock": str(s.package.stock), "cause": cause, "stock_id": s.package.stock.pk}
             operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(), "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
             if s.operation == '2':
                 operations[id][str(s.good.pk)]['diffr'] = s.amount - float(s.last_value)

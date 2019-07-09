@@ -1698,13 +1698,13 @@ function openSupply(isDonor) {
     });
 }
 
-function endShipment() {
+function endShipment(id) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
         url: 'finish_shipment/',
         data: {
-            'id': curReq
+            'id': id
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

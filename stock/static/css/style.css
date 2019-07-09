@@ -314,3 +314,13 @@ h9 {
 .good-li {
     color: #23a3ab!important;
 }
+
+.toggle:hover {
+    color: #23a3ab;
+    cursor: pointer;
+}
+
+.toggle.active {
+    color: #23a3ab;
+    border-bottom: 1px solid #23a3ab;
+}
