@@ -34,9 +34,9 @@
         });
 
         function toggleReqs(btn, t) {
+            if (isInbox!=t) $(".toggle").toggleClass('active');
             isInbox = t;
             $(".reqBtn").prop('disabled', false);
-            $(".toggle").toggleClass('active');
             //btn.disabled = true;
             loadReqs($("#curStock").val());
             if (isInbox) $("#addReqBtn").hide();
@@ -139,9 +139,58 @@
             }
             if (code == "") code = "<tr><td colspan='9' class='no-data'>Нет записей</td></tr>";
             $("#req-body").html(code);
+            addEditBtns();
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
         }
+
+        function saveDate(obj, id) {
+            var date = $(obj).prop('value');
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'save_date/',
+                data: {
+                    'date': date,
+                    'id': id,
+                    't': 0
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(date) {
+                    var btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this)\"><i class='fas fa-edit'></i></span>";
+                    $(obj).parent().parent().html(date + btn);
+                    reqs[id].release_date = date;
+                }
+            });
+        }
+
+        function changeDate(btn) {
+            id = $(btn).parent().parent().prop('id').substr(2);
+            textDate = reqs[id].release_date;
+            date = new Date(textDate.substr(6, 4), textDate.substr(3, 2), textDate.substr(0, 2));
+            valDate = formatDate(date);
+            saveBtn = "<span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;' onclick='saveDate(this.previousElementSibling, " + id + ")'><i class='fas fa-check'></i></span></div>";
+            $(btn).parent().html("<div class='form-inline'><input type='date' class='form-control form-control-sm'  value='" + valDate + "' />" + saveBtn);
+        }
+
+        function addEditBtns() {
+            var btn = "<span style=' float:right' onclick=\"changeDate(this)\"><i class='fas fa-edit'></i></span>";
+            $("#req-body tr").each(function (item) {
+                //условие отображения кнопки
+                id = $(this).prop('id').substr(2);
+                if (id != ""){
+                td = $(this).find('td').eq(4).html();
+                if (reqs[id].role == '1'){
+                    $(this).find('td').eq(4).html(td + btn);
+                }
+                }
+            });
+        }
+
 
 
         function changeStatus(obj, id) {
