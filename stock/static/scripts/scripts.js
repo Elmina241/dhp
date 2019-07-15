@@ -1399,6 +1399,8 @@ function openGood(id, obj) {
                 }
             },
             success: function onAjaxSuccess(data) {
+                $('.fa-caret-up').toggleClass("fa-caret-down fa-caret-up");
+                $(obj.firstElementChild).toggleClass("fa-caret-down fa-caret-up");
                 data = JSON.parse(data);
                 var period = $("#period").val();
                 var code = "<div class='tab-pane fade show active' id='names' role='tabpanel' aria-labelledby='names-tab'><table class=\"table table-sm table-bordered\">\n" +

@@ -475,7 +475,9 @@ def get_prod_info(request):
             for d in Demand_good.objects.filter(good = good, matrix__access='4'):
                 if (d.get_demand().donor == stock or d.get_demand().acceptor == stock) and d.get_demand().is_closed == False and d.balance != 0:
                     operation = 'Отгрузка' if d.get_demand().donor == stock else 'Поставка'
-                    expecting[str(d.pk)] = {'vin': d.get_demand().vin, 'date': d.get_demand().finish_date.strftime('%d.%m.%Y'), 'amount': d.balance, 'operation': operation}
+                    if Order.objects.filter(matrix=d.matrix, isDonor=(operation=='Отгрузка')).count() != 0:
+                        if Order.objects.filter(matrix=d.matrix, isDonor=(operation=='Отгрузка'))[0].status != '2':
+                            expecting[str(d.pk)] = {'vin': d.get_demand().vin, 'date': d.get_demand().finish_date.strftime('%d.%m.%Y'), 'amount': d.balance, 'operation': operation}
             data['expecting'] = expecting
             history = {}
             for o in Stock_operation.objects.filter(good = good, package__stock= stock).exclude(operation='2'):
