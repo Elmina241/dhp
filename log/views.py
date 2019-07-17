@@ -12,6 +12,8 @@ from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Cha
     Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, \
     Reactor
 
+from stock.models import *
+
 
 def materials(request):
     return render(request, "materials.html",
@@ -101,6 +103,52 @@ def release(request):
                 amm = 0
         return HttpResponse('ok')
 
+def send_data_to_stock(request):
+    if request.method == 'POST':
+        prods = json.loads(request.POST['prods'])
+        matrix = Matrix(access='4', cause='1')
+        matrix.save()
+        if Counterparty.objects.filter(name='Производственный отдел').count() != 0:
+            group = Counterparty.objects.filter(name='Производственный отдел')[0]
+        else:
+            group = Counterparty.objects.all()[0]
+        vin = group.cur_vin
+        group.cur_vin = group.cur_vin + 1
+        group.save()
+        new_demand = Demand(
+            matrix=matrix,
+            consumer=Counterparty.objects.filter(name='Коммерческий отдел')[0],
+            provider=None,
+            donor=None,
+            acceptor=Stock.objects.filter(name='Склад готовой продукции')[0],
+            is_closed=False,
+            release_date=datetime.datetime.now(),
+            finish_date=datetime.datetime.now(),
+            is_edited=False,
+            vin=vin,
+            is_demand=True,
+            user=request.user
+        )
+        new_demand.save()
+        acceptor = Stock.objects.filter(name='Склад готовой продукции')[0]
+        p = Package(stock=acceptor, vin=acceptor.cur_vin, matrix=matrix, date=datetime.datetime.now())
+        p.save()
+        acceptor.cur_vin = acceptor.cur_vin + 1
+        acceptor.save()
+        ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause='1', isDonor=False,
+                             status='0')
+        ord_acceptor.save()
+        for p in prods:
+            pr_id = p.split("_")[1]
+            product = Product.objects.filter(id=pr_id)[0]
+            if Good_name.objects.filter(name_type='1', area='0', name=product.code).count() != 0:
+                g_m = Good_name.objects.filter(name_type='1', area='0', name=product.code)[0].product
+                good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(), name=g_m.get_name(),
+                                   unit=g_m.get_unit(), amount=prods[p]['amount'],
+                                   balance=prods[p]['amount'])
+                good.save()
+        return HttpResponse('ok')
+
 
 def add_rows(request):
     if request.method == 'POST':
@@ -140,7 +188,8 @@ def get_act_by_prod(request):
         err = True
         for a in Acceptance.objects.filter(code=code):
             date = a.date
-            err = err and Movement_rec.objects.filter(batch=a.prod.batch)[0].is_printed
+            print(Movement_rec.objects.filter(batch=a.prod.batch, operation=Operation.objects.filter(id=1)[0]).last())
+            err = err and Movement_rec.objects.filter(batch=a.prod.batch, operation=Operation.objects.filter(id=1)[0]).last().is_printed
             inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(),
                                      "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
             print(err)
