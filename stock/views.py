@@ -843,6 +843,16 @@ def save_demand(request):
                 good = Goods.objects.get(pk=id)
                 d = Demand_good(matrix=matrix, good=good, unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'], balance=goods[g]['num'], name = good.get_name(t), article=good.get_article(t))
                 d.save()
+            if consumer == provider:
+                status = '4'
+                if demand.donor is not None:
+                    ord_donor = Order(stock=demand.donor, matrix=demand.matrix, isDonor=True, status='0')
+                    ord_donor.save()
+                if demand.acceptor is not None:
+                    ord_acceptor = Order(stock=demand.acceptor, matrix=demand.matrix, isDonor=False, status='0')
+                    ord_acceptor.save()
+                demand.matrix.access = status
+                demand.matrix.save()
             return HttpResponse('ok')
 
 def save_supply(request):

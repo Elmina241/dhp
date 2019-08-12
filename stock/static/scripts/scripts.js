@@ -1295,7 +1295,7 @@ function GTree(tree, t) {
         $("#group option[value=" + id + "]").prop('selected', true);
         if (id[0] == 'g') {
             $("#selectBtn").prop("disabled", false);
-            if ($("#selectInvBtn") == undefined) self.selected = id.substring(2);
+            if ($("#selectInvBtn").length == 0) self.selected = id.substring(2);
         }
         else {
             $("#selectBtn").prop("disabled", true);
