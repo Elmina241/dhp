@@ -60,6 +60,9 @@ def movement(request):
                    "batches": batches, "last_acc": last_acc, "products": json.dumps(prods),
                    "batches2": json.dumps(batches)})
 
+def del_pack(request):
+
+    return HttpResponse('ok')
 
 def accepting(request):
     acts = {}
