@@ -952,6 +952,7 @@ function Tree(tree, t) {
                 $("#model").find("[name=" + self.selected + "]").prop('selected', true);
                 $("#model").find("[name!=" + self.selected + "]").hide();
             }
+            getModelInfo();
         }
         //event.stopPropagation();
     });

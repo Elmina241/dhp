@@ -19,7 +19,7 @@ def loading_lists(request):
 def packing(request):
     return render(request, "packing.html", {"header": "Фасовка", "location": "/processes/packing/", "processes": Pack_process.objects.all, "products": Product.objects.all, "reactors": Reactor.objects.all, "tanks": Tank.objects.all})
 
-def storages(request):
+def storages3(request):
     prods = {}
     for p in Product.objects.all():
         prods[str(p.pk)] = {'name': p.code + " " + p.get_name_for_table(), 'composition': p.production.composition.id, 'amount': p.production.get_boxing_amm()}

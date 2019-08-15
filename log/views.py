@@ -7,7 +7,7 @@ from django.utils import timezone
 import datetime
 import operator
 from .models import Movement_rec, Operation, Acceptance, Packing_divergence, Packaged
-from processes.models import Batch, Kneading_char, Kneading_char_number, Kneading_char_var, Kneading
+from processes.models import *
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, \
     Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, \
     Reactor
@@ -61,8 +61,18 @@ def movement(request):
                    "batches2": json.dumps(batches)})
 
 def del_pack(request):
-
-    return HttpResponse('ok')
+    if 'id' in request.POST:
+        m_r = Movement_rec.objects.get(pk = request.POST['id'])
+        pack_info = Packing_divergence.objects.filter(batch=m_r.batch, date=m_r.date)[0]
+        if pack_info.reactor is None:
+            storage = Tank_content.objects.filter(tank=pack_info.tank)[0]
+        else:
+            storage = Reactor_content.objects.filter(reactor=pack_info.reactor)[0]
+        storage.amount = storage.amount + pack_info.pack_amm
+        storage.save()
+        pack_info.delete()
+        m_r.delete()
+        return HttpResponse('ok')
 
 def accepting(request):
     acts = {}

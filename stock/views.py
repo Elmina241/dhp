@@ -193,8 +193,8 @@ def counterparties(request):
             counter_data[str(c.pk)]['stocks'][str(s.stock.pk)] = {'name': s.stock.name}
     return render(request, "counterparties.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "count_data": json.dumps(counter_data), "header": "Контрагенты", "counters": Counterparty.objects.all(), "stockData": json.dumps(serializers.serialize("json", Stock.objects.all()))})
 
-def storages(request):
-    return render(request, "storages.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Склады", "stocks": Stock.objects.all()})
+def storages2(request):
+    return render(request, "storages2.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group), "permissions": json.dumps(User_group.objects.filter(user = request.user)[0].get_permissions()), "header": "Склады", "stocks": Stock.objects.all()})
 
 def get_goods_inf():
     goods_inf = {}
