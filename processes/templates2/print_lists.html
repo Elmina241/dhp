@@ -1,0 +1,181 @@
+{% load staticfiles %}
+<head>
+  <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/breadcrumb3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.css' %}">
+  <script src="{% static 'scripts/jquery.tabletojson.js' %}"></script>
+  <script src="{% static 'scripts/validation5.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepickerrumin.js' %}"></script>
+  <script src="{% static 'scripts/jquery.tablesorter.js' %}"></script>
+  <script type="text/javascript">
+  </script>
+  <style type="text/css">
+    @media print {
+      #printBtn {
+        display:none;
+      }
+      .info {
+        page-break-inside: avoid;
+      }
+      .proc {
+        page-break-inside: avoid;
+      }
+      .info2 {
+        page-break-inside: avoid;
+      }
+      .comps {
+        page-break-inside: avoid;
+      }
+      .compsHeader {
+        page-break-after: avoid;
+      }
+      .sign {
+        page-break-inside: avoid;
+      }
+    }
+    .h{
+      font-size: 14pt;
+      margin-top: 10pt;
+      margin-bottom: 10pt;
+      text-align: center;
+    }
+
+    .info{
+      font-size: 12pt;
+      margin-top: 5pt;
+      text-align: left;
+      float: left;
+      width: 150pt;
+      margin-left: 40pt;
+    }
+
+    .info2{
+      font-size: 12pt;
+      margin-top: 5pt;
+      text-align: left;
+      float: left;
+      width: 300pt;
+      margin-left: 30pt;
+    }
+    .info p {
+      line-height: 0.5;
+    }
+    .info2 p {
+      line-height: 0.5;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="passport">
+    <b><div class="h">Загрузочный лист</div></b>
+    {% for key, values in kneading.items %}
+    {% if values.isFinal == True %}
+    <div class = "proc">
+    <div class ="info">
+      <p>Наименование средства:</p>
+      <p>Артикул:</p>
+      <p>Дата:</p>
+      <p>Номер партии:</p>
+      <p>Вес:</p>
+      <b><p>Компоненты:</p></b>
+    </div>
+    <div class ="info2">
+      <p>{{values.name}}</p>
+      <p>{{values.code}}</p>
+      <p>{{values.start_date|date:"d.m.Y"}} - {{values.finish_date|date:"d.m.Y"}}</p>
+      <p>{{values.batch_num|floatformat:"0"}}</p>
+      <p>{{values.amount}}</p>
+    </div>
+    <div style="margin-top:5pt;margin-left:40pt;margin-right:40pt" class="comps">
+    <table class="table table-hover table-sm  table-bordered table-condensedtable">
+      <thead>
+        <tr>
+          <th>Наименование</th><th>Масса, кг</th><th>Допустимый вес, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key2, values2 in comps.items %}
+        {% if values2.list == values.list %}
+          <tr>
+            <td style="padding: 2px;">{{values2.name}}</td>
+            <td style="padding: 2px;">{{values2.ammount|floatformat:"2"}}</td>
+          {% if values2.min == None %}
+              <td style="padding: 2px;">--</td>
+            {% else %}
+              <td style="padding: 2px;">{{values2.min}} - {{values2.max}}</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  {% endif %}
+    {% endfor %}
+    {% for key, values in kneading.items %}
+    {% if values.isFinal == False %}
+    <div class = "proc">
+    <div class ="info">
+      <p>Наименование средства:</p>
+      <p>Артикул:</p>
+      <p>Дата:</p>
+      <p>Номер партии:</p>
+      <p>Вес:</p>
+      <b><p>Компоненты:</p></b>
+    </div>
+    <div class ="info2">
+      <p>{{values.name}}</p>
+      <p>{{values.code}}</p>
+      <p>{{values.start_date|date:"d.m.Y"}} - {{values.finish_date|date:"d.m.Y"}}</p>
+      <p>{{values.batch_num|floatformat:"0"}}</p>
+      <p>{{values.amount}}</p>
+    </div>
+    <div style="margin-top:5pt;margin-left:40pt;margin-right:40pt" class="comps">
+    <table class="table table-hover table-sm  table-bordered table-condensedtable">
+      <thead>
+        <tr>
+          <th>Наименование</th><th>Масса, кг</th><th>Допустимый вес, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key2, values2 in comps.items %}
+        {% if values2.list == values.list %}
+          <tr>
+            <td style="padding: 2px;">{{values2.name}}</td>
+            <td style="padding: 2px;">{{values2.ammount|floatformat:"2"}}</td>
+          {% if values2.min == None %}
+              <td style="padding: 2px;">--</td>
+            {% else %}
+              <td style="padding: 2px;">{{values2.min}} - {{values2.max}}</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+  {% endif %}
+    {% endfor %}
+    <div class="sign">
+    <br>
+    <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Зам. ген. директора по производству</div>
+    <div style="margin-top:10pt;margin-left:440pt;font-size:12pt;">Попова И.В.</div>
+    <br>
+    <div style="margin-top:5pt;margin-left:40pt;font-size:12pt;float:left;">Генеральный директор</div>
+    <div style="margin-top:5pt;margin-left:440pt;font-size:12pt;">Юзов В.А.</div>
+    </div>
+    <hr>
+    <button id="printBtn" type="button" style="margin-top:10pt;margin-left:40pt;float:right;" class="btn btn-info" onclick="window.print();">Печать</button>
+  </div>
+
+</body>

@@ -172,7 +172,7 @@ function changeMinMax(c, f, f_c){
   var fComp = JSON.parse(f_c);
   var amm = $("#ammount").val();
   var comp = getComp(form, $("#formula").val());
-  var size = $("#materials tr").size();
+  var size = $("#materials tr").length;
   for (var i = 2; i < size; i++){
     var row = $("#materials tr").eq(i);
     var code = row.attr("id");
@@ -190,13 +190,23 @@ function changeMinMax2(c, c_id){
   //var form = JSON.parse(f);
   var amm = $("#ammount").val();
   //var comp = getComp(form, $("#formula").val());
-  var size = $("#materials tr").size();
+  var size = $("#materials tr").length;
   for (var i = 2; i < size; i++){
     var row = $("#materials tr").eq(i);
     var code = row.attr("id");
     var bounds = getMinMax(components, c_id, code);
     $("#materials tr").eq(i).find('td').eq(2).text(((bounds.min/100)*amm).toFixed(2));
     $("#materials tr").eq(i).find('td').eq(3).text(((bounds.max/100)*amm).toFixed(2));
+  }
+}
+
+function recalculateList(loadList, amount){
+  var amm = $("#ammount").val();
+  var i = 2;
+  for (c in loadList){
+    var row = $("#materials tr").eq(i);
+    $("#materials tr").eq(i).find('input').last().prop('value', ((loadList[c].amount/amount)*amm).toFixed(2));
+    i++;
   }
 }
 
@@ -364,12 +374,12 @@ function getModelList(m, m_c, compl) {
   for (i = 0; i < m_comp.length; i++){
     if (m_comp[i].fields.list == sel_id){
       var row = document.createElement("TR");
-      var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(3) ;
+      var matAm = (m_comp[i].fields.ammount/100*amm).toFixed(2) ;
       if (m_comp[i].fields.formula == null){
-        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td></td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.mat + "><td>" + getCode(m_comp[i].fields.mat, materials) + "</td><td>" + getName(m_comp[i].fields.mat, materials) + "</td><td></td><td><input type='number' class='form-control' step='0.01' value=" + matAm + " name=" + getCode(m_comp[i].fields.mat, materials) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       else{
-        $("<tr id=" + m_comp[i].fields.formula + " name='compl'><td>" + getCode(m_comp[i].fields.formula, complComp) + "</td><td>" + getFormulaName(m_comp[i].fields.formula) + "</td><td>" + getSelectOfComp(m_comp[i].fields.formula) + "</td><td><input type='number' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.formula, complComp) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
+        $("<tr id=" + m_comp[i].fields.formula + " name='compl'><td>" + getCode(m_comp[i].fields.formula, complComp) + "</td><td>" + getFormulaName(m_comp[i].fields.formula) + "</td><td>" + getSelectOfComp(m_comp[i].fields.formula) + "</td><td><input type='number' step='0.01' class='form-control' value=" + matAm + " name=" + getCode(m_comp[i].fields.formula, complComp) + " onchange='changeMatAmP();changeWaterL();changeWaterT();return false;'></td>" + "<td><button class='btn btn-default' onclick='deleteRow(this)'><i class='glyphicon glyphicon-trash'></i></button></td><td style='visibility:collapse;'>" + matAm + "</td>" + "</tr>").appendTo(table);
       }
       }
     }

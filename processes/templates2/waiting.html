@@ -1,0 +1,255 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function changeDate(t){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'save_date/',
+        data: {
+          't': t,
+          'date': $("#datepicker").prop("value")
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+           window.location.reload();
+        }
+      });
+}
+
+
+
+$(document).ready(function(){
+  $('#formula').trigger("change");
+  $('#formula2').trigger("change");
+  //validate();
+  $('#materials .term').bind('input', function(){
+    changeWater();
+    changeMatTable();
+    return false;
+  });
+  var dp = $('#datepicker');
+  dp.datepicker({
+    format: "dd/mm/yyyy",
+    language: "ru",
+    todayHighlight: true
+  });
+  $('#editDate').on('show.bs.modal', function (event) {
+    // получить кнопку, которая его открыло
+    var button = $(event.relatedTarget)[0];
+    var t = button.dataset.type;
+    if (t == "start"){
+      $("#editHeader").text("Редактирование начальной даты");
+      $("#saveDate").click(function() {
+        changeDate("start");
+      });
+    }
+    else {
+      $("#editHeader").text("Редактирование конечной даты");
+      $("#saveDate").click(function() {
+        changeDate("end");
+      });
+    }
+  })
+});</script>
+
+<ul class="steps steps-5" style="margin-left: 0">
+  <li class="current"><a href="#" title=""><em>Ожидание</em></a></li>
+  <li><a href="#" title=""><em>Запущен</em></a></li>
+  <li><a href="#" title=""><em>Смешение</em></a></li>
+  <li><a href="#" title=""><em>Тестирование</em></a></li>
+  <li><a href="#" title=""><em>Перемещение</em></a></li>
+</ul>
+
+<a href="start_process/"><button type="button" class="btn btn-success" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>  Запустить процесс</button></a>
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editList" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>  Редактировать загрузочный лист</button>
+<button type="button" class="btn btn-danger" onclick="$('#confirm').modal('show');" style="margin-bottom: 5pt"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  Прервать процесс</button>
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title"><b>Процесс № {{p.id}}</b></h4>
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+
+<div class="panel-body">
+  <div class="input-group" style ="margin: left; margin-left:10pt">
+    <form action="save_load_list/" id="form" method="post" class="form-horizontal">
+      {% csrf_token %}
+      <div class="col-sm-3">
+        <h5><p><b>Дата начала: </b></p></div></h5>
+          <div class="col-sm-7">
+          <h5><p>{{p.start_date|date:"d.m.Y"}} <button type="button" data-toggle="modal" data-target="#editDate" data-type="start" class ="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></button></p></div>
+          <div class="col-sm-3">
+          <h5><p><b>Дата конца: </b></p></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.finish_date|date:"d.m.Y"}} <button type="button" data-toggle="modal" data-target="#editDate" data-type="end" class ="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></button></p>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Партия: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>П-{{p.batch_num|floatformat:"0" }}</p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Реактор: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.reactor}} <button type="button" data-toggle="modal" data-target="#editReactor" class ="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></button></p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Состав: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.list}}</p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Объём: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p id="textAmm">{{p.list.ammount}} кг</p></h5>
+          </div>
+      </div>
+
+
+      </div>
+      <div class="modal fade" id="editList">
+        <div class="modal-dialog modal-lg" >
+          <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal">x</button>
+              <h4>Редактирование загрузочного листа</h4>
+            </div>
+            <div class="modal-body">
+  <label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" onchange="changeMinMax2({{components}}, {{c_id}});changeWater();return false;"><span class="input-group-addon">кг</span></div>
+</div>
+
+        <input hidden class="form-control" id="formula" name="formula" onchange="getLoadList({{load_list}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
+        <input hidden class="form-control" id="formula2" name="formula2" onchange="getLoadList({{load_list}}, 'materials2');changeWater();return false;" value="{{p.list.formula.id}}">
+      </div>
+      <br><br>
+      <table class="table table-sm" id="materials" style="width:auto; margin: 5pt">
+        <thead>
+          <tr>
+            <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Композиция</th><th>Количество, кг</th><th style="visibility:collapse;width:1px">%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ВД01</td>
+            <td>Вода</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td id="water"></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <input type="hidden" id="json" name="json" value="">
+      <input type="hidden" id="batches" name="batches" value="{{batches}}">
+      <div class="modal-footer">
+      <input type="button" id="send" onclick="$(this).prop('disabled', true);changeMatTable();$('#form').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+    </div>
+    </div>
+    </div>
+
+    <div class="panel panel-default" style ="margin: auto">
+    <div class="panel-heading">
+        <h4 class="panel-title">Загрузочный лист</h4>
+    </div>
+    <div class="panel-body">
+    <table class="table table-sm" id="materials2" style="width:100%; margin: auto">
+      <thead>
+        <tr>
+          <th>Код</th><th>Наименование</th><th>Минимум, кг</th><th>Максимум, кг</th><th>Количество, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ВД01</td><td>Вода</td><td>-</td><td>-</td><td id="water2"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </form>
+</div>
+<form action="save_reactor/" id="formReactor" method="post" class="form-horizontal">
+  {% csrf_token %}
+<div class="modal fade" id="editReactor">
+  <div class="modal-dialog modal-sm" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">x</button>
+        <h4>Редактирование реактора</h4>
+      </div>
+      <div class="modal-body">
+        <select class="form-control" id="reactor" name="reactor">
+          {% for r in reactors %}
+            <option value="{{ r.id }}">{{ r }}</option>
+          {% endfor %}</select>
+      </div>
+      <div class="modal-footer">
+        <input type="button" onclick="$('#formReactor').submit();" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+      </div>
+    </div>
+  </div>
+  </form>
+  <div class="modal fade" id="editDate">
+    <div class="modal-dialog modal-sm" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" data-dismiss="modal">x</button>
+          <h4 id="editHeader">Редактирование даты</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom:25pt"><label for="start" class="col-sm-3 control-label" style="font-size: medium">Дата:   </label>
+            <div class="col-sm-9"><input type="text" required data-provide="datepicker" class="input-sm form-control" id="datepicker" /></div></div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" id="saveDate" value="Сохранить" class="btn btn-primary" style="float: right"/> </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="confirm">
+      <div class="modal-dialog modal-sm" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">x</button>
+            <h4 id="storCode">Предупреждение</h4>
+          </div>
+          <div class="modal-body">
+            <p>Прервать процесс?</p>
+            <div class="modal-footer">
+              <input value="Прервать" id = "stopBtn" onclick="document.location.href='stop_process/';" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}

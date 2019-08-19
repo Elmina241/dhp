@@ -1,0 +1,122 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+function setAmount(){
+  reactors =  JSON.parse($("#reactors").prop('value'));
+  id = $("#reactor").prop('value');
+  for (r in reactors) {
+    if (r == id) {
+      $("#amount").prop('max', reactors[r].amount);
+    }
+  }
+}
+
+function pack(pr_id, f_id){
+  var csrftoken = getCookie('csrftoken');
+  r_id = $("#reactor").prop('value');
+  t = r_id[0];
+  id = r_id.substr(1);
+  $("#packBtn").prop('disabled', true);
+  $.ajax({
+        type: "POST",
+        url: 'pack/',
+        data: {
+          'id': id,
+          'amm': $("#amount").prop("value"),
+          'type': t,
+          'pr_id' : pr_id,
+          'num' : $("#num").prop("value"),
+          'f_id': f_id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          window.location.href='/processes/packing/';
+        }
+      });
+}
+
+$(document).ready(function(){
+  setAmount();
+});</script>
+
+
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title"><b>Фасовка № {{p.id}}</b></h4>
+  </div>
+  {% if error_message %}
+  <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+
+<div class="panel-body">
+  <div class="input-group" style ="margin: left; margin-left:10pt; margin-bottom: 20px">
+      {% csrf_token %}
+      <div class="col-sm-3">
+        <h5><p><b>Дата: </b></p></div></h5>
+          <div class="col-sm-7">
+          <h5><p>{{p.date|date:"d.m.Y"}}</p></div>
+          <div class="col-sm-3">
+          <h5><p><b>Продукт: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p>{{p.product}}</p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Реактор: </b></p></h5></div>
+          <div class="col-sm-7 form-group">
+            <select id="reactor" class="form-control" name="storage" onchange="setAmount();" style="font-size:12px;height: 28px;width:  300px;">
+              {% for key, values in reactors.items %}
+                <option value='{{key}}' style="font-size:12px;">{{values.name}}</option>
+              {% endfor %}
+            </select>
+          <!--<h5><p>{{p.reactor}}</p></h5>-->
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Количество, шт: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p><input type="number" id="num" name="num" style="font-size:13px;height: 25px;width:  200px; margin-top: 0px" class="form-control col-sm-7" value="{{p.amount}}" step="1"></p></h5>
+          </div>
+          <div class="col-sm-3">
+          <h5><p><b>Объём, кг: </b></p></h5></div>
+          <div class="col-sm-7">
+          <h5><p><input type="number" id="amount" name="amount" style="font-size:13px;height: 25px;width:  200px; margin-top: 0px" class="form-control"></p></h5>
+          </div>
+          <input type="hidden" id="reactors" name="reactors" value="{{reactors2}}">
+      </div>
+      <hr>
+        <input type="button" id="packBtn" onclick="pack({{p.product.id}}, {{p.id}})" value="Сохранить" class="btn btn-primary" style="float: right"/>
+      </div>
+    </div>
+{% endblock content %}

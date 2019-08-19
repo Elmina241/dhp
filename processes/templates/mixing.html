@@ -1,15 +1,5 @@
 {% extends 'processes/base.html' %}
 {% block content %}
-    <style>
-    @media all and (max-width: 500px) {
-    .mobile-table {
-        font-size: 12px;
-    }
-        .tablet {
-            display: none;
-        }
-}
-    </style>
 <script type="text/javascript">
 function getCookie(name) {
     var cookieValue = null;
@@ -204,7 +194,7 @@ $(document).ready(function(){
         <h4 class="panel-title">Загрузочный лист</h4>
     </div>
     <div class="panel-body">
-    <table class="table table-sm mobile-table" id="materials2" style="width:100%; margin: auto">
+    <table class="table table-sm" id="materials2" style="width:100%; margin: auto">
       <thead>
         <tr>
           <th></th><th>Код</th><th>Наименование</th><th>Количество, кг</th><th>Добавлено, кг</th><th></th><th></th>

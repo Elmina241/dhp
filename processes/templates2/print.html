@@ -1,0 +1,151 @@
+{% load staticfiles %}
+<head>
+  <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <script src="{% static 'scripts/bootstrap.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/breadcrumb3.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.css' %}">
+  <script src="{% static 'scripts/jquery.tabletojson.js' %}"></script>
+  <script src="{% static 'scripts/validation5.js' %}"></script>
+  <script src="{% static 'scripts/json_to_table48.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'scripts/bootstrap-datepickerrumin.js' %}"></script>
+  <script src="{% static 'scripts/jquery.tablesorter.js' %}"></script>
+  <script type="text/javascript">
+  </script>
+  <style type="text/css">
+    @media print {
+      #printBtn { display:none; }
+    }
+    .text14{
+      font-size:14pt;
+      text-align: center;
+      line-height: 12pt;
+      margin-bottom: 5pt;
+    }
+    .text12{
+      line-height: 12pt;
+      font-size:12pt;
+      margin-bottom: 5pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="passport">
+    <button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button>
+    <div class="text14">ОАО «Дальхимпром»</div>
+    <div class="text12" style="text-align: center;margin-bottom:15pt">690074, г. Владивосток, ул. Снеговая, д.64</div>
+    <div class="text14">
+      <p>ПАСПОРТ ПАРТИИ № {{p.kneading.id}}</p>
+      <p>{{p.kneading.list}}</p>
+    </div>
+    <div class="text12" style="text-align: center;margin-bottom:15pt">{{p.kneading.list.formula.composition.standard}}</div>
+    <div class ="text12">
+      <p>Партия № {{p.kneading.batch_num|floatformat:"0"}}</p>
+      <p>Вес партии, кг: {{amount|floatformat:"2"}}</p>
+      <p>Дата изготовления: {{p.finish_date|date:"d.m.Y"}}</p>
+      <p>Упаковка: {{p.kneading.list.formula.composition.get_package}}</p>
+      <p>Срок годности: {{p.kneading.list.formula.composition.sh_life}} месяца с даты производства при соблюдении условий транспортировки и хранения</p>
+      <p>Состав средства: </p>
+      <!--<p>{{p.kneading.list}}</p>
+      <p>{{p.kneading.list.formula.code}}</p>
+      <p>{{p.kneading.start_date|date:"d.m.Y"}} - {{p.kneading.finish_date|date:"d.m.Y"}}</p>
+      <p>{{p.kneading.batch_num|floatformat:"0"}}</p>
+      <p>{{p.kneading.list.ammount}}</p>-->
+    </div>
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt">
+    <table class="table table-hover table-sm table-bordered table-condensed" style = "margin-left: -45pt">
+      <thead>
+        <tr>
+          <th>Наименование ингредиента</th><th>Количество, кг</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, values in components.items %}
+        <tr>
+          <td>{{values.name}}</td>
+          <td>{{values.ammount|floatformat:"2"}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <div class ="text12">
+      Физико-химические свойства:
+    </div>
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt">
+    <table class="table table-hover table-sm table-bordered table-condensed" style = "margin-left: -45pt">
+      <thead>
+        <tr>
+          <th>Наименование показателей</th><th>Нормы НД на продукцию</th><th>Фактические данные</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, values in chars.items %}
+        {% if values.type == 1 %}
+        <tr>
+          {% if values.group != 'отсутствует' %}
+          <td>{{values.group}}: {{values.name}}</td>
+          {% else %}
+          <td>{{values.name}}</td>
+          {% endif %}
+          <td>{{values.norm}}</td>
+          <td>{{values.value}}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <div class ="text12">
+      Справочные данные периодических испытаний средства:
+    </div>
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt">
+    <table class="table table-hover table-sm table-bordered table-condensed" style = "margin-left: -45pt">
+      <thead>
+        <tr>
+          <th>Наименование показателей</th><th>Нормы НД на продукцию</th><th>Фактические данные</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, values in chars.items %}
+        {% if values.type == 2 %}
+        <tr>
+          {% if values.group != 'отсутствует' %}
+          <td>{{values.group}}: {{values.name}}</td>
+          {% else %}
+          <td>{{values.name}}</td>
+          {% endif %}
+          <td>{{values.norm}}</td>
+          <td>{{values.value}}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <div class ="text12">
+      <p>Свидетельство о государственной регистрации {{p.kneading.list.formula.composition.sgr}} от {{p.kneading.list.formula.composition.date|date:"d.m.Y"}} г.</p>
+      {% if p.kneading.list.formula.composition.certificate != None %}
+      <p>Сертификат соответствия {{p.kneading.list.formula.composition.certificate}}</p>
+      <p>Декларация о соответствии {{p.kneading.list.formula.composition.declaration}}</p>
+      {% endif %}
+      <br>
+      {% if p.kneading.isValid %}
+      <p>Заключение: качество продукции соответствует требованиям {{p.kneading.list.formula.composition.standard}}</p>
+      {% else %}
+      <p>Заключение: качество продукции не соответствует требованиям {{p.kneading.list.formula.composition.standard}}</p>
+      {% endif %}
+      <br>
+      {{ temp }}
+      <p>Химик-технолог ______________________________________________</p>
+      <p>Представитель ОТК ___________________________________________</p>
+      <p>Заведующий производством ____________________________________</p>
+
+    </div>
+  </div>
+</body>

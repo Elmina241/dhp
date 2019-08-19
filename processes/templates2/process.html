@@ -1,0 +1,227 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+    <style>
+    @media all and (max-width: 500px) {
+    .mobile-table {
+        font-size: 12px;
+    }
+        .tablet {
+            display: none;
+        }
+}
+    </style>
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function getState(id){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_state/',
+        data: {
+          'id': id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          //if (data!="Завершён" && data!="Прерван"){
+            $("#"+id).text(data);
+          /*}
+          else {
+            $("#"+id).parent().remove();
+          }*/
+        }
+      });
+}
+
+function printLists(){
+  var lists = [];
+  $("input:checkbox:checked").each(function() {
+    lists.push($(this).val());
+  });
+  data = JSON.stringify(lists);
+  window.open(document.location.href + "print_lists/"+data);
+  /*var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'print_lists/',
+        data: {
+          'lists': data
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(res)
+        {
+          var myWin = window.open("");
+          myWin.document.open();
+          myWin.document.write(res);
+          myWin.document.close();
+        }
+      });*/
+}
+
+function applyFilters(){
+  $("tr").each(function(){
+      $(this).show();
+  });
+  filterState();
+  filterDate();
+  filterBatch();
+}
+
+$(document).ready(function(){
+  var dp = $('#datepicker');
+  dp.datepicker({
+    format: "dd/mm/yyyy",
+    language: "ru",
+    todayHighlight: true
+  });
+  $("#prTable").tablesorter({});
+  $("[name='groupState']").change(applyFilters);
+  $("[name='groupBatch']").change(applyFilters);
+  $("[name='start']").change(applyFilters);
+  $("[name='end']").change(applyFilters);
+});
+function filterDate(){
+  var start = $("#groupDateStart").prop("value");
+  var startD = new Date(parseInt(start.substr(6)), (parseInt(start.substr(3,2)) - 1), parseInt(start.substr(0,2)));
+  var end = $("#groupDateEnd").prop("value");
+  var endD = new Date(parseInt(end.substr(6)), (parseInt(end.substr(3,2)) - 1), parseInt(end.substr(0,2)));
+    $("tr").filter(function() {
+        startText = $(this).find("td").eq(4).text();
+        startDate = new Date(parseInt(startText.substr(6)), (parseInt(startText.substr(3,2)) - 1), parseInt(startText.substr(0,2)));
+        return (startDate > endD || startDate < startD) || $(this).is(':hidden');
+      }).each(function(){
+        $(this).hide();
+      });
+    $("tr").eq(0).show();
+}
+function filterState(){
+  var sel = $("[name='groupState']");
+  var group = sel.find(":selected").text();
+  if (group == "Все"){
+    /*$("tr").each(function(){
+      $(this).show();
+    });*/
+  }
+  else {
+    $("tr").filter(function() {
+        return $(this).find("td").eq(6).text() != group;
+      }).each(function(){
+        $(this).hide();
+      });
+    }
+    $("tr").eq(0).show();
+}
+function filterBatch(){
+  var sel = $("[name='groupBatch']");
+  var group = sel.find(":selected").text();
+  if (group == "Все"){
+  /*  $("tr").each(function(){
+      $(this).show();
+    });*/
+  }
+  else {
+    $("tr").filter(function() {
+        return ($(this).find("td").eq(2).text() + " " + $(this).find("td").eq(3).text()) != group || $(this).is(':hidden');
+      }).each(function(){
+        $(this).hide();
+      });
+    }
+    $("tr").eq(0).show();
+}
+</script>
+<div class="row">
+  <div class="col-sm-4">
+    <span>Фильтр по номеру партии</span>
+    <select class="form-control form-control-sm" name="groupBatch" >
+      <option value="-1" selected>Все</option>
+        {% for key, value in batches.items %}
+          <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}</select>
+  </div>
+  <div class="col-sm-4">
+    <span class="input-group-addon">Фильтр по дате</span>
+    <div class="input-daterange input-group" id="datepicker">
+        <input type="text" required data-provide="datepicker" class="input-sm form-control form-control-sm" name="start" id="groupDateStart"/>
+        <span class="input-group-addon">-</span>
+        <input type="text" required data-provide="datepicker" class="input-sm form-control form-control-sm" name="end" id="groupDateEnd"/>
+      </div>
+    </div>
+  <div class="col-sm-4">
+    <span class="input-group-addon">Фильтр по статусу</span>
+    <select class="form-control form-control-sm" name="groupState">
+      <option value="-1" selected>Все</option>
+        {% for s in states %}
+          <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}</select>
+  </div>
+</div>
+<hr>
+<form action="del_process/" method="post">
+    {% csrf_token %}
+    {% if new_kneading %}
+    <div id="alert" class="alert alert-success alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      Создан процесс {{new_kneading}}. Номер партии П-{{new_kneading.batch_num|floatformat:"0"}}.
+    </div>
+    {% endif %}
+
+          <!--<input type="submit" class="btn btn-default" value="Удалить"> --><button type="button" class="btn btn-success btn-sm" onclick="printLists();return false;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Загрузочные листы</button>
+          <br><br>
+          {% if kneading %}
+              <table class="table table-sm tablesorter mobile-table" id="prTable">
+                <thead class="thead-light">
+                  <tr>
+                    <th class="tablet"></th><th>№</th><th>Партия</th><th>Состав</th><th class="tablet">Дата начала</th><th class="tablet">Дата конца</th><th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for k in kneading|dictsortreversed:"id" %}
+                  <tr>
+                    <td class="tablet"><input type="checkbox" value="{{ k.id }}" name="del_list"></td>
+                    <td>{{ k.id }}</td>
+                    <td>П-{{ k.batch_num|floatformat:"0" }}</td>
+                    <td  onClick="window.location.href='/processes/process/{{ k.id }}/'">{{ k.list.formula }}</td>
+                    <td class="tablet">{{ k.start_date|date:"d.m.Y" }}</td>
+                    <td class="tablet">{{ k.finish_date|date:"d.m.Y" }}</td>
+                    <td id="{{k.id}}">{{ k.get_state }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <p>No materials are available right now.</p>
+              {% endif %}
+  {% endblock content %}

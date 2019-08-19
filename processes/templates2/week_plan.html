@@ -1,0 +1,166 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<style>
+   hr {
+    margin-top: 4pt;
+    margin-bottom: 4pt;
+    border: none; /* Убираем границу */
+    background-color: #D3D3D3; /* Цвет линии */
+    color: #D3D3D3; /* Цвет линии для IE6-7 */
+    height: 1px; /* Толщина линии */
+   }
+  </style>
+<script type="text/javascript">
+function getNowDate(){
+  var now = new Date();
+  month = now.getMonth()+1;
+  if (month < 10){
+    month = '0' + month;
+  }
+  day = now.getDate();
+  if (day < 10){
+    day = '0' + day;
+  }
+  text = day + "." + month + "." + now.getFullYear();
+  return text;
+}
+
+function getPlan(){
+  plans = $("#plans").prop("value");
+  jsPlan = JSON.parse(JSON.parse(plans));
+  temp = $("#datepicker").prop("value");
+  var length = $("#prod").find('tr').length;
+  for (i=1; i < length-2; i++){
+    $("#prod").find('tr').eq(i).find('input').prop("value", "");
+  }
+  for (obj in jsPlan){
+    if ($("#datepicker").prop("value") == jsPlan[obj].fields.month) $("#" + jsPlan[obj].fields.prod).prop("value", jsPlan[obj].fields.num);
+    //else $("#" + jsPlan[obj].fields.prod).prop("value", "");
+  }
+  countUnits();
+}
+
+function changeWeek(){
+  date = $("#datepicker").prop("value");
+  day = date.split("/")[0];
+  year = date.split("/")[2];
+  month = date.split("/")[1];
+  newDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+  endD = newDate;
+  endD.setDate(endD.getDate() + 6);
+  var mm = endD.getMonth() + 1; // месяц 1-12
+  if (mm < 10) mm = '0' + mm;
+  $("#period").text("Производственное задание на период с " + day + "."+ month + "." + year + " по " + endD.getDate() + "." + mm + "." + endD.getFullYear());
+}
+
+function printList(){
+  date = "[" + $("#datepicker").prop("value") + "]";
+  window.open(document.location.href + "print_list/"+date);
+}
+
+function countUnits(){
+  count = 0;
+  allAmm = 0;
+  var length = $("#prod").find('tr').length;
+  for (i=1; i < length-2; i++){
+    unit = $("#prod").find('tr').eq(i).find('input').prop('value');
+    if (unit == undefined || unit == ""){
+      unit = 0;
+    }
+    amm = $("#prod").find('tr').eq(i).find('td').eq(3).text();
+    count = count + parseInt(unit);
+    allAmm = allAmm + parseInt(unit) * parseFloat(amm);
+  }
+  $("#prod").find('tr').eq(length-2).find('td').eq(3).text(count);
+  $("#prod").find('tr').eq(length-1).find('td').eq(3).text((allAmm * 0.001).toFixed(2));
+}
+$(document).ready(function(){
+  var dp = $('#datepicker');
+  dp.datepicker({
+    format: "dd/mm/yyyy",
+    language: "ru",
+    todayHighlight: true
+  });
+  var now = new Date();
+  month = now.getMonth()+1;
+  if (month < 10){
+    month = '0' + month;
+  }
+  day = now.getDate() - now.getDay()+1;
+  if (day < 10){
+    day = '0' + day;
+  }
+  text = day + "/" + month + "/" + now.getFullYear() ;
+  $("#datepicker").prop("value", text);
+  changeWeek();
+  $("#nowDate").text(getNowDate());
+  getPlan();
+  $('.table tbody tr').each(function(i) {
+    length = $("#prod").find('tr').length;
+    if (i < length-3){
+      var number = i + 1;
+      $(this).find('td:first').text(number);
+    }
+  });
+//  $("#loadList input").attr("onchange", "changeMatAm({{compl_comp_comps}});return false;");
+});</script>
+
+<form action="save_month_plan/" method="post">
+  {% csrf_token %}
+<div class="panel panel-default" style ="margin: auto">
+  <div class="panel-heading">
+      <h4 class="panel-title">Задание на неделю </h4>
+      <hr>
+      <button type="button" class="btn btn-success" onclick="printList();return false;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>  Распечатать</button>
+  </div>
+  <div id = "test"></div>
+  <div class="input-group col-sm-10"  style ="margin: auto;margin-left:40pt">
+  <label for="datepicker" class="col-sm-1 control-label" style="font-size: medium; margin-top:10pt">Дата: </label>
+  <div class="input-group date col-sm-2" style="margin-top:5pt">
+  <input type="text" id="datepicker" name="month" onchange="changeWeek();getPlan();" class="form-control" >
+  <div class="input-group-addon">
+      <span class="glyphicon glyphicon-th"></span>
+  </div>
+</div>
+</div>
+<div class="panel panel-default" style ="margin: auto; margin-top: 5pt">
+  <div class="panel-heading">
+      <input type="hidden" id="plans" name="plans" value="{{plans}}">
+
+  </div>
+  <div class="panel-body">
+    <h4 id="period" style ="margin: auto;margin-left:40pt">Производственное задание на период с </h2>
+    <div class="sign">
+    <br>
+    <div style="margin-top:10pt;margin-left:40pt;font-size:12pt;float:left">Утверждено</div>
+    <div style="margin-top:10pt;margin-left:440pt;font-size:12pt;">Юзов В.А.</div>
+    <br>
+    <div style="margin-top:5pt;margin-left:40pt;font-size:12pt;float:left;">Дата</div>
+    <div id="nowDate" style="margin-top:5pt;margin-left:440pt;font-size:12pt;"></div>
+    </div>
+
+    <div style="margin-top:10pt;margin-left:40pt;margin-right:40pt" class="prod">
+    <table class="table table-hover table-sm  table-condensed" id="prod">
+      <thead>
+        <tr>
+          <th>№</th><th>Код</th><th>Наименование продукции</th><th>Вес ед, кг</th><th>Кол-во единиц</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products|dictsort:"get_name_for_table" %}
+        <tr><td></td><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td>{{p.production.compAmount}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="1" onchange="countUnits();"></td></tr>
+        {% endfor %}
+        <tr><td colspan="2"><b>Итого, штуки</b></td><td></td><td></td><td><b>0</b></td></tr>
+        <tr><td colspan="2"><b>Итого, тонны</b></td><td></td><td></td><td><b>0</b></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <hr>
+    <button class="btn btn-success" id = "submit" style="float: right; margin-right:40pt; margin-top:5pt">Сохранить</button>
+  </div>
+
+</div>
+
+  </div>
+</form>
+{% endblock content %}

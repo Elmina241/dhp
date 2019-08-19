@@ -1,0 +1,510 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+function pack(id, amm, newAm, t, pr_id){
+  var csrftoken = getCookie('csrftoken');
+  $("#packBtn").prop('disabled', true);
+  $.ajax({
+        type: "POST",
+        url: 'pack/',
+        data: {
+          'id': id,
+          'amm': newAm,
+          'type': t,
+          'pr_id' : pr_id,
+          'num' : $("#compAmm").prop("value"),
+          'at' : $('input[name=ammType]:checked').val()
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess()
+        {
+          var obj = $("#"+t+"-"+id);
+          res = (parseFloat(amm) - parseFloat(newAm)).toFixed(2);
+          obj.text(res);
+          obj.parent().find('td').eq(4).find('button').attr('data-amm', res)
+          if (res == 0){
+            obj.parent().find('td').eq(3).text("Пусто");
+            obj.parent().find('td').eq(4).html("");
+            obj.parent().find('td').eq(5).html("");
+          }
+          $("#packBtn").prop('disabled', false);
+          $("#pack").modal('hide');
+        }
+      });
+}
+
+function drop(id, t){
+  var csrftoken = getCookie('csrftoken');
+  $("#dropBtn").prop('disabled', true);
+  $.ajax({
+        type: "POST",
+        url: 'drop/',
+        data: {
+          'id': id,
+          'type': t
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          if (data == "ok"){
+            var obj = $("#"+t+"-"+id);
+            obj.text(0);
+            obj.parent().find('td').eq(3).text("Пусто");
+            obj.parent().find('td').eq(4).html("");
+            obj.parent().find('td').eq(5).html("");
+            $("#dropBtn").prop('disabled', false);
+            $("#confirm").modal('hide');
+          }
+          else {
+            $("#error_d").text("Композиция зарезервирована.");
+            $("#error_d").show();
+            $("#dropBtn").prop('disabled', false);
+          }
+        }
+
+      });
+}
+
+function move(acc, donor, amm){
+  var csrftoken = getCookie('csrftoken');
+  $("#error").hide();
+  $("#moveBtn").prop('disabled', true);
+  $.ajax({
+        type: "POST",
+        url: 'move/',
+        data: {
+          'acc': acc,
+          'donor': donor,
+          'amm': amm
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          if (data=="fail") {
+            $("#error").text("Композиция зарезервирована.");
+            $("#error").show();
+            $("#moveBtn").prop('disabled', false);
+          }
+          else{
+            location.reload();
+          }
+        }
+      });
+}
+
+function checkPack(id, amm, newAm, t){
+  prods = $("#products").prop("value");
+  prods = JSON.parse(prods);
+  pr_id = $("#prod").prop("value");
+  box_amm = prods[pr_id].amount;
+  at = $('input[name=ammType]:checked').val()
+  if (at == "left"){
+    pack_amm = amm - newAm;
+  }
+  else {
+    pack_amm = parseFloat(newAm);
+  }
+  if (pack_amm <= amm){
+    pack(id, amm, pack_amm, t, pr_id);
+  }
+}
+
+function getInf(id){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'get_stor_inf/',
+        data: {
+          'id': id
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          comps = JSON.parse(data);
+          var table = $("#compTable tbody");
+          var rowCount = $('#compTable tr').length;
+          for (i = 1; i < rowCount; i++) $('#compTable tr').eq(1).remove();
+          var matAm = 0;
+          $("#info3").html("<p>"+comps['name']+"</p><p>"+comps['code']+"</p><p>"+comps['finish']+"</p><p>"+"П-" +comps['batch']+"</p><p>"+comps['amount']+"</p>");
+          for (c in comps['comps']){
+            //matAm = matAm + comps[c].amount;
+            $("<tr><td>" + comps['comps'][c].code + "</td><td>" + comps['comps'][c].name + "</td><td>" + (comps['comps'][c].amount).toFixed(2) + "</td></tr>").appendTo(table);
+          }
+          //$("#tableName").text("Компоненты композиции " + comps[c].name);
+          $('#detail').modal('show');
+        }
+      });
+}
+
+function checkDrop(reserved, id, t){
+    $("#error_d").hide();
+    $("#dropBtn").unbind();
+    $("#dropBtn").click(function() {
+      drop(id, t);
+    });
+    $("#confirm").modal('show');
+}
+
+function checkMove(){
+  $("#error").hide();
+  acc = $('#accepting').val();
+  accId = acc.split("_")[0];
+  donor = $('#donor').val();
+  donorId = donor.split("_")[0];
+  donorF = donor.split("_")[1];
+  accF = acc.split("_")[1];
+  reserved = donor.split("_")[2];
+  amm = $('#moveAmm').val();
+  accepting = $("#c" + accId).parent();
+  donor = $("#c" + donorId).parent();
+  donorAm = parseFloat($(donor).find('td').eq(2).text());
+  accAm = parseFloat($(accepting).find('td').eq(2).text());
+  donorComp = $(donor).find('td').eq(3).text();
+  accComp = $(accepting).find('td').eq(3).text();
+  if (donorAm == 0) {
+    $("#error").text("Донор пуст");
+    $("#error").show();
+  }
+  else if(donorAm < amm){
+    $("#error").text("Недостаточно композиции в доноре");
+    $("#error").show();
+  }
+  else if(donorF!=accF&&accComp!="Пусто"){
+    $("#error").text("Акцептор не пуст");
+    $("#error").show();
+  }
+  else{
+    /*if (reserved > (donorAm - amm)){
+      $("#confirmButton").click(function() {
+        move(accId, donorId, amm);
+      });
+      $("#confirm").modal('show');
+      $("#move").modal('hide');
+    }*/
+    move(accId, donorId, amm);
+  }
+}
+
+function saveBounds(row){
+  var csrftoken = getCookie('csrftoken');
+  $.ajax({
+        type: "POST",
+        url: 'edit_amm/',
+        data: {
+          'id': $(row).parent().prop("id"),
+          'amm': $(row).parent().find("input").eq(0).prop("value")
+        },
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data)
+        {
+          $(row).parent().html(data + " <button class ='btn btn-default' onclick='editBounds(this," + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>")
+        }
+      });
+}
+
+function editBounds(row, amm){
+  var r = $(row).parent().parent();
+  r.find("td").eq(2).html("<input type='number' value='"+ amm +"'> <button class ='btn btn-default' onclick='saveBounds(this)'><i class='glyphicon glyphicon-ok'></i></button>");
+}
+
+function getSelOfProd(composition){
+  prods = $("#products").prop("value");
+  prods = JSON.parse(prods);
+  select = "";
+  for (p in prods){
+    if (composition == prods[p].composition) select = select + "<option value=" + p + ">" + prods[p].name + "</option>";
+  }
+  $("#prod").html(select);
+}
+
+$(document).ready(function(){
+  $("#moveBtn").prop('disabled', false);
+  $("#packBtn").prop('disabled', false);
+  $("#dropBtn").prop('disabled', false);
+  $("#prTable").tablesorter({sortList: [[3,0]]});
+  $('#pack').on('show.bs.modal', function (event) {
+    // получить кнопку, которая его открыло
+    var button = $(event.relatedTarget)[0];
+    var stor_id = $(button).attr("id");
+    var amm = button.dataset.amm;
+    var code = button.dataset.code;
+    var composition = button.dataset.composition;
+    var sType = button.dataset.t;
+    $(this).find('#amm').attr("value", amm);
+    $(this).find('#stor_id').attr("value", stor_id);
+    $(this).find('#storCode').text(code);
+    $(this).find('#storType').attr("value", sType);
+    getSelOfProd(composition);
+  });
+  $('#prTable tr').each(function(){
+    if ($(this).find('td').eq(3).text() != "Пусто"){
+      $(this).find('td').eq(1).on('click', function(){
+        var ind = $(this).parent().find('td').eq(2).attr("id");
+        getInf(ind);
+      });
+    }
+  }
+  );
+});
+</script>
+    {% csrf_token %}
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#move"  style="margin-bottom:5pt">Переток</button>
+          {% if reactors %}
+          <table class="table table-hover tablesorter" id="prTable">
+            <thead>
+              <tr>
+                <th>Код</th><th>Наименование</th><th>Объём</th><th>Содержимое</th><th></th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--<tr><td></td><td><b>Реакторы</b></td><td></td><td></td><td></td><td></td></tr>-->
+              {% for r in reactors %}
+              <tr>
+                <td id="cr-{{r.reactor.id}}">{{ r.reactor.code }}</td>
+                <td>{{ r.reactor.name }}</td>
+                {% if r.content_type == 1 %}
+                <td id="r-{{r.id}}">{{ r.amount|floatformat:"2" }} <button class ="btn btn-default" onclick='editBounds(this, {{ r.amount|floatformat:"2" }})'><i class="glyphicon glyphicon-pencil"></i></td>
+                {% else %}
+                <td id="r-{{r.id}}">{{ r.amount|floatformat:"2" }}</td>
+                {% endif %}
+                {% if r.content_type == 1 %}
+                <td>{{r.batch.id}} {{r.batch.kneading.list.formula}}</td>
+                {% if r.batch.kneading.list.formula.composition.isFinal %}
+                  <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-composition="{{r.batch.kneading.list.formula.composition.id}}" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
+                {% else %}
+                  <td></td>
+                {% endif %}
+                <td><button class="btn btn-danger btn-sm" type="button" data-res="{{r.reserved}}" id="{{r.id}}" onclick="checkDrop({{r.reserved}}, {{r.id}}, 'r');return false;">Сброс</button></td>
+                {% else %}
+                {% if r.content_type == 2 %}
+                <td>{{r.kneading.id}} {{r.kneading.list.formula}}</td>
+                <td></td>
+                <td><button class="btn btn-danger btn-sm" type="button" id="{{r.id}}" onclick="drop({{r.id}}, 'r');return false;">Сброс</button></td>
+                {% else %}
+                <td>Пусто</td>
+                <td></td><td></td>
+                {% endif %}
+                {% endif %}
+              </tr>
+              {% endfor %}
+              <!--<tr><td></td><td><b>Танки</b></td><td></td><td></td><td></td><td></td></tr>-->
+              {% for t in tanks %}
+              <tr>
+                <td id="ct-{{t.tank.id}}">{{ t.tank.code }}</td>
+                <td>{{ t.tank.name }}</td>
+                {% if t.content_type == 1 %}
+                    <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }} <button class ="btn btn-default" onclick='editBounds(this, {{ t.amount|floatformat:"2" }})'><i class="glyphicon glyphicon-pencil"></i></button></td>
+                {% else %}
+                <td id="t-{{t.id}}">{{ t.amount|floatformat:"2" }}</td>
+                {% endif %}
+                {% if t.content_type == 1 %}
+                <td>{{t.batch.id}} {{t.batch.kneading.list.formula}}</td>
+                {% if t.batch.kneading.list.formula.composition.isFinal %}
+                <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-composition="{{t.batch.kneading.list.formula.composition.id}}" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                <td><button class="btn btn-danger btn-sm" type="button"  id="{{t.id}}" data-formula="{{t.batch.kneading.list.formula.id}}" onclick="checkDrop({{t.reserved}}, {{t.id}}, 't');return false;">Сброс</button></td>
+                {% else %}
+                {% if t.content_type == 2 %}
+                <td>{{t.kneading.id}} {{t.kneading.list.formula}}</td>
+                <td></td>
+                <td><button class="btn btn-danger btn-sm" type="button" id="{{t.id}}" onclick="drop({{t.id}}, 't');return false;">Сброс</button></td>
+                {% else %}
+                <td>Пусто</td>
+                <td></td><td></td>
+                {% endif %}
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No materials are available right now.</p>
+          {% endif %}
+          <div class="modal fade" id="pack">
+            <div class="modal-dialog modal-md" >
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button class="close" data-dismiss="modal">x</button>
+                  <h4 id="storCode"></h4>
+                </div>
+                <div class="modal-body">
+                  <p>Количество, шт:</p>
+                  <input type="number" class="form-control" id="compAmm" step="1" style="margin-bottom:5pt">
+                  <p>Продукт:</p>
+                  <select id="prod" class="form-control" style="margin-bottom:5pt"></select>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="ammType" id="ammType1" value="all" checked>
+                      <label class="form-check-label" for="ammType1">
+                        Количество композиции
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="ammType" id="ammType2" value="left">
+                      <label class="form-check-label" for="ammType2">
+                        Остаток
+                      </label>
+                    </div>
+                    <input type="number" class="form-control" id="ammTypeNum" step="0.01" style="margin-bottom:5pt">
+                  <input type="hidden" id="stor_id" value="">
+                  <input type="hidden" id="amm" value="">
+                  <input type="hidden" id="storType" value="">
+                  <div class="modal-footer">
+                    <input value="Фасовать" id = "packBtn" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#ammTypeNum').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="products" value="{{products}}">
+            <div class="modal fade" id="detail">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4 id="tableName">Компоненты</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class ="info" style="margin-top:10pt;margin-left:5pt">
+                      <p>Наименование средства:</p>
+                      <p>Артикул:</p>
+                      <p>Дата:</p>
+                      <p>Номер партии:</p>
+                      <p>Вес:</p>
+                    </div>
+                    <div class ="info2" id="info3" style="margin-top:10pt">
+                    </div>
+                    <table class="table table-hover table-sm" id="compTable">
+                      <thead>
+                        <tr>
+                          <th>Код</th><th>Наименование</th><th>Масса, кг</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="confirm">
+              <div class="modal-dialog modal-sm" >
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4 id="storCode">Предупреждение</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div id="error_d" class="alert alert-danger" role="alert" style="display:none">
+                    </div>
+                    <p>Сбросить композицию?</p>
+                    <div class="modal-footer">
+                      <input value="Сброс" id = "dropBtn" onclick="" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="modal fade" id="move">
+              <div class="modal-dialog modal-md" >
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4>Переток</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div id="error" class="alert alert-danger" role="alert" style="display:none">
+                    </div>
+                    <div class="form-group">
+                    <div class="form-group">
+                      <label for="donor" class="col-sm-2 control-label" style="font-size: small">Донор: </label>
+                      <div class="col-sm-10">
+                        <select class="form-control" id="donor" name="donor">
+                          {% for r in reactors %}
+                            <option value="r-{{ r.reactor.id }}_{{r.batch.kneading.list.formula.id}}_{{r.reserved}}">{{ r.reactor }}</option>
+                          {% endfor %}
+                          {% for t in tanks %}
+                            <option value="t-{{ t.tank.id }}_{{t.batch.kneading.list.formula.id}}_{{t.reserved}}">{{ t.tank }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="accepting" style="margin-top:10pt" class="col-sm-2 control-label" style="font-size: small">Акцептор: </label>
+                      <div class="col-sm-10" style="margin-top:10pt">
+                        <select class="form-control" id="accepting" name="accepting">
+                          {% for r in reactors %}
+                            <option value="r-{{ r.reactor.id }}_{{r.batch.kneading.list.formula.id}}">{{ r.reactor }}</option>
+                          {% endfor %}
+                          {% for t in tanks %}
+                            <option value="t-{{ t.tank.id }}_{{t.batch.kneading.list.formula.id}}">{{ t.tank }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group" >
+                      <label for="moveAmm" class="col-sm-2 control-label" style="margin-top:10pt" style="font-size: small">
+                        Количество:
+                      </label>
+                      <div class="col-sm-10" style="margin-top:10pt">
+                      <div class="input-group"><input type="number" id="moveAmm" name="moveAmm" class="form-control" step="0.01"><span class="input-group-addon">кг</span></div>
+                      </div>
+                    </div>
+
+                    </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top:100pt">
+                      <input value="Применить" id = "moveBtn" onclick="checkMove();return false;" class="btn btn-primary" style="float: right"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  {% endblock content %}

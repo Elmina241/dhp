@@ -1,0 +1,146 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+<script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+function compare(a,b) {
+  if (a.id < b.id)
+    return 1;
+  if (a.id > b.id)
+    return -1;
+  return 0;
+}
+
+function changeDate(year) {
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "POST",
+        url: 'change_arch_date/',
+        data: {
+            'year': year
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            kneadings = JSON.parse(data);
+            kneadings.sort(compare);
+            code = "";
+            for (k in kneadings){
+                code = code + "<tr><td>" + kneadings[k]['id'] + "</td><td>" + kneadings[k]['name'] + "</td><td>" + kneadings[k]['batch'] + "</td><td>" + kneadings[k]['start'] + "</td><td>" + kneadings[k]['end'] + "</td></tr>";
+            }
+            $("#kneading-body").html(code);
+        }
+    });
+}
+
+
+function applyFilters(){
+  $("tr").each(function(){
+      $(this).show();
+  });
+  filterDate();
+}
+
+$(document).ready(function(){
+  var dp = $('#datepicker');
+  dp.datepicker({
+    format: "dd/mm/yyyy",
+    language: "ru",
+    todayHighlight: true
+  });
+  //$("#prTable").tablesorter({sortList: [[1,1]]});
+  $("[name='start']").change(applyFilters);
+  $("[name='end']").change(applyFilters);
+});
+function filterDate(){
+  var start = $("#groupDateStart").prop("value");
+  var startD = new Date(parseInt(start.substr(6)), (parseInt(start.substr(3,2)) - 1), parseInt(start.substr(0,2)));
+  var end = $("#groupDateEnd").prop("value");
+  var endD = new Date(parseInt(end.substr(6)), (parseInt(end.substr(3,2)) - 1), parseInt(end.substr(0,2)));
+    $("tr").filter(function() {
+        startText = $(this).find("td").eq(4).text();
+        startDate = new Date(parseInt(startText.substr(6)), (parseInt(startText.substr(3,2)) - 1), parseInt(startText.substr(0,2)));
+        return (startDate > endD || startDate < startD) || $(this).is(':hidden');
+      }).each(function(){
+        $(this).hide();
+      });
+    $("tr").eq(0).show();
+}
+
+</script>
+<div class="row">
+  <div class="col-sm-2">
+  <div class="input-group">
+      <span class="input-group-addon">Год</span>
+      <select id="year" class="form-control" onchange="changeDate($(this).val())">
+        {% for y in years %}
+          <option value="{{ y }}">{{ y }}</option>
+        {% endfor %}
+      </select>
+  </div>
+    <!--<span class="input-group-addon">Фильтр по дате</span>
+    <div class="input-daterange input-group" id="datepicker">
+        <input type="text" required data-provide="datepicker" class="input-sm form-control" name="start" id="groupDateStart"/>
+        <span class="input-group-addon">-</span>
+        <input type="text" required data-provide="datepicker" class="input-sm form-control" name="end" id="groupDateEnd"/>
+      </div>
+    </div>-->
+  </div>
+</div>
+<hr>
+<form action="del_process/" method="post">
+    {% csrf_token %}
+          <br><br>
+
+              <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
+                <thead>
+                  <tr>
+                    <th>№</th><th>Партия</th><th>Состав</th><th>Дата начала</th><th>Дата конца</th>
+                  </tr>
+                </thead>
+                <tbody id="kneading-body">
+                          {% if kneading %}
+                  {% for k in kneading|dictsortreversed:"pk" %}
+                  <tr>
+                    <td>{{ k.id }}</td>
+                    <td>П-{{ k.batch_num|floatformat:"0" }}</td>
+                    <td  onClick="window.location.href='/processes/archive/{{ k.id }}/'">{{ k.list.formula }}</td>
+                    <td>{{ k.start_date|date:"d.m.Y" }}</td>
+                    <td>{{ k.finish_date|date:"d.m.Y" }}</td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+              <tr><td colspan="5" align="center">Нет записей</td> </tr>
+              {% endif %}
+                </tbody>
+              </table>
+
+  {% endblock content %}

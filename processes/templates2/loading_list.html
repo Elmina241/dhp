@@ -1,0 +1,212 @@
+{% extends 'processes/base.html' %}
+{% block content %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#formula').trigger("change");
+            changeMatAm();
+            changeWaterP();
+            if ($("#isList").attr("value") == "true") disButtons();
+        });
+
+        function disButtons() {
+            $("#formula").prop("disabled", true);
+            $("button").prop("disabled", true);
+            $("#send").prop("disabled", true);
+            changeWaterTP();
+        }
+    </script>
+
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading">
+            {% if list == None %}
+                <h4 class="panel-title">Добавление записи</h4>
+                <input type="hidden" id="isList" value="false">
+            {% else %}
+                <h4 class="panel-title">Просмотр записи: {{ list }}</h4>
+                <input type="hidden" id="isList" value="true">
+            {% endif %}
+        </div>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="panel-body">
+            <div class="input-group col-sm-8" style="margin: auto">
+                <form id="form" action="save_list/" method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="formula" class="col-sm-2 control-label" style="font-size: medium">Состав: </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="formula" name="formula"
+                                    onchange="getCompositionP({{ components }}, {{ materials }}, {{ f_c }}, {{ f }});changeWaterP();changeWaterTP();return false;">
+                                {% for f in formulas %}
+                                    {% if list.formula == f %}
+                                        <option value="{{ f.id }}" selected>{{ f }}</option>
+                                    {% else %}
+                                        <option value="{{ f.id }}">{{ f }}</option>
+                                    {% endif %}
+                                {% endfor %}</select>
+                        </div>
+                    </div>
+                    <input type="hidden" id="json" name="json" value="">
+                    <input type="hidden" id="compl_comp_comps" name="compl_comp_comps" value="{{ f_c }}">
+                    <input type="hidden" id="f_c" name="f_c" value="{{ f_c }}">
+                    <input type="button" id="send" value="Сохранить" class="btn btn-primary" onclick="submitList();"
+                           style="float: right; margin-bottom:9pt"/>
+                </form>
+            </div>
+            <hr>
+            <div id="error" class="alert alert-danger" role="alert" style="display:none">
+                Загрузочный лист не соответствует составу
+            </div>
+            <div id="errors" class="alert alert-danger" role="alert" style="display:none">
+            </div>
+            <div class="col-sm-12">
+                <div class="col-md-12 col-lg-6">
+                    <div class="panel panel-default" style="margin: auto">
+                        <div class="panel-heading"><b><h4 class="panel-title">Состав</h4></b></div>
+                        <div class="panel-body">
+                            <table class="table table-sm" id="materials" style="width:100%; margin: auto">
+                                <thead>
+                                <tr>
+                                    <th>Код</th>
+                                    <th>Наименование</th>
+                                    <th>Мин., %</th>
+                                    <th>Макс., %</th>
+                                    <th>Количество, %</th>
+                                    <th>В загрузочном листе, %</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>ВД01</td>
+                                    <td>Вода</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td id="water"></td>
+                                    <td id="water2"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                    <div class="panel panel-default" style="margin: auto">
+                        <div class="panel-heading"><b><h4 class="panel-title">Загрузочный лист</h4></b>
+                            <hr>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i
+                                    class="glyphicon glyphicon-plus"></i> Реактив
+                            </button>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#newComplComp"><i
+                                    class="glyphicon glyphicon-plus"></i> Составной компонент
+                            </button>
+                            <div class="modal fade" id="newComp">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button class="close" data-dismiss="modal">x</button>
+                                            <h4>Добавление реактива</h4>
+                                        </div>
+                                        <div class="modal-body" style="height:80pt">
+                                            <div style="margin: auto">
+                                                <label for="material">Реактив:</label>
+                                                <select class="form-control" id="material">
+                                                    {% for m in materials2 %}
+                                                        <option value="{{ m.id }}">{{ m.get_full_name }}</option>
+                                                    {% endfor %}</select>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                    onclick="addMaterialP();return false;">Добавить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="newComplComp">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button class="close" data-dismiss="modal">x</button>
+                                            <h4>Добавление составного компонента</h4>
+                                        </div>
+                                        <div class="modal-body" style="height:80pt">
+                                            <div style="margin: auto">
+                                                <label for="material">Технологическая композиция:</label>
+                                                <select class="form-control" id="complComp">
+                                                    <!-- было get_name2 -->
+                                                    {% for c in compl_comps|dictsort:"get_short_name" %}
+                                                        <option value="{{ c.id }}">{{ c.code }} {{ c.get_short_name }} {{ c.composition.name }}</option>
+                                                    {% endfor %}</select>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                    onclick="addComplCompP();return false;">Добавить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="panel-body">
+                            <table class="table table-sm" id="loadList" style="width:100%; margin: auto">
+                                <thead>
+                                <tr>
+                                    <th>Код</th>
+                                    <th>Наименование</th>
+                                    <th>Количество, %</th>
+                                    <th>-, %</th>
+                                    <th>+, %</th>
+                                    <th></th>
+                                    <th style="visibility:collapse;width:1px">%</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>ВД01</td>
+                                    <td>Вода</td>
+                                    <td id="water1"></td>
+                                </tr>
+                                {% for c in list_comps %}
+                                    {% if c.mat == None %}
+                                        <tr id="{{ c.formula.id }}" name="compl">
+                                            <td>{{ c.formula.code }}</td>
+                                            <td>{{ c.formula }}</td>
+                                            <td><input type="number" value="{{ c.ammount }}"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td></td>
+                                            <td></td>
+
+                                        </tr>
+                                    {% else %}
+                                        <tr id="{{ c.mat.id }}">
+                                            <td>{{ c.mat.code }}</td>
+                                            <td>{{ c.mat }}</td>
+                                            <td><input type="number" value="{{ c.ammount }}"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td><input type="number" value="0"></td>
+                                            <td></td>
+                                            <td></td>
+
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock content %}
