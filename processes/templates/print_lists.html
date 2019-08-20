@@ -85,6 +85,9 @@
       <p>Дата:</p>
       <p>Номер партии:</p>
       <p>Вес:</p>
+        {% if values.num != 1 %}
+        <p>Количество замесов:</p>
+            {% endif %}
       <b><p>Компоненты:</p></b>
     </div>
     <div class ="info2">
@@ -93,6 +96,9 @@
       <p>{{values.start_date|date:"d.m.Y"}} - {{values.finish_date|date:"d.m.Y"}}</p>
       <p>{{values.batch_num|floatformat:"0"}}</p>
       <p>{{values.amount}}</p>
+        {% if values.num != 1 %}
+        <p>{{values.num}}</p>
+            {% endif %}
     </div>
     <div style="margin-top:5pt;margin-left:40pt;margin-right:40pt" class="comps">
     <table class="table table-hover table-sm  table-bordered table-condensedtable">
@@ -130,6 +136,9 @@
       <p>Дата:</p>
       <p>Номер партии:</p>
       <p>Вес:</p>
+        {% if values.num != 1 %}
+        <p>Количество замесов:</p>
+            {% endif %}
       <b><p>Компоненты:</p></b>
     </div>
     <div class ="info2">
@@ -138,6 +147,9 @@
       <p>{{values.start_date|date:"d.m.Y"}} - {{values.finish_date|date:"d.m.Y"}}</p>
       <p>{{values.batch_num|floatformat:"0"}}</p>
       <p>{{values.amount}}</p>
+        {% if values.num != 1 %}
+        <p>{{values.num}}</p>
+            {% endif %}
     </div>
     <div style="margin-top:5pt;margin-left:40pt;margin-right:40pt" class="comps">
     <table class="table table-hover table-sm  table-bordered table-condensedtable">

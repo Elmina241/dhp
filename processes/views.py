@@ -208,6 +208,12 @@ def print_week_plan(request, month):
     text_month = month[1:11]
     return render(request, "print_week_plan.html", {"products": Product.objects.all(), "plans": json.dumps(serializers.serialize("json", Month_plan.objects.all())), "plans2": Month_plan.objects.filter(month = text_month), "date": text_month})
 
+def has_batch(data, formula_pk, batch_num):
+    for d in data:
+        if data[d]['batch_num'] == batch_num and data[d]['formula_pk'] == formula_pk:
+            return d
+    return None
+
 def print_lists(request, lists, kneading_id = None):
     list_ids = json.loads(lists)
     data = {}
@@ -215,26 +221,29 @@ def print_lists(request, lists, kneading_id = None):
     for l in list_ids:
         amm = 0
         k = get_object_or_404(Kneading, pk=l)
-        data[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "name": str(k), "start_date": k.start_date, "finish_date": k.finish_date, "reactor": k.reactor.pk, "amount": k.list.ammount, "list": k.list.pk, "code": str(k.list.formula.code), "isFinal": k.list.formula.composition.isFinal}
-        for c in List_component.objects.filter(list = k.list):
-            amm = amm + c.ammount
-            if c.compl is None:
-                if c.r_cont is None and c.t_cont is None and c.formula is None:
-                    list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.mat), "ammount": c.ammount, "min": c.min, "max": c.max}
-                else:
-                    if c.t_cont is not None:
-                        list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.t_cont.batch.kneading.list.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
+        res = has_batch(data, k.list.formula.pk, k.batch_num)
+        if res is None:
+            data[str(k.pk)] = {"id": k.pk, "batch_num": k.batch_num, "num": 1, "formula_pk": k.list.formula.pk, "name": str(k), "start_date": k.start_date, "finish_date": k.finish_date, "reactor": k.reactor.pk, "amount": k.list.ammount, "list": k.list.pk, "code": str(k.list.formula.code), "isFinal": k.list.formula.composition.isFinal}
+            for c in List_component.objects.filter(list = k.list):
+                amm = amm + c.ammount
+                if c.compl is None:
+                    if c.r_cont is None and c.t_cont is None and c.formula is None:
+                        list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.mat), "ammount": c.ammount, "min": c.min, "max": c.max}
                     else:
-                        if c.r_cont is not None:
-                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.r_cont.batch.kneading.list.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
+                        if c.t_cont is not None:
+                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.t_cont.batch.kneading.list.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
                         else:
-                            list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
-            else:
-                list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.compl.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
-        water = Material.objects.filter(code = "ВД01")[0]
-        if round(k.list.ammount - amm, 2)!=0:
-            list_comps[str(water.pk) + str(k.id)] = {"list": c.list.pk, "name": str(water), "ammount": math.fabs(k.list.ammount - amm), "min": None, "max": None}
-
+                            if c.r_cont is not None:
+                                list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.r_cont.batch.kneading.list.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
+                            else:
+                                list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
+                else:
+                    list_comps[str(c.pk)] = {"list": c.list.pk, "name": str(c.compl.formula), "ammount": c.ammount, "min": c.min, "max": c.max}
+            water = Material.objects.filter(code = "ВД01")[0]
+            if round(k.list.ammount - amm, 2)!=0:
+                list_comps[str(water.pk) + str(k.id)] = {"list": c.list.pk, "name": str(water), "ammount": math.fabs(k.list.ammount - amm), "min": None, "max": None}
+        else:
+            data[res]['num'] = data[res]['num'] + 1
     return render(request, "print_lists.html", {"kneading": data, "comps": list_comps})
 
 def del_process(request, kneading_id = None):

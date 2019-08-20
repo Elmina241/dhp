@@ -148,7 +148,7 @@ $(document).ready(function(){
               <h4>Редактирование загрузочного листа</h4>
             </div>
             <div class="modal-body">
-  <label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" onchange="recalculateList({{load_list}}, {{p.list.ammount}});changeMinMax2({{components}}, {{c_id}});changeWater();return false;"><span class="input-group-addon">кг</span></div>
+  <label for="ammount" class="col-sm-2 control-label" style="font-size: medium">Объём: </label><div class="col-sm-10"><div class="input-group"><input id="ammount" name="ammount" type="number" value="{{p.list.ammount}}" min="0" class="form-control" onchange="recalculateList({{load_list}}, {{p.list.ammount}});changeWater();return false;"><span class="input-group-addon">кг</span></div>
 </div>
 
         <input hidden class="form-control" id="formula" name="formula" onchange="getLoadList({{load_list}}, 'materials');changeWater();return false;" value="{{p.list.formula.id}}">
