@@ -294,7 +294,7 @@ function getInf(id, isEdit = true) {
                         code = code + "<select class='form-control form-control-sm default'>";
                         for (p in propVars) {
                             if (propVars[p].fields.prop == inf.props[i].id) {
-                                if (propVars[p].pk = inf.props[i].default) {
+                                if (propVars[p].pk == inf.props[i].default) {
                                     code = code + "<option value='" + propVars[p].pk + "' selected>" + propVars[p].fields.name + "</option>";
                                 }
                                 else {
