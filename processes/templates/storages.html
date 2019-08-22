@@ -131,20 +131,26 @@ function move(acc, donor, amm){
 }
 
 function checkPack(id, amm, newAm, t){
-  prods = $("#products").prop("value");
-  prods = JSON.parse(prods);
-  pr_id = $("#prod").prop("value");
-  box_amm = prods[pr_id].amount;
-  at = $('input[name=ammType]:checked').val()
-  if (at == "left"){
-    pack_amm = amm - newAm;
-  }
-  else {
-    pack_amm = parseFloat(newAm);
-  }
-  if (pack_amm <= amm){
-    pack(id, amm, pack_amm, t, pr_id);
-  }
+    $('#ammTypeNum').prop('max', amm);
+    if ($('#packForm')[0].checkValidity()) {
+        prods = $("#products").prop("value");
+        prods = JSON.parse(prods);
+        pr_id = $("#prod").prop("value");
+        box_amm = prods[pr_id].amount;
+        at = $('input[name=ammType]:checked').val();
+        if (at == "left") {
+            pack_amm = amm - newAm;
+        }
+        else {
+            pack_amm = parseFloat(newAm);
+        }
+        if (pack_amm <= amm) {
+            pack(id, amm, pack_amm, t, pr_id);
+        }
+    }
+    else {
+        $('<input type="submit">').hide().appendTo("#packForm").click().remove();
+    }
 }
 
 function getInf(id){
@@ -376,8 +382,9 @@ $(document).ready(function(){
                   <h4 id="storCode"></h4>
                 </div>
                 <div class="modal-body">
+                    <form id="packForm">
                   <p>Количество, шт:</p>
-                  <input type="number" class="form-control" id="compAmm" step="1" style="margin-bottom:5pt">
+                  <input type="number" class="form-control" id="compAmm" step="1" style="margin-bottom:5pt" required>
                   <p>Продукт:</p>
                   <select id="prod" class="form-control" style="margin-bottom:5pt"></select>
                     <div class="form-check">
@@ -392,13 +399,13 @@ $(document).ready(function(){
                         Остаток
                       </label>
                     </div>
-                    <input type="number" class="form-control" id="ammTypeNum" step="0.01" style="margin-bottom:5pt">
+                    <input type="number" class="form-control" id="ammTypeNum" step="0.01" style="margin-bottom:5pt" required>
                   <input type="hidden" id="stor_id" value="">
                   <input type="hidden" id="amm" value="">
                   <input type="hidden" id="storType" value="">
                   <div class="modal-footer">
-                    <input value="Фасовать" id = "packBtn" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#ammTypeNum').val(), $('#storType').val());return false;" class="btn btn-primary" data-dismiss="modal" style="float: right"/> </div>
-                  </div>
+                    <input value="Фасовать" id = "packBtn" onclick="checkPack($('#stor_id').val(), $('#amm').val(), $('#ammTypeNum').val(), $('#storType').val());return false;" class="btn btn-primary" style="float: right"/> </div>
+                  </form></div>
                 </div>
               </div>
             </div>
