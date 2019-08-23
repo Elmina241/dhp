@@ -280,11 +280,12 @@ $(document).ready(function(){
     var stor_id = $(button).attr("id");
     var amm = button.dataset.amm;
     var code = button.dataset.code;
+    var name = button.dataset.name;
     var composition = button.dataset.composition;
     var sType = button.dataset.t;
     $(this).find('#amm').attr("value", amm);
     $(this).find('#stor_id').attr("value", stor_id);
-    $(this).find('#storCode').text(code);
+    $(this).find('#storCode').text(code + " " + name);
     $(this).find('#storType').attr("value", sType);
     getSelOfProd(composition);
   });
@@ -322,7 +323,7 @@ $(document).ready(function(){
                 {% if r.content_type == 1 %}
                 <td>{{r.batch.id}} {{r.batch.kneading.list.formula}}</td>
                 {% if r.batch.kneading.list.formula.composition.isFinal %}
-                  <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-composition="{{r.batch.kneading.list.formula.composition.id}}" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
+                  <td><button class="btn btn-primary btn-sm" type="button" id="{{r.id}}" data-toggle="modal" data-target="#pack" data-name="{{ r.reactor.name }}" data-composition="{{r.batch.kneading.list.formula.composition.id}}" data-code="{{r.reactor.code}}" data-t="r" data-amm="{{r.amount}}">Фасовка</button></td>
                 {% else %}
                   <td></td>
                 {% endif %}
@@ -352,7 +353,7 @@ $(document).ready(function(){
                 {% if t.content_type == 1 %}
                 <td>{{t.batch.id}} {{t.batch.kneading.list.formula}}</td>
                 {% if t.batch.kneading.list.formula.composition.isFinal %}
-                <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-composition="{{t.batch.kneading.list.formula.composition.id}}" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
+                <td><button class="btn btn-primary btn-sm" type="button" id="{{t.id}}" data-toggle="modal" data-name="{{ t.tank.name }}" data-composition="{{t.batch.kneading.list.formula.composition.id}}" data-target="#pack" data-code="{{t.tank.code}}" data-t="t" data-amm="{{t.amount}}">Фасовка</button></td>
                 {% else %}
                 <td></td>
                 {% endif %}

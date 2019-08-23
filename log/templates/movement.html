@@ -215,6 +215,7 @@
                     $("#prod").text(prod["inf_a"]['name']);
                     $("#passDate").text(prod["inf_a"]['date']);
                     $("#amount").text(prod["inf_a"]['amount'].toFixed(2));
+                    $("#packAmount").text(prod["inf_a"]['pack_amount'].toFixed(2));
                     $("#batch").text(prod["inf_a"]['batch']);
                     $("#standard").text(prod["inf_a"]['standard']);
                     $("#standard2").text(prod["inf_a"]['standard']);
@@ -577,6 +578,9 @@
                         <br>
                         <p class="line">Вес партии, кг: &nbsp;</p>
                         <div id="amount" class="line"></div>
+                        <br>
+                        <p class="line">Расфасовано, кг: &nbsp;</p>
+                        <div id="packAmount" class="line"></div>
                         <br>
                         <p class="line">Дата изготовления: &nbsp;</p>
                         <div id="passDate" class="line"></div>
