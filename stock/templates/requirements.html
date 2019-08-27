@@ -25,6 +25,8 @@
             units = JSON.parse($("#units").prop("value"));
             stocks = JSON.parse($("#stock_data").prop("value"));
             reqs = JSON.parse($("#reqs").prop("value"));
+            //console.log(Object.entries(reqs).reverse());
+            reqs = Object.values(reqs).reverse();
             addGoodField();
             loadReqs("-1");
             getStocks('acceptor');
@@ -129,7 +131,7 @@
             if (stock == "-1") {
                 for (r in reqs) {
                     if (role == reqs[r].role){
-                        status = getStatus(reqs[r].access, reqs[r].id);
+                        status = getStatus(reqs[r].access, r);
                     code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].provider + "</td><td><span class='stock'>" + reqs[r].donor + " </span>" + editBtn + "</td><td>" + reqs[r].release_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                 }
                 }
@@ -138,7 +140,7 @@
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
                         if (role == reqs[r].role) {
-                            status = getStatus(reqs[r].access, reqs[r].id);
+                            status = getStatus(reqs[r].access, r);
                             code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].provider + "</td><td><span class='stock'>" + reqs[r].donor + " </span>" + editBtn + "</td><td>" + reqs[r].release_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
                         }
                     }
@@ -154,12 +156,13 @@
         function saveDate(obj, id) {
             var date = $(obj).prop('value');
             var csrftoken = getCookie('csrftoken');
+            var pk = reqs[id].id;
             $.ajax({
                 type: "POST",
                 url: 'save_date/',
                 data: {
                     'date': date,
-                    'id': id,
+                    'id': pk,
                     't': 0
                 },
                 beforeSend: function (xhr, settings) {
@@ -241,8 +244,9 @@
     <input value="{{ stockData }}" id="stock_data" hidden/>
     <input value="{{ units }}" id="units" hidden/>
     <input value="{{ reqs }}" id="reqs" hidden/>
-    <div style="position: fixed; top: 69px; left: 120px"><span onclick="toggleReqs(this, true)" class="toggle">Входящие</span> / <span onclick="toggleReqs(this, false)" class="toggle active">Исходящие</span></div>
-    <div class="container-fluid">
+
+    <div class="container-fluid" style="position: relative">
+    <div style="position: absolute; margin-top: -72px; margin-left: 120px"><span onclick="toggleReqs(this, true)" class="toggle">Входящие</span> / <span onclick="toggleReqs(this, false)" class="toggle active">Исходящие</span></div>
         <input value="{{ count_data }}" id="countData" hidden/>
 
 

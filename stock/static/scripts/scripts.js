@@ -1615,11 +1615,12 @@ function getStockGoods(id) {
 
 function getDemandGoods(id, t = "d") {
     var csrftoken = getCookie('csrftoken');
+    var pk = reqs[id].id;
     $.ajax({
         type: "POST",
         url: 'get_demand_goods/',
         data: {
-            'id': id,
+            'id': pk,
             't': t
         },
         beforeSend: function (xhr, settings) {
@@ -1683,7 +1684,7 @@ function openSupply(isDonor) {
             type: "POST",
             url: 'save_stock_operation/',
             data: {
-                'id': id,
+                'id': reqs[id].id,
                 'operation': operation,
                 'cause': 1,
                 'goods': JSON.stringify(goods),
@@ -1707,7 +1708,7 @@ function endShipment(id) {
         type: "POST",
         url: 'finish_shipment/',
         data: {
-            'id': id
+            'id': reqs[id].id
         },
         beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1723,12 +1724,13 @@ function endShipment(id) {
 function saveChangedStock(obj, isDonor) {
     stock = $("#editStock").val();
     id = obj.parentElement.parentElement.parentElement.id.substr(2);
+    var pk = reqs[id].id;
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
         url: 'save_changed_stock/',
         data: {
-            'id': id,
+            'id': pk,
             'stock': stock,
             'is_donor': isDonor
         },
@@ -1747,12 +1749,13 @@ function saveChangedStock(obj, isDonor) {
 function saveStatus(obj) {
     status = $("option:selected", obj).val();
     id = obj.parentElement.parentElement.parentElement.id.substr(2);
+    var pk = reqs[id].id;
     var csrftoken = getCookie('csrftoken');
     $.ajax({
         type: "POST",
         url: 'save_status/',
         data: {
-            'id': id,
+            'id': pk,
             'status': status
         },
         beforeSend: function (xhr, settings) {

@@ -10,11 +10,13 @@
     <link rel="stylesheet" href="{% static 'css/tree.css' %}">
     <script type="text/javascript">
         $(document).ready(function () {
-            permissions = JSON.parse($("#permissions").prop("value"));
-            for (p in permissions){
-                if (!permissions[p]) {
-                    $(".p"+p).addClass("disabled");
-                    $(".p"+p).on('click', false);
+            if ($("#permissions").prop("value")!=undefined) {
+                permissions = JSON.parse($("#permissions").prop("value"));
+                for (p in permissions) {
+                    if (!permissions[p]) {
+                        $(".p" + p).addClass("disabled");
+                        $(".p" + p).on('click', false);
+                    }
                 }
             }
         });
@@ -24,7 +26,8 @@
 {% if request.user.username %}
     <input id="permissions" value="{{ permissions }}" hidden>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark pg">
-<a class="btn btn-info" href="/stock/" role="button">
+<div>
+<a class="btn btn-outline-info" href="/stock/" role="button">
                 Главная
             </a>
 <div class="btn-group" style="margin-left: 5px">
@@ -75,12 +78,13 @@
             </div>
         </div>
     </div>
+    </div>
     <div class="form-inline my-2 my-lg-0" style="position: absolute; right: 5px; display: block"><span class="navbar-text"><span style="font-size: 24pt; display: inline-block; vertical-align: middle; "><i class="fas fa-user-circle"></i></span><span style="display: inline-block; vertical-align: middle; width: 150px; line-height: 17px; margin-left: 10px">{{ request.user.username }}<br> <span style="font-size: 10pt;">{{ user_group }} </span><a href="/stock/logout/" style="font-size: 11px">(Выйти)</a></span></span></div>
 </nav>
 <div class="header-panel pg">
 <h4 class="header">{{ header }}</h4>
 </div>
-{% elif request.path != "/stock/" %}
+{% elif request.path != "/stock/" and request.path != "/stock/login/" %}
     <script>document.location.href = "/stock/login/";</script>
 {% endif %}
 {% block content %}

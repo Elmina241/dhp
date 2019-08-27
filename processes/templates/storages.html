@@ -269,6 +269,16 @@ function getSelOfProd(composition){
   $("#prod").html(select);
 }
 
+function getSelOfPacks(composition){
+  packs = $("#packages").prop("value");
+  packs = JSON.parse(packs);
+  choises = "";
+  for (p in packs){
+    if (composition == packs[p].composition) choises = choises + "<input type='checkbox' value=" + p + "/>" + packs[p].name;
+  }
+  $("#prod").html(select);
+}
+
 $(document).ready(function(){
   $("#moveBtn").prop('disabled', false);
   $("#packBtn").prop('disabled', false);
@@ -401,6 +411,8 @@ $(document).ready(function(){
                       </label>
                     </div>
                     <input type="number" class="form-control" id="ammTypeNum" step="0.01" style="margin-bottom:5pt" required>
+                        <p>Упаковки:</p>
+                        <div id="packages"></div>
                   <input type="hidden" id="stor_id" value="">
                   <input type="hidden" id="amm" value="">
                   <input type="hidden" id="storType" value="">

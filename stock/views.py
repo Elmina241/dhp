@@ -367,7 +367,7 @@ def offers(request):
 def requirements(request):
     counter = User_group.objects.filter(user = request.user)[0]
     reqs = {}
-    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand= True).exclude(matrix__access='4'):
+    for r in Demand.objects.filter(Q(consumer=counter.group) | Q(provider=counter.group)).filter(is_closed = False).filter(is_demand= True).exclude(matrix__access='4').order_by('-pk'):
         if r.consumer == counter.group:
             role = '2'
         else:

@@ -28,6 +28,7 @@
             addGoodField();
             getStocks('acceptor');
             reqs = JSON.parse($("#reqs").prop("value"));
+            reqs = Object.values(reqs).reverse();
             loadReqs("-1");
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");

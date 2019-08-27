@@ -31,6 +31,7 @@
             getStocks('acceptor');
 
             reqs = JSON.parse($("#reqs").prop("value"));
+            reqs = Object.values(reqs).reverse();
             loadReqs("-1");
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
@@ -52,13 +53,14 @@
 
         function saveDate(obj, id, t) {
             var date = $(obj).prop('value');
+            var pk = reqs[id].id;
             var csrftoken = getCookie('csrftoken');
             $.ajax({
                 type: "POST",
                 url: 'save_date/',
                 data: {
                     'date': date,
-                    'id': id,
+                    'id': pk,
                     't': t
                 },
                 beforeSend: function (xhr, settings) {
