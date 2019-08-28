@@ -41,6 +41,7 @@ class Packing_divergence(models.Model):
     date = models.DateField(auto_now_add=True, null=True)
     product = models.ForeignKey('tables.Product', on_delete=models.CASCADE)
     prod_num = models.FloatField()
+    pack_amm_set = models.CharField(max_length=80)
     def __str__(self):
         return "test"
 

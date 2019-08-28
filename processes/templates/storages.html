@@ -270,13 +270,19 @@ function getSelOfProd(composition){
 }
 
 function getSelOfPacks(composition){
-  packs = $("#packages").prop("value");
+  packs = $("#packs").prop("value");
   packs = JSON.parse(packs);
+  var set = new Set();
   choises = "";
   for (p in packs){
-    if (composition == packs[p].composition) choises = choises + "<input type='checkbox' value=" + p + "/>" + packs[p].name;
+      if (composition == packs[p].composition) {
+          if (!set.has(packs[p].amount)) {
+              choises = choises + "<label class='checkbox-inline'><input type='checkbox' checked value=" + packs[p].amount + "/> " + packs[p].amount + " г.</label> ";
+              set.add(packs[p].amount);
+          }
+      }
   }
-  $("#prod").html(select);
+  $("#packages").html(choises);
 }
 
 $(document).ready(function(){
@@ -298,6 +304,7 @@ $(document).ready(function(){
     $(this).find('#storCode').text(code + " " + name);
     $(this).find('#storType').attr("value", sType);
     getSelOfProd(composition);
+    getSelOfPacks(composition);
   });
   $('#prTable tr').each(function(){
     if ($(this).find('td').eq(3).text() != "Пусто"){
@@ -423,6 +430,7 @@ $(document).ready(function(){
               </div>
             </div>
             <input type="hidden" id="products" value="{{products}}">
+            <input type="hidden" id="packs" value="{{packs}}">
             <div class="modal fade" id="detail">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">

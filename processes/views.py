@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 #from typing import Any
 
-from tables.models import Product, Composition, Comp_prop_var, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
+from tables.models import Production, Product, Composition, Comp_prop_var, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, Reactor, Tank
 from .models import Month_plan, Pack_process, Batch_comp, Reactor_content, Tank_content, Model_list, Model_component, Kneading_char_number, Batch, Kneading_char_var, Loading_list, List_component, Kneading, State, State_log, Kneading_char
 from log.models import Movement_rec, Operation, Packing_divergence, Packaged
 import json
@@ -23,7 +23,13 @@ def storages3(request):
     prods = {}
     for p in Product.objects.all():
         prods[str(p.pk)] = {'name': p.code + " " + p.get_name_for_table(), 'composition': p.production.composition.id, 'amount': p.production.get_boxing_amm()}
-    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all, "products": json.dumps(prods)})
+    packs = {}
+    for p in Production.objects.all():
+        if p.compAmount != 0 and p.compAmount != 5:
+            amm = int(p.compAmount * 1000)
+            packs[str(p.pk)] = {'composition': p.composition.id,
+                            'amount': amm}
+    return render(request, "storages.html", {"header": "Хранилища", "location": "/processes/storages/", "reactors": Reactor_content.objects.all, "tanks": Tank_content.objects.all, "reactor": Reactor.objects.all, "tank": Tank.objects.all, "products": json.dumps(prods), "packs": json.dumps(packs)})
 
 def mixing(request, kneading_id = -1):
     if kneading_id != -1:
