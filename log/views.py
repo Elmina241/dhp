@@ -225,7 +225,11 @@ def get_pass(request):
                                             start_date__year=product.batch.kneading.start_date.year)
         for p in processes:
             amount = amount + p.list.ammount
-        div = Packing_divergence.objects.filter(batch=product.batch, date=product.date)[0]
+        div = Packing_divergence.objects.filter(batch=product.batch, date=product.date).last()
+        if div.pack_amm_set is None:
+            pack = product.batch.kneading.list.formula.composition.get_package_pass()
+        else:
+            pack = div.get_package_pass()
         inf_a = {
             "id": pass_num,
             "code": product.product.code,
@@ -235,7 +239,7 @@ def get_pass(request):
             "pack_amount": div.pack_amm,
             "date": product.date.strftime('%d.%m.%Y'),
             "standard": product.batch.kneading.list.formula.composition.standard,
-            "pack": product.batch.kneading.list.formula.composition.get_package_pass(),
+            "pack": pack,
             "sh_life": product.batch.kneading.list.formula.composition.sh_life
         }
         kneading = product.batch.kneading

@@ -676,6 +676,7 @@ def pack(request, pack_id = None):
         div.prod_num = request.POST['num']
         div.start_amm = storage.amount
         div.pack_amm = request.POST['amm']
+        div.pack_amm_set = request.POST['pack_amm_set']
         storage.amount = storage.amount - float(request.POST['amm'])
         prod = get_object_or_404(Product, pk=request.POST['pr_id'])
         div.product = prod

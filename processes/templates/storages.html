@@ -27,7 +27,7 @@ $.ajaxSetup({
         }
     }
 });
-function pack(id, amm, newAm, t, pr_id){
+function pack(id, amm, newAm, t, pr_id, pack_amm_set){
   var csrftoken = getCookie('csrftoken');
   $("#packBtn").prop('disabled', true);
   $.ajax({
@@ -39,7 +39,8 @@ function pack(id, amm, newAm, t, pr_id){
           'type': t,
           'pr_id' : pr_id,
           'num' : $("#compAmm").prop("value"),
-          'at' : $('input[name=ammType]:checked').val()
+          'at' : $('input[name=ammType]:checked').val(),
+            'pack_amm_set': pack_amm_set
         },
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -138,6 +139,12 @@ function checkPack(id, amm, newAm, t){
         pr_id = $("#prod").prop("value");
         box_amm = prods[pr_id].amount;
         at = $('input[name=ammType]:checked').val();
+        var packs = $("#packages").find('input:checked');
+        var pack_amm_set = "";
+        for (i = 0; i < packs.length; i++){
+            if (pack_amm_set == "") pack_amm_set = $(packs[i]).val();
+            else pack_amm_set = pack_amm_set + "_" + $(packs[i]).val();
+        }
         if (at == "left") {
             pack_amm = amm - newAm;
         }
@@ -145,7 +152,7 @@ function checkPack(id, amm, newAm, t){
             pack_amm = parseFloat(newAm);
         }
         if (pack_amm <= amm) {
-            pack(id, amm, pack_amm, t, pr_id);
+            pack(id, amm, pack_amm, t, pr_id, pack_amm_set);
         }
     }
     else {
@@ -277,7 +284,7 @@ function getSelOfPacks(composition){
   for (p in packs){
       if (composition == packs[p].composition) {
           if (!set.has(packs[p].amount)) {
-              choises = choises + "<label class='checkbox-inline'><input type='checkbox' checked value=" + packs[p].amount + "/> " + packs[p].amount + " г.</label> ";
+              choises = choises + "<label class='checkbox-inline'><input type='checkbox' checked value=" + packs[p].amount + " /> " + packs[p].amount + " г.</label> ";
               set.add(packs[p].amount);
           }
       }

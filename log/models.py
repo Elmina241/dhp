@@ -41,9 +41,23 @@ class Packing_divergence(models.Model):
     date = models.DateField(auto_now_add=True, null=True)
     product = models.ForeignKey('tables.Product', on_delete=models.CASCADE)
     prod_num = models.FloatField()
-    pack_amm_set = models.CharField(max_length=80)
+    pack_amm_set = models.CharField(max_length=80, null=True, blank=True)
     def __str__(self):
         return "test"
+    def get_package_pass(self):
+        amms = self.pack_amm_set.split('_')
+        length = len(amms)
+        i = 1
+        res = ""
+        for a in amms:
+            res = res + a
+            if i == length:
+                res = res + " г"
+            else:
+                res = res + " или "
+            i = i + 1
+        return res
+
 
 class Acceptance(models.Model):
     code = models.IntegerField()
