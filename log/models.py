@@ -48,7 +48,7 @@ class Packing_divergence(models.Model):
         amms = self.pack_amm_set.split('_')
         length = len(amms)
         i = 1
-        res = ""
+        res = self.product.production.composition.package + " по "
         for a in amms:
             res = res + a
             if i == length:
