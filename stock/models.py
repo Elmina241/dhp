@@ -285,7 +285,7 @@ class Stock_good(models.Model):
     stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
     good = models.ForeignKey('Goods', on_delete=models.CASCADE)
     unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
+    amount = models.FloatField(default=0)
     cost = models.FloatField(default=0, blank=True)
     def __str__(self):
         return str(self.stock) + ' ' + str(self.good)
