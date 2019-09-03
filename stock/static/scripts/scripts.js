@@ -635,6 +635,7 @@ function validateDemand() {
 
 function saveDemand(isDemand) {
     if ($('#form')[0].checkValidity()) {
+        $("#saveDemandBtn").prop("disabled", true);
         goods = {};
         $("#add_goods").find(".good-item").each(function (item) {
             goods[item] = {};
@@ -673,6 +674,7 @@ function saveDemand(isDemand) {
 
 function saveSupply() {
     if ($('#form')[0].checkValidity()) {
+        $("#saveSupplyBtn").prop("disabled", true);
         goods = {};
         cause = $("#cause").val();
         var operation = isSupply ? '0' : '1';
@@ -1521,6 +1523,7 @@ function saveInventory(stock) {
 
 function sendPlannedInventory() {
     if ($('#form')[0].checkValidity()) {
+        $("#sendPlannedInventoryBtn").prop("disabled", true);
         var inventoryGoods = {}
         $("#makeInventoryProds tr").each(function (item) {
             id = $(this).prop('id').slice(2);
@@ -1556,6 +1559,7 @@ function sendPlannedInventory() {
 }
 
 function sendInventoryPlan() {
+    $("#sendInventoryBtn").prop("disabled", true);
     var inventoryGoods = [];
     $("#inventoryProds tr").each(function (item) {
         id = $(this).prop('id');
@@ -1671,6 +1675,7 @@ function openSupply(isDonor) {
     else operation = 0;
     $("#supplyBtn").unbind('click');
     $("#supplyBtn").click(function () {
+        $("#supplyBtn").prop("disabled", true);
         var csrftoken = getCookie('csrftoken');
         goods = {};
         $("#supply-body").find("tr").each(function (item) {
