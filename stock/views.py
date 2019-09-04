@@ -66,7 +66,10 @@ def inventory(request):
             if Stock_good.objects.filter(stock = i.stock, good = g.good).count() != 0:
                 s_g = Stock_good.objects.filter(stock = i.stock, good = g.good)[0]
                 amount = s_g.amount
-                price = s_g.cost / s_g.amount
+                if s_g.amount != 0:
+                    price = s_g.cost / s_g.amount
+                else:
+                    price = s_g.cost
             else:
                 amount = 0
                 price = 0
@@ -267,7 +270,11 @@ def get_stock_goods(request):
             stock = Stock.objects.get(pk=request.POST['id'])
             goods = {}
             for g in Stock_good.objects.filter(stock=stock):
-                goods[str(g.good.pk)] = {'id': g.good.pk, 'article': g.good.get_article(), 'name': g.good.get_name(), 'unit': str(g.unit), 'amount': g.amount, 'cost': g.cost/g.amount}
+                if g.amount !=0:
+                    cost = g.cost/g.amount
+                else:
+                    cost = 0
+                goods[str(g.good.pk)] = {'id': g.good.pk, 'article': g.good.get_article(), 'name': g.good.get_name(), 'unit': str(g.unit), 'amount': g.amount, 'cost': cost}
             return HttpResponse(json.dumps(goods))
 
 def supplies(request):
