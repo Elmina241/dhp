@@ -76,18 +76,21 @@ class Goods(models.Model):
     def __str__(self):
         return self.model.name
     def get_name(self, t='0'):
-        if Good_name.objects.filter(product = self, name_type='0', area=t).count() != 0:
-            return Good_name.objects.filter(product = self, name_type='0', area=t)[0].name
+        name = Good_name.objects.filter(product = self, name_type='0', area=t)
+        if name.count() != 0:
+            return name[0].name
         else:
             return '-'
     def get_article(self, t='0'):
-        if Good_name.objects.filter(product = self, name_type='1', area=t).count():
-            return Good_name.objects.filter(product = self, name_type='1', area=t)[0].name
+        article = Good_name.objects.filter(product = self, name_type='1', area=t)
+        if article.count():
+            return article[0].name
         else:
             return '-'
     def get_unit(self):
-        if Goods_unit.objects.filter(product=self, isBase=True).count() != 0:
-            return Goods_unit.objects.filter(product=self, isBase=True)[0].unit
+        unit = Goods_unit.objects.filter(product=self, isBase=True)
+        if unit.count() != 0:
+            return unit[0].unit
         return "-"
     def get_base_amount(self, amount, unit):
         u = Goods_unit.objects.filter(unit = unit, product = self)[0]
@@ -95,12 +98,16 @@ class Goods(models.Model):
         return amount / coeff
     def get_full_name(self, t):
         name = ""
-        if Good_name.objects.filter(product = self, name_type='1', area=t).count() != 0:
-            name = name + Good_name.objects.filter(product = self, name_type='1', area=t)[0].name
-        if Good_name.objects.filter(product=self, name_type='0', area=t).count() != 0:
-            name = name + " " + Good_name.objects.filter(product=self, name_type='0', area=t)[0].name
-        if Good_name.objects.filter(product = self, name_type='2', area=t).count() != 0:
-            name = name + " " + Good_name.objects.filter(product = self, name_type='2', area=t)[0].name
+        if Good_name.objects.filter(product=self, area=t).count() != 0:
+            t_1 = Good_name.objects.filter(product = self, name_type='1', area=t)
+            if t_1.count() != 0:
+                name = name + t_1[0].name
+            t_2 = Good_name.objects.filter(product=self, name_type='0', area=t)
+            if t_2.count() != 0:
+                name = name + " " + t_2[0].name
+            t_3 = Good_name.objects.filter(product = self, name_type='2', area=t)
+            if t_3.count() != 0:
+                name = name + " " + t_3[0].name
         return name
 
 

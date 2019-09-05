@@ -13,9 +13,10 @@
             if ($("#permissions").prop("value")!=undefined) {
                 permissions = JSON.parse($("#permissions").prop("value"));
                 for (p in permissions) {
-                    if (!permissions[p]) {
-                        $(".p" + p).addClass("disabled");
-                        $(".p" + p).on('click', false);
+                    if (permissions[p]) {
+                        $(".p" + p).prop("hidden", false);
+                        //$(".p" + p).addClass("disabled");
+                        //$(".p" + p).on('click', false);
                     }
                 }
             }
@@ -63,13 +64,13 @@
     </div>
     <div class="btn-group" style="margin-left: 5px">
         <div class="dropdown">
-            <a class="btn btn-info dropdown-toggle p1" href="#" role="button" id="dropdownMenuLink"
+            <a class="btn btn-info p1 dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
+               aria-haspopup="true" aria-expanded="false" hidden>
                 Справочники
             </a>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu p1" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="/stock/goods_models/">Макеты МЦ</a>
                 <a class="dropdown-item" href="/stock/goods/">Материальные ценности</a>
                 <a class="dropdown-item" href="/stock/props/">Свойства</a>
