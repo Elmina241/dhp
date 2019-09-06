@@ -259,8 +259,8 @@ class Demand_good(models.Model):
     name = models.CharField(max_length=500)
     article = models.CharField(max_length=200, default = '-')
     unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
-    balance = models.IntegerField(default=0)
+    amount = models.FloatField(default=0)
+    balance = models.FloatField(default=0)
     def __str__(self):
         return str(self.demand) + ' ' + str(self.good)
     def get_demand(self):
@@ -277,7 +277,7 @@ class Stock_operation(models.Model):
     operation = models.CharField(choices=OPERATION_CHOICES, max_length=20, default='0')
     date = models.DateTimeField(auto_now_add=True, blank=True)
     unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
+    amount = models.FloatField(default=0)
     cost = models.FloatField(default=0, blank=True)
     last_value = models.FloatField(default=0, blank=True)
     def __str__(self):
@@ -310,7 +310,7 @@ class Matrix(models.Model):
         ('1', 'Оприходование/Выбытие'),
         ('2', 'Инвентаризация'),
     )
-    access = cause = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
+    access = models.CharField(choices=ACCESS_CHOICES, max_length=20, default='0')
     cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
     cause_id = models.IntegerField(default=0, null = True)
     name = models.CharField(max_length=500, null=True)
@@ -324,12 +324,12 @@ class Order(models.Model):
         ('1', 'Заполнение'),
         ('2', 'Завершено')
     )
-    CAUSE_CHOICES = (
+    CAUSE_ORDER_CHOICES = (
         ('0', 'Перемещение'),
         ('1', 'Производство'),
         ('2', 'Списание')
     )
-    cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
+    cause = models.CharField(choices=CAUSE_ORDER_CHOICES, max_length=20, default='0')
     stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
     matrix = models.ForeignKey('Matrix', on_delete=models.CASCADE)
     isDonor = models.BooleanField()
@@ -356,6 +356,6 @@ class Inventory(models.Model):
 class Inventory_good(models.Model):
     good = models.ForeignKey('Goods', on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
+    amount = models.FloatField(default=0)
     def __str__(self):
         return str(self.inventory) + ' ' + str(self.good)

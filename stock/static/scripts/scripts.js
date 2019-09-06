@@ -1323,6 +1323,7 @@ function STree(tree) {
         $("#tree li").click(function (event) {
             event.stopPropagation();
         });
+        console.log(goods);
     };
 
     this.makeTree = function () {
@@ -1341,6 +1342,10 @@ function STree(tree) {
         self.changeStockGroup();
         //event.stopPropagation();
     });
+
+    this.findChild = function() {
+        var nodes = [self.selected];
+    };
 
     this.changeStockGroup = function () {
         stock = $("#stock").val();
@@ -1808,7 +1813,7 @@ function addGoodField() {
         "                        <div class='form-group col-md-3'>\n" +
         "                           <select class='form-control form-control-sm' required><option value='' readonly>Ед.изм.</option>\n" +
         "                        </select></div><div class='form-group col-md-3'>\n" +
-        "                            <div class='form-inline'><input placeholder='Кол-во' type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove()' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
+        "                            <div class='form-inline'><input placeholder='Кол-во' step='0.001' type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove()' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
         "                    </div>";
     $(code).appendTo("#add_goods");
     autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);

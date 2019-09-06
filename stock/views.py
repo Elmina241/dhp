@@ -735,12 +735,12 @@ def save_stock_operation(request):
                     amount=goods[g]['amount']
                 )
                 s.save()
-                good_d.balance = good_d.balance - int(goods[g]['amount'])
+                good_d.balance = good_d.balance - float(goods[g]['amount'])
                 good_d.save()
                 balance = balance + good_d.balance
                 # добавление информации в склад
                 if json.loads(request.POST['isDonor']) != True:
-                    amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(
+                    amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * float(
                         goods[g]['amount'])
                     if Stock_good.objects.filter(stock=demand.acceptor, good=good_d.good).count() == 0:
                         rec = Stock_good(stock=demand.acceptor, good=good_d.good,
@@ -749,18 +749,24 @@ def save_stock_operation(request):
                         rec.save()
                     else:
                         rec = Stock_good.objects.filter(stock=demand.acceptor, good=good_d.good)[0]
-                        cost = (rec.cost / rec.amount) * amount
+                        if rec.amount != 0:
+                            cost = (rec.cost / rec.amount) * amount
+                        else:
+                            cost = 0
                         rec.amount = rec.amount + amount
-                        rec.cost = int(rec.cost + cost)
+                        rec.cost = float(rec.cost + cost)
                         rec.save()
                 else:
                     if Stock_good.objects.filter(stock=demand.donor, good=good_d.good).count() != 0:
-                        amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * int(
+                        amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * float(
                             goods[g]['amount'])
                         rec = Stock_good.objects.filter(stock=demand.donor, good=good_d.good)[0]
-                        cost = (rec.cost / rec.amount) * amount
+                        if rec.amount != 0:
+                            cost = (rec.cost / rec.amount) * amount
+                        else:
+                            cost = 0
                         rec.amount = rec.amount - amount
-                        rec.cost = int(rec.cost - cost)
+                        rec.cost = float(rec.cost - cost)
                         rec.save()
                 if balance == 0:
                     if json.loads(request.POST['isDonor']):
@@ -1027,20 +1033,20 @@ def save_supply(request):
                                          unit=Goods_unit.objects.filter(product=good, isBase=True)[0].unit, amount=
                                          Goods_unit.objects.filter(product=good,
                                                                    unit=Unit.objects.get(pk=goods[g]['unit']))[
-                                             0].coeff * int(goods[g]['num']))
+                                             0].coeff * float(goods[g]['num']))
                         rec.save()
                     else:
                         rec = Stock_good.objects.filter(stock=acceptor, good=good)[0]
                         rec.amount = rec.amount + Goods_unit.objects.filter(product=good,
                                                                             unit=Unit.objects.get(pk=goods[g]['unit']))[
-                            0].coeff * int(goods[g]['num'])
+                            0].coeff * float(goods[g]['num'])
                         rec.save()
                 else:
                     if Stock_good.objects.filter(stock=acceptor, good=good).count() != 0:
                         rec = Stock_good.objects.filter(stock=acceptor, good=good)[0]
                         rec.amount = rec.amount - Goods_unit.objects.filter(product=good,
                                                                             unit=Unit.objects.get(pk=goods[g]['unit']))[
-                            0].coeff * int(goods[g]['num'])
+                            0].coeff * float(goods[g]['num'])
                         rec.save()
             return HttpResponse('ok')
 
@@ -1112,8 +1118,8 @@ def save_planned_supply(request):
                 id = goods[g]['product'][2:]
                 g_m = Goods.objects.get(pk=id)
                 good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(t), name=g_m.get_name(t),
-                                   unit=Unit.objects.get(pk=goods[g]['unit']), amount=goods[g]['num'],
-                                   balance=goods[g]['num'])
+                                   unit=Unit.objects.get(pk=goods[g]['unit']), amount=float(goods[g]['num']),
+                                   balance=float(goods[g]['num']))
                 good.save()
             return HttpResponse('ok')
 
