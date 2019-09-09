@@ -45,8 +45,8 @@ def stocks(request):
             if str(s.pk) not in goods_json[str(g.pk)]:
                 goods_json[str(g.pk)][str(s.pk)] = {}
             for r in Stock_good.objects.filter(stock=s, good__model__group=g):
-                goods_json["1"][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(), "name": r.good.get_name(),
-                                                         "amount": r.amount, "unit": str(r.unit), "cost": r.cost}
+                #goods_json["1"][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(), "name": r.good.get_name(),
+                                                         #"amount": r.amount, "unit": str(r.unit), "cost": r.cost}
                 goods_json[str(g.pk)][str(s.pk)][str(r.pk)] = {"code": r.good.get_article(), "name": r.good.get_name(),
                                                                "amount": r.amount, "unit": str(r.unit), "cost": r.cost}
     return render(request, "stocks.html",

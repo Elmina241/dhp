@@ -1323,7 +1323,6 @@ function STree(tree) {
         $("#tree li").click(function (event) {
             event.stopPropagation();
         });
-        console.log(goods);
     };
 
     this.makeTree = function () {
@@ -1343,16 +1342,37 @@ function STree(tree) {
         //event.stopPropagation();
     });
 
-    this.findChild = function() {
-        var nodes = [self.selected];
+    this.findNode = function(startNode, id){
+        var res;
+        if (startNode.id == id) return startNode;
+        else {
+            for (c in startNode.nodes) {
+                res = self.findNode(startNode.nodes[c], id);
+                if (res != undefined) return res;
+            }
+            if (res == undefined) res = null;
+        }
+        return res;
+    };
+
+    this.findChildren = function(node, res = []) {
+        res.push(node.id);
+        for (n in node.nodes) {
+            res = self.findChildren(node.nodes[n], res);
+        }
+        return res;
     };
 
     this.changeStockGroup = function () {
         stock = $("#stock").val();
         code = "";
-        for (r in goods[self.selected][stock]) {
-            code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+        var startNode = self.findNode(tree[0], self.selected);
+        var nodes = self.findChildren(startNode);
+        for (n in nodes) {
+            for (r in goods[nodes[n]][stock]) {
+                code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
+                    "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost + "</td></tr>";
+            }
         }
         if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
         $("#goods-body").html(code);
