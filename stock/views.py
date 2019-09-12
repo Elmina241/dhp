@@ -1181,31 +1181,37 @@ def save_inventory(request):
             stock.save()
             for g in goods:
                 good = Goods.objects.get(pk=g)
-                if Stock_good.objects.filter(stock=stock, good=good).count() == 0:
-                    s_g = Stock_good(stock=stock, good=good, unit=good.get_unit(), amount=goods[g]['amount'],
-                                     cost=float(goods[g]['cost']) * float(goods[g]['amount']))
-                    last_value = 0
-                    s_g.save()
+                last_value = 0
+                if goods[g]['amount'] == '0':
+                    if Stock_good.objects.filter(stock=stock, good=good).count() != 0:
+                        last_value = Stock_good.objects.filter(stock=stock, good=good)[0].amount
+                        Stock_good.objects.filter(stock=stock, good=good).delete()
                 else:
-                    s_g = Stock_good.objects.filter(stock=stock, good=good)[0]
-                    last_value = s_g.amount
-                    amount = float(goods[g]['amount'])
-                    for h in Stock_operation.objects.filter(good=good, package__stock=stock, package__date__gte=date):
-                        if h.operation == '0':
-                            last_value = last_value - good.get_base_amount(h.amount, h.unit)
-                            amount = amount + good.get_base_amount(h.amount, h.unit)
-                        else:
-                            if h.operation == '1':
-                                last_value = last_value + good.get_base_amount(h.amount, h.unit)
-                                amount = amount - good.get_base_amount(h.amount, h.unit)
-                    s_g.amount = amount
-                    s_g.cost = float(goods[g]['cost']) * amount
-                    s_g.save()
+                    if Stock_good.objects.filter(stock=stock, good=good).count() == 0:
+                        s_g = Stock_good(stock=stock, good=good, unit=good.get_unit(), amount=goods[g]['amount'],
+                                         cost=float(goods[g]['cost']) * float(goods[g]['amount']))
+                        last_value = 0
+                        s_g.save()
+                    else:
+                        s_g = Stock_good.objects.filter(stock=stock, good=good)[0]
+                        last_value = s_g.amount
+                        amount = float(goods[g]['amount'])
+                        for h in Stock_operation.objects.filter(good=good, package__stock=stock, package__date__gte=date):
+                            if h.operation == '0':
+                                last_value = last_value - good.get_base_amount(h.amount, h.unit)
+                                amount = amount + good.get_base_amount(h.amount, h.unit)
+                            else:
+                                if h.operation == '1':
+                                    last_value = last_value + good.get_base_amount(h.amount, h.unit)
+                                    amount = amount - good.get_base_amount(h.amount, h.unit)
+                        s_g.amount = amount
+                        s_g.cost = float(goods[g]['cost']) * amount
+                        s_g.save()
                 s = Stock_operation(
                     package=p,
                     good=good,
                     operation='2',
-                    unit=s_g.unit,
+                    unit=good.get_unit(),
                     amount=float(goods[g]['amount']),
                     cost=goods[g]['cost'],
                     last_value=last_value

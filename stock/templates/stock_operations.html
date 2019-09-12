@@ -68,9 +68,10 @@
         }
 
         function addProd() {
-            id = $("#newProd").prop('name');
+            id = $("#newProd").prop('name').substr(2);
             code = "<tr id='" + id + "'><td>" + goods_json[id].article + "</td><td>" + goods_json[id].name + "</td><td>" + goods_json[id].unit + "</td><td><input type='number' name='amount' class='form-control form-control-sm short-input' /></td><td><input type='number' name='cost' class='form-control form-control-sm short-input' /></td><td><span onclick='this.parentElement.parentElement.remove()' style='font-size: 14pt; color:gray'><i class=\"fas fa-trash-alt\"></i></span></td></tr>";
             $(code).appendTo("#inventoryProds");
+            $("#newProd").prop('value', "");
         }
 
         function changeOperGroup(group) {
