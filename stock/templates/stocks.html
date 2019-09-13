@@ -24,7 +24,7 @@
     <input value="{{ prop_vars }}" id="prop_vars" hidden/>
     <div class="container-fluid">
         <div class="row">
-            <div class="left-column goods-tree-container">
+            <div class="goods-tree-container col-md-3">
 
                 <div class="card">
                     <div class="card-header" style="height: 55px">
@@ -38,19 +38,20 @@
 
 
             </div>
-            <div class="right-column">
+            <div class="col-md-9">
 
-                <div class="card" style="margin-left: 30px;margin-right: 30px;">
+                <div class="card" style="">
                     <div class="card-header">
-                        <div class="filter">
-                            <div class="form-inline">Склад
-                                <select class="form-control inline-el short-input form-control-sm" id="stock" onchange="tr.changeStockGroup()">
+                        <div class="row">
+                            <div class="form-inline col-md-4 col-xl-auto"><lable for="stock" class="col-form-label" style="margin-right: 20px;">Склад</lable>
+                                <select class="form-control short-input form-control-sm" id="stock" onchange="tr.changeStockGroup()">
                                     {% for s in stocks %}
                                         <option value="{{ s.pk }}">{{ s.name }}</option>
                                     {% endfor %}
-                                </select>
-                            <span>Период</span>
-                        <select id="period" class="form-control inline-el form-control-sm"
+                                </select></div>
+                            <div class="form-inline col-md-3 col-xl-auto">
+                                <lable for="period" class="col-form-label" style="margin-right: 20px;">Период</lable>
+                        <select id="period" class="form-control form-control-sm"
                                 onchange="changePeriod()">
                             <option value="0">Все</option>
                             <option value="1">День</option>
@@ -58,14 +59,13 @@
                             <option value="3">Месяц</option>
                             <option value="4">Год</option>
                         </select>
+                            </div>
 
-                                <div class="form-inline" style="position: absolute; right: 0">
-                                    <lable for="filter" class="col-form-label">Поиск</lable>
-                                    <input type="search" class="form-control form-control-sm col-sm-9"
-                                           style="margin-left:10px;width:300px" id="filter"
+                                <div class="form-inline col-md-4 col-xl-auto ml-auto">
+                                    <lable for="filter" class="col-form-label" style="margin-right: 20px;">Поиск</lable>
+                                    <input type="search" class="form-control form-control-sm col-xl-8"
+                                           style="" id="filter"
                                            oninput="tr.searchProd($(this).prop('value'));"/>
-                                    <img src="{% static "img/spinner.gif" %}" id="loader"
-                                         style="width: 30px; display:none">
                                 </div>
                             </div>
                         </div>
