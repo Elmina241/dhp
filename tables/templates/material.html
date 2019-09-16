@@ -50,12 +50,12 @@ $(document).ready(function(){
                     <br><br><br>
                     <h5><b>Концентрация:</b><br></h5>
                     <div class="input-group">
-                      <input type="number" class="form-control bfh-number" max="100" min="0"  name="concentration" value="{{ material.concentration }}"> <span class="input-group-addon">%</span></p>
+                      <input type="number" class="form-control bfh-number" step="0.01" max="100" min="0"  name="concentration" value="{{ material.concentration }}"> <span class="input-group-addon">%</span></p>
                     </div>
                     <br>
                     <h5><b>Количество:</b><br></h5>
                     <div class="input-group">
-                      <input type="number" class="form-control bfh-number" min="0"  name="ammount" value="{{ material.ammount }}"> <span class="input-group-addon">{{ material.unit.name }}</span></p>
+                      <input type="number" class="form-control bfh-number" step="0.01" min="0"  name="ammount" value="{{ material.ammount }}"> <span class="input-group-addon">{{ material.unit.name }}</span></p>
                     </div>
                     <br><br><br>
                     <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>

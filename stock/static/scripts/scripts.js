@@ -1384,12 +1384,16 @@ function STree(tree) {
             self.changeStockGroup();
         }
         else {
-            for (r in goods[self.selected][stock]) {
-                if (goods[self.selected][stock][r].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[self.selected][stock][r].code.toUpperCase().indexOf(text.toUpperCase()) != -1) {
+            var startNode = self.findNode(tree[0], self.selected);
+        var nodes = self.findChildren(startNode);
+        for (n in nodes) {
+            for (r in goods[nodes[n]][stock]) {
+                if (goods[nodes[n]][stock][r].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[nodes[n]][stock][r].code.toUpperCase().indexOf(text.toUpperCase()) != -1) {
                     code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                        "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[self.selected][stock][r].code + "</td><td>" + goods[self.selected][stock][r].name + "</td><td>" + goods[self.selected][stock][r].amount + "</td><td>" + goods[self.selected][stock][r].unit + "</td><td>" + goods[self.selected][stock][r].cost + "</td></tr>";
+                        "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost + "</td></tr>";
                 }
             }
+        }
             if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
             $("#goods-body").html(code);
         }

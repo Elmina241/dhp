@@ -804,6 +804,7 @@ def stock_operations(request):
     stock_operations_res = Stock_operation.objects.none()
     for stock in Counter_stock.objects.filter(counter=counter):
         stock_operations_res = stock_operations_res | Stock_operation.objects.filter(package__stock=stock.stock)
+    stock_operations_res = stock_operations_res.order_by('-date')
     for s in stock_operations_res:
         id = s.package.pk
         demands = Demand.objects.filter(pk=s.package.matrix.cause_id)
