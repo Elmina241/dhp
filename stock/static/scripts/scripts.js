@@ -203,7 +203,7 @@ function editProp(id) {
 
 function e_addUnit() {
     e_unitNum++;
-    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getMUnits() +
+    var code = "<div class='form-inline' style='margin-top:10px;'><span class='inline-el'> - </span>" + getMUnits() +
         "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
     var additionalUnit = $("#e_additional_unit");
     $(code).appendTo(additionalUnit);
@@ -211,7 +211,7 @@ function e_addUnit() {
 
 function e_addProp() {
     e_propNum++;
-    var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox' class='form-control inline-el isDefault' onclick='addDefault(this)'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+    var code = "<div class='form-inline' style='margin-top:10px;'><span class='inline-el'> - </span>" + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'><span class='inline-el'> Скрытое</span> <input type='checkbox' class='form-control inline-el editable'><span class='inline-el'> Неизменяемое </span><input type='checkbox' class='form-control inline-el isDefault' onclick='addDefault(this)'> <span class='inline-el'>Предустановленное</span> <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
     var additionalProp = $("#e_additional_prop");
     $(code).appendTo(additionalProp);
 }
@@ -354,10 +354,10 @@ function getGoodInf(id, isEdit = true) {
             $("#e_counter option[value=" + inf.counter + "]").prop('selected', true);
             var code = "";
             for (u in inf.units) {
-                code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + inf['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' value='" + inf.units[u].value + "' class='form-control form-control-sm inline-el'/></div></div>";
+                code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + inf['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'><span class='inline-el'>Коэффициент </span><input type='number' value='" + inf.units[u].value + "' class='form-control form-control-sm inline-el'/></div></div>";
                 if (inf.units[u].isBase) checked = "checked";
                 else checked = "";
-                code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='radio' name='e_isBase' class='form-control' " + checked + "/><span class='inline-el'> Базовая</span></div></div>";
+                code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='radio' name='e_isBase' class='inline-el form-control' " + checked + "/><span class='inline-el'> Базовая</span></div></div>";
             }
             $(code).appendTo("#e_units");
             code = "";
@@ -1213,8 +1213,8 @@ function getModelInfo() {
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']) {
-        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'>Коэффициент <input type='number' step='0.001' class='form-control form-control-sm inline-el' required/></div></div>";
-        code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
+        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'><span class='inline-el'>Коэффициент </span><input type='number' step='0.001' class='form-control form-control-sm inline-el' required/></div></div>";
+        code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='inline-el form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='inline-el form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
     //получение свойств
@@ -1225,7 +1225,7 @@ function getModelInfo() {
         if (!models[id]['props'][p]['editable']) checkedE = "checked";
         else checkedE = "";
         code = code + "<div class='prop'  id='" + p + "'><div class='form-inline'><div class='form-group col-md-3'><h6>- " + models[id]['props'][p].name + "</h6></div><div class='form-group col-md-6'>" + getPropCode(models[id]['props'][p]['type'], models[id]['props'][p]['default'], models[id]['props'][p]['choises']) + "</div></div>";
-        code = code + "<div class='form-inline inline-el'><input type='checkbox' " + checkedV + " class='form-control visible' /> <span class='inline-el'>Скрытое</span><input type='checkbox' " + checkedE + " class='form-control editable'/><span class='inline-el'> Неизменяемое</span><input type='checkbox'  class='form-control applicable'/><span class='inline-el'> Неприменимое</span></div></div>";
+        code = code + "<div class='form-inline inline-el'><input type='checkbox' " + checkedV + " class='inline-el form-control visible' /> <span class='inline-el'>Скрытое</span><input type='checkbox' " + checkedE + " class='inline-el form-control editable'/><span class='inline-el'> Неизменяемое</span><input type='checkbox'  class='inline-el form-control applicable'/><span class='inline-el'> Неприменимое</span></div></div>";
     }
     $(code).appendTo("#props");
 }

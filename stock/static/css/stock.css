@@ -70,7 +70,7 @@ body {
 
 .inline-el {
     margin-right: 10px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 }
 
 .create-form h6:not(:first-child) {
@@ -324,3 +324,42 @@ h9 {
     color: #23a3ab;
     border-bottom: 1px solid #23a3ab;
 }
+
+.user {
+    position: absolute;
+    right: 5px;
+    display: block;
+}
+
+.card {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+@media all and (max-width: 500px) {
+    .user {
+        margin-top: 0!important;
+    }
+
+    .menu-btns {
+        display: none;
+    }
+
+    .card {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .header {
+        font-size: 16pt;
+    }
+
+    .in_out_btns{
+        margin-left: 170px!important;
+    }
+
+    .mobile-invisible{
+        display: none;
+    }
+}
+

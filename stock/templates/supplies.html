@@ -87,16 +87,16 @@
     <input id="goods_json" value="{{ goods_json }}" hidden>
     <div class="container-fluid">
 
-        <div class="card" style="margin-left: 30px;margin-right: 30px;">
+        <div class="card">
             <div class="card-header">
                 <div class="form-inline">
-            <button type="button" class="btn btn-success btn-sm"
+            <button type="button" class="inline-el btn btn-success btn-sm"
                                onclick="$('#add_supply').modal();$('#add_supply').modal('handleUpdate');">
                             Создать поступление
                         </button>
                 <div class="filter inline-el">
                     <div class="form-inline">
-                        <span>Склад</span>
+                        <span class="inline-el">Склад</span>
                         <select class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
                             <option value="-1">Все</option>
                             {% for s in stocks %}
@@ -107,7 +107,7 @@
                 </div>
                 </div>
             </div>
-            <div class="count_table" style="padding-bottom: 0">
+            <div class="count_table table-responsive-sm" style="padding-bottom: 0">
                 <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
                     <thead class="thead-light" style="text-align: center">
                     <tr>
@@ -130,13 +130,13 @@
                 <ul class="pagination pagination-sm justify-content-end" id="reqNav">
                 </ul>
             </nav>
-        <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
+        <div class="card" style="margin-top: 30px;">
             <h6 class="card-header">
                 Номенклатура
                 <input style="float: right"  type="button" id="makeSupplyBtn" onclick="openSupply(false)" disabled
                        class="btn btn-primary btn-sm" value="Оприходовать"/>
             </h6>
-            <table class="table table-bordered table-sm">
+            <table class="table table-bordered table-sm table-responsive-sm">
                 <thead class="thead-light" style="text-align: center">
                 <tr>
                     <th scope="col">Артикул</th>

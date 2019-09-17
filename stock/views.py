@@ -1244,7 +1244,7 @@ def edit_good(request):
                 prop = Goods_property.objects.get(pk=p)
                 if prop.property.prop_type == 0:
                     prop.property_num.number = properties[p]['value']
-                    prop.property_num.number.save()
+                    prop.property_num.save()
                 else:
                     if prop.property.prop_type == 1:
                         prop.goods_string.text = properties[p]['value']

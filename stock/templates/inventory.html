@@ -87,7 +87,7 @@
         <input value="{{ units }}" id="units" hidden/>
         <input id="inventory_goods" value="{{ inventory_goods }}" hidden>
         <input id="goods_json" value="{{ goods_json }}" hidden>
-        <div class="card" style="margin-left: 30px;margin-right: 30px;">
+        <div class="card">
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline">
@@ -157,7 +157,7 @@
                     </li>
                 </ul>
             </nav>
-        <div class="card" style="margin-left: 30px;margin-top: 30px;margin-right: 30px;">
+        <div class="card" style="margin-top: 30px;">
             <table class="table table-bordered table-sm">
                 <thead class="thead-light" style="text-align: center">
                 <tr>
@@ -265,12 +265,12 @@
                     <form id="form">
                     <h6>Склад: <span id="stock-info"></span></h6>
                     <div class="form-inline">
-                    <h6 id="dateLabel">Дата: <span id="date-info"></span></h6>
+                    <h6 id="dateLabel">Дата: <span id="date-info" class="inline-el"></span></h6>
                     <h6 id="dateLabel" class="inline-el">Время: </h6>
                     <input type="time" class="form-control short-input form-control-sm inline-el" id="inventoryTime" required/>
                         </div>
                     <hr>
-                    <table class="table table-bordered table-sm small-table" style="text-align: center">
+                    <table class="table table-bordered table-sm small-table table-responsive-sm" style="text-align: center">
                         <thead style="text-align: center" class="thead-light">
                         <tr>
                             <th>Артикул</th>

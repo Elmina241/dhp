@@ -55,7 +55,7 @@
 
         function addUnit(isAdditional = false) {
             unitNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getMUnits() +
+            var code = "<div class='form-inline' style='margin-top:10px;'><span class='inline-el'> - </span>" + getMUnits() +
                 "                       <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();unitNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
             if (isAdditional) additionalUnit = $("#e_additional_unit");
             else var additionalUnit = $("#additional_unit");
@@ -64,7 +64,7 @@
 
         function addProp(isAdditional = false) {
             propNum++;
-            var code = "<div class='form-inline' style='margin-top:10px;'> - " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'> Скрытое <input type='checkbox' class='form-control inline-el editable'> Неизменяемое <input type='checkbox'  onclick='addDefault(this)' class='form-control inline-el isDefault'> Предустановленное <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
+            var code = "<div class='form-inline' style='margin-top:10px;'><span class='inline-el'> -</span> " + getPropsCode() + " <input type='checkbox' class='form-control inline-el visible'><span class='inline-el'> Скрытое </span><input type='checkbox' class='form-control inline-el editable'> <span class='inline-el'>Неизменяемое</span> <input type='checkbox'  onclick='addDefault(this)' class='form-control inline-el isDefault'> <span class='inline-el'>Предустановленное</span> <span style='font-size: 20px; color: #999999;' onclick='this.parentElement.remove();propNum--;'><i class='fas fa-trash-alt menu-btn'></i></span></div>";
            if (isAdditional) var additionalProp = $("#e_additional_prop");
            else var additionalProp = $("#additional_prop");
             $(code).appendTo(additionalProp);
