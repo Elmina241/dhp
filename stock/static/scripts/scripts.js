@@ -1071,6 +1071,28 @@ function delInventory(obj) {
     });
 };
 
+function delOperation(obj) {
+    id = $(obj.parentElement).prop("id").slice(2);
+    var csrftoken = getCookie('csrftoken');
+    var pk = reqs[id].id;
+    $.ajax({
+        type: "POST",
+        url: 'del_operation/',
+        data: {
+            'id': pk
+        },
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        success: function onAjaxSuccess(data) {
+            $(obj.parentElement).remove();
+            $("#del_modal").modal('toggle');
+        }
+    });
+};
+
 function delGood(obj) {
     var csrftoken = getCookie('csrftoken');
     $.ajax({

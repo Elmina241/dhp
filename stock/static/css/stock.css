@@ -336,6 +336,11 @@ h9 {
     margin-right: 30px;
 }
 
+.nav-pages {
+    margin-right: 30px;
+    margin-top: 5px;
+}
+
 @media all and (max-width: 500px) {
     .user {
         margin-top: 0!important;
@@ -361,5 +366,22 @@ h9 {
     .mobile-invisible{
         display: none;
     }
+
+    .nav-pages {
+        margin-right: 0;
+    }
+}
+
+.page-item.active .page-link {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.page-link {
+    color: #17a2b8;
+}
+
+.page-link:hover {
+    color: #2bb8e2;
 }
 

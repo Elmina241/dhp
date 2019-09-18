@@ -54,13 +54,13 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td><td><span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span></td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>"  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>"  + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>"  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>"  + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td><td><span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span></td></tr>";
                     }
                 }
             }
@@ -70,6 +70,15 @@
             pag2 = new Pagination(10, "goods-body", "goodsNav");
         }
 
+        function confirmDel(id, obj) {
+            $("#delBtn").unbind();
+            $("#delBtn").click(function(){
+                delOperation(obj);
+            });
+            var name = reqs[id].vin;
+            $("#del-name").text(name);
+            $("#del_modal").modal();
+        }
 
         function openInf(id, obj) {
             $("#add-" + id).toggle();
@@ -118,6 +127,7 @@
                         <th scope="col">Отправитель</th>
                         <th scope="col">Ожидаемая дата отпуска</th>
                         <th scope="col">Создатель</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody id="req-body">
@@ -126,7 +136,7 @@
                 </table>
             </div>
         </div>
-    <nav aria-label="..." style="margin-top: 5px; margin-right: 30px">
+    <nav aria-label="..." class="nav-pages">
                 <ul class="pagination pagination-sm justify-content-end" id="reqNav">
                 </ul>
             </nav>
@@ -134,7 +144,7 @@
             <h6 class="card-header">
                 Номенклатура
                 <input style="float: right"  type="button" id="makeSupplyBtn" onclick="openSupply(false)" disabled
-                       class="btn btn-primary btn-sm" value="Оприходовать"/>
+                       class="btn btn-info btn-sm" value="Оприходовать"/>
             </h6>
             <table class="table table-bordered table-sm table-responsive-sm">
                 <thead class="thead-light" style="text-align: center">
@@ -155,7 +165,7 @@
                 </tbody>
             </table>
         </div>
-    <nav aria-label="..." style="margin-top: 5px; margin-right: 30px">
+    <nav aria-label="..." class="nav-pages">
                 <ul class="pagination pagination-sm justify-content-end" id="goodsNav">
                 </ul>
             </nav>
@@ -262,6 +272,24 @@
                         <input value="Выбрать"
                                onclick="setGoodName(inp);$('#tree-div').modal('hide');"
                                id="selectBtn" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="del_modal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Удаление поступления</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <h6>Удалить <span id="del-name"></span>?</h6>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Удалить" id="delBtn" onclick="" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
             </div>
