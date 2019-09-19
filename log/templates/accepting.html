@@ -1,5 +1,6 @@
 {% extends 'log/base.html' %}
 {% block content %}
+    {% load log_extras %}
 <script type="text/javascript">
 function getCookie(name) {
     var cookieValue = null;
@@ -105,7 +106,7 @@ $(document).ready(function(){
               </tr>
             </thead>
             <tbody>
-              {% for key, values in acts.items %}
+              {% for key, values in acts.items|sort %}
               <tr>
                 <td>{{ key }}</td>
                 <td>{{ values.date }}</td>

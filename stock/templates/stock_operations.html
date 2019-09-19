@@ -1,6 +1,7 @@
 {% extends 'store/base.html' %}
 {% block content %}
     {% load staticfiles %}
+    {% load stock_extras %}
     <script>
         var goods_inf = null;
         var inp = null;
@@ -161,7 +162,7 @@
                     </tr>
                     </thead>
                     <tbody id="op-body">
-                    {% for key, values in operations.items %}
+                    {% for key, values in operations|sort %}
                         <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
                             <td>{{ values.vin }}</td>
                             <td>{{ values.date }}</td>

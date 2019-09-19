@@ -352,13 +352,13 @@
                             </select></div>
                         <div class="form-group col-md-6">
                             <h6>Донор</h6>
-                            <select class="form-control" id="donor">
+                            <select class="form-control" id="donor" required>
                             </select></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <h6>Получатель</h6>
-                            <select class="form-control" id="consumer" disabled onchange="getStocks('acceptor')">
+                            <select class="form-control" id="consumer" disabled onchange="getStocks('acceptor')" required>
                                 {% for c in counters %}
                                     {% if c == counter %}
                                     <option value="{{ c.id }}" selected>{{ c.name }}</option>
@@ -370,7 +370,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <h6>Акцептор</h6>
-                            <select class="form-control" id="acceptor">
+                            <select class="form-control" id="acceptor" required>
                             </select>
                         </div>
                     </div>
