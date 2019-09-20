@@ -32,8 +32,8 @@ def new_characteristic(request):
 
 
 
-def packing(request):
-    return render(request, "packing.html",
+def packing2(request):
+    return render(request, "packing2.html",
         {"containers": Container.objects.all, "header": "Тара", "location": "/tables/packing/"})
 
 def formulas(request):
