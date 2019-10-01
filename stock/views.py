@@ -191,7 +191,7 @@ def add_children_g(obj, node):
             node['nodes'][o.id]['nodes']['m_' + str(m.pk)] = {"name": m.name, "id": 'm_' + str(m.id)}
             node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes'] = {}
             for g in Goods.objects.filter(model=m):
-                node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes']['g_' + str(g.pk)] = {"name": g.get_name(),
+                node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes']['g_' + str(g.pk)] = {"name": g.get_full_name('0'),
                                                                                              "id": 'g_' + str(g.id)}
         add_children_g(o, node['nodes'][o.id])
 

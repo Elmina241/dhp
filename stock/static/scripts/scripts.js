@@ -1281,6 +1281,18 @@ function openClose(obj, arrow) {
     $(arrow).toggleClass("fa-angle-up fa-angle-down");
 }
 
+function sortLi(ul){
+    var lis = $(ul).children('li');
+    lis = lis.sort(function(a,b){
+       var name1 = $(a).children("span").text().toLowerCase(),
+           name2 = $(b).children("span").text().toLowerCase();
+        if (name1 > name2) return 1;
+        if (name1 < name2) return -1;
+        return 0;
+    });
+    $(ul).html(lis);
+}
+
 function GTree(tree, t) {
     this.t = t;
     this.tree = tree;
@@ -1290,6 +1302,7 @@ function GTree(tree, t) {
     this.init = function () {
         $('#tree').html("");
         this.makeTree();
+        this.sortTree();
         $('#tree').treed({openedClass: 'fa-folder-open', closedClass: 'fa-folder'});
         $("#tree li").click(function (event) {
             event.stopPropagation();
@@ -1301,6 +1314,12 @@ function GTree(tree, t) {
             }
         });
     };
+
+    this.sortTree = function () {
+        $("#tree ul").each(function (item) {
+            sortLi(this);
+        });
+    }
 
     this.makeTree = function () {
         code = "";
