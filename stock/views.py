@@ -331,6 +331,13 @@ def get_stock_goods(request):
                                          'unit': str(g.unit), 'amount': g.amount, 'cost': cost}
             return HttpResponse(json.dumps(goods))
 
+def get_stock_inf():
+    data = {}
+    for s in Stock.objects.all():
+        data[str(s.pk)] = {}
+        for r in Stock_good.objects.filter(stock=s):
+            data[str(s.pk)][str(r.good.pk)] = r.amount
+    return data
 
 def supplies(request):
     tree = {}
@@ -393,7 +400,7 @@ def supplies(request):
                                              "goods": json.dumps(goods), "goods_json": json.dumps(goods_json),
                                              "goods_inf": json.dumps(goods_inf), "counter": counter.group,
                                              "units": json.dumps(units), "stockData": json.dumps(stocks),
-                                             "counters": Counterparty.objects.all()})
+                                             "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
 
 
 def offers(request):

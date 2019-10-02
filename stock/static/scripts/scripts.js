@@ -531,7 +531,7 @@ function addRows(table, data) {
 function addBranch(code, branch, t = "model") {
     menu = "";
     if (t == "model") menu = "<span style='font-size: 15px; color: yellowgreen; display: none' onclick='tr.addGroup(this.parentElement)' id='a" + branch.id + "'><i class='fas fa-plus-circle menu-btn'></i></span><span style='font-size: 15px; color: dodgerblue; display: none' onclick='tr.editGroup(this.parentElement, " + branch.id + ")'  id='e" + branch.id + "'><i class='fas fa-pencil-alt menu-btn'></i></span><span style='font-size: 15px; color: red; display: none' onclick='tr.delGroup(this.parentElement)' id='d" + branch.id + "'><i class='fas fa-minus-circle menu-btn'></i></span>";
-    code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + menu + "</span>";
+    code = code + "<li id=" + branch.id + "><span class='txt'>" + branch["name"] + menu + "</span><span class='amount'>0</span>";
     if (branch["nodes"] != undefined) {
         code = code + "<ul>";
         for (br in branch["nodes"]) {
@@ -1327,6 +1327,14 @@ function GTree(tree, t) {
         $(code).appendTo("#tree");
     };
 
+    this.get_stock_data = function (good) {
+        var stock = $('#acceptor').prop('value');
+        if (stock != "") {
+            if (good in stock_inf[stock]) return stock_inf[stock][good];
+        }
+        return 0;
+    };
+
     this.init();
     $("#tree li").click(function (event) {
         id = $(this).prop("id");
@@ -1343,6 +1351,15 @@ function GTree(tree, t) {
         }
         else {
             $("#selectBtn").prop("disabled", true);
+            if ($(this).children('ul').length != 0) {
+                $(this).children('ul').children('li').each(function () {
+                    var good_id = $(this).prop("id");
+                    if (good_id[0] == 'g') {
+                        var good = good_id.substr(2);
+                        $(this).children('.amount').prop('text', self.get_stock_data(good));
+                    }
+                });
+            }
         }
         //event.stopPropagation();
     });

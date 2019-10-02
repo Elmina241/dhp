@@ -14,9 +14,11 @@
         var reqInfo = {};
         var curReq = null;
         var isSupply = true;
+        var stock_inf = null;
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
+            stock_inf = JSON.parse($("#stock_inf").prop("value"));
             goods = JSON.parse($("#goods").prop("value"));
             goods_json = JSON.parse($("#goods_json").prop("value"));
             goods_inf = JSON.parse($("#goods_inf").prop("value"));
@@ -93,6 +95,7 @@
         <input id="goods_inf" value="{{ goods_inf }}" hidden>
         <input value="{{ stockData }}" id="stock_data" hidden/>
         <input value="{{ units }}" id="units" hidden/>
+        <input value="{{ stock_inf }}" id="stock_inf" hidden/>
     <input id="goods_json" value="{{ goods_json }}" hidden>
     <div class="container-fluid">
 

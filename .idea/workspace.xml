@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/static/css/stock.css" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/css/stock.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/scripts/scripts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/templates/supplies.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/supplies.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,14 +15,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4956446">
+    <splitter split-orientation="horizontal" split-proportion="0.44533664">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="406">
-                  <caret line="193" column="119" selection-start-line="193" selection-start-column="119" selection-end-line="193" selection-end-column="119" />
+                <state relative-caret-position="288">
+                  <caret line="334" column="13" lean-forward="true" selection-start-line="334" selection-start-column="13" selection-end-line="334" selection-end-column="13" />
                   <folding>
                     <element signature="e#0#45#0" expanded="true" />
                   </folding>
@@ -32,8 +33,17 @@
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="408">
-                  <caret line="98" column="21" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="21" />
+                <state relative-caret-position="129">
+                  <caret line="234" column="47" lean-forward="true" selection-start-line="234" selection-start-column="47" selection-end-line="234" selection-end-column="47" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tables/urls.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="102">
+                  <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
                 </state>
               </provider>
             </entry>
@@ -45,8 +55,8 @@
           <file leaf-file-name="scripts.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="493">
-                  <caret line="1304" column="24" selection-start-line="1304" selection-start-column="24" selection-end-line="1304" selection-end-column="24" />
+                <state relative-caret-position="254">
+                  <caret line="531" column="14" lean-forward="true" selection-start-line="531" selection-start-column="14" selection-end-line="531" selection-end-column="14" />
                   <folding>
                     <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -85,11 +95,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="shipment.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/shipment.html">
+          <file leaf-file-name="stock.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="5440">
-                  <caret line="320" column="87" selection-start-line="320" selection-start-column="87" selection-end-line="320" selection-end-column="87" />
+                <state relative-caret-position="535">
+                  <caret line="381" column="1" lean-forward="true" selection-start-line="381" selection-start-column="1" selection-end-line="381" selection-end-column="1" />
                 </state>
               </provider>
             </entry>
@@ -97,26 +107,17 @@
           <file leaf-file-name="supplies.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/supplies.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2465">
-                  <caret line="145" column="97" selection-start-line="145" selection-start-column="97" selection-end-line="145" selection-end-column="97" />
+                <state relative-caret-position="602">
+                  <caret line="226" column="59" selection-start-line="226" selection-start-column="59" selection-end-line="226" selection-end-column="59" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
+          <file leaf-file-name="shipment.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/templates/shipment.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="349">
-                  <caret line="26" column="13" lean-forward="true" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="main-page.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/main-page.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="816">
-                  <caret line="48" column="22" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
+                <state relative-caret-position="422">
+                  <caret line="299" column="69" selection-start-line="299" selection-start-column="61" selection-end-line="299" selection-end-column="69" />
                 </state>
               </provider>
             </entry>
@@ -135,11 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getDemandGoods</find>
-      <find>addGoodField</find>
-      <find>print</find>
-      <find>get_demand</find>
-      <find>save_pl</find>
       <find>amount</find>
       <find>cause</find>
       <find>saveSupply</find>
@@ -165,6 +161,11 @@
       <find>supply</find>
       <find>add_children_g</find>
       <find>get_name</find>
+      <find>suppl</find>
+      <find>Gtre</find>
+      <find>GTre</find>
+      <find>addBr</find>
+      <find>addBranch</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -208,9 +209,7 @@
         <option value="$PROJECT_DIR$/stock/templates/goods_models.html" />
         <option value="$PROJECT_DIR$/stock/templates/stocks.html" />
         <option value="$PROJECT_DIR$/stock/templates/inventory.html" />
-        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
         <option value="$PROJECT_DIR$/stock/urls.py" />
-        <option value="$PROJECT_DIR$/stock/templates/supplies.html" />
         <option value="$PROJECT_DIR$/stock/templates/shipment.html" />
         <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
         <option value="$PROJECT_DIR$/stock/templates/offers.html" />
@@ -222,8 +221,10 @@
         <option value="$PROJECT_DIR$/log/templates/accepting.html" />
         <option value="$PROJECT_DIR$/tables/urls.py" />
         <option value="$PROJECT_DIR$/tables/views.py" />
-        <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
+        <option value="$PROJECT_DIR$/stock/templates/supplies.html" />
         <option value="$PROJECT_DIR$/stock/views.py" />
+        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
+        <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
       </list>
     </option>
   </component>
@@ -251,26 +252,32 @@
         <subPane>
           <expand>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="store" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -327,21 +334,21 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Python Console" order="10" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.11655773" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09381663" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.14270152" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1401919" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1369936" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -355,7 +362,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.19607843" />
       <window_info anchor="bottom" id="Python Console" order="10" />
@@ -579,13 +586,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5763">
-          <caret line="339" column="4" selection-start-line="339" selection-start-column="4" selection-end-line="339" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/inventory.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5202">
@@ -597,20 +597,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
           <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/shipment.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5440">
-          <caret line="320" column="87" selection-start-line="320" selection-start-column="87" selection-end-line="320" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/supplies.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2465">
-          <caret line="145" column="97" selection-start-line="145" selection-start-column="97" selection-end-line="145" selection-end-column="97" />
         </state>
       </provider>
     </entry>
@@ -692,14 +678,52 @@
     <entry file="file://$PROJECT_DIR$/tables/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
-          <caret line="7" column="13" lean-forward="true" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="234" column="47" lean-forward="true" selection-start-line="234" selection-start-column="47" selection-end-line="234" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/shipment.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="299" column="69" selection-start-line="299" selection-start-column="61" selection-end-line="299" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/supplies.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="602">
+          <caret line="226" column="59" selection-start-line="226" selection-start-column="59" selection-end-line="226" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="334" column="13" lean-forward="true" selection-start-line="334" selection-start-column="13" selection-end-line="334" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="535">
+          <caret line="381" column="1" lean-forward="true" selection-start-line="381" selection-start-column="1" selection-end-line="381" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="1304" column="24" selection-start-line="1304" selection-start-column="24" selection-end-line="1304" selection-end-column="24" />
+        <state relative-caret-position="254">
+          <caret line="531" column="14" lean-forward="true" selection-start-line="531" selection-start-column="14" selection-end-line="531" selection-end-column="14" />
           <folding>
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -733,23 +757,6 @@
             <element signature="n#style#0;n#span#0;n#button#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="98" column="21" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="193" column="119" selection-start-line="193" selection-start-column="119" selection-end-line="193" selection-end-column="119" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
