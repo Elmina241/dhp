@@ -314,7 +314,7 @@ def shipment(request):
                                              "goods": json.dumps(goods), "goods_json": json.dumps(goods_json),
                                              "goods_inf": json.dumps(goods_inf), "counter": counter.group,
                                              "units": json.dumps(units), "stockData": json.dumps(stocks),
-                                             "counters": Counterparty.objects.all()})
+                                             "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
 
 
 def get_stock_goods(request):
@@ -456,7 +456,7 @@ def offers(request):
                                            'stocks': Counter_stock.objects.filter(counter=counter.group),
                                            "goods": json.dumps(goods), "goods_inf": json.dumps(goods_inf),
                                            "units": json.dumps(units), "stockData": json.dumps(stocks),
-                                           "counters": Counterparty.objects.all()})
+                                           "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
 
 
 def requirements(request):
@@ -509,7 +509,7 @@ def requirements(request):
                    "header": "Заказы", "reqs": json.dumps(reqs), "tree": json.dumps(tree),
                    'stocks': Counter_stock.objects.filter(counter=counter.group), "goods": json.dumps(goods),
                    "goods_inf": json.dumps(goods_inf), "units": json.dumps(units), "counter": counter.group,
-                   "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
+                   "stockData": json.dumps(stocks), "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
 
 
 def send_prop(request):
