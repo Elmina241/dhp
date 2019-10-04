@@ -1374,6 +1374,16 @@ function GTree(tree, t) {
     });
 }
 
+function sortTable(table){
+    if (table.rows.length > 1) {
+        var sortedRows = Array.from(table.rows).slice(1).sort((rowA, rowB) => rowA.cells[1].innerHTML > rowB.cells[1].innerHTML ? 1 : -1);
+        $(table).html('');
+        for (r in sortedRows) {
+            $(table).append(sortedRows[r]);
+        }
+    }
+}
+
 function STree(tree) {
     this.tree = tree;
     this.selected = 1;
@@ -1433,11 +1443,12 @@ function STree(tree) {
         for (n in nodes) {
             for (r in goods[nodes[n]][stock]) {
                 code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                    "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost + "</td></tr>";
+                    "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost.toFixed(2) + "</td></tr>";
             }
         }
         if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
         $("#goods-body").html(code);
+        sortTable($("#goods-body")[0]);
     }
 
     this.searchProd = function (text) {
@@ -1737,7 +1748,8 @@ function getDemandGoods(id, t = "d") {
                         article: rows[r]['article'],
                         name: rows[r]['name'],
                         amount: rows[r]['amount'],
-                        balance: rows[r]['balance']
+                        balance: rows[r]['balance'],
+                        cost: rows[r]['cost'].toFixed(2)
                     }
                     i++;
                 }
@@ -1758,7 +1770,9 @@ function openSupply(isDonor) {
     id = curReq;
     code = "";
     for (r in reqInfo[id]) {
-        code = code + "<tr id=" + reqInfo[id][r].id + "><td>" + reqInfo[id][r].article + "</td><td>" + reqInfo[id][r].name + "</td><td><input type='number' class='form-control form-control-sm' value=" + reqInfo[id][r].balance + " /></td></tr>";
+        if (isDonor) price = "";
+        else price = "<td><input type='number' class='form-control form-control-sm' value=" + reqInfo[id][r].cost + " /></td>";
+        code = code + "<tr id=" + reqInfo[id][r].id + "><td>" + reqInfo[id][r].article + "</td><td>" + reqInfo[id][r].name + "</td><td><input type='number' class='form-control form-control-sm' value=" + reqInfo[id][r].balance + " /></td>" + price + "</tr>";
     }
     $("#supply-body").html(code);
     $("#supply").modal();
@@ -1773,7 +1787,8 @@ function openSupply(isDonor) {
             i = $(this).prop('id');
             if ($(this).find('input').eq(0).prop("value") != null) goods[i] = {
                 "id": i,
-                "amount": $(this).find('input').eq(0).prop("value")
+                "amount": $(this).find('input').eq(0).prop("value"),
+                "price": $(this).find('input').eq(1).prop("value")
             };
         });
         $.ajax({

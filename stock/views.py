@@ -677,6 +677,11 @@ def get_demand_goods(request):
                 data[str(d.pk)] = {'article': d.article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
                 if request.POST['t'] == 's':
                     data[str(d.pk)]['balance'] = d.balance
+                    s_gs = Stock_good.objects.filter(good = d.good, stock = demand.acceptor)
+                    try:
+                        data[str(d.pk)]['cost'] = 0 if s_gs.count() == 0 else s_gs[0].cost / s_gs[0].amount
+                    except ZeroDivisionError:
+                        data[str(d.pk)]['cost'] = 0
             return HttpResponse(json.dumps(data))
 
 
@@ -756,10 +761,7 @@ def save_stock_operation(request):
                         rec.save()
                     else:
                         rec = Stock_good.objects.filter(stock=demand.acceptor, good=good_d.good)[0]
-                        if rec.amount != 0:
-                            cost = (rec.cost / rec.amount) * amount
-                        else:
-                            cost = 0
+                        cost = float(goods[g]['price'].replace(',', '.')) * amount
                         rec.amount = rec.amount + amount
                         rec.cost = float(rec.cost + cost)
                         rec.save()
