@@ -32,6 +32,14 @@ class Movement_rec(models.Model):
         num = 'П-' + str(round(self.batch.kneading.batch_num))
         return num
 
+class Packing_char(models.Model):
+    char = models.ForeignKey('processes.Kneading_char_number', on_delete=models.CASCADE)
+    packing = models.ForeignKey('Packing_divergence', on_delete=models.CASCADE)
+    value = models.FloatField()
+    def __str__(self):
+        return str(self.packing.product) + " " + str(self.char)
+
+
 class Packing_divergence(models.Model):
     reactor = models.ForeignKey('tables.Reactor', null=True, on_delete=models.CASCADE)
     tank = models.ForeignKey('tables.Tank', null=True, on_delete=models.CASCADE)
@@ -43,7 +51,7 @@ class Packing_divergence(models.Model):
     prod_num = models.FloatField()
     pack_amm_set = models.CharField(max_length=80, null=True, blank=True)
     def __str__(self):
-        return "test"
+        return str(self.date) + " " + str(self.product)
     def get_package_pass(self):
         amms = self.pack_amm_set.split('_')
         length = len(amms)

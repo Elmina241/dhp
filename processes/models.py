@@ -50,7 +50,7 @@ class Kneading(models.Model):
     isValid = models.BooleanField(default = False)
     isFinished = models.BooleanField(default = False)
     def __str__(self):
-        return self.list.formula.get_name()
+        return "П-" + str(self.batch_num) + " " + self.list.formula.get_name()
     def get_state(self):
         log = State_log.objects.filter(kneading = self).last()
         name = log.get_state()
@@ -97,7 +97,7 @@ class Kneading_char(models.Model):
     def __str__(self):
         return self.characteristic.name
     def get_name(self):
-        return self.kneading.name + ' ' + self.characteristic.name
+        return str(self.kneading) + ' ' + self.characteristic.name
 
 class Kneading_char_number(Kneading_char):
     number = models.FloatField()

@@ -6,7 +6,7 @@ from django.core import serializers
 from django.utils import timezone
 import datetime
 import operator
-from .models import Movement_rec, Operation, Acceptance, Packing_divergence, Packaged
+from .models import Movement_rec, Operation, Acceptance, Packing_divergence, Packaged, Packing_char
 from processes.models import *
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, \
     Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, \
@@ -252,10 +252,14 @@ def get_pass(request):
                                                             characteristic=c.characteristic)[0]
                 if c.characteristic.char_type.id != 3:
                     try:
+                        if Packing_char.objects.filter(packing = div, char = c.kneading_char_number).count() == 0:
+                            value = c.kneading_char_number.number
+                        else:
+                            value = Packing_char.objects.filter(packing = div, char = c.kneading_char_number)[0].value
                         chars[i] = {'group': c.characteristic.group.name, 'type': 1,
                                     'norm': str(comp_char.comp_char_range.inf) + "-" + str(
                                         comp_char.comp_char_range.sup),
-                                    'name': c.characteristic.name, 'value': c.kneading_char_number.number}
+                                    'name': c.characteristic.name, 'value': value, 'char_id': c.kneading_char_number.pk, 'div_id': div.pk}
                     except Kneading_char_number.DoesNotExist:
                         chars[i] = {}
                 else:
@@ -268,7 +272,8 @@ def get_pass(request):
                         val = Kneading_char_var.objects.filter(kneading_char=c)[0].char_var.name
                         chars[i] = {'group': c.characteristic.group.name, 'type': 1, 'norm': vars_str,
                                     'name': c.characteristic.name, 'value': val}
-            except Exception:
+            except Exception as e:
+                print(e)
                 chars[i] = {}
             i = i + 1
         data = {}
@@ -286,6 +291,18 @@ def print_pass(request):
             product.save()
             return HttpResponse("ok")
 
+def save_char(request):
+    if request.method == 'POST':
+        if "char_id" in request.POST:
+            res = Packing_char.objects.filter(char__pk=request.POST['char_id'], packing__pk=request.POST['div_id'])
+            if res.count() == 0:
+                p_ch = Packing_char(char=Kneading_char_number.objects.get(pk=request.POST['char_id']), packing=Packing_divergence.objects.get(pk=request.POST['div_id']), value=request.POST['value'])
+                p_ch.save()
+            else:
+                char = res[0]
+                char.value = request.POST['value']
+                char.save()
+            return HttpResponse("ok")
 
 def edit_pack(request):
     if request.method == 'POST':

@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^movement/add_rows/$', views.add_rows, name = 'add_rows'),
     url(r'^movement/edit_pack/$', views.edit_pack, name = 'edit_pack'),
     url(r'^movement/del_pack/$', views.del_pack, name = 'del_pack'),
+    url(r'^movement/save_char/$', views.save_char, name = 'save_char'),
     url(r'^movement/send_data_to_stock/$', views.send_data_to_stock, name = 'send_data_to_stock'),
 ]
