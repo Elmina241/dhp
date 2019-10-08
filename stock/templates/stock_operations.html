@@ -14,6 +14,7 @@
         var inventoryGoods = null;
         var goods_json = null;
         var pag = null;
+        var oper_periods = 2;
         $(document).ready(function () {
             operations = JSON.parse($("#operations_json").prop("value"));
             /**************/
@@ -92,6 +93,35 @@
             pag = new Pagination(10, "op-body", "operationNav");
         }
 
+        function changeOperPeriod() {
+            var group = $('#operGroup option:selected').text();
+            var period = $("#period").val();
+            if (oper_periods == 0) changeOperGroup(group);
+            else if (period > oper_periods || period == 0) getOperations(period, group);
+            else changeOperGroup(group, group);
+            if (period > oper_periods) oper_periods = period;
+        }
+
+        function getOperations(period, group){
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_operations/',
+                data: {
+                    'period': period
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    operations = JSON.parse(data);
+                    changeOperGroup(group);
+                }
+            });
+        }
+
     </script>
     <div class="container-fluid pg">
         <input id="tree_data" value="{{ tree }}" hidden>
@@ -127,10 +157,10 @@
                         </select>
                     <span class="inline-el">Период</span>
                         <select id="period" class="form-control inline-el form-control-sm"
-                                onchange="changeOperGroup($('#operGroup option:selected').text())">
+                                onchange="changeOperPeriod()">
                             <option value="0">Все</option>
                             <option value="1">День</option>
-                            <option value="2">Неделя</option>
+                            <option value="2" selected>Неделя</option>
                             <option value="3">Месяц</option>
                             <option value="4">Год</option>
                         </select>

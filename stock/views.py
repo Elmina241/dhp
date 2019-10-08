@@ -9,6 +9,7 @@ from django.core import serializers
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 # from django.contrib import auth
 import datetime
+from datetime import timedelta
 from django.contrib.auth.models import User
 import timeit
 
@@ -239,6 +240,20 @@ def storages2(request):
 
 
 def get_goods_inf():
+    goods_inf = {}
+    goods_inf['goods'] = []
+    goods_inf['goods_inf'] = {}
+    i = 0
+    for g in Goods.objects.all():
+        for t in Good_name.AREA_CHOICES:
+            full_name = g.get_full_name(t[0])
+            if full_name != "":
+                goods_inf['goods'].append(full_name)
+                goods_inf['goods_inf'][i] = t[0] + '_' + str(g.pk)
+                i = i + 1
+    return goods_inf
+
+def get_goods_inf2():
     goods_inf = {}
     goods_inf['goods'] = []
     goods_inf['goods_inf'] = {}
@@ -787,6 +802,45 @@ def save_stock_operation(request):
                     ord.save()
             return HttpResponse('ok')
 
+def get_operations(request):
+    if request.method == 'POST':
+        if 'period' in request.POST:
+            user = request.user
+            counter = User_group.objects.filter(user=user)[0].group
+            operations = {}
+            stock_operations_res = Stock_operation.objects.none()
+            period = request.POST['period']
+            if period == 0:
+                for stock in Counter_stock.objects.filter(counter=counter):
+                    stock_operations_res = stock_operations_res | Stock_operation.objects.filter(
+                        package__stock=stock.stock)
+            elif period == 3:
+                days = 31
+            else:
+                days = 365
+            if period != 0:
+                for stock in Counter_stock.objects.filter(counter=counter):
+                    stock_operations_res = stock_operations_res | Stock_operation.objects.filter(
+                        package__stock=stock.stock).filter(date__gte=(datetime.date.today() - timedelta(days=days)))
+            for s in stock_operations_res:
+                id = s.package.pk
+                demands = Demand.objects.filter(pk=s.package.matrix.cause_id)
+                if s.package.matrix.cause_id is None or demands.count() == 0:
+                    cause = 'Инвентаризация'
+                else:
+                    demand = demands[0]
+                    cause = Order.objects.filter(matrix=demand.matrix)[0].get_cause_display()
+                if id not in operations:
+                    operations[id] = {"date": s.package.date.strftime('%d.%m.%Y'),
+                                      "operation": s.get_operation_display(),
+                                      "vin": s.package.vin, "stock": str(s.package.stock), "cause": cause,
+                                      "stock_id": s.package.stock.pk}
+                operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(),
+                                                  "unit": str(s.unit), "amount": s.amount, "cost": s.cost}
+                if s.operation == '2':
+                    operations[id][str(s.good.pk)]['diffr'] = s.amount - float(s.last_value)
+            return HttpResponse(json.dumps(operations))
+
 
 def stock_operations(request):
     user = request.user
@@ -811,7 +865,7 @@ def stock_operations(request):
     operations = {}
     stock_operations_res = Stock_operation.objects.none()
     for stock in Counter_stock.objects.filter(counter=counter):
-        stock_operations_res = stock_operations_res | Stock_operation.objects.filter(package__stock=stock.stock)
+        stock_operations_res = stock_operations_res | Stock_operation.objects.filter(package__stock=stock.stock).filter(date__gte=(datetime.date.today() - timedelta(days=7)))
     stock_operations_res = stock_operations_res.order_by('-date')
     for s in stock_operations_res:
         id = s.package.pk

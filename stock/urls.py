@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^stock_operations/save_supply/$', views.save_supply, name='save_supply'),
     url(r'^stock_operations/save_inventory/$', views.save_inventory, name='save_inventory'),
     url(r'^stock_operations/get_stock_goods/$', views.get_stock_goods, name='get_stock_goods'),
+    url(r'^stock_operations/get_operations/$', views.get_operations, name='get_operations'),
     url(r'^goods/save_good/$', views.save_good, name='save_good'),
     url(r'^goods/edit_good/$', views.edit_good, name='edit_good'),
     url(r'^goods_models/save_group/$', views.save_group, name='save_group$'),
