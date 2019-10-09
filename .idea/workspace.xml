@@ -3,9 +3,38 @@
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/changelists.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/changelists.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/forms.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/forms.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/login.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/rtl.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/rtl.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/css/widgets.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/css/widgets.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/SelectBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/SelectBox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/SelectFilter2.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/SelectFilter2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/actions.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/actions.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/admin/DateTimeShortcuts.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/admin/DateTimeShortcuts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/admin/RelatedObjectLookups.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/admin/RelatedObjectLookups.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/calendar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/collapse.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/collapse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/collapse.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/collapse.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/core.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/inlines.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/inlines.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/inlines.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/inlines.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/jquery.init.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/jquery.init.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/prepopulate.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/prepopulate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/prepopulate.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/prepopulate.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/timeparse.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/timeparse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/admin/js/urlify.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/admin/js/urlify.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/css/style3.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/css/style3.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/css/tables.css" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/css/tables.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/scripts/characteristics19.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/scripts/characteristics19.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/scripts/json_to_table5.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/scripts/json_to_table5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/scripts/json_to_table57.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/scripts/json_to_table57.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/scripts/scripts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/static/scripts/tables6.js" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/static/scripts/tables6.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/stock_operations.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/stock_operations.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,8 +53,8 @@
           <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="257">
-                  <caret line="816" column="29" lean-forward="true" selection-start-line="816" selection-start-column="29" selection-end-line="816" selection-end-column="29" />
+                <state relative-caret-position="14637">
+                  <caret line="861" column="15" lean-forward="true" selection-start-line="861" selection-start-column="15" selection-end-line="861" selection-end-column="15" />
                   <folding>
                     <element signature="e#0#45#0" expanded="true" />
                   </folding>
@@ -36,8 +65,8 @@
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="578">
-                  <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+                <state relative-caret-position="289">
+                  <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
                 </state>
               </provider>
             </entry>
@@ -45,8 +74,8 @@
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-102">
-                  <caret line="248" column="36" selection-start-line="248" selection-start-column="36" selection-end-line="248" selection-end-column="36" />
+                <state relative-caret-position="408">
+                  <caret line="271" column="24" lean-forward="true" selection-start-line="271" selection-start-column="24" selection-end-line="271" selection-end-column="24" />
                 </state>
               </provider>
             </entry>
@@ -55,29 +84,57 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="24616">
-                  <caret line="1448" column="52" selection-start-line="1448" selection-start-column="52" selection-end-line="1448" selection-end-column="52" />
+                <state relative-caret-position="323">
+                  <caret line="1472" column="5" lean-forward="true" selection-start-line="1472" selection-start-column="5" selection-end-line="1472" selection-end-column="5" />
+                  <folding>
+                    <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#4;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#button#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#1;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#ul#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#h6#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#h6#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#nav#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#nav#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#button#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="movement.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="510">
-                  <caret line="264" column="15" lean-forward="true" selection-start-line="246" selection-start-column="12" selection-end-line="264" selection-end-column="15" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="stock_operations.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="stock_operations.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="689">
-                  <caret line="159" column="58" selection-start-line="159" selection-start-column="58" selection-end-line="159" selection-end-column="58" />
+                <state relative-caret-position="374">
+                  <caret line="165" column="47" selection-start-line="165" selection-start-column="47" selection-end-line="165" selection-end-column="47" />
+                  <folding>
+                    <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -134,10 +191,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/processes/templates/week_plan.html" />
-        <option value="$PROJECT_DIR$/processes/templates/plan.html" />
-        <option value="$PROJECT_DIR$/stock/templates/storages.html" />
-        <option value="$PROJECT_DIR$/stock/templates/props.html" />
         <option value="$PROJECT_DIR$/stock/templates/counterparties.html" />
         <option value="$PROJECT_DIR$/stock/static/css/style.css" />
         <option value="$PROJECT_DIR$/processes/urls.py" />
@@ -181,9 +234,13 @@
         <option value="$PROJECT_DIR$/log/urls.py" />
         <option value="$PROJECT_DIR$/log/views.py" />
         <option value="$PROJECT_DIR$/log/templates/movement.html" />
-        <option value="$PROJECT_DIR$/django_example/settings.py" />
         <option value="$PROJECT_DIR$/stock/urls.py" />
         <option value="$PROJECT_DIR$/stock/views.py" />
+        <option value="$PROJECT_DIR$/django_example/static/css/errors.css" />
+        <option value="$PROJECT_DIR$/django_example/settings.py" />
+        <option value="$PROJECT_DIR$/stock/templates/404.html" />
+        <option value="$PROJECT_DIR$/stock/static/css/errors.css" />
+        <option value="$PROJECT_DIR$/stock/templates/500.html" />
         <option value="$PROJECT_DIR$/stock/templates/stock_operations.html" />
       </list>
     </option>
@@ -197,7 +254,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -208,6 +265,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -229,13 +287,30 @@
               <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
               <item name="django_example" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="tables" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -245,11 +320,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Anna\Documents\Python\django_example\stock\templatetags" />
-      <recent name="C:\Users\Anna\Documents\Python\django_example\stock\static\css" />
-      <recent name="C:\Users\Elmina\Documents\python\dhp\stock\templates" />
+      <recent name="C:\Users\Anna\Documents\Python\django_example\tables\templates" />
+      <recent name="C:\Users\Anna\Documents\Python\django_example\log\templates" />
+      <recent name="C:\Users\Anna\Documents\Python\django_example\processes\templates" />
+      <recent name="C:\Users\Anna\Documents\Python\django_example\django_example\static\css" />
       <recent name="C:\Users\Anna\Documents\Python\django_example\stock\templates" />
-      <recent name="C:\Users\Elmina\Documents\python\dhp\django_example\static\css" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Anna\Documents\Python\django_example\log\static\css" />
@@ -291,7 +366,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32897604" />
@@ -300,11 +375,10 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32897604" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32897604" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.078431375" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1433902" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.2037037" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13059701" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -315,6 +389,7 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -329,41 +404,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/processes/templates/print_lists.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="63" column="16" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/static/scripts/json_to_table57.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="231" column="7" selection-start-line="231" selection-start-column="7" selection-end-line="231" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/props.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="696">
-          <caret line="46" column="220" selection-start-line="46" selection-start-column="214" selection-end-line="46" selection-end-column="220" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processes/templates/storages.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="300" column="42" selection-start-line="300" selection-start-column="42" selection-end-line="300" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/static/css/stock3.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="731">
@@ -478,13 +518,6 @@
     <entry file="file://$PROJECT_DIR$/log/templatetags/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="26" column="13" lean-forward="true" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/templatetags/stock_extras.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -575,13 +608,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24616">
-          <caret line="1448" column="52" selection-start-line="1448" selection-start-column="52" selection-end-line="1448" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/processes/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1700">
@@ -610,9 +636,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="45" column="48" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -647,51 +670,133 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4488">
+          <caret line="264" column="15" selection-start-line="246" selection-start-column="12" selection-end-line="264" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/404.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="25" lean-forward="true" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/css/errors.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="30" column="1" lean-forward="true" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processes/templates/404.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/static/css/errors.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="1" lean-forward="true" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/500.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="25" lean-forward="true" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="165" column="47" selection-start-line="165" selection-start-column="47" selection-end-line="165" selection-end-column="47" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
-          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
+          <caret line="1472" column="5" lean-forward="true" selection-start-line="1472" selection-start-column="5" selection-end-line="1472" selection-end-column="5" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#4;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#3;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#ul#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#li#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h6#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h6#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#td#0;n#tr#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#nav#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#nav#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#button#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="27" selection-start-line="17" selection-start-column="27" selection-end-line="17" selection-end-column="27" />
           <folding>
             <element signature="e#318#327#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="264" column="15" lean-forward="true" selection-start-line="246" selection-start-column="12" selection-end-line="264" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-102">
-          <caret line="248" column="36" selection-start-line="248" selection-start-column="36" selection-end-line="248" selection-end-column="36" />
+        <state relative-caret-position="408">
+          <caret line="271" column="24" lean-forward="true" selection-start-line="271" selection-start-column="24" selection-end-line="271" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+        <state relative-caret-position="289">
+          <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="816" column="29" lean-forward="true" selection-start-line="816" selection-start-column="29" selection-end-line="816" selection-end-column="29" />
+        <state relative-caret-position="14637">
+          <caret line="861" column="15" lean-forward="true" selection-start-line="861" selection-start-column="15" selection-end-line="861" selection-end-column="15" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="689">
-          <caret line="159" column="58" selection-start-line="159" selection-start-column="58" selection-end-line="159" selection-end-column="58" />
         </state>
       </provider>
     </entry>

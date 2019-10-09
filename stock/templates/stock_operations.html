@@ -103,6 +103,7 @@
         }
 
         function getOperations(period, group){
+            $("#loader").show();
             var csrftoken = getCookie('csrftoken');
             $.ajax({
                 type: "POST",
@@ -118,6 +119,7 @@
                 success: function onAjaxSuccess(data) {
                     operations = JSON.parse(data);
                     changeOperGroup(group);
+                    $("#loader").hide();
                 }
             });
         }
@@ -164,6 +166,7 @@
                             <option value="3">Месяц</option>
                             <option value="4">Год</option>
                         </select>
+                    <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 25px;display: none">
                         <div class="form-inline mobile-invisible" style="position: absolute; right: 0">
                             <lable for="filter" class="col-form-label">Фильтр</lable>
                             <select class="form-control col-sm-9 form-control-sm" id="operGroup"
@@ -174,7 +177,6 @@
                                 <option value="2">Расход</option>
                                 <option value="3">Коррекция</option>
                             </select>
-                            <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 30px; display:none">
                         </div>
                     </div>
                 </div>

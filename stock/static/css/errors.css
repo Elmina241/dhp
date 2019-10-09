@@ -1,0 +1,40 @@
+.body-error {
+    background-color: #f7f7f7;
+    font-family: "URW Palladio L", Palatino, serif;
+}
+
+.error-text {
+    text-align: center;
+    padding-top: 15%;
+}
+
+.body-error h1{
+    color: #c3cbc8;
+    font-size: 100pt;
+    font-weight: bold;
+    margin: 20pt;
+}
+
+.body-error h2{
+    color: #514e55;
+    font-size: 15pt;
+    font-weight: lighter;
+}
+
+.err400{
+    color: #169eb3;
+    font-size: 200pt;
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+    opacity: 0.5;
+}
+
+.err500 {
+    color: #FF5722;
+    font-size: 200pt;
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+    opacity: 0.5;
+}
