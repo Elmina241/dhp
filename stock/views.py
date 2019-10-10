@@ -7,7 +7,7 @@ from django.db.models import Q
 from .models import *
 from django.core import serializers
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-# from django.contrib import auth
+import time
 import datetime
 from datetime import timedelta
 from django.contrib.auth.models import User
@@ -257,13 +257,17 @@ def get_goods_inf2():
     goods_inf = {}
     goods_inf['goods'] = []
     goods_inf['goods_inf'] = {}
+    goods_inf['goods_json'] = {}
     i = 0
     for g in Goods.objects.all():
         for t in Good_name.AREA_CHOICES:
-            full_name = g.get_full_name(t[0])
+            full_name = g.get_full_name2(t[0])
             if full_name != "":
-                goods_inf['goods'].append(full_name)
+                goods_inf['goods'].append(full_name[0])
                 goods_inf['goods_inf'][i] = t[0] + '_' + str(g.pk)
+                if t == '0':
+                    goods_inf['goods_json'][str(g.pk)] = {"article": full_name[1], "name": full_name[2],
+                                             "unit": str(g.get_unit())}
                 i = i + 1
     return goods_inf
 
@@ -276,9 +280,10 @@ def shipment(request):
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
-    goods_json = {}
-    for r in Goods.objects.all():
-        goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
+    #goods_json = goods_inf_res['goods_json']
+    #goods_json = {}
+    #for r in Goods.objects.all():
+        #goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     units = {}
     causes = {}
     for c in Order.CAUSE_CHOICES:
@@ -326,7 +331,7 @@ def shipment(request):
                                              "header": "Отпуск",
                                              'stocks': Counter_stock.objects.filter(counter=counter.group),
                                              'causes': causes, 'reqs': json.dumps(reqs), "tree": json.dumps(tree),
-                                             "goods": json.dumps(goods), "goods_json": json.dumps(goods_json),
+                                             "goods": json.dumps(goods), #"goods_json": json.dumps(goods_json),
                                              "goods_inf": json.dumps(goods_inf), "counter": counter.group,
                                              "units": json.dumps(units), "stockData": json.dumps(stocks),
                                              "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
@@ -362,9 +367,10 @@ def supplies(request):
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
-    goods_json = {}
-    for r in Goods.objects.all():
-        goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
+    #goods_json = goods_inf_res['goods_json']
+    #goods_json = {}
+    #for r in Goods.objects.all():
+        #goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     causes = {}
     for c in Order.CAUSE_CHOICES:
         causes[c[0]] = {'name': c[1]}
@@ -412,7 +418,7 @@ def supplies(request):
                                              'causes': causes, "header": "Поступления",
                                              'stocks': Counter_stock.objects.filter(counter=counter.group),
                                              'reqs': json.dumps(reqs), "tree": json.dumps(tree),
-                                             "goods": json.dumps(goods), "goods_json": json.dumps(goods_json),
+                                             "goods": json.dumps(goods), #"goods_json": json.dumps(goods_json),
                                              "goods_inf": json.dumps(goods_inf), "counter": counter.group,
                                              "units": json.dumps(units), "stockData": json.dumps(stocks),
                                              "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
@@ -849,12 +855,14 @@ def stock_operations(request):
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0])
-    goods_inf_res = get_goods_inf()
+    goods_inf_res = get_goods_inf2()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
-    goods_json = {}
-    for r in Goods.objects.all():
-        goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
+    goods_json = goods_inf_res['goods_json']
+    #goods_json = {}
+    #start_time = time.time()
+    #for r in Goods.objects.all():
+        #goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name,
@@ -866,7 +874,7 @@ def stock_operations(request):
     stock_operations_res = Stock_operation.objects.none()
     for stock in Counter_stock.objects.filter(counter=counter):
         stock_operations_res = stock_operations_res | Stock_operation.objects.filter(package__stock=stock.stock).filter(date__gte=(datetime.date.today() - timedelta(days=7)))
-    stock_operations_res = stock_operations_res.order_by('-date')
+    #stock_operations_res = stock_operations_res.order_by('-date')
     for s in stock_operations_res:
         id = s.package.pk
         demands = Demand.objects.filter(pk=s.package.matrix.cause_id)

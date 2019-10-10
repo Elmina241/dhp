@@ -83,7 +83,7 @@ class Goods(models.Model):
             return '-'
     def get_article(self, t='0'):
         article = Good_name.objects.filter(product = self, name_type='1', area=t)
-        if article.count():
+        if article.count() != 0:
             return article[0].name
         else:
             return '-'
@@ -96,26 +96,44 @@ class Goods(models.Model):
         u = Goods_unit.objects.filter(unit = unit, product = self)[0]
         coeff = u.coeff
         return amount / coeff
+
     def get_full_name(self, t):
+        full_name = ""
+        if Good_name.objects.filter(product=self, area=t).count() != 0:
+            t_1 = Good_name.objects.filter(product=self, name_type='1', area=t)
+            if t_1.count() != 0:
+                full_name = full_name + t_1[0].name
+            t_2 = Good_name.objects.filter(product=self, name_type='0', area=t)
+            if t_2.count() != 0:
+                full_name = full_name + " " + t_2[0].name
+            t_3 = Good_name.objects.filter(product=self, name_type='2', area=t)
+            if t_3.count() != 0:
+                full_name = full_name + " " + t_3[0].name
+        return full_name
+    def get_full_name2(self, t):
+        full_name = ""
+        article = ""
         name = ""
         if Good_name.objects.filter(product=self, area=t).count() != 0:
             t_1 = Good_name.objects.filter(product = self, name_type='1', area=t)
             if t_1.count() != 0:
-                name = name + t_1[0].name
+                article = t_1[0].name
+                full_name = full_name + article
             t_2 = Good_name.objects.filter(product=self, name_type='0', area=t)
             if t_2.count() != 0:
-                name = name + " " + t_2[0].name
+                name = t_2[0].name
+                full_name = full_name + " " + name
             t_3 = Good_name.objects.filter(product = self, name_type='2', area=t)
             if t_3.count() != 0:
-                name = name + " " + t_3[0].name
-        return name
+                full_name = full_name + " " + t_3[0].name
+        return [full_name, article, name]
 
 
 class Good_name(models.Model):
     product = models.ForeignKey('Goods', on_delete=models.CASCADE)
     TYPE_CHOICES = (
-        ('0', 'Наименование'),
         ('1', 'Артикул'),
+        ('0', 'Наименование'),
         ('2', 'Штрихкод'),
     )
     AREA_CHOICES = (
