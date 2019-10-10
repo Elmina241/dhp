@@ -851,6 +851,7 @@ def get_operations(request):
 def stock_operations(request):
     user = request.user
     counter = User_group.objects.filter(user=user)[0].group
+    '''
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
     g = Model_group.objects.all().first()
@@ -859,10 +860,7 @@ def stock_operations(request):
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
     goods_json = goods_inf_res['goods_json']
-    #goods_json = {}
-    #start_time = time.time()
-    #for r in Goods.objects.all():
-        #goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
+    '''
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name,
@@ -895,8 +893,9 @@ def stock_operations(request):
                   {"user_group": str(User_group.objects.filter(user=request.user)[0].group),
                    "permissions": json.dumps(User_group.objects.filter(user=request.user)[0].get_permissions()),
                    "header": "Журнал приходов/расходов", "operations": operations,
-                   "operations_json": json.dumps(operations), "tree": json.dumps(tree), "goods": json.dumps(goods),
-                   "goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf), "counter": counter,
+                   "operations_json": json.dumps(operations), #"tree": json.dumps(tree), "goods": json.dumps(goods),
+                   #"goods_json": json.dumps(goods_json), "goods_inf": json.dumps(goods_inf),
+                   "counter": counter,
                    "units": json.dumps(units), 'stocks': Counter_stock.objects.filter(counter=counter),
                    "stockData": json.dumps(stocks), "counters": Counterparty.objects.all()})
 

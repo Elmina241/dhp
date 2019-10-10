@@ -3,31 +3,31 @@
     {% load staticfiles %}
     {% load stock_extras %}
     <script>
-        var goods_inf = null;
+        //var goods_inf = null;
         var inp = null;
         var tr = null;
-        var goods = null;
+        //var goods = null;
         var units = null;
         var stocks = null;
         var operations = null;
         var isSupply = true;
         var inventoryGoods = null;
-        var goods_json = null;
+        //var goods_json = null;
         var pag = null;
         var oper_periods = 2;
         $(document).ready(function () {
             operations = JSON.parse($("#operations_json").prop("value"));
             /**************/
-            goods = JSON.parse($("#goods").prop("value"));
-            goods_json = JSON.parse($("#goods_json").prop("value"));
-            goods_inf = JSON.parse($("#goods_inf").prop("value"));
-            tree = JSON.parse($("#tree_data").prop("value"));
-            tr = new GTree(tree, "goods");
-            $("#1")[0].click();
+            //goods = JSON.parse($("#goods").prop("value"));
+            //goods_json = JSON.parse($("#goods_json").prop("value"));
+            //goods_inf = JSON.parse($("#goods_inf").prop("value"));
+            //tree = JSON.parse($("#tree_data").prop("value"));
+            //tr = new GTree(tree, "goods");
+            //$("#1")[0].click();
             units = JSON.parse($("#units").prop("value"));
             stocks = JSON.parse($("#stock_data").prop("value"));
-            addGoodField();
-            getStocks('acceptor');
+            //addGoodField();
+            //getStocks('acceptor');
             /***********/
             pag = new Pagination(10, "op-body", "operationNav");
             pag2 = new Pagination(10, "goods-body", "operationNav2");
@@ -144,11 +144,11 @@
                         <button type="button" class="btn btn-danger inline-el btn-sm"
                                 onclick="isSupply=false;openModalSupply()">
                             Выбытие
-                        </button>-->
+                        </button>
                         <button type="button" id="openInventoryBtn" class="mobile-invisible inline-el btn btn-warning btn-sm"
                                 onclick="getStockGoods($('#stock').val())" disabled>
                             Инвентаризация
-                        </button>
+                        </button>-->
                         <span class="inline-el mobile-invisible">Склад</span>
                         <select id="stock" class="mobile-invisible form-control inline-el form-control-sm"
                                 onchange="changeOperGroup($('#operGroup option:selected').text())">
