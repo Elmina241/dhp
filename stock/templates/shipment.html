@@ -40,6 +40,7 @@
             $('#date').val(new Date().toDateInputValue());
             /*$('#demand_table').stacktable();
             $('#demand_goods').stacktable();*/
+            $('.modal').css('overflow-y', 'auto');
         });
 
         function formatDate(date) {
@@ -342,7 +343,7 @@
                     </ul>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Выбрать"
-                               onclick="setGoodName(inp);$('#tree-div').modal('hide');"
+                               onclick="setGoodName(inp);$('#tree-div').modal('hide');$('#add_supply').modal('handleUpdate');"
                                id="selectBtn" class="btn btn-primary"
                                style="float: right"/></div>
                 </div>

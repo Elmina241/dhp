@@ -3,7 +3,9 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
+import pytz
+
+local_tz = pytz.timezone('Asia/Vladivostok')
 
 #Классы модели МЦ
 class Product_model(models.Model):
@@ -299,7 +301,7 @@ class Stock_operation(models.Model):
     cost = models.FloatField(default=0, blank=True)
     last_value = models.FloatField(default=0, blank=True)
     def __str__(self):
-        return str(self.stock) + ' ' + str(self.good)
+        return str(self.date.replace(tzinfo=pytz.utc).astimezone(local_tz)) + ' ' + str(self.pk) + ' ' + str(self.good)
     def get_good_name(self):
         return Demand_good.objects.filter(demand__pk = self.cause_id, good = self.good)[0].name
 

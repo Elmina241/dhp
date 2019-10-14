@@ -37,6 +37,7 @@
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
             $('#date').val(new Date().toDateInputValue());
+            $('.modal').css('overflow-y', 'auto');
         });
 
         function toggleReqs(btn, t) {
