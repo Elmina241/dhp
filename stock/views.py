@@ -610,13 +610,14 @@ def get_prod_info(request):
                     operation = 'Отгрузка' if d.get_demand().donor == stock else 'Поставка'
                     if Order.objects.filter(matrix=d.matrix, isDonor=(operation == 'Отгрузка')).count() != 0:
                         if Order.objects.filter(matrix=d.matrix, isDonor=(operation == 'Отгрузка'))[0].status != '2':
+                            print(d.get_demand().finish_date)
                             expecting[str(d.pk)] = {'vin': d.get_demand().vin,
                                                     'date': d.get_demand().finish_date.strftime('%d.%m.%Y'),
                                                     'amount': d.balance, 'operation': operation}
             data['expecting'] = expecting
             history = {}
             for o in Stock_operation.objects.filter(good=good, package__stock=stock).exclude(operation='2'):
-                history[str(o.pk)] = {'vin': o.package.vin, 'date': o.package.date.strftime('%d.%m.%Y'),
+                history[str(o.pk)] = {'vin': o.package.vin, 'date': o.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%Y'),
                                       'operation': o.get_operation_display(), 'amount': o.amount, 'unit': str(o.unit)}
             data['history'] = history
             return HttpResponse(json.dumps(data))
@@ -777,14 +778,14 @@ def save_stock_operation(request):
                 # добавление информации в склад
                 if json.loads(request.POST['isDonor']) != True:
                     amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * amount
+                    cost = float(goods[g]['price'].replace(',', '.')) * amount
                     if Stock_good.objects.filter(stock=demand.acceptor, good=good_d.good).count() == 0:
                         rec = Stock_good(stock=demand.acceptor, good=good_d.good,
                                          unit=Goods_unit.objects.filter(product=good_d.good, isBase=True)[0].unit,
-                                         amount=amount)
+                                         amount=amount, cost=cost)
                         rec.save()
                     else:
                         rec = Stock_good.objects.filter(stock=demand.acceptor, good=good_d.good)[0]
-                        cost = float(goods[g]['price'].replace(',', '.')) * amount
                         rec.amount = rec.amount + amount
                         rec.cost = float(rec.cost + cost)
                         rec.save()
