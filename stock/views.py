@@ -61,13 +61,13 @@ def stocks(request):
 
 
 def inventory(request):
-    tree = {}
-    tree[0] = {"name": "root", "nodes": {}}
-    g = Model_group.objects.all().first()
-    add_children_g(g, tree[0])
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0], goods_inf_res['full_names'])
     inventory_goods = {}
     for i in Inventory.objects.filter(is_finished=False):
         inventory_goods[str(i.pk)] = {'date': i.date.strftime('%d.%m.%Y'), 'stock': str(i.stock),
@@ -184,7 +184,7 @@ def add_children(obj, node):
         add_children(o, node['nodes'][o.id])
 
 
-def add_children_g(obj, node):
+def add_children_g(obj, node, full_names):
     for o in Model_group.objects.filter(parent=obj.id):
         if 'nodes' not in node:
             node['nodes'] = {}
@@ -194,9 +194,9 @@ def add_children_g(obj, node):
             node['nodes'][o.id]['nodes']['m_' + str(m.pk)] = {"name": m.name, "id": 'm_' + str(m.id)}
             node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes'] = {}
             for g in Goods.objects.filter(model=m):
-                node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes']['g_' + str(g.pk)] = {"name": g.get_full_name('0'),
+                node['nodes'][o.id]['nodes']['m_' + str(m.pk)]['nodes']['g_' + str(g.pk)] = {"name": full_names[str(g.id)],
                                                                                              "id": 'g_' + str(g.id)}
-        add_children_g(o, node['nodes'][o.id])
+        add_children_g(o, node['nodes'][o.id], full_names)
 
 
 def props(request):
@@ -241,7 +241,7 @@ def storages2(request):
                                               "header": "Склады", "stocks": Stock.objects.all()})
 
 
-def get_goods_inf():
+def get_goods_inf3():
     goods_inf = {}
     goods_inf['goods'] = []
     goods_inf['goods_inf'] = {}
@@ -273,20 +273,51 @@ def get_goods_inf2():
                 i = i + 1
     return goods_inf
 
+def get_goods_inf():
+    data = {}
+    goods_inf = {}
+    goods_inf['goods'] = []
+    goods_inf['goods_inf'] = {}
+    for name in Good_name.objects.all():
+        id = str(name.product_id)
+        if id not in data:
+            data[id] = {}
+        if name.area not in data[id]:
+            data[id][name.area] = {name.name_type: name.name}
+        else:
+            data[id][name.area][name.name_type] = name.name
+    i = 0
+    full_names = {}
+    for id in data:
+        for t in ['0', '1', '2']:
+            if t in data[id]:
+                article = data[id][t]['1'] if '1' in data[id][t] else "-"
+                name = data[id][t]['0'] if '0' in data[id][t] else ""
+                barcode = data[id][t]['2'] if '2' in data[id][t] else ""
+                full_name = "{article} {name} {barcode}".format(article=article, name=name, barcode=barcode)
+                goods_inf['goods'].append(full_name)
+                goods_inf['goods_inf'][i] = t + '_' + id
+                if t == '0':
+                    full_names[id] = full_name
+                i += 1
+    goods_inf['full_names'] = full_names
+    return goods_inf
 
 def shipment(request):
-    tree = {}
-    tree[0] = {"name": "root", "nodes": {}}
-    g = Model_group.objects.all().first()
-    add_children_g(g, tree[0])
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    start_time = time.time()
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0], goods_inf_res['full_names'])
     #goods_json = goods_inf_res['goods_json']
     #goods_json = {}
     #for r in Goods.objects.all():
         #goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     units = {}
+    print("--- %s seconds ---" % (time.time() - start_time))
     causes = {}
     for c in Order.CAUSE_CHOICES:
         causes[c[0]] = {'name': c[1]}
@@ -362,13 +393,13 @@ def get_stock_inf():
     return data
 
 def supplies(request):
-    tree = {}
-    tree[0] = {"name": "root", "nodes": {}}
-    g = Model_group.objects.all().first()
-    add_children_g(g, tree[0])
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0], goods_inf_res['full_names'])
     #goods_json = goods_inf_res['goods_json']
     #goods_json = {}
     #for r in Goods.objects.all():
@@ -456,13 +487,13 @@ def offers(request):
             'isEdited': r.is_edited,
             'vin': r.vin
         }
-    tree = {}
-    tree[0] = {"name": "root", "nodes": {}}
-    g = Model_group.objects.all().first()
-    add_children_g(g, tree[0])
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0], goods_inf_res['full_names'])
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name,
@@ -511,13 +542,13 @@ def requirements(request):
             'isEdited': r.is_edited,
             'vin': r.vin
         }
-    tree = {}
-    tree[0] = {"name": "root", "nodes": {}}
-    g = Model_group.objects.all().first()
-    add_children_g(g, tree[0])
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
     goods_inf = goods_inf_res['goods_inf']
+    tree = {}
+    tree[0] = {"name": "root", "nodes": {}}
+    g = Model_group.objects.all().first()
+    add_children_g(g, tree[0], goods_inf_res['full_names'])
     units = {}
     for u in Goods_unit.objects.all():
         units[str(u.pk)] = {'pk': u.unit.pk, 'product': u.product.pk, 'applicable': u.applicable, 'unit': u.unit.name,
