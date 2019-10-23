@@ -1,62 +1,71 @@
 {% extends 'tables/base.html' %}
 {% block content %}
 
-<script type="text/javascript">
-$(document).ready(function(){
-  addValidation();
-});</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            addValidation();
+        });
+    </script>
 
-        <div class="panel panel-default" style ="margin: auto">
-          <div class="panel-heading"><h4 class="panel-title"> Добавление новой записи </h4></div>
-          {% if error_message %}
-          <p><strong>{{ error_message }}</strong></p>
-          {% endif %}
-          <div class="panel-body">
-            <div class="input-group" style ="margin: auto">
-              <form action="add_material/" method="post">
-                {% csrf_token %}
-                <div id="two-column">
-                  <div id="left">
-                    <h5><b>Артикул:</b><h5>
-                    <input type="text" class="form-control" placeholder="Артикул" size = "50" name = "code" required></p>
-                    <br><br><br>
-                    <h5><b>Химическое наименование:</b></h5>
-                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" required></p>
-                    <br><br><br>
-                    <h5><b>Группа:</b><br></h5>
-                    <p><select class="form-control" name="group">
-                      {% for g in groups %}
-                      <option value="{{g.id}}">{{g.name}}</option>
-                      {% endfor %}
-                    </select></p></p>
-                  
-                  </div>
-                  <div id="right">
-                    <h5><b>Марка:</b><br></h5>
-                    <input type="text" class="form-control" placeholder="Марка" Value="-" size = "50" name="mark" required></p>
-                    <br><br><br>
-                    <h5><b>Ед. изм.:</b><br></h5>
-                    <p><select class="form-control" name="unit">
-                      {% for u in units %}
-                      <option value="{{u.id}}">{{u.name}}</option>
-                      {% endfor %}
-                    </select></p></p>
-                    <br><br><br>
-                    <h5><b>Концентрация:</b><br></h5>
-                    <div class="input-group">
-                      <input type="number" class="form-control bfh-number" max="100" min="0"  value="100" name="concentration"> <span class="input-group-addon">%</span></p>
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading"><h4 class="panel-title"> Добавление новой записи </h4></div>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="add_material/" method="post" style="height: 360px">
+                    {% csrf_token %}
+                    <div id="two-column" style="height: 100%">
+                        <div id="left">
+                            <h5><b>Артикул:</b></h5>
+                            <input type="text" class="form-control" placeholder="Артикул" size="50" name="code"
+                                   required></p>
+                            <br><br><br>
+                            <h5><b>Химическое наименование:</b></h5>
+                            <input type="text" class="form-control" placeholder="Наименование" size="50"
+                                   name="name" required></p>
+                            <br><br><br>
+                            <h5><b>Группа:</b><br></h5>
+                            <p><select class="form-control" name="group">
+                                {% for g in groups %}
+                                    <option value="{{ g.id }}">{{ g.name }}</option>
+                                {% endfor %}
+                            </select></p>
+                            <br><br><br>
+                            <h5><b>Количество:</b><br></h5>
+                            <div class="input-group">
+                                <input type="number" class="form-control bfh-number" min="0" name="ammount" value="0">
+                                <span class="input-group-addon">кг</span></p>
+                            </div>
+
+                        </div>
+                        <div id="right">
+                            <h5><b>Марка:</b><br></h5>
+                            <input type="text" class="form-control" placeholder="Марка" Value="-" size="50" name="mark"
+                                   required></p>
+                            <br><br><br>
+                            <h5><b>Ед. изм.:</b><br></h5>
+                            <p><select class="form-control" name="unit">
+                                {% for u in units %}
+                                    <option value="{{ u.id }}">{{ u.name }}</option>
+                                {% endfor %}
+                            </select></p>
+                            </p>
+                            <br><br><br>
+                            <h5><b>Концентрация:</b><br></h5>
+                            <div class="input-group">
+                                <input type="number" class="form-control bfh-number" max="100" min="0" value="100"
+                                       name="concentration"> <span class="input-group-addon">%</span></p>
+                            </div>
+                            <br>
+                        </div>
                     </div>
-                    <br>
-                    <h5><b>Количество:</b><br></h5>
-                    <div class="input-group">
-                      <input type="number" class="form-control bfh-number" min="0"  name="ammount" value="0"> <span class="input-group-addon">кг</span></p>
-                    </div>
-                    <br><br><br><br><br>
-                    <input id="send" type="submit" value="Сохранить" class="btn btn-primary" style="float: right"/>
-                  </div>
-                </div>
-              </form>
+                    <hr>
+                    <input id="send" type="submit" value="Сохранить" class="btn btn-primary"
+                           style="float: right"/>
+                </form>
             </div>
-          </div>
         </div>
+    </div>
 {% endblock content %}
