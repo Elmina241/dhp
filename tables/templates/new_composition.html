@@ -1,106 +1,119 @@
 {% extends 'tables/base.html' %}
 {% block content %}
 
-<script type="text/javascript">
-$(document).ready(function(){
-  saveTable2();
-  addValidation();
-});</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            saveTable2();
+            addValidation();
+        });
+    </script>
 
-<div class="panel panel-default" style ="margin: auto">
-  <div class="panel-heading"><h4 class="panel-title"></h4></div>
-  {% if error_message %}
-  <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
-<div class="panel-body">
-  <div class="input-group" style ="margin: auto">
-    <form action="add_composition/" method="post">
-      {% csrf_token %}
-      <div id="two-column">
-        <div id="left">
-          <h5><b>Код:</b><h5>
-          <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" required></p>
-          <br><br><br>
-          <h5><b>Наименование:</b></h5>
-          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" required></p>
-          <br><br><br>
-          <h5><b>Форма:</b><br></h5>
-          <p><select class="form-control" name="form">
-            {% for f in forms %}
-            <option value="{{f.id}}">{{f.name}}</option>
-            {% endfor %}
-          </select></p></p>
-        </div>
-        <div id="right">
-          <h5><b>Группа:</b><br></h5>
-          <p><select class="form-control" name="group">
-            {% for g in groups %}
-            <option value="{{g.id}}">{{g.name}}</option>
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <h5><b>СГР:</b><br></h5>
-          <input type="text" class="form-control" placeholder="СГР" size = "50" name = "sgr" required></p>
-          <br><br><br>
-          <h5><b>Технологическая:  </b><br><br> <input type="checkbox" name="isFinal"></h5>
-          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top:20pt"/>
-          <input type="hidden" id="json" name="json" value="">
-        </form>
-        </div>
-      </div>
-    </div>
-    </div>
-    <div class="panel panel-default" style ="margin: auto">
-      <div class="panel-heading">
-      <!--<p><h5><b></b><h5></p>-->
-      <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i class="glyphicon glyphicon-plus"></i> Добавить реактив</button>
-      <div class="modal fade" id="newComp">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button class="close" data-dismiss="modal">x</button>
-              <h4>Добавление реактива</h4>
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading"><h4 class="panel-title"></h4></div>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="add_composition/" method="post">
+                    {% csrf_token %}
+                    <div id="two-column">
+                        <div id="left">
+                            <h5><b>Код:</b></h5>
+                            <input type="text" class="form-control" placeholder="Код" size="50" name="code"
+                                   required></p>
+                            <br><br><br>
+                            <h5><b>Наименование:</b></h5>
+                            <input type="text" class="form-control" placeholder="Наименование" size="50"
+                                   name="name" required></p>
+                            <br><br><br>
+                            <h5><b>Форма:</b><br></h5>
+                            <p><select class="form-control" name="form">
+                                {% for f in forms %}
+                                    <option value="{{ f.id }}">{{ f.name }}</option>
+                                {% endfor %}
+                            </select></p>
+                            </p>
+                        </div>
+                        <div id="right">
+                            <h5><b>Группа:</b><br></h5>
+                            <p><select class="form-control" name="group">
+                                {% for g in groups %}
+                                    <option value="{{ g.id }}">{{ g.name }}</option>
+                                {% endfor %}
+                            </select></p>
+                            </p>
+                            <br><br><br>
+                            <h5><b>СГР:</b><br></h5>
+                            <input type="text" class="form-control" placeholder="СГР" size="50" name="sgr" required></p>
+                            <br><br><br>
+                            <h5><b>Технологическая: </b><br><br> <input type="checkbox" name="isFinal"></h5>
+                            <input type="submit" id="send" value="Сохранить" class="btn btn-primary"
+                                   style="float: right; margin-top:20pt"/>
+                            <input type="hidden" id="json" name="json" value="">
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-      <div style="margin: auto">
-        <label for="material">Реактив:</label>
-        <select class="form-control" id="material">
-          {% for m in materials %}
-          <option value="{{ m.code }}">{{ m.get_full_name }}</option>
-          {% endfor %}</select>
-          <br>
-          <label for="min">Минимум:</label>
-          <div class="input-group">
-            <input type="number" class="form-control bfh-number" max="100" min="0"  value="0" id="min"> <span class="input-group-addon">%</span></p>
-          </div>
-          <br>
-          <label for="max">Максимум:</label>
-          <div class="input-group">
-            <input type="number" class="form-control bfh-number" max="100" min="0"  value="100" id="max"> <span class="input-group-addon">%</span></p>
-          </div>
-      </div>
-    </div>
-    <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveRow();return false;">Добавить</button></div>
-    </div>
-    </div>
-    </div>
-  </div>
-  <div class="panel-body">
+        </div>
+        <div class="panel panel-default" style="margin: auto">
+            <div class="panel-heading">
+                <button class="btn btn-success" data-toggle="modal" data-target="#newComp"><i
+                        class="glyphicon glyphicon-plus"></i> Добавить реактив
+                </button>
+                <div class="modal fade" id="newComp">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal">x</button>
+                                <h4>Добавление реактива</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin: auto">
+                                    <label for="material">Реактив:</label>
+                                    <select class="form-control" id="material">
+                                        {% for m in materials %}
+                                            <option value="{{ m.code }}">{{ m.get_full_name }}</option>
+                                        {% endfor %}</select>
+                                    <br>
+                                    <label for="min">Минимум:</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control bfh-number" max="100" min="0" value="0"
+                                               id="min"> <span class="input-group-addon">%</span></p>
+                                    </div>
+                                    <br>
+                                    <label for="max">Максимум:</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control bfh-number" max="100" min="0"
+                                               value="100"
+                                               id="max"> <span class="input-group-addon">%</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="saveRow();return false;">Добавить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-sm" id="components" style="width:80%; margin: auto">
+                    <thead>
+                    <tr>
+                        <th>Код</th>
+                        <th>Наименование</th>
+                        <th>Минимум чистого реактива</th>
+                        <th>Максимум чистого реактива</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-      <table class="table table-sm" id="components" style="width:80%; margin: auto">
-        <thead>
-          <tr>
-            <th>Код</th><th>Наименование</th><th>Минимум чистого реактива</th><th>Максимум чистого реактива</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
-
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
-  </div>
-
-
 {% endblock content %}

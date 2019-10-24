@@ -283,13 +283,17 @@ def mat_char_detail(request, mat_id):
 
 
 def comp_detail(request, composition_id):
+    """
+    Возвращает страницу с информацией о рецепте с id composition_id
+    """
     return render(request, "composition.html",
                   {"comp": get_object_or_404(Composition, pk=composition_id),
                    "groups": Composition_group.objects.all,
                    "location": "/tables/compositions/",
                    "forms": Product_form.objects.all(),
                    "comps": Components.objects.filter(comp=get_object_or_404(Composition, pk=composition_id)),
-                   "materials": Material.objects.all
+                   "materials": Material.objects.all(),
+                   "header": "Редактирование рецепта"
                    })
 
 
@@ -395,6 +399,9 @@ def new_material(request):
 
 
 def new_composition(request):
+    """
+    Возвращает страницу для создания нового рецепта
+    """
     return render(request, "new_composition.html",
                   {"materials": Material.objects.all, "forms": Product_form.objects.all(),
                    "header": "Добавление рецепта", "location": "/tables/compositions/",
@@ -453,6 +460,9 @@ def del_cap(request):
 
 
 def del_composition(request):
+    """
+    Удаляет рецепты с id из del_list
+    """
     del_var = request.POST.getlist('del_list')
     for d in del_var:
         del_obj = get_object_or_404(Composition, pk=d)
@@ -718,6 +728,9 @@ def add_product(request):
 
 
 def add_composition(request):
+    """
+    Сохраняет новый рецепт
+    """
     try:
         code = request.POST['code']
         name = request.POST['name']
