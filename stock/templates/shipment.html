@@ -17,9 +17,11 @@
         var curReq = null;
         var isSupply = false;
         var isDonor = false;
+        var user = "";
         $(document).ready(function () {
             //goods = JSON.parse(JSON.parse($("#stockData").prop("value")));
             //addStock();
+            user = $("#user").prop("value");
             goods = JSON.parse($("#goods").prop("value"));
             stock_inf = JSON.parse($("#stock_inf").prop("value"));
             //goods_json = JSON.parse($("#goods_json").prop("value"));
@@ -115,13 +117,15 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " "  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td><td><i title='Завершить отпуск' class='far fa-check-square' onclick='endShipment(" + r + ")'></i></td><td><span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span></td></tr>";
+                    var delBtn = reqs[r].user == user ? "<span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span>" : "";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " "  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td><td><i title='Завершить отпуск' class='far fa-check-square' onclick='endShipment(" + r + ")'></i></td><td>" + delBtn + "</td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td><td><i title='Завершить отпуск' class='far fa-check-square' onclick='endShipment(" + r + ")'></i></td><td><span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span></td></tr>";
+                        var delBtn = reqs[r].user == user ? "<span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span>" : "";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].cause + " " + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].user + "</td><td><i title='Завершить отпуск' class='far fa-check-square' onclick='endShipment(" + r + ")'></i></td><td>" + delBtn + "</td></tr>";
                     }
                 }
             }
@@ -163,6 +167,7 @@
         <input value="{{ units }}" id="units" hidden/>
     <input value="{{ stock_inf }}" id="stock_inf" hidden/>
     <input id="goods_json" value="{{ goods_json }}" hidden>
+    <input value="{{ request.user.username }}" id="user" hidden/>
     <div class="container-fluid">
 
         <div class="card">

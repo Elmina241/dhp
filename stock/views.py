@@ -309,15 +309,9 @@ def shipment(request):
     goods_inf = goods_inf_res['goods_inf']
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
-    start_time = time.time()
     g = Model_group.objects.all().first()
     add_children_g(g, tree[0], goods_inf_res['full_names'])
-    #goods_json = goods_inf_res['goods_json']
-    #goods_json = {}
-    #for r in Goods.objects.all():
-        #goods_json[str(r.pk)] = {"article": r.get_article(), "name": r.get_name(), "unit": str(r.get_unit())}
     units = {}
-    print("--- %s seconds ---" % (time.time() - start_time))
     causes = {}
     for c in Order.CAUSE_CHOICES:
         causes[c[0]] = {'name': c[1]}
@@ -1534,9 +1528,10 @@ def del_stock(request):
 def del_operation(request):
     if request.method == 'POST':
         d = Demand.objects.get(pk=request.POST['id'])
-        ord = Order.objects.filter(matrix=d.matrix)[0]
-        ord.status = '2'
-        ord.save()
+        ords = Order.objects.filter(matrix=d.matrix)
+        for ord in ords:
+            ord.status = '2'
+            ord.save()
         return HttpResponse("ok")
 
 def save_status(request):

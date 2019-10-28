@@ -314,9 +314,10 @@ def edit_pack(request):
         div.product = prod
         movm.product = prod
         movm.amount = request.POST['amm']
-        p_rec = Packaged.objects.filter(rec=movm)[0]
-        p_rec.amount = movm.amount
-        p_rec.save()
+        if Packaged.objects.filter(rec=movm).count() != 0:
+            p_rec = Packaged.objects.filter(rec=movm)[0]
+            p_rec.amount = movm.amount
+            p_rec.save()
         div.save()
         movm.save()
         return HttpResponse('ok')
