@@ -6,6 +6,7 @@ from django.core import serializers
 from django.utils import timezone
 import datetime
 import operator
+from stock.models import Stock
 from .models import Movement_rec, Operation, Acceptance, Packing_divergence, Packaged, Packing_char
 from processes.models import *
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, \
@@ -42,23 +43,11 @@ def movement(request):
         else:
             batches[name] = {"pr_id": p.rec.product.id, "code": p.rec.product.code,
                              "name": p.rec.product.get_name_for_table(), "batch": p.rec.get_batch(), "amount": p.amount}
-    # for r in Movement_rec.objects.all():
-    #     if r.operation.id == 1 or r.operation.id == 2 or r.operation.id == 3:
-    #         name = str(r.batch.id) + "_" + str(r.product.id)
-    #         if name not in batches:
-    #             amm = 0
-    #             for m in Movement_rec.objects.filter(product = r.product, batch = r.batch):
-    #                 if m.operation.id == 1:
-    #                     amm = amm + m.amount
-    #                 else:
-    #                     if m.operation.id == 2 or m.operation.id == 3:
-    #                         amm = amm - m.amount
-    #             if amm > 0:
-    #                 batches[name] = {"pr_id": r.product.id, "code": r.product.code,  "name": r.product.get_name_for_table(), "batch": r.get_batch(), "amount": amm}
     return render(request, "movement.html",
                   {"header": "Журнал прихода и расхода", "location": "/log/movement/", "movements": sorted_r,
                    "batches": batches, "last_acc": last_acc, "products": json.dumps(prods),
-                   "batches2": json.dumps(batches)})
+                   "batches2": json.dumps(batches),
+                   "stocks": Stock.objects.all()})
 
 def del_pack(request):
     if 'id' in request.POST:
@@ -119,6 +108,7 @@ def release(request):
 def send_data_to_stock(request):
     if request.method == 'POST':
         prods = json.loads(request.POST['prods'])
+        stock_id = request.POST['stock']
         matrix = Matrix(access='4', cause='1')
         matrix.save()
         if Counterparty.objects.filter(name='Производственный отдел').count() != 0:
@@ -133,7 +123,7 @@ def send_data_to_stock(request):
             consumer=Counterparty.objects.filter(name='Коммерческий отдел')[0],
             provider=None,
             donor=None,
-            acceptor=Stock.objects.filter(name='Склад готовой продукции')[0],
+            acceptor=stock,
             is_closed=False,
             release_date=datetime.datetime.now(),
             finish_date=datetime.datetime.now(),
@@ -143,11 +133,10 @@ def send_data_to_stock(request):
             user=request.user
         )
         new_demand.save()
-        acceptor = Stock.objects.filter(name='Склад готовой продукции')[0]
-        p = Package(stock=acceptor, vin=acceptor.cur_vin, matrix=matrix, date=datetime.datetime.now())
+        p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=datetime.datetime.now())
         p.save()
-        acceptor.cur_vin = acceptor.cur_vin + 1
-        acceptor.save()
+        stock.cur_vin = stock.cur_vin + 1
+        stock.save()
         ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause='1', isDonor=False,
                              status='0')
         ord_acceptor.save()

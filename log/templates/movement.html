@@ -462,6 +462,12 @@
                     <h4 id="storCode">Выпуск товара</h4>
                 </div>
                 <div class="modal-body">
+                    <p style="font-size: medium">Склад: </p>
+                    <select class="form-control" id="stock" name="stock" style="max-width: 250px; margin-bottom: 30px">
+                        {% for stock in stocks %}
+                            <option value="{{ stock.pk }}">{{ stock.name }}</option>
+                        {% endfor %}
+                    </select>
                     <table class="table table-hover table-sm table-condensed" style="font-size: medium"
                            id="release_prod">
                         <thead>
