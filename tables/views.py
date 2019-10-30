@@ -165,11 +165,16 @@ def comm_detail(request, commodity_id):
 
 
 def formula_detail(request, formula_id):
+    '''
+    Возвращает страницу с информацией о составе с id - formula_id.
+    Если formula_id - 0, то возвращает страницу для создания нового состава
+    '''
     components = serializers.serialize("json", Components.objects.all())
     materials = serializers.serialize("json", Material.objects.all())
     if (formula_id == '0'):
         return render(request, "formula.html",
                       {"formula": None,
+                       "header": "Добавление состава",
                        "components": json.dumps(components),
                        "compositions": Composition.objects.all,
                        "f_components": "0",
@@ -182,6 +187,7 @@ def formula_detail(request, formula_id):
         return render(request, "formula.html",
                       {"formula": get_object_or_404(Formula, pk=formula_id),
                        "components": json.dumps(components),
+                       "header": "Редактирование состава",
                        "compositions": Composition.objects.all,
                        "f_components": json.dumps(f_components),
                        "materials": json.dumps(materials),

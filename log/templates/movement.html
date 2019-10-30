@@ -100,11 +100,13 @@
 
         function sendDataToStock(prods) {
             var csrftoken = getCookie('csrftoken');
+            var stock = $("#stock").prop("value");
             $.ajax({
                 type: "POST",
                 url: 'send_data_to_stock/',
                 data: {
-                    'prods': JSON.stringify(prods)
+                    'prods': JSON.stringify(prods),
+                    'stock': stock
                 },
                 beforeSend: function (xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -137,8 +139,8 @@
                             prods[id] = {'id': id, 'amount': $(row).find(".relAmm").prop("value")};
                         }
                     }
-                    window.location.reload();
-                    //sendDataToStock(prods);
+                    //window.location.reload();
+                    sendDataToStock(prods);
                 }
                 else {
                     $("#confirmButton").prop('disabled', false);

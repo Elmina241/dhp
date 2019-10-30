@@ -107,49 +107,51 @@ def release(request):
 
 def send_data_to_stock(request):
     if request.method == 'POST':
-        prods = json.loads(request.POST['prods'])
-        stock_id = request.POST['stock']
-        matrix = Matrix(access='4', cause='1')
-        matrix.save()
-        if Counterparty.objects.filter(name='Производственный отдел').count() != 0:
-            group = Counterparty.objects.filter(name='Производственный отдел')[0]
-        else:
-            group = Counterparty.objects.all()[0]
-        vin = group.cur_vin
-        group.cur_vin = group.cur_vin + 1
-        group.save()
-        new_demand = Demand(
-            matrix=matrix,
-            consumer=Counterparty.objects.filter(name='Коммерческий отдел')[0],
-            provider=None,
-            donor=None,
-            acceptor=stock,
-            is_closed=False,
-            release_date=datetime.datetime.now(),
-            finish_date=datetime.datetime.now(),
-            is_edited=False,
-            vin=vin,
-            is_demand=True,
-            user=request.user
-        )
-        new_demand.save()
-        p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=datetime.datetime.now())
-        p.save()
-        stock.cur_vin = stock.cur_vin + 1
-        stock.save()
-        ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause='1', isDonor=False,
-                             status='0')
-        ord_acceptor.save()
-        for p in prods:
-            pr_id = p.split("_")[1]
-            product = Product.objects.filter(id=pr_id)[0]
-            if Good_name.objects.filter(name_type='1', area='0', name=product.code).count() != 0:
-                g_m = Good_name.objects.filter(name_type='1', area='0', name=product.code)[0].product
-                good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(), name=g_m.get_name(),
-                                   unit=g_m.get_unit(), amount=prods[p]['amount'],
-                                   balance=prods[p]['amount'])
-                good.save()
-        return HttpResponse('ok')
+        if 'stock' in request.POST:
+            prods = json.loads(request.POST['prods'])
+            stock_id = request.POST['stock']
+            stock = Stock.objects.get(pk=stock_id)
+            matrix = Matrix(access='4', cause='1')
+            matrix.save()
+            if Counterparty.objects.filter(name='Производственный отдел').count() != 0:
+                group = Counterparty.objects.filter(name='Производственный отдел')[0]
+            else:
+                group = Counterparty.objects.all()[0]
+            vin = group.cur_vin
+            group.cur_vin = group.cur_vin + 1
+            group.save()
+            new_demand = Demand(
+                matrix=matrix,
+                consumer=group,
+                provider=None,
+                donor=None,
+                acceptor=stock,
+                is_closed=False,
+                release_date=datetime.datetime.now(),
+                finish_date=datetime.datetime.now(),
+                is_edited=False,
+                vin=vin,
+                is_demand=True,
+                user=request.user if request.user.is_authenticated else None
+            )
+            new_demand.save()
+            p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=datetime.datetime.now())
+            p.save()
+            stock.cur_vin = stock.cur_vin + 1
+            stock.save()
+            ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause='1', isDonor=False,
+                                 status='0')
+            ord_acceptor.save()
+            for p in prods:
+                pr_id = p.split("_")[1]
+                product = Product.objects.filter(id=pr_id)[0]
+                if Good_name.objects.filter(name_type='1', area='0', name=product.code).count() != 0:
+                    g_m = Good_name.objects.filter(name_type='1', area='0', name=product.code)[0].product
+                    good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(), name=g_m.get_name(),
+                                       unit=g_m.get_unit(), amount=prods[p]['amount'],
+                                       balance=prods[p]['amount'])
+                    good.save()
+            return HttpResponse('ok')
 
 
 def add_rows(request):
@@ -295,12 +297,15 @@ def save_char(request):
 
 def edit_pack(request):
     if request.method == 'POST':
-        # Дописать соответсвие выпуску товара
         movm = Movement_rec.objects.get(id=request.POST['id'])
         div = Packing_divergence.objects.filter(batch=movm.batch, date=movm.date)[0]
         div.prod_num = request.POST['amm']
         prod = get_object_or_404(Product, pk=request.POST['pr_id'])
         div.product = prod
+        prev_prod = movm.product
+        for m in Movement_rec.objects.filter(batch=movm.batch, product = prev_prod, date__gte=movm.date):
+            m.product = prod
+            m.save()
         movm.product = prod
         movm.amount = request.POST['amm']
         if Packaged.objects.filter(rec=movm).count() != 0:

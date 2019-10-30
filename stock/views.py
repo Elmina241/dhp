@@ -12,6 +12,7 @@ import datetime
 from datetime import timedelta
 from django.contrib.auth.models import User
 import pytz
+from django.contrib.auth.decorators import login_required
 
 local_tz = pytz.timezone('Asia/Vladivostok')
 
@@ -34,7 +35,7 @@ def goods_models(request):
                    "groups": Model_group.objects.exclude(pk=0),
                    "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
-
+@login_required(login_url='/stock/login/')
 def stocks(request):
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
@@ -59,7 +60,7 @@ def stocks(request):
                    "models": Product_model.objects.all(), "stocks": Stock.objects.all(),
                    "goods_json": json.dumps(goods_json), "goods": Goods.objects.all()})
 
-
+@login_required(login_url='/stock/login/')
 def inventory(request):
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
@@ -129,7 +130,7 @@ def login(request):
     else:
         return redirect("auth")
 
-
+@login_required(login_url='/stock/login/')
 def goods(request):
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
@@ -218,7 +219,7 @@ def props(request):
                    "user_group": str(User_group.objects.filter(user=request.user)[0].group),
                    "prop_data": json.dumps(prop_data)})
 
-
+@login_required(login_url='/stock/login/')
 def counterparties(request):
     counter_data = {}
     for c in Counterparty.objects.all():
@@ -303,6 +304,7 @@ def get_goods_inf():
     goods_inf['full_names'] = full_names
     return goods_inf
 
+@login_required(login_url='/stock/login/')
 def shipment(request):
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
@@ -386,6 +388,7 @@ def get_stock_inf():
             data[str(s.pk)][str(r.good.pk)] = r.amount
     return data
 
+@login_required(login_url='/stock/login/')
 def supplies(request):
     goods_inf_res = get_goods_inf()
     goods = goods_inf_res['goods']
@@ -450,7 +453,7 @@ def supplies(request):
                                              "units": json.dumps(units), "stockData": json.dumps(stocks),
                                              "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
 
-
+@login_required(login_url='/stock/login/')
 def offers(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
@@ -506,7 +509,7 @@ def offers(request):
                                            "units": json.dumps(units), "stockData": json.dumps(stocks),
                                            "counters": Counterparty.objects.all(), "stock_inf": json.dumps(get_stock_inf())})
 
-
+@login_required(login_url='/stock/login/')
 def requirements(request):
     counter = User_group.objects.filter(user=request.user)[0]
     reqs = {}
@@ -875,7 +878,7 @@ def get_operations(request):
                     operations[id][str(s.good.pk)]['diffr'] = s.amount - float(s.last_value)
             return HttpResponse(json.dumps(operations))
 
-
+@login_required(login_url='/stock/login/')
 def stock_operations(request):
     user = request.user
     counter = User_group.objects.filter(user=user)[0].group
