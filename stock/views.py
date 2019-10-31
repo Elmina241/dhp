@@ -1578,8 +1578,11 @@ def edit_prop(request):
                 prop.name = name
                 prop.save()
                 if prop.prop_type == 2:
-                    Property_var.objects.filter(prop=prop).delete()
+                    for p in Property_var.objects.filter(prop=prop):
+                        if p.name not in data:
+                            p.delete()
                     for d in data:
-                        p = Property_var(prop=prop, name=d)
-                        p.save()
+                        if Property_var.objects.filter(prop=prop, name=d).count() == 0:
+                            p = Property_var(prop=prop, name=d)
+                            p.save()
             return HttpResponse('ok')

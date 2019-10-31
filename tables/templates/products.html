@@ -1,67 +1,76 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script>
-$(document).ready(function(){
-  $("[name='group1']").change(function(){
-    var sel = $("[name='group1']");
-    var group = sel.find(":selected").text();
-    if (group == "Все"){
-      $("tr").each(function(){
-        $(this).show();
-      });
-    }
-    else {
-      $("tr").each(function(){
-        $(this).hide();
-      });
-      $("tr td:contains(" + group + ")").filter(function() {
-          return $(this).text() == group;
-        }).each(function(){
-          $(this).parent().show();
+    <script>
+        $(document).ready(function () {
+            /***
+             * Фильтр по группам
+             */
+            $("[name='group1']").change(function () {
+                var sel = $("[name='group1']");
+                var group = sel.find(":selected").text();
+                if (group == "Все") {
+                    $("tr").each(function () {
+                        $(this).show();
+                    });
+                }
+                else {
+                    $("tr").each(function () {
+                        $(this).hide();
+                    });
+                    $("tr td:contains(" + group + ")").filter(function () {
+                        return $(this).text() == group;
+                    }).each(function () {
+                        $(this).parent().show();
+                    });
+                    $("tr").eq(0).show();
+                }
+            });
         });
-        $("tr").eq(0).show();
-      }
-    });
-});
-</script>
-<form action="get_group/" method="POST" class="form-inline">
-  {% csrf_token %}
- Фильтр по группе:
- <select class="form-control" name="group1">
-   <option value="-1" selected>Все</option>
-   {% for g in groups %}
-   {% if g == group %}
-    <option value="{{ g.id }}" selected="">{{ g.name }}</option>
-   {% else %}
-   <option value="{{ g.id }}">{{ g.name }}</option>
-   {% endif %}
-   {% endfor %}</select>
- </form>
-   <hr>
-  <form action="del_product/" method="post">
+    </script>
+    <form action="get_group/" method="POST" class="form-inline">
+        {% csrf_token %}
+        Фильтр по группе:
+        <select class="form-control" name="group1">
+            <option value="-1" selected>Все</option>
+            {% for g in groups %}
+                {% if g == group %}
+                    <option value="{{ g.id }}" selected="">{{ g.name }}</option>
+                {% else %}
+                    <option value="{{ g.id }}">{{ g.name }}</option>
+                {% endif %}
+            {% endfor %}</select>
+    </form>
+    <hr>
+    <form action="del_product/" method="post">
     {% csrf_token %}
-          <a href="new_product/"><button type="button" class="btn btn-default">Добавить запись</button></a>
-          <input type="submit" class="btn btn-default" value="Удалить">
-          <br><br>
-          {% if products %}
-              <table class="table table-sm" style="font-size: 110%;">
-                <thead>
-                  <tr>
-                    <th></th><th>Код</th><th>Наименование</th><th>Группа</th><!--<th>Форма</th><th>Назначение</th><th>Варианты</th><th>Уточнение</th><th>Марка</th>-->
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for p in products %}
-                  <tr>
+    <a href="new_product/">
+        <button type="button" class="btn btn-default">Добавить запись</button>
+    </a>
+    <input type="submit" class="btn btn-default" value="Удалить">
+    <br><br>
+    {% if products %}
+        <table class="table table-sm" style="font-size: 110%;">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Код</th>
+                <th>Наименование</th>
+                <th>Группа</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in products %}
+                <tr>
                     <td><input type="checkbox" value="{{ p.id }}" name="del_list"></td>
                     <td>{{ p.code }}</td>
                     <td onClick="window.location.href='/tables/products/{{ p.id }}/'">{{ p }}</td>
                     <td>{{ p.group.name }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              {% else %}
-              <p>No materials are available right now.</p>
-              {% endif %}
-  {% endblock content %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No materials are available right now.</p>
+    {% endif %}
+    </form>
+{% endblock content %}

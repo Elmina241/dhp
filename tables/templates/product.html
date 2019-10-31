@@ -1,218 +1,254 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script type="text/javascript">
-$(document).ready(function(){
-  addValidation();
-  document.getElementById('closeButton').onclick=function(){
-    if ($('#model').css('display') == 'none'){
-      $('#model').css('display', 'block');
-      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-up'></i>");
-    }
-    else {
-      $('#model').css('display', 'none');
-      $('#closeButton').html("<i class='glyphicon glyphicon-chevron-down'></i>");
-    }
-  };
-});
-</script>
-        <div class="panel panel-default" style ="margin: auto">
-          <div class="panel-heading"><h4 class="panel-title"> {{ product.name }} </h4></div>
-          {% if error_message %}
-          <p><strong>{{ error_message }}</strong></p>
-          {% endif %}
-          <div class="panel-body">
-            <div class="input-group" style ="margin: auto">
-              <form action="save_product/" method="post">
-                {% csrf_token %}
-                <p><h3>Продукт</h3></p>
-                <hr>
-                <div id="two-column" style="width:80%;margin:auto">
-                    <h5><b>Код:</b><h5>
-                    <input type="text" class="form-control" placeholder="Код" size = "50" name = "code" value="{{product.code}}" required></p>
-                    <br><br><br>
-                    <h5><b>Краткое наименование:</b></h5>
-                    <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{product.name}}" required></p>
-                    <br><br><br>
-                    <h5><b>Группа:</b><br></h5>
-                    <p><select class="form-control" name="group">
-                      {% for g in groups %}
-                      {% if product.group == g %}
-                      <option selected value="{{g.id}}">{{g.name}}</option>
-                      {% else %}
-                      <option value="{{g.id}}">{{g.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
-                    <br><br><br>
-                    <h5><b>Назначение:</b><br></h5>
-                    <p><select class="form-control" name="use">
-                      {% for u in uses %}
-                      {% if product.use == u %}
-                      <option selected value="{{u.id}}">{{u.name}}</option>
-                      {% else %}
-                      <option value="{{u.id}}">{{u.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
-                    <br><br><br>
-                    <h5><b>Варианты:</b><br></h5>
-                    <input type="text" class="form-control" placeholder="Варианты" size = "80" name = "option" value ="{{product.option}}"></p>
-                    <br><br><br>
-                    <h5><b>Уточнение:</b><br></h5>
-                  <input type="text" class="form-control" placeholder="Уточнение" size = "80" name = "detail" value ="{{product.detail}}"></p>
-                    <br><br><br>
-                    <h5><b>Марка:</b><br></h5>
-                    <p><select class="form-control" name="mark">
-                      {% for m in marks %}
-                      {% if product.mark == m %}
-                      <option selected value="{{m.id}}">{{m.name}}</option>
-                      {% else %}
-                      <option value="{{m.id}}">{{m.name}}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select></p></p>
-                </div>
-                <br>
-                <p><h3 style="margin-top:40pt">Комплект <button type="button" class="btn btn-default" id="closeButton"><i class="glyphicon glyphicon-chevron-down"></i></button></h3></p>
-                <hr>
-                <div id="model" style="display: none">
-                <div id="two-column" style="display:inline-block">
-                  <div id="left">
-                  <h5><b>Рецепт:</b><br></h5>
-                  <p><select class="form-control" name="composition">
-                    {% for c in compositions %}
-                    {% if product.production.composition == c %}
-                    <option selected value="{{c.id}}">{{c.code}} {{c.name}}</option>
-                    {% else %}
-                    <option value="{{c.id}}">{{c.code}} {{c.name}}</option>
-                    {% endif %}
-                    {% endfor %}
-                  </select></p></p>
-                  <br><br><br>
-                  <h5><b>Тара:</b><br></h5>
-                  <p><select class="form-control" name="container">
-                    {% for c in containers %}
-                    {% if product.production.container == c %}
-                    <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
-                    {% else %}
-                    <option value="{{c.id}}">{{c.code}} {{c}}</option>
-                    {% endif %}
-                    {% endfor %}
-                  </select></p></p>
-                  <br><br><br>
-                  <h5><b>Укупорка:</b><br></h5>
-                  <p><select class="form-control" name="cap">
-                    {% for c in caps %}
-                    {% if product.production.cap == c %}
-                    <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
-                    {% else %}
-                    <option value="{{c.id}}">{{c.code}} {{c}}</option>
-                    {% endif %}
-                    {% endfor %}
-                  </select></p></p>
-                  <br><br><br>
-                  <h5><b>Этикетка:</b><br></h5>
-                  <p><select class="form-control" name="sticker">
-                    {% for s in stickers %}
-                    {% if product.production.sticker == s %}
-                    <option selected value="{{s.id}}">{{s.code}} {{s}}</option>
-                    {% else %}
-                    <option value="{{s.id}}">{{s.code}} {{s}}</option>
-                    {% endif %}
-                    {% endfor %}
-                  </select></p></p>
-                  <br><br><br>
-                  <h5><b>Упаковка:</b><br></h5>
-                  <p><select class="form-control" name="boxing">
-                    {% for b in boxing %}
-                    {% if product.production.boxing == b %}
-                    <option selected value="{{b.id}}">{{b.code}} {{b}}</option>
-                    {% else %}
-                    <option value="{{b.id}}">{{b.code}} {{b}}</option>
-                    {% endif %}
-                    {% endfor %}
-                  </select></p></p>
-                  <br><br><br>
-                </div>
-                <div id="right" style="width:30%;float:left;margin-left:10%">
-                <h5><b>Кол-во в фасовке:</b></h5>
-                <input type="number" class="form-control" placeholder="Кол-во в фасовке композиции" step="0.01" name = "compAmount" value="{{product.production.compAmount}}" required></p>
-                <br><br><br>
-                <h5><b>Кол-во в фасовке:</b></h5>
-                <input type="number" class="form-control" placeholder="Кол-во в фасовке тары" step="0.01" name = "contAmount" value="{{product.production.contAmount}}"  required></p>
-                <br><br><br>
-                <h5><b>Кол-во в фасовке:</b></h5>
-                <input type="number" class="form-control" placeholder="Кол-во в фасовке укупорки" step="0.01" name = "capAmount" value="{{product.production.capAmount}}"  required></p>
-                <br><br><br>
-                <h5><b>Кол-во в фасовке:</b></h5>
-                <input type="number" class="form-control" placeholder="Кол-во в фасовке этикеток" step="0.01" name = "stickerAmount" value="{{product.production.stickerAmount}}"  required></p>
-                <br><br><br>
-                <h5><b>Кол-во в фасовке:</b></h5>
-                <input type="number" class="form-control" placeholder="Кол-во в фасовке упаковки" step="0.001" name = "boxingAmount" value="{{product.production.boxingAmount}}"  required></p>
-                <br><br><br>
-                </div>
-                <div id="right" style="width:10%">
-                <h5><b>Ед. изм.:</b><br></h5>
-                <p><select class="form-control" name="compUnit">
-                  {% for u in units %}
-                  {% if u == product.production.compUnit %}
-                  <option value="{{u.id}}" selected>{{u.name}}</option>
-                  {% else %}
-                  <option value="{{u.id}}">{{u.name}}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select></p></p>
-                <br><br><br>
-                <h5><b>Ед. изм.:</b><br></h5>
-                <p><select class="form-control" name="contUnit">
-                  {% for u in units %}
-                  {% if u == product.production.contUnit %}
-                  <option value="{{u.id}}" selected>{{u.name}}</option>
-                  {% else %}
-                  <option value="{{u.id}}">{{u.name}}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select></p></p>
-                <br><br><br>
-                <h5><b>Ед. изм.:</b><br></h5>
-                <p><select class="form-control" name="capUnit">
-                  {% for u in units %}
-                  {% if u == product.production.capUnit %}
-                  <option value="{{u.id}}" selected>{{u.name}}</option>
-                  {% else %}
-                  <option value="{{u.id}}">{{u.name}}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select></p></p>
-                <br><br><br>
-                <h5><b>Ед. изм.:</b><br></h5>
-                <p><select class="form-control" name="stickerUnit">
-                  {% for u in units %}
-                  {% if u == product.production.stickerUnit %}
-                  <option value="{{u.id}}" selected>{{u.name}}</option>
-                  {% else %}
-                  <option value="{{u.id}}">{{u.name}}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select></p></p>
-                <br><br><br>
-                <h5><b>Ед. изм.:</b><br></h5>
-                <p><select class="form-control" name="boxingUnit">
-                  {% for u in units %}
-                  {% if u == product.production.boxingUnit %}
-                  <option value="{{u.id}}" selected>{{u.name}}</option>
-                  {% else %}
-                  <option value="{{u.id}}">{{u.name}}</option>
-                  {% endif %}
-                  {% endfor %}
-                </select></p></p>
-              </div>
-                </div>
-                </div>
-                <hr>
-                <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
-              </form>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            addValidation();
+            /**
+             * Скрыть или показать комплект
+             */
+            document.getElementById('closeButton').onclick = function () {
+                if ($('#model').css('display') == 'none') {
+                    $('#model').css('display', 'block');
+                    $('#closeButton').html("<i class='glyphicon glyphicon-chevron-up'></i>");
+                }
+                else {
+                    $('#model').css('display', 'none');
+                    $('#closeButton').html("<i class='glyphicon glyphicon-chevron-down'></i>");
+                }
+            };
+        });
+    </script>
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading"><h4 class="panel-title"> {{ product.name }} </h4></div>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="save_product/" method="post">
+                    {% csrf_token %}
+                    <p>
+                    <h3>Продукт</h3></p>
+                    <hr>
+                    <div id="two-column" style="width:80%;margin:auto">
+                        <h5><b>Код:</b></h5>
+                                <input type="text" class="form-control" placeholder="Код" size="50" name="code"
+                                       value="{{ product.code }}" required></p>
+                                <br><br><br>
+                                <h5><b>Краткое наименование:</b></h5>
+                                <input type="text" class="form-control" placeholder="Наименование" size="50" name="name"
+                                       value="{{ product.name }}" required></p>
+                                <br><br><br>
+                                <h5><b>Группа:</b><br></h5>
+                                <p><select class="form-control" name="group">
+                                    {% for g in groups %}
+                                        {% if product.group == g %}
+                                            <option selected value="{{ g.id }}">{{ g.name }}</option>
+                                        {% else %}
+                                            <option value="{{ g.id }}">{{ g.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Назначение:</b><br></h5>
+                                <p><select class="form-control" name="use">
+                                    {% for u in uses %}
+                                        {% if product.use == u %}
+                                            <option selected value="{{ u.id }}">{{ u.name }}</option>
+                                        {% else %}
+                                            <option value="{{ u.id }}">{{ u.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Варианты:</b><br></h5>
+                                <input type="text" class="form-control" placeholder="Варианты" size="80" name="option"
+                                       value="{{ product.option }}"></p>
+                                <br><br><br>
+                                <h5><b>Уточнение:</b><br></h5>
+                                <input type="text" class="form-control" placeholder="Уточнение" size="80" name="detail"
+                                       value="{{ product.detail }}"></p>
+                                <br><br><br>
+                                <h5><b>Марка:</b><br></h5>
+                                <p><select class="form-control" name="mark">
+                                    {% for m in marks %}
+                                        {% if product.mark == m %}
+                                            <option selected value="{{ m.id }}">{{ m.name }}</option>
+                                        {% else %}
+                                            <option value="{{ m.id }}">{{ m.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                    </div>
+                    <br>
+                    <p>
+                    <h3 style="margin-top:40pt">Комплект
+                        <button type="button" class="btn btn-default" id="closeButton"><i
+                                class="glyphicon glyphicon-chevron-down"></i></button>
+                    </h3>
+                    </p>
+                    <hr>
+                    <div id="model" style="display: none">
+                        <div id="two-column" style="display:inline-block">
+                            <div id="left">
+                                <h5><b>Рецепт:</b><br></h5>
+                                <p><select class="form-control" name="composition">
+                                    {% for c in compositions %}
+                                        {% if product.production.composition == c %}
+                                            <option selected value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
+                                        {% else %}
+                                            <option value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Тара:</b><br></h5>
+                                <p><select class="form-control" name="container">
+                                    {% for c in containers %}
+                                        {% if product.production.container == c %}
+                                            <option selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                        {% else %}
+                                            <option value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Укупорка:</b><br></h5>
+                                <p><select class="form-control" name="cap">
+                                    {% for c in caps %}
+                                        {% if product.production.cap == c %}
+                                            <option selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                        {% else %}
+                                            <option value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Этикетка:</b><br></h5>
+                                <p><select class="form-control" name="sticker">
+                                    {% for s in stickers %}
+                                        {% if product.production.sticker == s %}
+                                            <option selected value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                                        {% else %}
+                                            <option value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Упаковка:</b><br></h5>
+                                <p><select class="form-control" name="boxing">
+                                    {% for b in boxing %}
+                                        {% if product.production.boxing == b %}
+                                            <option selected value="{{ b.id }}">{{ b.code }} {{ b }}</option>
+                                        {% else %}
+                                            <option value="{{ b.id }}">{{ b.code }} {{ b }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                            </div>
+                            <div id="right" style="width:30%;float:left;margin-left:10%">
+                                <h5><b>Кол-во в фасовке:</b></h5>
+                                <input type="number" class="form-control" placeholder="Кол-во в фасовке композиции"
+                                       step="0.01" name="compAmount" value="{{ product.production.compAmount }}"
+                                       required></p>
+                                <br><br><br>
+                                <h5><b>Кол-во в фасовке:</b></h5>
+                                <input type="number" class="form-control" placeholder="Кол-во в фасовке тары"
+                                       step="0.01" name="contAmount" value="{{ product.production.contAmount }}"
+                                       required></p>
+                                <br><br><br>
+                                <h5><b>Кол-во в фасовке:</b></h5>
+                                <input type="number" class="form-control" placeholder="Кол-во в фасовке укупорки"
+                                       step="0.01" name="capAmount" value="{{ product.production.capAmount }}"
+                                       required></p>
+                                <br><br><br>
+                                <h5><b>Кол-во в фасовке:</b></h5>
+                                <input type="number" class="form-control" placeholder="Кол-во в фасовке этикеток"
+                                       step="0.01" name="stickerAmount" value="{{ product.production.stickerAmount }}"
+                                       required></p>
+                                <br><br><br>
+                                <h5><b>Кол-во в фасовке:</b></h5>
+                                <input type="number" class="form-control" placeholder="Кол-во в фасовке упаковки"
+                                       step="0.001" name="boxingAmount" value="{{ product.production.boxingAmount }}"
+                                       required></p>
+                                <br><br><br>
+                            </div>
+                            <div id="right" style="width:10%">
+                                <h5><b>Ед. изм.:</b><br></h5>
+                                <p><select class="form-control" name="compUnit">
+                                    {% for u in units %}
+                                        {% if u == product.production.compUnit %}
+                                            <option value="{{ u.id }}" selected>{{ u.name }}</option>
+                                        {% else %}
+                                            <option value="{{ u.id }}">{{ u.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Ед. изм.:</b><br></h5>
+                                <p><select class="form-control" name="contUnit">
+                                    {% for u in units %}
+                                        {% if u == product.production.contUnit %}
+                                            <option value="{{ u.id }}" selected>{{ u.name }}</option>
+                                        {% else %}
+                                            <option value="{{ u.id }}">{{ u.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Ед. изм.:</b><br></h5>
+                                <p><select class="form-control" name="capUnit">
+                                    {% for u in units %}
+                                        {% if u == product.production.capUnit %}
+                                            <option value="{{ u.id }}" selected>{{ u.name }}</option>
+                                        {% else %}
+                                            <option value="{{ u.id }}">{{ u.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Ед. изм.:</b><br></h5>
+                                <p><select class="form-control" name="stickerUnit">
+                                    {% for u in units %}
+                                        {% if u == product.production.stickerUnit %}
+                                            <option value="{{ u.id }}" selected>{{ u.name }}</option>
+                                        {% else %}
+                                            <option value="{{ u.id }}">{{ u.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Ед. изм.:</b><br></h5>
+                                <p><select class="form-control" name="boxingUnit">
+                                    {% for u in units %}
+                                        {% if u == product.production.boxingUnit %}
+                                            <option value="{{ u.id }}" selected>{{ u.name }}</option>
+                                        {% else %}
+                                            <option value="{{ u.id }}">{{ u.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select></p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
+                </form>
             </div>
-          </div>
         </div>
+    </div>
 {% endblock content %}

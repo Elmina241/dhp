@@ -1235,10 +1235,11 @@ function getModelInfo() {
     $("#props").html("");
     //получение единиц измерения
     for (u in models[id]['units']) {
-        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'><span class='inline-el'>Коэффициент </span><input type='number' step='0.001' class='form-control form-control-sm inline-el' required/></div></div>";
+        code = code + "<div class='unit'  id='" + u + "'><div class='form-inline'><div class='form-group col-md-6'><h6>- " + models[id]['units'][u].name + "</h6></div><div class='form-group inline-group col-md-6'><span class='inline-el'>Коэффициент </span><input type='number' step='0.001' value='1' class='form-control form-control-sm inline-el' required/></div></div>";
         code = code + "<div class='form-inline'><div class='form-group col-md-6'><input type='checkbox' class='inline-el form-control' /> <span class='inline-el'>Неприменимая</span></div><div class='form-group col-md-6'><input type='radio' name='isBase' class='inline-el form-control'/><span class='inline-el'> Базовая</span></div></div></div>";
     }
     $(code).appendTo("#units");
+    $("input[name='isBase']").eq(0).prop('checked', 'true');
     //получение свойств
     code = "";
     for (p in models[id]['props']) {

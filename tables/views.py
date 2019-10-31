@@ -26,6 +26,9 @@ def index(request):
 
 
 def products(request):
+    """
+    Возвращает страницу со списком продуктов
+    """
     return render(request, "products.html",
                   {"products": Product.objects.all,
                    "groups": Product_group.objects.all, "header": "Продукция", "location": "/tables/products/"})
@@ -122,12 +125,16 @@ def detail(request, material_id):
 
 
 def pr_detail(request, product_id):
+    """
+    Возвращает страницу с информацией о продукте с id - product_id
+    """
     return render(request, "product.html",
                   {"product": get_object_or_404(Product, pk=product_id),
                    "location": "/tables/products/",
                    "groups": Product_group.objects.all,
                    "forms": Product_form.objects.all,
                    "caps": Cap_group.objects.all,
+                   "header": "Редактирование продукта",
                    "containers": Container_group.objects.all,
                    "uses": Product_use.objects.all,
                    "marks": Product_mark.objects.all,
@@ -426,6 +433,9 @@ def del_material(request):
 
 
 def del_product(request):
+    """
+    Удаляет продукты с id из del_list
+    """
     del_var = request.POST.getlist('del_list')
     for d in del_var:
         del_obj = get_object_or_404(Product, pk=d)
@@ -523,12 +533,16 @@ def del_storage(request):
 
 
 def new_product(request):
+    """
+    Возвращает страницу для создания нового продукта
+    """
     return render(request, "new_product.html",
                   {"groups": Product_group.objects.all,
                    "location": "/tables/products/",
                    "forms": Product_form.objects.all,
                    "uses": Product_use.objects.all,
                    "caps": Cap_group.objects.all,
+                   "header": "Добавление продукта",
                    "containers": Container_group.objects.all,
                    "marks": Product_mark.objects.all,
                    "compositions": Composition.objects.all,
