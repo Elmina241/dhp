@@ -1377,7 +1377,7 @@ function GTree(tree, t) {
 
 function sortTable(table){
     if (table.rows.length > 1) {
-        var sortedRows = Array.from(table.rows).slice(1).sort((rowA, rowB) => rowA.cells[1].innerHTML > rowB.cells[1].innerHTML ? 1 : -1);
+        var sortedRows = Array.from(table.rows).sort((rowA, rowB) => rowA.cells[1].innerHTML > rowB.cells[1].innerHTML ? 1 : -1);
         $(table).html('');
         for (r in sortedRows) {
             $(table).append(sortedRows[r]);
