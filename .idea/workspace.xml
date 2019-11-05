@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/static/css/stock.css" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/css/stock.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/scripts/scripts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/templates/offers.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/offers.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/templates/requirements.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/requirements.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,35 +33,23 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.43821657">
+    <splitter split-orientation="horizontal" split-proportion="0.45841035">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/urls.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
-                  <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tables/views.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="245">
-                  <caret line="189" column="25" lean-forward="true" selection-start-line="189" selection-start-column="25" selection-end-line="189" selection-end-column="25" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="225">
-                  <caret line="99" column="7" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="7" />
-                  <folding>
-                    <element signature="e#0#45#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="26520">
+                  <caret line="1574" column="42" selection-start-line="1574" selection-start-column="42" selection-end-line="1574" selection-end-column="42" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="204">
+                  <caret line="66" column="45" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
                 </state>
               </provider>
             </entry>
@@ -67,11 +58,42 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="tables10.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tables/static/scripts/tables10.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="238">
+                  <caret line="60" column="1" lean-forward="true" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
+                  <folding>
+                    <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="offers.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="275">
+                  <caret line="214" column="38" selection-start-line="214" selection-start-column="38" selection-end-line="214" selection-end-column="38" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="requirements.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="418">
+                  <caret line="116" column="29" lean-forward="true" selection-start-line="116" selection-start-column="29" selection-end-line="116" selection-end-column="29" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="446">
-                  <caret line="1390" column="20" lean-forward="true" selection-start-line="1390" selection-start-column="20" selection-end-line="1390" selection-end-column="20" />
+                <state relative-caret-position="255">
+                  <caret line="1751" column="50" lean-forward="true" selection-start-line="1751" selection-start-column="50" selection-end-line="1751" selection-end-column="50" />
                   <folding>
                     <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -110,32 +132,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="shipment.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/shipment.html">
+          <file leaf-file-name="stock.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2516">
-                  <caret line="148" column="35" selection-start-line="148" selection-start-column="35" selection-end-line="148" selection-end-column="35" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="movement.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1734">
-                  <caret line="102" column="50" selection-start-line="102" selection-start-column="50" selection-end-line="102" selection-end-column="50" />
-                  <folding>
-                    <element signature="n#style#0;n#select#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="formula.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tables/templates/formula.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
-                  <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+                <state relative-caret-position="150">
+                  <caret line="299" column="1" lean-forward="true" selection-start-line="299" selection-start-column="1" selection-end-line="299" selection-end-column="12" />
                 </state>
               </provider>
             </entry>
@@ -154,13 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>get_sto</find>
-      <find>openSupply</find>
-      <find>get_demand_</find>
-      <find>saveSu</find>
-      <find>kneading_cha</find>
-      <find>product</find>
-      <find>get_goods_inf</find>
       <find>shipment</find>
       <find>addGoodField</find>
       <find>add</find>
@@ -184,6 +178,13 @@
       <find>delOperation</find>
       <find>del_opera</find>
       <find>sortTa</find>
+      <find>edit-btn</find>
+      <find>stock</find>
+      <find>shor</find>
+      <find>class='edit-btn'</find>
+      <find>saveS</find>
+      <find>getDeman</find>
+      <find>status</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -212,7 +213,6 @@
         <option value="$PROJECT_DIR$/log/templatetags/__init__.py" />
         <option value="$PROJECT_DIR$/log/templates/accepting.html" />
         <option value="$PROJECT_DIR$/tables/urls.py" />
-        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
         <option value="$PROJECT_DIR$/log/admin.py" />
         <option value="$PROJECT_DIR$/log/models.py" />
         <option value="$PROJECT_DIR$/processes/models.py" />
@@ -227,8 +227,6 @@
         <option value="$PROJECT_DIR$/stock/templates/500.html" />
         <option value="$PROJECT_DIR$/stock/templates/stock_operations.html" />
         <option value="$PROJECT_DIR$/django_example/urls.py" />
-        <option value="$PROJECT_DIR$/stock/templates/offers.html" />
-        <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
         <option value="$PROJECT_DIR$/stock/admin.py" />
         <option value="$PROJECT_DIR$/stock/models.py" />
         <option value="$PROJECT_DIR$/dhp.com.conf" />
@@ -242,7 +240,10 @@
         <option value="$PROJECT_DIR$/stock/views.py" />
         <option value="$PROJECT_DIR$/log/templates/movement.html" />
         <option value="$PROJECT_DIR$/log/views.py" />
+        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
+        <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
         <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
+        <option value="$PROJECT_DIR$/stock/templates/offers.html" />
       </list>
     </option>
   </component>
@@ -256,10 +257,9 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="683" />
+    <option name="width" value="683" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -271,37 +271,46 @@
         <subPane>
           <expand>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="tables" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="tables" type="462c0819:PsiDirectoryNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="tables" type="462c0819:PsiDirectoryNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django_example" type="462c0819:PsiDirectoryNode" />
-              <item name="tables" type="462c0819:PsiDirectoryNode" />
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="store" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -416,11 +425,11 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32897604" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.1819172" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.49834985" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32897604" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.17755991" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.3191721" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16311301" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.29411766" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11353944" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32995737" />
@@ -544,13 +553,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="380" column="19" lean-forward="true" selection-start-line="380" selection-start-column="19" selection-end-line="380" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/stocks.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
@@ -636,20 +638,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/props.html">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="39" column="50" selection-start-line="39" selection-start-column="50" selection-end-line="39" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="37" column="50" selection-start-line="37" selection-start-column="50" selection-end-line="37" selection-end-column="50" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/admin.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -738,13 +726,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="31" column="27" selection-start-line="31" selection-start-column="6" selection-end-line="31" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/supplies.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -756,20 +737,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2516">
           <caret line="148" column="35" selection-start-line="148" selection-start-column="35" selection-end-line="148" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="83" column="44" lean-forward="true" selection-start-line="83" selection-start-column="44" selection-end-line="83" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tables/static/scripts/tables10.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="47" column="3" lean-forward="true" selection-start-line="47" selection-start-column="3" selection-end-line="47" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -800,10 +767,56 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tables/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="189" column="25" lean-forward="true" selection-start-line="189" selection-start-column="25" selection-end-line="189" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26520">
+          <caret line="1574" column="42" selection-start-line="1574" selection-start-column="42" selection-end-line="1574" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="66" column="45" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/static/scripts/tables10.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="60" column="1" lean-forward="true" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
+          <folding>
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="37" lean-forward="true" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="299" column="1" lean-forward="true" selection-start-line="299" selection-start-column="1" selection-end-line="299" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="1390" column="20" lean-forward="true" selection-start-line="1390" selection-start-column="20" selection-end-line="1390" selection-end-column="20" />
+        <state relative-caret-position="255">
+          <caret line="1751" column="50" lean-forward="true" selection-start-line="1751" selection-start-column="50" selection-end-line="1751" selection-end-column="50" />
           <folding>
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -841,20 +854,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tables/views.py">
+    <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="189" column="25" lean-forward="true" selection-start-line="189" selection-start-column="25" selection-end-line="189" selection-end-column="25" />
+        <state relative-caret-position="418">
+          <caret line="116" column="29" lean-forward="true" selection-start-line="116" selection-start-column="29" selection-end-line="116" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/views.py">
+    <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="99" column="7" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="275">
+          <caret line="214" column="38" selection-start-line="214" selection-start-column="38" selection-end-line="214" selection-end-column="38" />
         </state>
       </provider>
     </entry>

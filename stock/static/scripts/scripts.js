@@ -1743,6 +1743,7 @@ function getDemandGoods(id, t = "d") {
             var rows = JSON.parse(data);
             i = 0;
             for (r in rows) {
+                var cost = rows[r]['cost'] != undefined ? rows[r]['cost'].toFixed(2) : "";
                 if (rows[r]['article'] != undefined) {
                     reqInfo[id][i] = {
                         id: r,
@@ -1750,7 +1751,7 @@ function getDemandGoods(id, t = "d") {
                         name: rows[r]['name'],
                         amount: rows[r]['amount'],
                         balance: rows[r]['balance'],
-                        cost: rows[r]['cost'].toFixed(2)
+                        cost: cost
                     }
                     i++;
                 }
@@ -1876,8 +1877,8 @@ function saveStatus(obj) {
             }
         },
         success: function onAjaxSuccess(data) {
-            obj.parentElement.parentElement.innerHTML = $("option:selected", obj).text();
-
+            code = "<div class='td-inline'>" + $("option:selected", obj).text() +  "<span class='edit-btn' onclick='changeStatus(this, " + id + ")'><i class='fas fa-edit'></i></span></div>";
+            obj.parentElement.parentElement.innerHTML = code;
         }
     });
 }

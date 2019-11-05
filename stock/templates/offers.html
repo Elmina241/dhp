@@ -107,13 +107,13 @@
         function getStatus(s, id) {
             var status = "";
             if (s == '3') {
-                status = "<td>Отказ</td><td><span style='font-size: 17px;' onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></td>";
+                status = "<td><div class='td-inline'>Отказ <span class='edit-btn' onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></td>";
             }
             else if (s == '4') {
-                status = "<td>Выполнение</td><td></td>";
+                status = "<td>Выполнение</td>";
             }
             else {
-                status = "<td>Запрос</td><td><span style='font-size: 17px;'\n" +
+                status = "<td><div class='td-inline'>Запрос <span class='edit-btn'\n" +
                     "                          onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></td>";
             }
             return status;
@@ -123,7 +123,7 @@
             code = "";
             if (isInbox) role = '2';
             else role = '1';
-            var editBtn = isInbox ? "<span onclick='editStock(this)'><i class='fas fa-edit'></i></span>" : "";
+            var editBtn = isInbox ? "<span class='edit-btn' onclick='editStock(this)'><i class='fas fa-edit'></i></span>" : "";
             if (stock == "-1") {
                 for (r in reqs) {
                     if (role == reqs[r].role){
@@ -184,7 +184,7 @@
         }
 
         function addEditBtns() {
-            var btn = "<span style=' float:right' onclick=\"changeDate(this)\"><i class='fas fa-edit'></i></span>";
+            var btn = "<span class='edit-btn' style=' float:right' onclick=\"changeDate(this)\"><i class='fas fa-edit'></i></span>";
             $("#req-body tr").each(function (item) {
                 //условие отображения кнопки
                 id = $(this).prop('id').substr(2);
@@ -212,10 +212,10 @@
             else {
                 options = "<option value='0'>Запрос</option><option value='1'>Выполнение</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
-            select = obj.parentElement.previousElementSibling;
+            select = obj.parentElement;
             text = $(select).text();
-            code = "<div class='form-inline'><select class='form-control form-control-sm'>" + options + "</select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
-                "onclick='saveStatus(this.previousElementSibling)'><i class='fas fa-check'></i></span></div>";
+            code = "<select style='min-width: 90px' class='form-control form-control-sm'>" + options + "</select><span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;'\n" +
+                "onclick='saveStatus(this.previousElementSibling)'><i class='fas fa-check'></i></span>";
             select.innerHTML = code;
             $("option:contains('" + text + "')", select.firstElementChild.firstElementChild).prop("selected", true);
         }
@@ -274,14 +274,12 @@
                     <tr>
                         <th scope="col">ВИН</th>
                         <th scope="col">Дата</th>
-                        <th scope="col">Поставщик</th>
-                        <th scope="col">Донор</th>
+                        <th scope="col" colspan="2">Поставщик</th>
                         <th scope="col">Дата отгрузки</th>
-                        <th scope="col">Получатель</th>
-                        <th scope="col">Акцептор</th>
+                        <th scope="col" colspan="2">Получатель</th>
                         <th scope="col">Дата поставки</th>
                         <th scope="col">Статус</th>
-                        <th scope="col"></th>
+                        <!--<th scope="col"></th>-->
                         <th scope="col">Создатель</th>
                     </tr>
                     </thead>
@@ -347,8 +345,7 @@
                                 {% endfor %}
                             </select></div>
                         <div class="form-group col-md-6">
-                            <h6>Донор</h6>
-                            <select class="form-control" id="donor" required>
+                            <select class="form-control field-without-label" id="donor" required>
                             </select></div>
                     </div>
                     <div class="form-row">
@@ -362,8 +359,7 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <h6>Акцептор</h6>
-                            <select class="form-control" id="acceptor" required>
+                            <select class="form-control field-without-label" id="acceptor" required>
                             </select>
                         </div>
                     </div>

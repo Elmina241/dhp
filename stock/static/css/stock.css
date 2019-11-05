@@ -389,3 +389,16 @@ h9 {
     color: #999999;
 }
 
+.field-without-label {
+    margin-top: 27px;
+}
+
+.edit-btn {
+    font-size: 18px;
+    margin-left: 6px;
+}
+
+.td-inline{
+    display: inline-flex;
+}
+
