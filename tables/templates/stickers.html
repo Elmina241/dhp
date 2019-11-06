@@ -1,39 +1,46 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script type="text/javascript">
-$(document).ready(function(){
-  $('#f').addClass("active");
-  });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#f').addClass("active");
+        });
+    </script>
 
 
-<form action="del_sticker/" method="post" style="margin-top: 40px">
-{% csrf_token %}
-<button type="button" class="btn btn-default" onClick="window.location.href='/tables/stickers/0/'">Добавить запись</button></a>
-<input type="submit" class="btn btn-default" value="Удалить">
-<br><br>
-{% if stickers %}
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th></th><th>Артикул</th><th>Наименование</th><th>Продукт</th><th>Часть</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for s in stickers %}
-    <tr>
-      <td><input type="checkbox" value="{{ s.id }}" name="del_list"></td>
-      <td>{{ s.code }}</td>
-      <td onClick="window.location.href='/tables/stickers/{{ s.id }}/'">{{ s }}</td>
-      <td>{{ s.product.code }}</td>
-      <td>{{ s.part.name }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No materials are available right now.</p>
-{% endif %}
-</div>
-</form>
+    <form action="del_sticker/" method="post" style="margin-top: 40px">
+        {% csrf_token %}
+        <button type="button" class="btn btn-default" onClick="window.location.href='/tables/stickers/0/'">Добавить
+            запись
+        </button>
+        </a>
+        <input type="submit" class="btn btn-default" value="Удалить">
+        <br><br>
+        {% if stickers %}
+            <table class="table table-hover table-sm">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Артикул</th>
+                    <th>Наименование</th>
+                    <th>Продукт</th>
+                    <th>Часть</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in stickers %}
+                    <tr>
+                        <td><input type="checkbox" value="{{ s.id }}" name="del_list"></td>
+                        <td>{{ s.code }}</td>
+                        <td onClick="window.location.href='/tables/stickers/{{ s.id }}/'">{{ s }}</td>
+                        <td>{{ s.product.code }}</td>
+                        <td>{{ s.part.name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No materials are available right now.</p>
+        {% endif %}
+        </div>
+    </form>
 {% endblock content %}

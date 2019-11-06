@@ -1,99 +1,104 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script type="text/javascript">
-$(document).ready(function(){
-  addValidation();
-});</script>
-<div class="panel panel-default" style ="margin: auto">
-  <div class="panel-heading">
-    {% if commodity == None %}
-      <h4 class="panel-title">Добавление записи</h4>
-      {% else %}
-      <h4 class="panel-title">Редактирование записи: {{ commodity }}</h4>
-      {% endif %}
-  </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            addValidation();
+        });</script>
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading">
+            {% if commodity == None %}
+                <h4 class="panel-title">Добавление записи</h4>
+            {% else %}
+                <h4 class="panel-title">Редактирование записи: {{ commodity }}</h4>
+            {% endif %}
+        </div>
 
-  {% if error_message %}
-  <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
-<div class="panel-body">
-  <div class="input-group" style ="margin: auto">
-    <form action="save_commodity/" method="post">
-      {% csrf_token %}
-          <h5><b>Продукт:</b></h5>
-          {% if commodity == None %}
-          <p><select class="form-control" name="product">
-            {% for p in products %}
-            {% if commodity.product == p %}
-            <option selected value="{{p.id}}">{{p.code}} {{p}}</option>
-            {% else %}
-            <option value="{{p.id}}">{{p.code}} {{p}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          {% else %}
-          <input type="hidden" value="{{commodity.product.id}}" name="product"><h4>{{commodity.product.code}} {{commodity.product}}</h4>
-          {% endif %}
-          <h5><b>Рецепт:</b><br></h5>
-          <p><select class="form-control" name="composition">
-            {% for c in compositions %}
-            {% if commodity.composition == c %}
-            <option selected value="{{c.id}}">{{c.code}} {{c.name}}</option>
-            {% else %}
-            <option value="{{c.id}}">{{c.code}} {{c.name}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <h5><b>Тара:</b><br></h5>
-          <p><select class="form-control" name="container">
-            {% for c in containers %}
-            {% if commodity.container == c %}
-            <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
-            {% else %}
-            <option value="{{c.id}}">{{c.code}} {{c}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <h5><b>Укупорка:</b><br></h5>
-          <p><select class="form-control" name="cap">
-            {% for c in caps %}
-            {% if commodity.cap == c %}
-            <option selected value="{{c.id}}">{{c.code}} {{c}}</option>
-            {% else %}
-            <option value="{{c.id}}">{{c.code}} {{c}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <h5><b>Этикетка:</b><br></h5>
-          <p><select class="form-control" name="sticker">
-            {% for s in stickers %}
-            {% if commodity.sticker == s %}
-            <option selected value="{{s.id}}">{{s.code}} {{s}}</option>
-            {% else %}
-            <option value="{{s.id}}">{{s.code}} {{s}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <h5><b>Упаковка:</b><br></h5>
-          <p><select class="form-control" name="boxing">
-            {% for b in boxing %}
-            {% if commodity.boxing == b %}
-            <option selected value="{{b.id}}">{{b.code}} {{b.name}}</option>
-            {% else %}
-            <option value="{{b.id}}">{{b.code}} {{b.name}}</option>
-            {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="save_commodity/" method="post">
+                    {% csrf_token %}
+                    <h5><b>Продукт:</b></h5>
+                    {% if commodity == None %}
+                        <p><select class="form-control" name="product">
+                            {% for p in products %}
+                                {% if commodity.product == p %}
+                                    <option selected value="{{ p.id }}">{{ p.code }} {{ p }}</option>
+                                {% else %}
+                                    <option value="{{ p.id }}">{{ p.code }} {{ p }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select></p></p>
+                        <br><br><br>
+                    {% else %}
+                        <input type="hidden" value="{{ commodity.product.id }}" name="product">
+                        <h4>{{ commodity.product.code }} {{ commodity.product }}</h4>
+                    {% endif %}
+                    <h5><b>Рецепт:</b><br></h5>
+                    <p><select class="form-control" name="composition">
+                        {% for c in compositions %}
+                            {% if commodity.composition == c %}
+                                <option selected value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
+                            {% else %}
+                                <option value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select></p>
+                    </p>
+                    <br><br><br>
+                    <h5><b>Тара:</b><br></h5>
+                    <p><select class="form-control" name="container">
+                        {% for c in containers %}
+                            {% if commodity.container == c %}
+                                <option selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                            {% else %}
+                                <option value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select></p>
+                    </p>
+                    <br><br><br>
+                    <h5><b>Укупорка:</b><br></h5>
+                    <p><select class="form-control" name="cap">
+                        {% for c in caps %}
+                            {% if commodity.cap == c %}
+                                <option selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                            {% else %}
+                                <option value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select></p>
+                    </p>
+                    <br><br><br>
+                    <h5><b>Этикетка:</b><br></h5>
+                    <p><select class="form-control" name="sticker">
+                        {% for s in stickers %}
+                            {% if commodity.sticker == s %}
+                                <option selected value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                            {% else %}
+                                <option value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select></p>
+                    </p>
+                    <br><br><br>
+                    <h5><b>Упаковка:</b><br></h5>
+                    <p><select class="form-control" name="boxing">
+                        {% for b in boxing %}
+                            {% if commodity.boxing == b %}
+                                <option selected value="{{ b.id }}">{{ b.code }} {{ b.name }}</option>
+                            {% else %}
+                                <option value="{{ b.id }}">{{ b.code }} {{ b.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select></p>
+                    </p>
+                    <br><br><br>
+                    <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-  </form>
-  </div>
 {% endblock content %}

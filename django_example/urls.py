@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^tables/', include('tables.urls')),
@@ -36,3 +37,6 @@ if settings.DEBUG:
         # url(r'^__debug__/', include(debug_toolbar.urls)),
 
     ] + urlpatterns
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

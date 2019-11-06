@@ -1,40 +1,47 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script type="text/javascript">
-$(document).ready(function(){
-  $('#f').addClass("active");
-  });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#f').addClass("active");
+        });
+    </script>
 
-<form action="del_cap/" method="post" style="margin-top: 40px">
-{% csrf_token %}
-<button type="button" class="btn btn-default" onClick="window.location.href='/tables/caps/0/'">Добавить запись</button>
-<input type="submit" class="btn btn-default" value="Удалить">
-<br><br>
-{% if caps %}
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th></th><th>Артикул</th><th>Наименование</th><th>Вид</th><th>Форма</th><th>Цвет</th><th>Материал</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for c in caps %}
-    <tr>
-      <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
-      <td>{{ c.code }}</td>
-      <td onClick="window.location.href='/tables/caps/{{ c.id }}/'">{{ c }}</td>
-      <td>{{ c.group.name }}</td>
-      <td>{{ c.form }}</td>
-      <td>{{ c.colour.name }}</td>
-      <td>{{ c.mat.name }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No materials are available right now.</p>
-{% endif %}
-</div>
-</form>
+    <form action="del_cap/" method="post" style="margin-top: 40px">
+        {% csrf_token %}
+        <button type="button" class="btn btn-default" onClick="window.location.href='/tables/caps/0/'">Добавить запись
+        </button>
+        <input type="submit" class="btn btn-default" value="Удалить">
+        <br><br>
+        {% if caps %}
+            <table class="table table-hover table-sm">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Артикул</th>
+                    <th>Наименование</th>
+                    <th>Вид</th>
+                    <th>Форма</th>
+                    <th>Цвет</th>
+                    <th>Материал</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in caps %}
+                    <tr>
+                        <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
+                        <td>{{ c.code }}</td>
+                        <td onClick="window.location.href='/tables/caps/{{ c.id }}/'">{{ c }}</td>
+                        <td>{{ c.group.name }}</td>
+                        <td>{{ c.form }}</td>
+                        <td>{{ c.colour.name }}</td>
+                        <td>{{ c.mat.name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No materials are available right now.</p>
+        {% endif %}
+        </div>
+    </form>
 {% endblock content %}

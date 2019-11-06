@@ -3,10 +3,18 @@
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_example/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_example/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/static/css/stock.css" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/css/stock.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/scripts/scripts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/offers.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/offers.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/requirements.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/requirements.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/box.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/box.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/boxing.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/boxing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/cap.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/cap.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/caps.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/caps.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/commodity.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/commodity.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/container.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/container.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/sticker.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/sticker.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables/templates/stickers.html" beforeDir="false" afterPath="$PROJECT_DIR$/tables/templates/stickers.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,23 +41,44 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.45841035">
+    <splitter split-orientation="horizontal" split-proportion="0.43821657">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/views.py">
+          <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="26520">
-                  <caret line="1574" column="42" selection-start-line="1574" selection-start-column="42" selection-end-line="1574" selection-end-column="42" />
+                <state relative-caret-position="306">
+                  <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="dhp.com.conf" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/dhp.com.conf">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="187">
+                  <caret line="11" column="23" lean-forward="true" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/django_example/urls.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="466">
+                  <caret line="33" column="44" lean-forward="true" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+                  <folding>
+                    <element signature="e#648#689#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/django_example/settings.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="204">
-                  <caret line="66" column="45" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
+                <state relative-caret-position="1194">
+                  <caret line="73" column="48" lean-forward="true" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
                 </state>
               </provider>
             </entry>
@@ -58,42 +87,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="tables10.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/tables/static/scripts/tables10.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="238">
-                  <caret line="60" column="1" lean-forward="true" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
-                  <folding>
-                    <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="offers.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="275">
-                  <caret line="214" column="38" selection-start-line="214" selection-start-column="38" selection-end-line="214" selection-end-column="38" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="requirements.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="418">
-                  <caret line="116" column="29" lean-forward="true" selection-start-line="116" selection-start-column="29" selection-end-line="116" selection-end-column="29" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="scripts.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="1751" column="50" lean-forward="true" selection-start-line="1751" selection-start-column="50" selection-end-line="1751" selection-end-column="50" />
+                <state relative-caret-position="276">
+                  <caret line="1365" column="19" lean-forward="true" selection-start-line="1365" selection-start-column="19" selection-end-line="1365" selection-end-column="19" />
                   <folding>
                     <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -132,11 +130,29 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="requirements.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="248">
+                  <caret line="289" column="52" lean-forward="true" selection-start-line="289" selection-start-column="52" selection-end-line="289" selection-end-column="70" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="offers.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="343">
+                  <caret line="278" column="72" lean-forward="true" selection-start-line="278" selection-start-column="72" selection-end-line="278" selection-end-column="72" />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="stock.css" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="150">
-                  <caret line="299" column="1" lean-forward="true" selection-start-line="299" selection-start-column="1" selection-end-line="299" selection-end-column="12" />
+                <state relative-caret-position="619">
+                  <caret line="405" column="31" selection-start-line="405" selection-start-column="31" selection-end-line="405" selection-end-column="31" />
                 </state>
               </provider>
             </entry>
@@ -193,14 +209,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/processes/templates/started.html" />
-        <option value="$PROJECT_DIR$/processes/templates/css/style3.css" />
-        <option value="$PROJECT_DIR$/processes/templates/print_lists.html" />
-        <option value="$PROJECT_DIR$/processes/views.py" />
-        <option value="$PROJECT_DIR$/processes/templates/storages.html" />
-        <option value="$PROJECT_DIR$/stock/templates/main-page.html" />
-        <option value="$PROJECT_DIR$/stock/templates/goods.html" />
-        <option value="$PROJECT_DIR$/tables/templates/tables/base.html" />
         <option value="$PROJECT_DIR$/stock/templates/login.html" />
         <option value="$PROJECT_DIR$/stock/static/css/stacktable.css" />
         <option value="$PROJECT_DIR$/stock/static/css/stock2.css" />
@@ -226,7 +234,6 @@
         <option value="$PROJECT_DIR$/stock/static/css/errors.css" />
         <option value="$PROJECT_DIR$/stock/templates/500.html" />
         <option value="$PROJECT_DIR$/stock/templates/stock_operations.html" />
-        <option value="$PROJECT_DIR$/django_example/urls.py" />
         <option value="$PROJECT_DIR$/stock/admin.py" />
         <option value="$PROJECT_DIR$/stock/models.py" />
         <option value="$PROJECT_DIR$/dhp.com.conf" />
@@ -240,10 +247,19 @@
         <option value="$PROJECT_DIR$/stock/views.py" />
         <option value="$PROJECT_DIR$/log/templates/movement.html" />
         <option value="$PROJECT_DIR$/log/views.py" />
-        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
-        <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
         <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
+        <option value="$PROJECT_DIR$/tables/templates/cap.html" />
+        <option value="$PROJECT_DIR$/tables/templates/caps.html" />
+        <option value="$PROJECT_DIR$/tables/templates/box.html" />
+        <option value="$PROJECT_DIR$/tables/templates/boxing.html" />
+        <option value="$PROJECT_DIR$/tables/templates/container.html" />
+        <option value="$PROJECT_DIR$/tables/templates/commodity.html" />
+        <option value="$PROJECT_DIR$/tables/templates/sticker.html" />
+        <option value="$PROJECT_DIR$/tables/templates/stickers.html" />
+        <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
+        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
         <option value="$PROJECT_DIR$/stock/templates/offers.html" />
+        <option value="$PROJECT_DIR$/django_example/urls.py" />
       </list>
     </option>
   </component>
@@ -257,65 +273,55 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="683" />
-    <option name="width" value="683" />
-    <option name="height" value="728" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="apache" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
               <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dhp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dhp" type="462c0819:PsiDirectoryNode" />
-              <item name="stock" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="store" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -425,11 +431,11 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32897604" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.49834985" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32897604" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32897604" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.17755991" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.29411766" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11353944" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.18082789" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16311301" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32995737" />
@@ -481,50 +487,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/stock/static/scripts/stacktable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="85" column="52" lean-forward="true" selection-start-line="85" selection-start-column="52" selection-end-line="85" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="51" selection-start-line="12" selection-start-column="51" selection-end-line="12" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/goods.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2363">
-          <caret line="139" column="24" lean-forward="true" selection-start-line="139" selection-start-column="24" selection-end-line="139" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/goods_models.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="56" column="22" lean-forward="true" selection-start-line="56" selection-start-column="22" selection-end-line="56" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/inventory.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5202">
-          <caret line="306" column="4" selection-start-line="306" selection-start-column="4" selection-end-line="322" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templatetags/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/templatetags/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templatetags/stock_extras.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/log/templatetags/log_extras.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -619,16 +581,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/django_example/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="22" column="51" selection-start-line="22" selection-start-column="51" selection-end-line="22" selection-end-column="51" />
-          <folding>
-            <element signature="e#648#689#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -681,13 +633,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
           <caret line="297" selection-start-line="297" selection-end-line="297" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dhp.com.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="24" lean-forward="true" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -769,22 +714,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tables/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="189" column="25" lean-forward="true" selection-start-line="189" selection-start-column="25" selection-end-line="189" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26520">
-          <caret line="1574" column="42" selection-start-line="1574" selection-start-column="42" selection-end-line="1574" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="66" column="45" selection-start-line="66" selection-start-column="45" selection-end-line="66" selection-end-column="45" />
+        <state relative-caret-position="2975">
+          <caret line="189" column="25" selection-start-line="189" selection-start-column="25" selection-end-line="189" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -792,10 +723,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="60" column="1" lean-forward="true" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
-          <folding>
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -806,17 +733,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
+    <entry file="file://$PROJECT_DIR$/tables/templates/cap.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="299" column="1" lean-forward="true" selection-start-line="299" selection-start-column="1" selection-end-line="299" selection-end-column="12" />
+        <state relative-caret-position="170">
+          <caret line="10" column="56" selection-start-line="10" selection-start-column="56" selection-end-line="10" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/caps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="11" lean-forward="true" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/box.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="64" column="46" lean-forward="true" selection-start-line="64" selection-start-column="46" selection-end-line="64" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/boxing.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="39" lean-forward="true" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/container.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="35" lean-forward="true" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/commodity.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="14" lean-forward="true" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/sticker.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="51" selection-start-line="18" selection-start-column="51" selection-end-line="18" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tables/templates/stickers.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="71" lean-forward="true" selection-start-line="9" selection-start-column="71" selection-end-line="9" selection-end-column="71" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="1751" column="50" lean-forward="true" selection-start-line="1751" selection-start-column="50" selection-end-line="1751" selection-end-column="50" />
+        <state relative-caret-position="276">
+          <caret line="1365" column="19" lean-forward="true" selection-start-line="1365" selection-start-column="19" selection-end-line="1365" selection-end-column="19" />
           <folding>
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -854,17 +830,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="619">
+          <caret line="405" column="31" selection-start-line="405" selection-start-column="31" selection-end-line="405" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="116" column="29" lean-forward="true" selection-start-line="116" selection-start-column="29" selection-end-line="116" selection-end-column="29" />
+        <state relative-caret-position="248">
+          <caret line="289" column="52" lean-forward="true" selection-start-line="289" selection-start-column="52" selection-end-line="289" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="112" lean-forward="true" selection-start-line="112" selection-end-line="112" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="214" column="38" selection-start-line="214" selection-start-column="38" selection-end-line="214" selection-end-column="38" />
+        <state relative-caret-position="343">
+          <caret line="278" column="72" lean-forward="true" selection-start-line="278" selection-start-column="72" selection-end-line="278" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1194">
+          <caret line="73" column="48" lean-forward="true" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dhp.com.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="23" lean-forward="true" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="466">
+          <caret line="33" column="44" lean-forward="true" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+          <folding>
+            <element signature="e#648#689#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

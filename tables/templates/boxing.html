@@ -1,36 +1,40 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<script type="text/javascript">
-$(document).ready(function(){
-  $('#f').addClass("active");
-  });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#f').addClass("active");
+        });
+    </script>
 
-<form action="del_box/" method="post" style="margin-top: 40px">
-{% csrf_token %}
-<button type="button" class="btn btn-default" onClick="window.location.href='/tables/boxing/0/'">Добавить запись</button>
-<input type="submit" class="btn btn-default" value="Удалить">
-<br><br>
-{% if boxes %}
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th></th><th>Артикул</th><th>Наименование</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for b in boxes %}
-    <tr>
-      <td><input type="checkbox" value="{{ b.id }}" name="del_list"></td>
-      <td>{{ b.code }}</td>
-      <td onClick="window.location.href='/tables/boxing/{{ b.id }}/'">{{ b }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No materials are available right now.</p>
-{% endif %}
-</div>
-</form>
+    <form action="del_box/" method="post" style="margin-top: 40px">
+        {% csrf_token %}
+        <button type="button" class="btn btn-default" onClick="window.location.href='/tables/boxing/0/'">Добавить
+            запись
+        </button>
+        <input type="submit" class="btn btn-default" value="Удалить">
+        <br><br>
+        {% if boxes %}
+            <table class="table table-hover table-sm">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Артикул</th>
+                    <th>Наименование</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for b in boxes %}
+                    <tr>
+                        <td><input type="checkbox" value="{{ b.id }}" name="del_list"></td>
+                        <td>{{ b.code }}</td>
+                        <td onClick="window.location.href='/tables/boxing/{{ b.id }}/'">{{ b }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No materials are available right now.</p>
+        {% endif %}
+        </div>
+    </form>
 {% endblock content %}
