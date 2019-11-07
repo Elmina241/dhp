@@ -71,7 +71,7 @@ def inventory(request):
     add_children_g(g, tree[0], goods_inf_res['full_names'])
     inventory_goods = {}
     for i in Inventory.objects.filter(is_finished=False):
-        inventory_goods[str(i.pk)] = {'date': i.date.strftime('%d.%m.%Y'), 'stock': str(i.stock),
+        inventory_goods[str(i.pk)] = {'date': i.date.strftime('%d.%m.%y'), 'stock': str(i.stock),
                                       'stock_id': i.stock.pk}
         for g in Inventory_good.objects.filter(inventory=i):
             if Stock_good.objects.filter(stock=i.stock, good=g.good).count() != 0:
@@ -337,7 +337,7 @@ def shipment(request):
                         role = '0'
                 reqs[str(r.pk)] = {
                     'id': r.pk,
-                    'date': r.date.strftime('%d.%m.%Y'),
+                    'date': r.date.strftime('%d.%m.%y'),
                     'consumer': "-" if r.consumer is None else str(r.consumer),
                     'provider': "-" if r.provider is None else str(r.provider),
                     'donor': "" if r.donor is None else str(r.donor),
@@ -348,8 +348,8 @@ def shipment(request):
                     'vin': r.vin,
                     'cause': Order.objects.filter(matrix=r.matrix, isDonor=True)[0].get_cause_display(),
                     'user': "-" if r.user is None else str(r.user),
-                    'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-                    'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+                    'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%y'),
+                    'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%y')
                 }
     stocks = {}
     for s in Counter_stock.objects.all():
@@ -425,7 +425,7 @@ def supplies(request):
                         role = '0'
                 reqs[str(r.pk)] = {
                     'id': r.pk,
-                    'date': r.date.strftime('%d.%m.%Y'),
+                    'date': r.date.strftime('%d.%m.%y'),
                     'consumer': "-" if r.consumer is None else str(r.consumer),
                     'provider': "-" if r.provider is None else str(r.provider),
                     'donor': "" if r.donor is None else str(r.donor),
@@ -436,8 +436,8 @@ def supplies(request):
                     'vin': r.vin,
                     'cause': Order.objects.filter(matrix=r.matrix, isDonor=False)[0].get_cause_display(),
                     'user': "-" if r.user is None else str(r.user),
-                    'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-                    'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y')
+                    'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%y'),
+                    'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%y')
                 }
     stocks = {}
     for s in Counter_stock.objects.all():
@@ -469,9 +469,9 @@ def offers(request):
                 role = '0'
         reqs[str(r.pk)] = {
             'id': r.pk,
-            'date': r.date.strftime('%d.%m.%Y'),
-            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y'),
+            'date': r.date.strftime('%d.%m.%y'),
+            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%y'),
+            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%y'),
             'consumer': str(r.consumer),
             'provider': str(r.provider),
             'donor': "-" if r.donor is None else str(r.donor),
@@ -524,9 +524,9 @@ def requirements(request):
                 role = '0'
         reqs[str(r.pk)] = {
             'id': r.pk,
-            'date': r.date.strftime('%d.%m.%Y'),
-            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%Y'),
-            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%Y'),
+            'date': r.date.strftime('%d.%m.%y'),
+            'release_date': "-" if r.release_date is None else r.release_date.strftime('%d.%m.%y'),
+            'finish_date': "-" if r.finish_date is None else r.finish_date.strftime('%d.%m.%y'),
             'consumer': str(r.consumer),
             'provider': str(r.provider),
             'donor': "-" if r.donor is None else str(r.donor),
@@ -640,12 +640,12 @@ def get_prod_info(request):
                         if Order.objects.filter(matrix=d.matrix, isDonor=(operation == 'Отгрузка'))[0].status != '2':
                             print(d.get_demand().finish_date)
                             expecting[str(d.pk)] = {'vin': d.get_demand().vin,
-                                                    'date': d.get_demand().finish_date.strftime('%d.%m.%Y'),
+                                                    'date': d.get_demand().finish_date.strftime('%d.%m.%y'),
                                                     'amount': d.balance, 'operation': operation}
             data['expecting'] = expecting
             history = {}
             for o in Stock_operation.objects.filter(good=good, package__stock=stock).exclude(operation='2'):
-                history[str(o.pk)] = {'vin': o.package.vin, 'date': o.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%Y'),
+                history[str(o.pk)] = {'vin': o.package.vin, 'date': o.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%y'),
                                       'operation': o.get_operation_display(), 'amount': o.amount, 'unit': str(o.unit)}
             data['history'] = history
             return HttpResponse(json.dumps(data))
@@ -764,7 +764,7 @@ def save_date(request):
                 d.finish_date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
                 date = d.finish_date
             d.save()
-            return HttpResponse(date.strftime('%d.%m.%Y'))
+            return HttpResponse(date.strftime('%d.%m.%y'))
 
 
 def save_stock_operation(request):
@@ -913,7 +913,7 @@ def stock_operations(request):
             demand = demands[0]
             cause = Order.objects.filter(matrix=demand.matrix)[0].get_cause_display()
         if id not in operations:
-            operations[id] = {"date": s.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%Y'), "operation": s.get_operation_display(),
+            operations[id] = {"date": s.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%y'), "operation": s.get_operation_display(),
                               "vin": s.package.vin, "stock": str(s.package.stock), "cause": cause,
                               "stock_id": s.package.stock.pk}
         operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(),
@@ -1542,6 +1542,8 @@ def save_status(request):
         if 'id' in request.POST:
             d = Demand.objects.get(pk=request.POST['id'])
             status = request.POST['status']
+            if status == '0':
+                return HttpResponse('ok')
             if status == '1':
                 status = '4'
                 if d.donor is not None:

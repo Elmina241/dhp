@@ -79,14 +79,14 @@
         function changeOperGroup(group) {
             stock = $("#stock").val();
             period = $("#period").val();
-            code = "";
+            var code = "";
             for (row in operations) {
                 if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1") && checkDatePeriod(operations[row]['date'], period)) {
-                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'] + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span></td></tr>";
+                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'].slice(0, 5) + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span></td></tr>";
                 }
             }
             if (code == "") code = "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
-            goodsCode = "<tr><td colspan=5 align='center'>Нет записей</td></tr>";
+            goodsCode = "<tr><td colspan=5 class='no-data'>Нет записей</td></tr>";
             $("#goods-body").html(goodsCode);
             $("#op-body").html(code);
             $("#openInventoryBtn").prop("disabled", stock == '-1');
@@ -197,7 +197,7 @@
                     {% for key, values in operations|sort %}
                         <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
                             <td>{{ values.vin }}</td>
-                            <td>{{ values.date }}</td>
+                            <td>{{ values.date|date:"d.m.y" }}</td>
                             <td>{{ values.operation }}</td>
                             <td>{{ values.cause }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>

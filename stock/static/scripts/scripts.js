@@ -1089,6 +1089,7 @@ function delOperation(obj) {
         success: function onAjaxSuccess(data) {
             $(obj.parentElement).remove();
             $("#del_modal").modal('toggle');
+            $("#goods-body").html("<tr><td colspan='9' class='no-data'>Нет записей</td></tr>");
         }
     });
 };
@@ -1877,7 +1878,7 @@ function saveStatus(obj) {
             }
         },
         success: function onAjaxSuccess(data) {
-            code = "<div class='td-inline'>" + $("option:selected", obj).text() +  "<span class='edit-btn' onclick='changeStatus(this, " + id + ")'><i class='fas fa-edit'></i></span></div>";
+            var code = "<div class='td-inline'>" + $("option:selected", obj).text() +  "<span class='edit-btn' onclick='changeStatus(this, " + id + ")'><i class='fas fa-edit'></i></span></div>";
             obj.parentElement.parentElement.innerHTML = code;
         }
     });

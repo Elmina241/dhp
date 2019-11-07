@@ -46,8 +46,14 @@
             $(".reqBtn").prop('disabled', false);
             //$(btn).addClass('active');
             loadReqs($("#curStock").val());
-            if (isInbox) $("#addReqBtn").hide();
-            else $("#addReqBtn").show();
+            if (isInbox) {
+                $("#addReqBtn").hide();
+                $("#user_status_div").text("Я поставщик");
+            }
+            else {
+                $("#addReqBtn").show();
+                $("#user_status_div").text("Я получатель");
+            }
             if (isInbox) $("#editReqBtn").show();
             else $("#editReqBtn").hide();
         }
@@ -271,12 +277,9 @@
                             {% endfor %}
                         </select>
                     </div></div>
+                    <div id="user_status_div" class="user-status">Я получатель</div>
 
                     </div>
-                <!--<div class="btn-group" style="float: right" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-primary btn-sm reqBtn" onclick="toggleReqs(this, true)">Входящие</button>
-                            <button type="button" class="btn btn-primary btn-sm reqBtn" onclick="toggleReqs(this, false)" disabled>Исходящие</button>
-                        </div>-->
                 </div>
             </div>
             <div class="count_table table-responsive-sm" style="padding-bottom: 0">
@@ -317,9 +320,6 @@
                     <th scope="col">Наименование</th>
                     <th scope="col">Кол-во</th>
                     <th scope="col">Ед. изм.</th>
-                    <!--<th scope="col">Кол-во базовых ед.</th>
-                    <th scope="col">Ед. изм. базовая</th>
-                    <th scope="col">Остаток</th>-->
                 </tr>
                 </thead>
                 <tbody id="goods-body">
