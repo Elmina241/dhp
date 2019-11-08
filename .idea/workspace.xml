@@ -3,14 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/templates/movement.html" beforeDir="false" afterPath="$PROJECT_DIR$/log/templates/movement.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/log/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/static/css/stock.css" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/css/stock.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/scripts/scripts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/offers.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/offers.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/requirements.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/requirements.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/shipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/shipment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/templates/stock_operations.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/stock_operations.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/templates/store/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/store/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/templates/supplies.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/supplies.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -43,17 +43,17 @@
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
+                <state relative-caret-position="17">
                   <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
                 </state>
               </provider>
             </entry>
           </file>
           <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/stock/views.py">
+            <entry file="file://$PROJECT_DIR$/log/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="412">
-                  <caret line="867" column="39" lean-forward="true" selection-start-line="867" selection-start-column="39" selection-end-line="867" selection-end-column="39" />
+                <state relative-caret-position="233">
+                  <caret line="140" column="57" selection-start-line="140" selection-start-column="53" selection-end-line="140" selection-end-column="57" />
                   <folding>
                     <element signature="e#0#45#0" expanded="true" />
                   </folding>
@@ -77,8 +77,8 @@
           <file leaf-file-name="scripts.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="204">
-                  <caret line="1394" column="24" lean-forward="true" selection-start-line="1394" selection-start-column="24" selection-end-line="1394" selection-end-column="24" />
+                <state relative-caret-position="323">
+                  <caret line="1412" column="39" lean-forward="true" selection-start-line="1412" selection-start-column="39" selection-end-line="1412" selection-end-column="39" />
                   <folding>
                     <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -117,29 +117,20 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="requirements.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
+          <file leaf-file-name="base.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="503">
-                  <caret line="279" column="20" selection-start-line="279" selection-start-column="20" selection-end-line="279" selection-end-column="84" />
+                <state relative-caret-position="408">
+                  <caret line="24" column="58" lean-forward="true" selection-start-line="24" selection-start-column="58" selection-end-line="24" selection-end-column="58" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="offers.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
+          <file leaf-file-name="movement.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="88">
-                  <caret line="332" column="52" lean-forward="true" selection-start-line="332" selection-start-column="52" selection-end-line="332" selection-end-column="52" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="stock_operations.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="344">
-                  <caret line="81" column="26" lean-forward="true" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
+                <state relative-caret-position="119">
+                  <caret line="103" column="29" lean-forward="true" selection-start-line="103" selection-start-column="29" selection-end-line="103" selection-end-column="29" />
                 </state>
               </provider>
             </entry>
@@ -147,8 +138,8 @@
           <file leaf-file-name="stock.css" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="636">
-                  <caret line="410" column="13" selection-start-line="410" selection-start-column="13" selection-end-line="410" selection-end-column="13" />
+                <state relative-caret-position="602">
+                  <caret line="417" lean-forward="true" selection-start-line="417" selection-end-line="417" />
                 </state>
               </provider>
             </entry>
@@ -167,7 +158,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ship</find>
       <find>opera</find>
       <find>session</find>
       <find>Gtree</find>
@@ -197,6 +187,7 @@
       <find>delObj</find>
       <find>date</find>
       <find>'%d.%m.</find>
+      <find>check</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -212,7 +203,6 @@
         <option value="$PROJECT_DIR$/stock/templates/stocks.html" />
         <option value="$PROJECT_DIR$/stock/templates/inventory.html" />
         <option value="$PROJECT_DIR$/stock/templatetags/__init__.py" />
-        <option value="$PROJECT_DIR$/stock/templates/store/base.html" />
         <option value="$PROJECT_DIR$/stock/templatetags/stock_extras.py" />
         <option value="$PROJECT_DIR$/log/templatetags/__init__.py" />
         <option value="$PROJECT_DIR$/log/templates/accepting.html" />
@@ -237,8 +227,6 @@
         <option value="$PROJECT_DIR$/tables/views.py" />
         <option value="$PROJECT_DIR$/tables/templates/new_material.html" />
         <option value="$PROJECT_DIR$/django_example/settings.py" />
-        <option value="$PROJECT_DIR$/log/templates/movement.html" />
-        <option value="$PROJECT_DIR$/log/views.py" />
         <option value="$PROJECT_DIR$/tables/templates/cap.html" />
         <option value="$PROJECT_DIR$/tables/templates/caps.html" />
         <option value="$PROJECT_DIR$/tables/templates/box.html" />
@@ -248,14 +236,17 @@
         <option value="$PROJECT_DIR$/tables/templates/sticker.html" />
         <option value="$PROJECT_DIR$/tables/templates/stickers.html" />
         <option value="$PROJECT_DIR$/django_example/urls.py" />
-        <option value="$PROJECT_DIR$/stock/templates/supplies.html" />
-        <option value="$PROJECT_DIR$/stock/templates/shipment.html" />
         <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
-        <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
-        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
-        <option value="$PROJECT_DIR$/stock/templates/offers.html" />
         <option value="$PROJECT_DIR$/stock/views.py" />
         <option value="$PROJECT_DIR$/stock/templates/stock_operations.html" />
+        <option value="$PROJECT_DIR$/stock/static/css/stock.css" />
+        <option value="$PROJECT_DIR$/stock/templates/offers.html" />
+        <option value="$PROJECT_DIR$/stock/templates/requirements.html" />
+        <option value="$PROJECT_DIR$/stock/templates/shipment.html" />
+        <option value="$PROJECT_DIR$/stock/templates/supplies.html" />
+        <option value="$PROJECT_DIR$/log/templates/movement.html" />
+        <option value="$PROJECT_DIR$/log/views.py" />
+        <option value="$PROJECT_DIR$/stock/templates/store/base.html" />
       </list>
     </option>
   </component>
@@ -279,12 +270,24 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
               <item name="django_example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="log" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="log" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
@@ -297,11 +300,17 @@
               <item name="stock" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="django_example" type="b2602c69:ProjectViewProjectNode" />
+              <item name="django_example" type="462c0819:PsiDirectoryNode" />
+              <item name="stock" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="store" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -401,7 +410,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573027296790</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="small_fixes">
+      <created>1573102573374</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1573102573374</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView">
@@ -423,8 +439,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.19281046" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32897604" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.17755991" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.18082789" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16311301" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.1546841" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16471216" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32995737" />
@@ -448,7 +464,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="packing_refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="packing_refactoring" />
+    <MESSAGE value="small_fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="small_fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -636,26 +653,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1734">
-          <caret line="102" column="50" selection-start-line="102" selection-start-column="50" selection-end-line="102" selection-end-column="50" />
-          <folding>
-            <element signature="n#style#0;n#select#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="144" column="57" lean-forward="true" selection-start-line="144" selection-start-column="57" selection-end-line="144" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tables/templates/formula.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -674,13 +671,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="60" column="1" lean-forward="true" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="42" column="37" lean-forward="true" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -764,31 +754,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/urls.py">
+    <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
+        <state relative-caret-position="310">
+          <caret line="79" column="38" lean-forward="true" selection-start-line="79" selection-start-column="38" selection-end-line="79" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="602">
+          <caret line="417" lean-forward="true" selection-start-line="417" selection-end-line="417" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/supplies.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="74" column="35" lean-forward="true" selection-start-line="74" selection-start-column="35" selection-end-line="74" selection-end-column="94" />
+        <state relative-caret-position="151">
+          <caret line="55" column="40" lean-forward="true" selection-start-line="55" selection-start-column="40" selection-end-line="55" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/templates/shipment.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="145" column="36" lean-forward="true" selection-start-line="145" selection-start-column="36" selection-end-line="145" selection-end-column="36" />
+        <state relative-caret-position="366">
+          <caret line="208" column="40" selection-start-line="208" selection-start-column="40" selection-end-line="208" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="141" column="296" lean-forward="true" selection-start-line="141" selection-start-column="24" selection-end-line="141" selection-end-column="296" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="171" column="12" selection-start-line="171" selection-start-column="12" selection-end-line="174" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="876" column="38" lean-forward="true" selection-start-line="876" selection-start-column="38" selection-end-line="876" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/templates/movement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="103" column="29" lean-forward="true" selection-start-line="103" selection-start-column="29" selection-end-line="103" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="1394" column="24" lean-forward="true" selection-start-line="1394" selection-start-column="24" selection-end-line="1394" selection-end-column="24" />
+        <state relative-caret-position="323">
+          <caret line="1412" column="39" lean-forward="true" selection-start-line="1412" selection-start-column="39" selection-end-line="1412" selection-end-column="39" />
           <folding>
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -826,38 +861,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
+    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="636">
-          <caret line="410" column="13" selection-start-line="410" selection-start-column="13" selection-end-line="410" selection-end-column="13" />
+        <state relative-caret-position="408">
+          <caret line="24" column="58" lean-forward="true" selection-start-line="24" selection-start-column="58" selection-end-line="24" selection-end-column="58" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/requirements.html">
+    <entry file="file://$PROJECT_DIR$/log/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="279" column="20" selection-start-line="279" selection-start-column="20" selection-end-line="279" selection-end-column="84" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/offers.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="332" column="52" lean-forward="true" selection-start-line="332" selection-start-column="52" selection-end-line="332" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/stock_operations.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="81" column="26" lean-forward="true" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="867" column="39" lean-forward="true" selection-start-line="867" selection-start-column="39" selection-end-line="867" selection-end-column="39" />
+        <state relative-caret-position="233">
+          <caret line="140" column="57" selection-start-line="140" selection-start-column="53" selection-end-line="140" selection-end-column="57" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>

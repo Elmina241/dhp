@@ -1,9 +1,10 @@
 {% load staticfiles %}
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
     <script src="{% static 'scripts/jquery-3.2.1.js' %}"></script>
+    <script src="{% static 'scripts/popper.min.js' %}"></script>
     <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">-->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min2.css' %}">
     <link rel="stylesheet" href="{% static 'css/font.all.css' %}">
@@ -12,7 +13,7 @@
     <link rel="stylesheet" href="{% static 'css/tree.css' %}">
     <script type="text/javascript">
         $(document).ready(function () {
-            if ($("#permissions").prop("value")!=undefined) {
+            if ($("#permissions").prop("value") != undefined) {
                 permissions = JSON.parse($("#permissions").prop("value"));
                 for (p in permissions) {
                     if (!permissions[p]) {
@@ -25,73 +26,100 @@
                     }
                 }
             }
+            (function () {
+
+                var reload = false;
+
+                // Match this timestamp with the release of your code
+                var lastVersioning = new Date(2019, 10, 6);
+
+                var lastCacheDateTime = localStorage.getItem('lastCacheDatetime');
+
+                if (lastCacheDateTime) {
+                    if (lastVersioning > lastCacheDateTime) {
+                        reload = true;
+                    }
+                }
+
+                localStorage.setItem('lastCacheDatetime', Date.now());
+
+                if (reload) {
+                    location.reload(true);
+                }
+
+            })();
         });
     </script>
 </head>
 <body>
 {% if request.user.username %}
     <input id="permissions" value="{{ permissions }}" hidden>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark pg">
-<div>
-<a class="btn btn-outline-info" href="/stock/" role="button">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark pg">
+        <div>
+            <a class="btn btn-outline-info" href="/stock/" role="button">
                 Главная
             </a>
-    <div class="menu-btns btn-group">
-<div class="btn-group" style="margin-left: 5px">
-        <div class="dropdown">
-            <a class="btn btn-info dropdown-toggle p2" href="#" role="button" id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-                Перемещение
-            </a>
+            <div class="menu-btns btn-group">
+                <div class="btn-group" style="margin-left: 5px">
+                    <div class="dropdown">
+                        <a class="btn btn-info dropdown-toggle p2" href="#" role="button" id="dropdownMenuLink"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Перемещение
+                        </a>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="/stock/requirements/">Заказы</a>
-                <a class="dropdown-item" href="/stock/offers/">Предложения</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="/stock/requirements/">Заказы</a>
+                            <a class="dropdown-item" href="/stock/offers/">Предложения</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-left: 5px">
+                    <div class="dropdown">
+                        <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Склад
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item p4" href="/stock/stock_operations/">Журнал учётных операций</a>
+                            <a class="dropdown-item p5" href="/stock/stocks/">Остатки</a>
+                            <a class="dropdown-item p3" href="/stock/shipment/">Отпуск</a>
+                            <a class="dropdown-item p3" href="/stock/supplies/">Поступления</a>
+                            <a class="dropdown-item p3" href="/stock/inventory/">Инвентаризация</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-left: 5px">
+                    <div class="dropdown">
+                        <a class="btn btn-info p1 dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false" hidden>
+                            Справочники
+                        </a>
+
+                        <div class="dropdown-menu p1" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="/stock/goods_models/">Макеты МЦ</a>
+                            <a class="dropdown-item" href="/stock/goods/">Материальные ценности</a>
+                            <a class="dropdown-item" href="/stock/props/">Свойства</a>
+                            <a class="dropdown-item" href="/stock/counterparties/">Контрагенты</a>
+                            <a class="dropdown-item" href="/stock/storages/">Склады</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="btn-group" style="margin-left: 5px">
-        <div class="dropdown">
-            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-                Склад
-            </a>
-
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item p4" href="/stock/stock_operations/">Журнал учётных операций</a>
-                <a class="dropdown-item p5" href="/stock/stocks/">Остатки</a>
-                <a class="dropdown-item p3" href="/stock/shipment/">Отпуск</a>
-                <a class="dropdown-item p3" href="/stock/supplies/">Поступления</a>
-                <a class="dropdown-item p3" href="/stock/inventory/">Инвентаризация</a>
-            </div>
+        <div class="form-inline my-2 my-lg-0 user"><span class="navbar-text"><span
+                style="font-size: 24pt; display: inline-block; vertical-align: middle; "><i
+                class="fas fa-user-circle"></i></span><span
+                style="display: inline-block; vertical-align: middle; width: 210px; line-height: 17px; margin-left: 10px">{{ request.user.username }}<br> <span
+                style="font-size: 10pt;">{{ user_group }} </span><a href="/stock/logout/" style="font-size: 11px">(Выйти)</a></span></span>
         </div>
+    </nav>
+    <div class="header-panel pg">
+        <h4 class="header">{{ header }}</h4>
     </div>
-    <div class="btn-group" style="margin-left: 5px">
-        <div class="dropdown">
-            <a class="btn btn-info p1 dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false" hidden>
-                Справочники
-            </a>
-
-            <div class="dropdown-menu p1" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="/stock/goods_models/">Макеты МЦ</a>
-                <a class="dropdown-item" href="/stock/goods/">Материальные ценности</a>
-                <a class="dropdown-item" href="/stock/props/">Свойства</a>
-                <a class="dropdown-item" href="/stock/counterparties/">Контрагенты</a>
-                <a class="dropdown-item" href="/stock/storages/">Склады</a>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    <div class="form-inline my-2 my-lg-0 user"><span class="navbar-text"><span style="font-size: 24pt; display: inline-block; vertical-align: middle; "><i class="fas fa-user-circle"></i></span><span style="display: inline-block; vertical-align: middle; width: 210px; line-height: 17px; margin-left: 10px">{{ request.user.username }}<br> <span style="font-size: 10pt;">{{ user_group }} </span><a href="/stock/logout/" style="font-size: 11px">(Выйти)</a></span></span></div>
-</nav>
-<div class="header-panel pg">
-<h4 class="header">{{ header }}</h4>
-</div>
 {% elif request.path != "/stock/" and request.path != "/stock/login/" %}
     <script>document.location.href = "/stock/login/";</script>
 {% endif %}
@@ -103,12 +131,12 @@
             crossorigin="anonymous"></script>-->
 <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
 
- <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"></script>
+<!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+           integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+           crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-            crossorigin="anonymous"></script>-->
+           integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+           crossorigin="anonymous"></script>-->
 <script src="{% static 'scripts/bootstrap.min2.js' %}"></script>
 <script src="{% static 'scripts/popper.min.js' %}"></script>
 <script src="{% static 'scripts/chosen.jquery.min.js' %}"></script>

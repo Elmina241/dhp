@@ -49,9 +49,10 @@ def movement(request):
                    "batches2": json.dumps(batches),
                    "stocks": Stock.objects.all()})
 
+
 def del_pack(request):
     if 'id' in request.POST:
-        m_r = Movement_rec.objects.get(pk = request.POST['id'])
+        m_r = Movement_rec.objects.get(pk=request.POST['id'])
         pack_info = Packing_divergence.objects.filter(batch=m_r.batch, date=m_r.date)[0]
         if pack_info.reactor is None:
             storage = Tank_content.objects.filter(tank=pack_info.tank)[0]
@@ -62,6 +63,7 @@ def del_pack(request):
         pack_info.delete()
         m_r.delete()
         return HttpResponse('ok')
+
 
 def accepting(request):
     acts = {}
@@ -105,12 +107,16 @@ def release(request):
                 amm = 0
         return HttpResponse('ok')
 
+
 def send_data_to_stock(request):
     if request.method == 'POST':
-        if 'stock' in request.POST:
-            prods = json.loads(request.POST['prods'])
-            stock_id = request.POST['stock']
-            stock = Stock.objects.get(pk=stock_id)
+        prods = json.loads(request.POST['prods'])
+        stocks = []
+        for p in prods:
+            if prods[p]['stock'] not in stocks:
+                stocks.append(prods[p]['stock'])
+        for s in stocks:
+            stock = Stock.objects.get(pk=s)
             matrix = Matrix(access='4', cause='1')
             matrix.save()
             if Counterparty.objects.filter(name='Производственный отдел').count() != 0:
@@ -137,21 +143,23 @@ def send_data_to_stock(request):
             new_demand.save()
             p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=datetime.datetime.now())
             p.save()
+            print(p)
             stock.cur_vin = stock.cur_vin + 1
             stock.save()
             ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause='1', isDonor=False,
                                  status='0')
             ord_acceptor.save()
             for p in prods:
-                pr_id = p.split("_")[1]
-                product = Product.objects.filter(id=pr_id)[0]
-                if Good_name.objects.filter(name_type='1', area='0', name=product.code).count() != 0:
-                    g_m = Good_name.objects.filter(name_type='1', area='0', name=product.code)[0].product
-                    good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(), name=g_m.get_name(),
-                                       unit=g_m.get_unit(), amount=prods[p]['amount'],
-                                       balance=prods[p]['amount'])
-                    good.save()
-            return HttpResponse('ok')
+                if prods[p]['stock'] == s:
+                    pr_id = p.split("_")[1]
+                    product = Product.objects.filter(id=pr_id)[0]
+                    if Good_name.objects.filter(name_type='1', area='0', name=product.code).count() != 0:
+                        g_m = Good_name.objects.filter(name_type='1', area='0', name=product.code)[0].product
+                        good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(), name=g_m.get_name(),
+                                           unit=g_m.get_unit(), amount=prods[p]['amount'],
+                                           balance=prods[p]['amount'])
+                        good.save()
+        return HttpResponse('ok')
 
 
 def add_rows(request):
@@ -193,7 +201,8 @@ def get_act_by_prod(request):
         for a in Acceptance.objects.filter(code=code):
             date = a.date
             print(Movement_rec.objects.filter(batch=a.prod.batch, operation=Operation.objects.filter(id=1)[0]).last())
-            err = err and Movement_rec.objects.filter(batch=a.prod.batch, operation=Operation.objects.filter(id=1)[0]).last().is_printed
+            err = err and Movement_rec.objects.filter(batch=a.prod.batch,
+                                                      operation=Operation.objects.filter(id=1)[0]).last().is_printed
             inf_a[str(a.prod.pk)] = {"code": a.prod.product.code, "name": a.prod.product.get_name_for_table(),
                                      "batch": a.prod.get_batch(), "amount": str(a.prod.amount)}
             print(err)
@@ -243,14 +252,15 @@ def get_pass(request):
                                                             characteristic=c.characteristic)[0]
                 if c.characteristic.char_type.id != 3:
                     try:
-                        if Packing_char.objects.filter(packing = div, char = c.kneading_char_number).count() == 0:
+                        if Packing_char.objects.filter(packing=div, char=c.kneading_char_number).count() == 0:
                             value = c.kneading_char_number.number
                         else:
-                            value = Packing_char.objects.filter(packing = div, char = c.kneading_char_number)[0].value
+                            value = Packing_char.objects.filter(packing=div, char=c.kneading_char_number)[0].value
                         chars[i] = {'group': c.characteristic.group.name, 'type': 1,
                                     'norm': str(comp_char.comp_char_range.inf) + "-" + str(
                                         comp_char.comp_char_range.sup),
-                                    'name': c.characteristic.name, 'value': value, 'char_id': c.kneading_char_number.pk, 'div_id': div.pk}
+                                    'name': c.characteristic.name, 'value': value, 'char_id': c.kneading_char_number.pk,
+                                    'div_id': div.pk}
                     except Kneading_char_number.DoesNotExist:
                         chars[i] = {}
                 else:
@@ -282,18 +292,22 @@ def print_pass(request):
             product.save()
             return HttpResponse("ok")
 
+
 def save_char(request):
     if request.method == 'POST':
         if "char_id" in request.POST:
             res = Packing_char.objects.filter(char__pk=request.POST['char_id'], packing__pk=request.POST['div_id'])
             if res.count() == 0:
-                p_ch = Packing_char(char=Kneading_char_number.objects.get(pk=request.POST['char_id']), packing=Packing_divergence.objects.get(pk=request.POST['div_id']), value=request.POST['value'])
+                p_ch = Packing_char(char=Kneading_char_number.objects.get(pk=request.POST['char_id']),
+                                    packing=Packing_divergence.objects.get(pk=request.POST['div_id']),
+                                    value=request.POST['value'])
                 p_ch.save()
             else:
                 char = res[0]
                 char.value = request.POST['value']
                 char.save()
             return HttpResponse("ok")
+
 
 def edit_pack(request):
     if request.method == 'POST':
@@ -303,7 +317,7 @@ def edit_pack(request):
         prod = get_object_or_404(Product, pk=request.POST['pr_id'])
         div.product = prod
         prev_prod = movm.product
-        for m in Movement_rec.objects.filter(batch=movm.batch, product = prev_prod, date__gte=movm.date):
+        for m in Movement_rec.objects.filter(batch=movm.batch, product=prev_prod, date__gte=movm.date):
             m.product = prod
             m.save()
         movm.product = prod

@@ -411,3 +411,11 @@ h9 {
     right: 35px;
     color: darkgray;
 }
+
+.edit-btn a{
+    color: #4e4e4e;
+}
+
+.edit-btn a:hover{
+    color: #169eb3;
+}

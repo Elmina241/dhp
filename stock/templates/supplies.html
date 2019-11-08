@@ -39,6 +39,10 @@
             pag2 = new Pagination(10, "goods-body", "goodsNav");
             $('#date').val(new Date().toDateInputValue());
             $('.modal').css('overflow-y', 'auto');
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            });
+            $('[data-toggle="popover"]').popover();
         });
 
         function formatDate(date) {
@@ -60,15 +64,17 @@
             code = "";
             if (stock == "-1") {
                 for (r in reqs) {
+                    var infBtn = "<span class='edit-btn'><a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' title='Дополнительная информация' data-content='Создатель: " + reqs[r].user + "'><i class='fas fa-info-circle' title='Дополнительная информация'></i></a></span>";
                     var delBtn = reqs[r].user == user ? "<span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span>" : "";
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td><td>" + delBtn + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + infBtn + "</td><td>" + delBtn + "</td></tr>";
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
+                        var infBtn = "<span class='edit-btn'><a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' title='Дополнительная информация' data-content='Создатель: " + reqs[r].user + "'><i class='fas fa-info-circle' title='Дополнительная информация'></i></a></span>";
                         var delBtn = reqs[r].user == user ? "<span onclick='confirmDel(" + r + ", this.parentElement)'><i class='fas fa-trash-alt menu-btn' title='Удалить'></i></span>" : "";
-                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>"  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>"  + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].user + "</td><td>" + delBtn + "</td></tr>";
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ", \"s\")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>"  + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>"  + reqs[r].cause + " " + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + infBtn + "</td><td>" + delBtn + "</td></tr>";
                     }
                 }
             }
@@ -136,7 +142,7 @@
                         <th scope="col">Ожидаемая дата получения</th>
                         <th scope="col">Отправитель</th>
                         <th scope="col">Ожидаемая дата отпуска</th>
-                        <th scope="col">Создатель</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                     </thead>

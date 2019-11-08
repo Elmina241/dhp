@@ -36,6 +36,12 @@
             pag2 = new Pagination(10, "goods-body", "goodsNav");
             $('#date').val(new Date().toDateInputValue());
             $('.modal').css('overflow-y', 'auto');
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            });
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            });
         });
 
         function toggleReqs(btn, t) {
@@ -133,8 +139,9 @@
             if (stock == "-1") {
                 for (r in reqs) {
                     if (role == reqs[r].role){
+                        var infBtn = "<span class='edit-btn'><a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' title='Дополнительная информация' data-content='Создатель: " + reqs[r].user + "'><i class='fas fa-info-circle' title='Дополнительная информация'></i></a></span>";
                         status = getStatus(reqs[r].access, r);
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].consumer + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td><td>" + reqs[r].finish_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].consumer + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td><td>" + reqs[r].finish_date + "</td>" + status + "<td>" + infBtn + "</td></tr>";
                 }
                 }
             }
@@ -142,8 +149,9 @@
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
                         if (role == reqs[r].role) {
+                            var infBtn = "<span class='edit-btn'><a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' title='Дополнительная информация' data-content='Создатель: " + reqs[r].user + "'><i class='fas fa-info-circle' title='Дополнительная информация'></i></a></span>";
                             status = getStatus(reqs[r].access, r);
-                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].consumer + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td><td>" + reqs[r].finish_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].provider + "</td><td>" + reqs[r].donor + "</td><td>" + reqs[r].release_date + "</td><td>" + reqs[r].consumer + "</td><td><span class='stock'>" + reqs[r].acceptor + " </span>" + editBtn + "</td><td>" + reqs[r].finish_date + "</td>" + status + "<td>" + infBtn + "</td></tr>";
                         }
                     }
                 }
@@ -153,6 +161,10 @@
             addEditBtns();
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            });
+            $('[data-toggle="popover"]').popover();
         }
 
         function saveDate(obj, id) {
@@ -282,7 +294,7 @@
                         <th scope="col" colspan="2" class="td-lighter">Получатель</th>
                         <th scope="col">Дата поставки</th>
                         <th scope="col">Статус</th>
-                        <th scope="col">Создатель</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody id="req-body">

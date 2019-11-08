@@ -38,10 +38,16 @@
             pag2 = new Pagination(10, "goods-body", "goodsNav");
             $('#date').val(new Date().toDateInputValue());
             $('.modal').css('overflow-y', 'auto');
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            });
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            });
         });
 
         function toggleReqs(btn, t) {
-            if (isInbox!=t) $(".toggle").toggleClass('active');
+            if (isInbox != t) $(".toggle").toggleClass('active');
             isInbox = t;
             $(".reqBtn").prop('disabled', false);
             //$(btn).addClass('active');
@@ -108,7 +114,7 @@
             else if (s == '4') {
                 status = "<td>Выполнение</td>";
             }
-            else if (reqs[id].isEdited){
+            else if (reqs[id].isEdited) {
                 status = "<td><div class='td-inline'>Уточнение <span class='edit-btn'\n" +
                     "                          onclick=\"changeStatus(this, " + id + ")\"><i class='fas fa-edit'></i></span></div></td>";
             }
@@ -119,7 +125,7 @@
             return status;
         }
 
-        function editStock(obj){
+        function editStock(obj) {
             id = {{ user_group_pk }};
             var code = "<div class='form-inline'><select id='editStock' class='form-control form-control-sm'>";
             var curStock = $.trim($(obj.previousElementSibling).text());
@@ -140,18 +146,20 @@
             var editBtn = isInbox ? "<span class='edit-btn' onclick='editStock(this)'><i class='fas fa-edit'></i></span>" : "";
             if (stock == "-1") {
                 for (r in reqs) {
-                    if (role == reqs[r].role){
+                    if (role == reqs[r].role) {
+                        var infBtn = "<span class='edit-btn'><a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' title='Дополнительная информация' data-content='Создатель: " + reqs[r].user + "'><i class='fas fa-info-circle' title='Дополнительная информация'></i></a></span>";
                         status = getStatus(reqs[r].access, r);
-                    code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].provider + "</td><td><span class='stock'>" + reqs[r].donor + " </span>" + editBtn + "</td><td>" + reqs[r].release_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
-                }
+                        code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].provider + "</td><td><span class='stock'>" + reqs[r].donor + " </span>" + editBtn + "</td><td>" + reqs[r].release_date + "</td>" + status + "<td>" + infBtn + "</td></tr>";
+                    }
                 }
             }
             else {
                 for (r in reqs) {
                     if (reqs[r].donor_id == stock || reqs[r].acceptor_id == stock) {
                         if (role == reqs[r].role) {
+                            var infBtn = "<span class='edit-btn'><a tabindex='0' role='button' data-toggle='popover' data-trigger='focus' title='Дополнительная информация' data-content='" + reqs[r].user + "'><i class='fas fa-info-circle' title='Дополнительная информация'></i></a></span>";
                             status = getStatus(reqs[r].access, r);
-                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].provider + "</td><td><span class='stock'>" + reqs[r].donor + " </span>" + editBtn + "</td><td>" + reqs[r].release_date + "</td>" + status + "<td>" + reqs[r].user + "</td></tr>";
+                            code = code + "<tr id='l-" + r + "' onclick='getDemandGoods(" + r + ")'><td>" + reqs[r].vin + "</td><td>" + reqs[r].date + "</td><td>" + reqs[r].consumer + "</td><td>" + reqs[r].acceptor + "</td><td>" + reqs[r].finish_date + "</td><td>" + reqs[r].provider + "</td><td><span class='stock'>" + reqs[r].donor + " </span>" + editBtn + "</td><td>" + reqs[r].release_date + "</td>" + status + "<td>" + infBtn + "</td></tr>";
                         }
                     }
                 }
@@ -161,6 +169,10 @@
             addEditBtns();
             pag = new Pagination(10, "req-body", "reqNav");
             pag2 = new Pagination(10, "goods-body", "goodsNav");
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            });
+            $('[data-toggle="popover"]').popover();
         }
 
         function saveDate(obj, id) {
@@ -202,11 +214,11 @@
             $("#req-body tr").each(function (item) {
                 //условие отображения кнопки
                 id = $(this).prop('id').substr(2);
-                if (id != ""){
-                td = $(this).find('td').eq(7).html();
-                if (reqs[id].role == '1'){
-                    $(this).find('td').eq(7).html(td + btn);
-                }
+                if (id != "") {
+                    td = $(this).find('td').eq(7).html();
+                    if (reqs[id].role == '1') {
+                        $(this).find('td').eq(7).html(td + btn);
+                    }
                 }
             });
         }
@@ -222,7 +234,7 @@
             else if (reqs[id].access == '3') {
                 options = "<option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
-            else if (reqs[id].isEdited){
+            else if (reqs[id].isEdited) {
                 options = "<option value='0'>Уточнение</option><option value='1'>Выполнение</option><option value='2'>Отказ</option><option value='3'>Закрыт</option>";
             }
             else {
@@ -254,9 +266,11 @@
     <input value="{{ stockData }}" id="stock_data" hidden/>
     <input value="{{ units }}" id="units" hidden/>
     <input value="{{ reqs }}" id="reqs" hidden/>
-<input value="{{ stock_inf }}" id="stock_inf" hidden/>
+    <input value="{{ stock_inf }}" id="stock_inf" hidden/>
     <div class="container-fluid" style="position: relative">
-    <div style="position: absolute; margin-top: -72px; margin-left: 120px"><span onclick="toggleReqs(this, true)" class="toggle">Входящие</span> / <span onclick="toggleReqs(this, false)" class="toggle active">Исходящие</span></div>
+        <div style="position: absolute; margin-top: -72px; margin-left: 120px"><span onclick="toggleReqs(this, true)"
+                                                                                     class="toggle">Входящие</span> /
+            <span onclick="toggleReqs(this, false)" class="toggle active">Исходящие</span></div>
         <input value="{{ count_data }}" id="countData" hidden/>
 
 
@@ -264,20 +278,24 @@
             <div class="card-header">
                 <div class="filter">
                     <div class="form-inline" style="float: left">
-                        <button type="button" id="addReqBtn" class="inline-el btn btn-success btn-sm" onclick="$('#add_req').modal();$('#add_req').modal('handleUpdate');" style="margin-right: 30px">
+                        <button type="button" id="addReqBtn" class="inline-el btn btn-success btn-sm"
+                                onclick="$('#add_req').modal();$('#add_req').modal('handleUpdate');"
+                                style="margin-right: 30px">
                             Добавить заказ
                         </button>
-                    <div class="filter inline-el">
-                    <div class="form-inline">
-                        <span class="inline-el">Склад</span>
-                        <select id="curStock" class="form-control inline-el form-control-sm" onchange="loadReqs($(this).val())">
-                            <option value="-1">Все</option>
-                            {% for s in stocks %}
-                                <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
-                            {% endfor %}
-                        </select>
-                    </div></div>
-                    <div id="user_status_div" class="user-status">Я получатель</div>
+                        <div class="filter inline-el">
+                            <div class="form-inline">
+                                <span class="inline-el">Склад</span>
+                                <select id="curStock" class="form-control inline-el form-control-sm"
+                                        onchange="loadReqs($(this).val())">
+                                    <option value="-1">Все</option>
+                                    {% for s in stocks %}
+                                        <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="user_status_div" class="user-status">Я получатель</div>
 
                     </div>
                 </div>
@@ -293,8 +311,7 @@
                         <th scope="col" colspan="2" class="td-lighter">Поставщик</th>
                         <th scope="col">Дата отгрузки</th>
                         <th scope="col">Статус</th>
-                        <!--<th scope="col"></th>-->
-                        <th scope="col">Создатель</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody id="req-body">
@@ -303,10 +320,10 @@
                 </table>
             </div>
         </div>
-    <nav aria-label="..." class="nav-pages">
-                <ul class="pagination pagination-sm justify-content-end" id="reqNav">
-                </ul>
-            </nav>
+        <nav aria-label="..." class="nav-pages">
+            <ul class="pagination pagination-sm justify-content-end" id="reqNav">
+            </ul>
+        </nav>
         <div class="card" style="margin-top: 30px;">
             <h6 class="card-header">
                 Номенклатура
@@ -329,10 +346,10 @@
                 </tbody>
             </table>
         </div>
-    <nav aria-label="..." class="nav-pages">
-                <ul class="pagination pagination-sm justify-content-end" id="goodsNav">
-                </ul>
-            </nav>
+        <nav aria-label="..." class="nav-pages">
+            <ul class="pagination pagination-sm justify-content-end" id="goodsNav">
+            </ul>
+        </nav>
     </div>
     <div class="modal fade" id="add_req">
         <div class="modal-dialog modal-lg">
@@ -343,49 +360,53 @@
 
                 </div>
                 <div class="modal-body create-form">
-                <form id="form">
-                    <div class="form-row">
-                        <div class="form-group col-md-6"><h6>Поставщик</h6>
-                            <select class="form-control" id="provider" onchange="getStocks('donor')" required>
-                                <option value="">-----</option>
-                                {% for c in counters %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
-                                {% endfor %}
-                            </select></div>
-                        <div class="form-group col-md-6">
-                            <select class="form-control field-without-label" id="donor" required>
-                            </select></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <h6>Получатель</h6>
-                            <select class="form-control" id="consumer" disabled onchange="getStocks('acceptor')" required>
-                                {% for c in counters %}
-                                    {% if c == counter %}
-                                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
-                                    {% else %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
+                    <form id="form">
+                        <div class="form-row">
+                            <div class="form-group col-md-6"><h6>Поставщик</h6>
+                                <select class="form-control" id="provider" onchange="getStocks('donor')" required>
+                                    <option value="">-----</option>
+                                    {% for c in counters %}
+                                        <option value="{{ c.id }}">{{ c.name }}</option>
+                                    {% endfor %}
+                                </select></div>
+                            <div class="form-group col-md-6">
+                                <select class="form-control field-without-label" id="donor" required>
+                                </select></div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <select class="form-control field-without-label" id="acceptor" required>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <h6>Получатель</h6>
+                                <select class="form-control" id="consumer" disabled onchange="getStocks('acceptor')"
+                                        required>
+                                    {% for c in counters %}
+                                        {% if c == counter %}
+                                            <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                        {% else %}
+                                            <option value="{{ c.id }}">{{ c.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select class="form-control field-without-label" id="acceptor" required>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <h6>Ожидаемая дата поступления</h6>
-                    <input type="date" class="form-control" id="date" required/>
-                    <hr>
-                    <h6>Товары</h6>
-                    <div id="add_goods">
-                    </div>
-                    <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
-                          onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
-                    <button class="btn add-btn btn-outline-success" onclick="addGoodField();return false;">Добавить</button>
+                        <h6>Ожидаемая дата поступления</h6>
+                        <input type="date" class="form-control" id="date" required/>
+                        <hr>
+                        <h6>Товары</h6>
+                        <div id="add_goods">
+                        </div>
+                        <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                              onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
+                        <button class="btn add-btn btn-outline-success" onclick="addGoodField();return false;">
+                            Добавить
+                        </button>
                     </form>
                     <div class="modal-footer" style="margin-top:5pt">
-                        <input value="Сохранить" id="saveDemandBtn" onclick="saveDemand(true);return false;" class="btn btn-primary"
+                        <input value="Сохранить" id="saveDemandBtn" onclick="saveDemand(true);return false;"
+                               class="btn btn-primary"
                                style="float: right"/></div>
                 </div>
 

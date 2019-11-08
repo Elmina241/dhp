@@ -100,13 +100,11 @@
 
         function sendDataToStock(prods) {
             var csrftoken = getCookie('csrftoken');
-            var stock = $("#stock").prop("value");
             $.ajax({
                 type: "POST",
                 url: 'send_data_to_stock/',
                 data: {
-                    'prods': JSON.stringify(prods),
-                    'stock': stock
+                    'prods': JSON.stringify(prods)
                 },
                 beforeSend: function (xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -136,7 +134,10 @@
                         var id = $(row).find("input:checkbox:checked").prop("value");
                         if (id != undefined) {
                             release(id, $(row).find(".relAmm").prop("value"), op);
-                            prods[id] = {'id': id, 'amount': $(row).find(".relAmm").prop("value")};
+                            prods[id] = {'id': id,
+                                'amount': $(row).find(".relAmm").prop("value"),
+                                'stock': $(row).find("select").prop("value")
+                            };
                         }
                     }
                     //window.location.reload();
@@ -464,12 +465,6 @@
                     <h4 id="storCode">Выпуск товара</h4>
                 </div>
                 <div class="modal-body">
-                    <p style="font-size: medium">Склад: </p>
-                    <select class="form-control" id="stock" name="stock" style="max-width: 250px; margin-bottom: 30px">
-                        {% for stock in stocks %}
-                            <option value="{{ stock.pk }}">{{ stock.name }}</option>
-                        {% endfor %}
-                    </select>
                     <table class="table table-hover table-sm table-condensed" style="font-size: medium"
                            id="release_prod">
                         <thead>
@@ -479,6 +474,7 @@
                             <th>Продукт</th>
                             <th>Партия</th>
                             <th>Кол-во в наличии, шт</th>
+                            <th>Склад</th>
                             <th>Количество, шт</th>
                         </tr>
                         </thead>
@@ -490,24 +486,19 @@
                                 <td>{{ values.name }}</td>
                                 <td>{{ values.batch }}</td>
                                 <td>{{ values.amount }}</td>
+                                <td>
+                                    <select class="form-control" name="stock" style="max-width: 250px; margin-bottom: 30px">
+                                        {% for stock in stocks %}
+                                        <option value="{{ stock.pk }}">{{ stock.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
                                 <td><input type="number" id="{{ values.pr_id }}" name="relAmm" min='1'
                                            max='{{ values.amount }}' class="form-control relAmm" step="1"></td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                    <!--<p style="font-size: medium">Продукт: </p>
-                <select class="form-control" id="batch" name="batch">
-                  {% for key, values in batches.items %}
-                    <option value="{{key}}">{{values.name}} {{values.batch}}</option>
-                  {% endfor %}
-                </select>
-              <p style="font-size: medium; margin-top:10pt">
-                Количество:
-              </p>
-              <div class="input-group"><input type="number" id="relAmm" name="relAmm" class="form-control" step="1"><span class="input-group-addon">шт</span></div>
-              <div id="error" class="alert alert-danger" role="alert" style="display:none;margin-top:10pt">
-              </div>-->
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Выпуск" id="confirmButton" onclick="check(1);" class="btn btn-primary"
                                style="float: right"/></div>
