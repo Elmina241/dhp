@@ -319,7 +319,9 @@
                     <h6>Основание</h6>
                             <select class="form-control" id="cause" required>
                                 {% for key, values in causes.items %}
-                                    <option value="{{ key }}">{{ values.name }}</option>
+                                    {% if key != '0' %}
+                                        <option value="{{ key }}">{{ values.name }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                     <hr>

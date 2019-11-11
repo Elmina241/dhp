@@ -14,8 +14,8 @@ class Model_component(models.Model):
     formula = models.ForeignKey('tables.Formula', blank=True, default = None, null=True, on_delete=models.CASCADE)
     mat = models.ForeignKey('tables.Material', blank=True, default = None, null=True, on_delete=models.CASCADE)
     ammount = models.FloatField()
-    min = models.FloatField(blank=True, default = 0, null=True)
-    max = models.FloatField(blank=True, default=0, null=True)
+    #min = models.FloatField(blank=True, default = 0, null=True)
+    #max = models.FloatField(blank=True, default=0, null=True)
     def __str__(self):
         return self.mat.name
 
@@ -50,7 +50,7 @@ class Kneading(models.Model):
     isValid = models.BooleanField(default = False)
     isFinished = models.BooleanField(default = False)
     def __str__(self):
-        return "П-" + str(self.batch_num) + " " + self.list.formula.get_name()
+        return self.list.formula.get_name()
     def get_state(self):
         log = State_log.objects.filter(kneading = self).last()
         name = log.get_state()
@@ -72,7 +72,7 @@ class Batch_comp(models.Model):
     mat = models.ForeignKey('tables.Material', on_delete=models.CASCADE)
     ammount = models.FloatField()
     def __str__(self):
-        return self.mat.name
+        return str(self.pk) + self.mat.name
 
 
 class State(models.Model):
@@ -97,7 +97,7 @@ class Kneading_char(models.Model):
     def __str__(self):
         return self.characteristic.name
     def get_name(self):
-        return str(self.kneading) + ' ' + self.characteristic.name
+        return self.kneading.name + ' ' + self.characteristic.name
 
 class Kneading_char_number(Kneading_char):
     number = models.FloatField()
@@ -160,4 +160,4 @@ class Pack_process(models.Model):
     tank = models.ForeignKey('tables.Tank', null=True, on_delete=models.CASCADE)
     finished = models.BooleanField(default = False)
     def __str__(self):
-        return str(date) + " " + str(product)
+        return str(self.date) + " " + str(self.product)

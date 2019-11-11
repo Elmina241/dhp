@@ -347,7 +347,8 @@ class Order(models.Model):
     CAUSE_CHOICES = (
         ('0', 'Перемещение'),
         ('1', 'Производство'),
-        ('2', 'Списание')
+        ('2', 'Списание'),
+        ('3', 'Поступление')
     )
     cause = models.CharField(choices=CAUSE_CHOICES, max_length=20, default='0')
     stock = models.ForeignKey('Stock', on_delete=models.CASCADE)
