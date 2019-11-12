@@ -16,28 +16,28 @@ class Prefix(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Префиксы"
+        verbose_name = "Префикс"
 
 class Unit(models.Model):
     name = models.CharField(max_length=80, verbose_name="Наименование")
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Единицы измерения"
+        verbose_name = "Единица измерения"
 
 class Material(models.Model):
-    code = models.CharField(max_length=80, verbose_name="Наименование")
+    code = models.CharField(max_length=80, verbose_name="Артикул")
     name = models.CharField(max_length=80, verbose_name="Наименование")
-    group = models.ForeignKey('Material_group', on_delete=models.CASCADE, verbose_name="Наименование")
-    prefix = models.ForeignKey('Prefix', on_delete=models.CASCADE, verbose_name="Наименование")
-    mark = models.CharField(max_length=80, verbose_name="Наименование")
-    ammount = models.FloatField(verbose_name="Наименование")
-    reserved = models.FloatField(default = 0, verbose_name="Наименование")
-    unit = models.ForeignKey('Unit', on_delete=models.CASCADE, verbose_name="Наименование")
-    concentration = models.FloatField(verbose_name="Наименование")
-    price = models.FloatField(verbose_name="Наименование")
+    group = models.ForeignKey('Material_group', on_delete=models.CASCADE, verbose_name="Группа")
+    prefix = models.ForeignKey('Prefix', on_delete=models.CASCADE, verbose_name="Префикс")
+    mark = models.CharField(max_length=80, verbose_name="Марка")
+    ammount = models.FloatField(verbose_name="Количество")
+    reserved = models.FloatField(default = 0, verbose_name="Зарезервировано")
+    unit = models.ForeignKey('Unit', on_delete=models.CASCADE, verbose_name="Ед. изм.")
+    concentration = models.FloatField(verbose_name="Концентрация")
+    price = models.FloatField(verbose_name="Цена")
     def __str__(self):
         full_name = self.name + ('' if self.mark == '-' else (' ' + self.mark))
         return full_name
@@ -49,8 +49,8 @@ class Material(models.Model):
         full_name = self.code + " " + full_name
         return full_name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Реактивы"
+        verbose_name = "Реактив"
 
 
 # Модели для продукции
@@ -59,42 +59,42 @@ class Product_group(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Группы продукции"
+        verbose_name = "Группа продукции"
 
 class Product_form(models.Model):
     name = models.CharField(max_length=200, verbose_name="Наименование")
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Формы продукции"
+        verbose_name = "Форма продукции"
 
 class Product_use(models.Model):
     name = models.CharField(max_length=200, verbose_name="Наименование")
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Назначения продукции"
+        verbose_name = "Назначение продукции"
 
 class Product_mark(models.Model):
     name = models.CharField(max_length=200, verbose_name="Наименование")
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Марки продукции"
+        verbose_name = "Марка продукции"
 
 class Product(models.Model):
-    code = models.CharField(max_length=13, verbose_name="Наименование")
+    code = models.CharField(max_length=13, verbose_name="Артикул")
     name = models.CharField(max_length=80, verbose_name="Наименование")
-    group = models.ForeignKey('Product_group', on_delete=models.CASCADE, verbose_name="Наименование")
-    use = models.ForeignKey('Product_use', on_delete=models.CASCADE, verbose_name="Наименование")
-    option = models.CharField(max_length=80, verbose_name="Наименование")
-    detail = models.CharField(max_length=80, verbose_name="Наименование")
-    mark = models.ForeignKey('Product_mark', on_delete=models.CASCADE, verbose_name="Наименование")
-    production = models.OneToOneField('Production', null=True, on_delete=models.CASCADE, verbose_name="Наименование")
+    group = models.ForeignKey('Product_group', on_delete=models.CASCADE, verbose_name="Группа")
+    use = models.ForeignKey('Product_use', on_delete=models.CASCADE, verbose_name="Назначение")
+    option = models.CharField(max_length=80, verbose_name="Варианты")
+    detail = models.CharField(max_length=80, verbose_name="Уточнение")
+    mark = models.ForeignKey('Product_mark', on_delete=models.CASCADE, verbose_name="Марка")
+    production = models.OneToOneField('Production', null=True, on_delete=models.CASCADE, verbose_name="Комплект")
     def __str__(self):
         opt = ' (' + self.mark.name + ', ' + ('' if self.production is None else (self.production.container.mat.name + " " + self.production.container.group.name + ', ')) + ('' if self.production is None else (self.production.cap.group.name + ', ')) + ('0' if self.production is None else str(self.production.compAmount)) + ' кг.' + ')'
         full_name =  ('' if self.production is None or self.production.composition.form is None else self.production.composition.form.name) + ' ' + self.use.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' ')) + ('' if self.detail == 'отсутствует' else self.detail) + opt
@@ -106,8 +106,8 @@ class Product(models.Model):
     def get_name_for_table(self):
         return self.name + ' ' + self.mark.name + ' ' + ('' if self.option == 'отсутствует' else (self.option + ' '))
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Продукция"
+        verbose_name = "Продукция"
 
 #Модели для рецептов
 
@@ -116,23 +116,23 @@ class Composition_group(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Группы рецептов"
+        verbose_name = "Группа рецептов"
 
 class Composition(models.Model):
-    code = models.CharField(max_length=80, verbose_name="Наименование")
+    code = models.CharField(max_length=80, verbose_name="Код")
     name = models.CharField(max_length=80, verbose_name="Наименование")
-    sgr = models.CharField(max_length=80, verbose_name="Наименование")
-    sh_life = models.IntegerField(default = 24, verbose_name="Наименование")
-    date = models.DateField(null = True, verbose_name="Наименование")
-    package = models.CharField(max_length=80, null = True, verbose_name="Наименование")
-    standard = models.CharField(max_length=80, null = True, verbose_name="Наименование")
-    certificate = models.CharField(max_length=80, null = True, verbose_name="Наименование")
-    declaration = models.CharField(max_length=80, null = True, verbose_name="Наименование")
-    cur_batch = models.FloatField(default = 1, verbose_name="Наименование")
-    group = models.ForeignKey('Composition_group', on_delete=models.CASCADE, verbose_name="Наименование")
-    form = models.ForeignKey('Product_form', null=True, on_delete=models.CASCADE, verbose_name="Наименование")
-    isFinal = models.BooleanField(default = True, verbose_name="Наименование")
+    sgr = models.CharField(max_length=80, verbose_name="СГР")
+    sh_life = models.IntegerField(default = 24, verbose_name="Срок годности")
+    date = models.DateField(null = True, verbose_name="Дата СГР")
+    package = models.CharField(max_length=80, null = True, verbose_name="Упаковка")
+    standard = models.CharField(max_length=80, null = True, verbose_name="Стандарт")
+    certificate = models.CharField(max_length=80, null = True, verbose_name="Свидетельство о гос. регистрации")
+    declaration = models.CharField(max_length=80, null = True, verbose_name="Требования качества продукции")
+    cur_batch = models.FloatField(default = 1, verbose_name="Текущий номер партии")
+    group = models.ForeignKey('Composition_group', on_delete=models.CASCADE, verbose_name="Группа")
+    form = models.ForeignKey('Product_form', null=True, on_delete=models.CASCADE, verbose_name="Форма")
+    isFinal = models.BooleanField(default = True, verbose_name="Не технологическая?")
     def __str__(self):
         return self.name
     def get_name(self):
@@ -168,18 +168,18 @@ class Composition(models.Model):
                 res = res + " г"
         return res
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Рецепты"
+        verbose_name = "Рецепт"
 
 
 class Components(models.Model):
-    comp = models.ForeignKey('Composition', on_delete=models.CASCADE, verbose_name="Наименование")
-    mat = models.ForeignKey('Material', on_delete=models.CASCADE, verbose_name="Наименование")
-    min = models.FloatField(verbose_name="Наименование")
-    max = models.FloatField(verbose_name="Наименование")
+    comp = models.ForeignKey('Composition', on_delete=models.CASCADE, verbose_name="Рецепт")
+    mat = models.ForeignKey('Material', on_delete=models.CASCADE, verbose_name="Реактив")
+    min = models.FloatField(verbose_name="Мин. %")
+    max = models.FloatField(verbose_name="Макс. %")
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Компоненты рецептов"
+        verbose_name = "Компонент рецепта"
 
 #Модели для тары
 
@@ -188,36 +188,36 @@ class Container_group(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Группы тары"
+        verbose_name = "Группа тары"
 
 class Colour(models.Model):
     name = models.CharField(max_length=80, verbose_name="Наименование")
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Цвета"
+        verbose_name = "Цвет"
 
 class Container_mat(models.Model):
     name = models.CharField(max_length=80, verbose_name="Наименование")
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Материалы тары"
+        verbose_name = "Материал тары"
 
 class Container(models.Model):
     code = models.CharField(max_length=80, verbose_name="Наименование")
-    group = models.ForeignKey('Container_group', on_delete=models.CASCADE, verbose_name="Наименование")
-    form = models.CharField(max_length=80, verbose_name="Наименование")
-    colour = models.ForeignKey('Colour', on_delete=models.CASCADE, verbose_name="Наименование")
-    mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE, verbose_name="Наименование")
+    group = models.ForeignKey('Container_group', on_delete=models.CASCADE, verbose_name="Группа")
+    form = models.CharField(max_length=80, verbose_name="Форма")
+    colour = models.ForeignKey('Colour', on_delete=models.CASCADE, verbose_name="Цвет")
+    mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE, verbose_name="Материал")
     def __str__(self):
         return 'Нет' if self.code == 'Т000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Тара"
+        verbose_name = "Тара"
 
 #Модели для укупорки
 
@@ -226,20 +226,20 @@ class Cap_group(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Группы укупорки"
+        verbose_name = "Группа укупорки"
 
 class Cap(models.Model):
     code = models.CharField(max_length=80, verbose_name="Наименование")
-    group = models.ForeignKey('Cap_group', on_delete=models.CASCADE, verbose_name="Наименование")
-    form = models.CharField(max_length=80, verbose_name="Наименование")
-    colour = models.ForeignKey('Colour', on_delete=models.CASCADE, verbose_name="Наименование")
-    mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE, verbose_name="Наименование")
+    group = models.ForeignKey('Cap_group', on_delete=models.CASCADE, verbose_name="Группа")
+    form = models.CharField(max_length=80, verbose_name="Форма")
+    colour = models.ForeignKey('Colour', on_delete=models.CASCADE, verbose_name="Цвет")
+    mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE, verbose_name="Материал")
     def __str__(self):
         return 'Нет' if self.code == 'У000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
     class Meta:
-        verbose_name_plural = "Группы реактивов"
-        verbose_name = "Группа реактива"
+        verbose_name_plural = "Укупорка"
+        verbose_name = "Укупорка"
 
 #Модели для упаковки
 
