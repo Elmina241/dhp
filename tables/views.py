@@ -35,12 +35,18 @@ def products(request):
 
 
 def characteristics(request):
+    """
+    Возвращает страницу с характеристиками
+    """
     return render(request, "characteristics.html",
                   {"characteristics": Characteristic.objects.all,
                    "header": "Характеристики", "location": "/tables/characteristics/"})
 
 
 def new_characteristic(request):
+    """
+        Возвращает страницу для создания новой характеристики
+    """
     return render(request, "new_characteristic.html",
                   {"types": Characteristic_type.objects.all,
                    "groups": Char_group.objects.all,
@@ -48,16 +54,25 @@ def new_characteristic(request):
 
 
 def packing2(request):
+    """
+        Возвращает страницу с тарой
+    """
     return render(request, "packing2.html",
                   {"containers": Container.objects.all, "header": "Тара", "location": "/tables/packing/"})
 
 
 def formulas(request):
+    """
+        Возвращает страницу с составами
+    """
     return render(request, "formulas.html",
                   {"formulas": Formula.objects.all, "header": "Составы", "location": "/tables/formulas/"})
 
 
 def caps(request):
+    """
+        Возвращает страницу с укупорками
+    """
     return render(request, "caps.html",
                   {"caps": Cap.objects.all, "header": "Укупорка", "location": "/tables/packing/"})
 
@@ -68,45 +83,69 @@ def production(request):
 
 
 def storage(request):
+    """
+        Возвращает страницу с хранилищами
+    """
     return render(request, "storage.html",
                   {"reactors": Reactor.objects.all, "tanks": Tank.objects.all, "header": "Хранилища",
                    "location": "/tables/storage/"})
 
 
 def boxing(request):
+    """
+        Возвращает страницу с упаковкой
+    """
     return render(request, "boxing.html",
                   {"boxes": Boxing.objects.all, "header": "Упаковка", "location": "/tables/packing/"})
 
 
 def stickers(request):
+    """
+        Возвращает страницу с этикетками
+    """
     return render(request, "stickers.html",
                   {"stickers": Sticker.objects.all, "header": "Этикетка", "location": "/tables/packing/"})
 
 
 def compositions(request):
+    """
+        Возвращает страницу с рецептами
+    """
     return render(request, "compositions.html",
                   {"compositions": Composition.objects.all, "groups": Composition_group.objects.all,
                    "header": "Рецепты", "location": "/tables/compositions/"})
 
 
 def comp_chars(request):
+    """
+        Возвращает страницу с характеристиками композиций
+    """
     return render(request, "comp_chars.html",
                   {"compositions": Composition.objects.all, "groups": Composition_group.objects.all,
                    "header": "Характеристики", "location": "/tables/characteristics/"})
 
 
 def comp_props(request):
+    """
+        Возвращает страницу с видовыми свойствами
+    """
     return render(request, "comp_props.html", {"compositions": Composition.objects.all, "header": "Видовые свойства",
                                                "location": "/tables/comp_props/"})
 
 
 def mat_chars(request):
+    """
+        Возвращает страницу с характеристиками реактивов
+    """
     return render(request, "mat_chars.html",
                   {"materials": Material.objects.all, "groups": Material_group.objects.all, "header": "Характеристики",
                    "location": "/tables/characteristics/"})
 
 
 def complex_comps(request):
+    """
+        Возвращает страницу с технологическими композициями
+    """
     return render(request, "complex_comps.html",
                   {"comps": Compl_comp.objects.all, "header": "Технологические композиции",
                    "location": "/tables/complex_comps/"})
@@ -203,6 +242,9 @@ def formula_detail(request, formula_id):
 
 
 def get_comps(request):
+    """
+    Возвращает компоненты технологической композиции
+    """
     components = {}
     if 'comp_id' in request.POST:
         for c in Compl_comp_comp.objects.filter(compl__pk=request.POST['comp_id']):

@@ -328,11 +328,11 @@ def shipment(request):
     for r in Demand.objects.filter(provider=counter.group, matrix__access='4'):
         if Order.objects.filter(matrix=r.matrix, isDonor=True).count() != 0:
             if Order.objects.filter(matrix=r.matrix, isDonor=True)[0].status != '2':
-                if r.consumer == counter.group:
-                    role = '2'
+                if r.provider == counter.group:
+                    role = '1'
                 else:
-                    if r.provider == counter.group:
-                        role = '1'
+                    if r.consumer == counter.group:
+                        role = '2'
                     else:
                         role = '0'
                 reqs[str(r.pk)] = {

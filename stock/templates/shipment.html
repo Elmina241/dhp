@@ -88,20 +88,21 @@
 
         function changeDate(btn, t) {
             id = $(btn).parent().parent().prop('id').substr(2);
+            debugger
             if (t == 0) {
-                textDate = reqs[id].release_date;
+                var textDate = reqs[id].release_date;
             }
             else {
-                textDate = reqs[id].finish_date;
+                var textDate = reqs[id].finish_date;
             }
-            date = new Date(textDate.substr(6, 4), textDate.substr(3, 2), textDate.substr(0, 2));
+            var date = new Date('20' + textDate.substr(6, 2), textDate.substr(3, 2), textDate.substr(0, 2));
             valDate = formatDate(date);
             saveBtn = "<span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;' onclick='saveDate(this.previousElementSibling, " + id + ", " + t + ")'><i class='fas fa-check'></i></span></div>";
             $(btn).parent().html("<div class='form-inline'><input type='date' class='form-control form-control-sm'  value='" + valDate + "' />" + saveBtn);
         }
 
         function addEditBtns() {
-            var btn = "<span style=' float:right' onclick=\"changeDate(this, 0)\"><i class='fas fa-edit'></i></span>";
+            var btn = "<span style=' float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
             $("#req-body tr").each(function (item) {
                 //условие отображения кнопки
                 id = $(this).prop('id').substr(2);
@@ -109,7 +110,7 @@
                 td = $(this).find('td').eq(3).html();
                 if (reqs[id].role == '1'){
                     $(this).find('td').eq(3).html(td + btn);
-                    btn = "<span style=' float:right' onclick=\"changeDate(this, 1)\"><i class='fas fa-edit'></i></span>";
+                    btn = "<span style=' float:right' onclick=\"changeDate(this, 0)\"><i class='fas fa-edit'></i></span>";
                     td = $(this).find('td').eq(5).html();
                     $(this).find('td').eq(5).html(td + btn);
                 }
