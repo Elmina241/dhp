@@ -289,14 +289,16 @@ def characteristic_detail(request, characteristic_id):
         return render(request, "characteristic.html",
                       {"characteristic": char,
                        "groups": Char_group.objects.all,
-                       "location": "/tables/characteristics/"
+                       "location": "/tables/characteristics/",
+                       "header": "Редактирование характеристики"
                        })
     else:
         return render(request, "characteristic.html",
                       {"characteristic": char,
                        "groups": Char_group.objects.all,
                        "set_values": Characteristic_set_var.objects.filter(char_set=char),
-                       "location": "/tables/characteristics/"
+                       "location": "/tables/characteristics/",
+                       "header": "Редактирование характеристики"
                        })
 
 
@@ -312,7 +314,8 @@ def comp_char_detail(request, composition_id):
                   {"composition": get_object_or_404(Composition, pk=composition_id),
                    "characteristics": Characteristic.objects.all(),
                    "chars": Composition_char.objects.filter(comp=get_object_or_404(Composition, pk=composition_id)),
-                   "location": "/tables/characteristics/"
+                   "location": "/tables/characteristics/",
+                   "header": "Редактирование характеристик рецепта"
                    })
 
 
@@ -324,7 +327,8 @@ def comp_prop_detail(request, composition_id):
                    # "isValid": kneading.isValid,
                    # "kneading_chars": Kneading_char.objects.filter(kneading = kneading),
                    "location": "/tables/comp_props/",
-                   "comp": get_object_or_404(Composition, pk=composition_id)
+                   "comp": get_object_or_404(Composition, pk=composition_id),
+                   "header": "Редактирование видовых свойств рецепта"
                    })
 
 
@@ -1237,31 +1241,49 @@ def save_mat_char(request, mat_id):
 
 def save_comp_char(request, composition_id):
     comp = get_object_or_404(Composition, pk=composition_id)
-    Composition_char.objects.filter(comp=comp).delete()
     if 'json' in request.POST:
         chars = request.POST['json']
         data = json.loads(chars)
+        for c in Composition_char.objects.filter(comp=comp):
+            if str(c.characteristic.pk) not in data:
+                c.delete()
         for d in data:
             char = get_object_or_404(Characteristic, pk=d)
             if (char.char_type.id == 1):
                 if (str(char.id) + "'from'") in request.POST:
-                    comp_char = Comp_char_range(comp=comp, characteristic=char,
+                    if Composition_char.objects.filter(comp=comp, characteristic=char).exists():
+                        comp_char = Composition_char.objects.filter(comp=comp, characteristic=char).first()
+                        comp_char.inf = request.POST[str(char.id) + "'from'"]
+                        comp_char.sup = request.POST[str(char.id) + "'to'"]
+                    else:
+                        comp_char = Comp_char_range(comp=comp, characteristic=char,
                                                 inf=request.POST[str(char.id) + "'from'"],
                                                 sup=request.POST[str(char.id) + "'to'"])
                     comp_char.save()
             if (char.char_type.id == 2):
                 if str(char.id) in request.POST:
-                    comp_char = Comp_char_number(comp=comp, characteristic=char, number=request.POST[str(char.id)])
+                    if Composition_char.objects.filter(comp=comp, characteristic=char).exists():
+                        comp_char = Composition_char.objects.filter(comp=comp, characteristic=char)
+                        comp_char.number = request.POST[str(char.id)]
+                    else:
+                        comp_char = Comp_char_number(comp=comp, characteristic=char, number=request.POST[str(char.id)])
                     comp_char.save()
             if (char.char_type.id == 3):
                 if (str(char.id) + "'checked_list'") in request.POST:
                     char_var = request.POST.getlist(str(char.id) + "'checked_list'")
-                    char = Composition_char(comp=comp, characteristic=char)
-                    char.save()
+                    if Composition_char.objects.filter(comp=comp, characteristic=char).exists():
+                        char = Composition_char.objects.filter(comp=comp, characteristic=char).first()
+                        for ch in Comp_char_var.objects.filter(comp_char=char):
+                            if str(ch.char_var.pk) not in char_var:
+                                ch.delete()
+                    else:
+                        char = Composition_char(comp=comp, characteristic=char)
+                        char.save()
                     for c in char_var:
                         set_var = get_object_or_404(Set_var, pk=c)
-                        сomp_char_var = Comp_char_var(comp_char=char, char_var=set_var)
-                        сomp_char_var.save()
+                        if Comp_char_var.objects.filter(comp_char=char, char_var=set_var).count() == 0:
+                            сomp_char_var = Comp_char_var(comp_char=char, char_var=set_var)
+                            сomp_char_var.save()
         return redirect('characteristics')
 
 

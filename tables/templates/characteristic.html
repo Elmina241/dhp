@@ -1,115 +1,169 @@
 {% extends 'tables/base.html' %}
 {% block content %}
 
-<script type="text/javascript">
-  $(document).ready(function(){
-    var table = $('#elems').tableToJSON(); // Convert the table into a javascript object
-    var field = document.getElementById('json');
-    field.value = JSON.stringify(table);
-    $('form').on('submit',function(e){
-       e.preventDefault();
-  });
-  });
-</script>
-<div class="panel panel-default" style ="margin: auto">
-  <div class="panel-heading">
-    {% if characteristic == None %}
-      <h4 class="panel-title">Добавление записи</h4>
-      {% else %}
-      <h4 class="panel-title">Редактирование записи: {{ characteristic }}</h4>
-      {% endif %}
-  </div>
-
-  {% if error_message %}
-  <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
-<div class="panel-body">
-  <div class="input-group" style ="margin: auto">
-    <form action="save_characteristic/" method="post" id="form">
-      {% csrf_token %}
-          <h5><b>Тип характеристики:</b><h5>
-          <p><select class="form-control" name="type" id="type" readonly>
-            <option selected value="{{characteristic.char_type.id}}">{{characteristic.char_type}}</option>
-          </select></p></p>
-          <br><br><br>
-          <h5><b>Наименование:</b><h5>
-          <input type="text" class="form-control" placeholder="Наименование" size = "50" name = "name" value="{{ characteristic.name }}" required></p>
-          <br><br><br>
-          <h5><b>Группа характеристики:</b><h5>
-          <p><select class="form-control" name="group" id="group">
-            {% for g in groups %}
-            {% if characteristic.group == g %}
-            <option selected value="{{g.id}}">{{g.name}}</option>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#elems').tableToJSON(); // Convert the table into a javascript object
+            var field = document.getElementById('json');
+            field.value = JSON.stringify(table);
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading">
+            {% if characteristic == None %}
+                <h4 class="panel-title">Добавление записи</h4>
             {% else %}
-            <option value="{{g.id}}">{{g.name}}</option>
+                <h4 class="panel-title">Редактирование записи: {{ characteristic }}</h4>
             {% endif %}
-            {% endfor %}
-          </select></p></p>
-          <br><br><br>
-          <h5><b>Видовое свойство</b><h5>
-            {% if characteristic.is_general %}
-            <input type="checkbox" name="is_general" checked>
-            {% else %}
-            <input type="checkbox" name="is_general">
-            {% endif %}
-          <br><br><br>
-          <div id="charVal">
-            {% if characteristic.char_type.id == 1 %}
-            <div class='form-group'>
-              <label for='range' class='col-sm-12 control-label' style='font-size: medium; margin-bottom: 20pt;'>Числовой диапазон: </label>
-              <label for='from' class='col-sm-2 control-label' style='font-size: medium'>От: </label>
-              <div class='col-sm-4'><input id='from' name='from' type='number' class='form-control' value='{{characteristic.characteristic_range.inf}}' required></div>
-                <label for='to' class='col-sm-2 control-label' style='font-size: medium'>До: </label>
-                <div class='col-sm-4'><input id='to' name='to' type='number' class='form-control' value="{{characteristic.characteristic_range.sup}}" required></div>
-              </div>
-              {% else %}
-              {% if characteristic.char_type.id == 2 %}
-              <div class='form-group'>
-                <label for='range' class='col-sm-12 control-label' style='font-size: medium; margin-bottom: 20pt;'>Числовой диапазон: </label>
-                <label for='from' class='col-sm-2 control-label' style='font-size: medium'>От: </label>
-                <div class='col-sm-4'><input id='from' name='from' type='number' class='form-control' value='{{characteristic.characteristic_number.inf}}' required></div>
-                  <label for='to' class='col-sm-2 control-label' style='font-size: medium'>До: </label>
-                  <div class='col-sm-4'><input id='to' name='to' type='number' class='form-control' value="{{characteristic.characteristic_number.sup}}" required></div>
-                </div>
-              {% else %}
-              <div class='modal fade' id='newComp'>
-                <div class='modal-dialog'>
-                  <div class='modal-content'>
-                    <div class='modal-header'>
-                      <button class='close' data-dismiss='modal'>x</button>
-                      <h4>Добавление элемента</h4>
-                    </div>
-                    <div class='modal-body'>
-                      <div class='form-group' style='margin-bottom: 20pt'><input id='elem' name='elem' class='form-control' type='text'></div>
-                    </div>
-                    <div class='modal-footer'><button type='button' class='btn btn-primary' onclick='addElem()' data-dismiss='modal'>Добавить</button></div>
-                  </div>
-                </div>
-              </div>
-              <div class='panel panel-default'>
-                <div class='panel-heading'>
-                  <button class='btn btn-success' data-toggle='modal' data-target='#newComp'><i class='glyphicon glyphicon-plus'></i> Добавить элемент множества</button>
-                </div>
-              <div class='panel-body'>
-              <table class='table table-bordered' id='elems'>
-                <thead><tr><th>Значение</th></tr></thead>
-                <tbody>
+        </div>
 
-                  {% for v in set_values %}
-                    <tr><td> {{v.char_var.name}} </td></tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              </div></div>
-              <input type='hidden' id='json' name='json' value=''>
-              {% endif %}
-              {% endif %}
-          </div>
-          <input type="button" value="Отправить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
-          </form>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="save_characteristic/" method="post" id="form">
+                    {% csrf_token %}
+                    <h5><b>Тип характеристики:</b></h5>
+                            <p><select class="form-control" name="type" id="type" readonly>
+                                <option selected
+                                        value="{{ characteristic.char_type.id }}">{{ characteristic.char_type }}</option>
+                            </select></p>
+                            </p>
+                            <br><br><br>
+                            <h5><b>Наименование:</b></h5>
+                                    <input type="text" class="form-control" placeholder="Наименование" size="50"
+                                           name="name" value="{{ characteristic.name }}" required></p>
+                                    <br><br><br>
+                                    <h5><b>Группа характеристики:</b></h5>
+                                            <p><select class="form-control" name="group" id="group">
+                                                {% for g in groups %}
+                                                    {% if characteristic.group == g %}
+                                                        <option selected value="{{ g.id }}">{{ g.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ g.id }}">{{ g.name }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select></p>
+                                            </p>
+                                            <br><br><br>
+                                            <h5><b>Видовое свойство</b></h5>
+                                                    {% if characteristic.is_general %}
+                                                        <input type="checkbox" name="is_general" checked>
+                                                    {% else %}
+                                                        <input type="checkbox" name="is_general">
+                                                    {% endif %}
+                                                    <br><br><br>
+                                                    <div id="charVal">
+                                                        {% if characteristic.char_type.id == 1 %}
+                                                            <div class='form-group'>
+                                                                <label for='range' class='col-sm-12 control-label'
+                                                                       style='font-size: medium; margin-bottom: 20pt;'>Числовой
+                                                                    диапазон: </label>
+                                                                <label for='from' class='col-sm-2 control-label'
+                                                                       style='font-size: medium'>От: </label>
+                                                                <div class='col-sm-4'><input id='from' name='from'
+                                                                                             type='number'
+                                                                                             class='form-control'
+                                                                                             value='{{ characteristic.characteristic_range.inf }}'
+                                                                                             required></div>
+                                                                <label for='to' class='col-sm-2 control-label'
+                                                                       style='font-size: medium'>До: </label>
+                                                                <div class='col-sm-4'><input id='to' name='to'
+                                                                                             type='number'
+                                                                                             class='form-control'
+                                                                                             value="{{ characteristic.characteristic_range.sup }}"
+                                                                                             required></div>
+                                                            </div>
+                                                        {% else %}
+                                                            {% if characteristic.char_type.id == 2 %}
+                                                                <div class='form-group'>
+                                                                    <label for='range' class='col-sm-12 control-label'
+                                                                           style='font-size: medium; margin-bottom: 20pt;'>Числовой
+                                                                        диапазон: </label>
+                                                                    <label for='from' class='col-sm-2 control-label'
+                                                                           style='font-size: medium'>От: </label>
+                                                                    <div class='col-sm-4'><input id='from' name='from'
+                                                                                                 type='number'
+                                                                                                 class='form-control'
+                                                                                                 value='{{ characteristic.characteristic_number.inf }}'
+                                                                                                 required></div>
+                                                                    <label for='to' class='col-sm-2 control-label'
+                                                                           style='font-size: medium'>До: </label>
+                                                                    <div class='col-sm-4'><input id='to' name='to'
+                                                                                                 type='number'
+                                                                                                 class='form-control'
+                                                                                                 value="{{ characteristic.characteristic_number.sup }}"
+                                                                                                 required></div>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class='modal fade' id='newComp'>
+                                                                    <div class='modal-dialog'>
+                                                                        <div class='modal-content'>
+                                                                            <div class='modal-header'>
+                                                                                <button class='close'
+                                                                                        data-dismiss='modal'>x
+                                                                                </button>
+                                                                                <h4>Добавление элемента</h4>
+                                                                            </div>
+                                                                            <div class='modal-body'>
+                                                                                <div class='form-group'
+                                                                                     style='margin-bottom: 20pt'><input
+                                                                                        id='elem' name='elem'
+                                                                                        class='form-control'
+                                                                                        type='text'></div>
+                                                                            </div>
+                                                                            <div class='modal-footer'>
+                                                                                <button type='button'
+                                                                                        class='btn btn-primary'
+                                                                                        onclick='addElem()'
+                                                                                        data-dismiss='modal'>Добавить
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class='panel panel-default'>
+                                                                    <div class='panel-heading'>
+                                                                        <button class='btn btn-success'
+                                                                                data-toggle='modal'
+                                                                                data-target='#newComp'><i
+                                                                                class='glyphicon glyphicon-plus'></i>
+                                                                            Добавить элемент множества
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class='panel-body'>
+                                                                        <table class='table table-bordered' id='elems'>
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th>Значение</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                            {% for v in set_values %}
+                                                                                <tr>
+                                                                                    <td> {{ v.char_var.name }} </td>
+                                                                                </tr>
+                                                                            {% endfor %}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <input type='hidden' id='json' name='json' value=''>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </div>
+                                                    <input type="button" value="Отправить"
+                                                           onclick="getElementById('form').submit();" id="send"
+                                                           value="Сохранить" class="btn btn-primary"
+                                                           style="float: right; margin-top: 20pt"/>
+                </form>
+            </div>
         </div>
     </div>
-    </div>
-
 
 {% endblock content %}

@@ -1,86 +1,112 @@
 {% extends 'tables/base.html' %}
 {% block content %}
 
-<script type="text/javascript">
-  $(document).ready(function(){
-    //getCharVal();
-    $('form').on('submit',function(e){
-       e.preventDefault();
-  });
-  var chars = [];
-  $("#chars li").each(function(indx, element){
-    chars.push($(element).attr("id"));
-  });
-  var json = JSON.stringify(chars);
-  $("#json").attr('value', JSON.stringify(chars));
-  });
-</script>
-<button class='btn btn-success' data-toggle='modal' data-target='#newComp' style="margin-bottom: 10pt"><i class='glyphicon glyphicon-plus'></i> Добавить характеристику</button>
-<div class="modal fade" id="newComp">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button class="close" data-dismiss="modal">x</button>
-        <h4>Добавление характеристики</h4>
-      </div>
-      <div class="modal-body">
-<div style="margin: auto">
-  <select class="form-control" id="char">
-    {% for c in characteristics %}
-    <option value="{{ c.id }}">{{ c }}</option>
-    {% endfor %}</select>
-</div>
-</div>
-<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="getChar($('#char').val())" data-dismiss="modal">Добавить</button></div>
-</div>
-</div>
-</div>
-<div class="panel panel-default" style ="margin: auto">
-  <div class="panel-heading">
-      <h4 class="panel-title">Характеристики рецепта: {{ composition }}</h4>
-  </div>
-  {% if error_message %}
-  <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
-
-<div class="panel-body">
-  <div class="input-group" style ="margin: auto">
-    <form action="save_comp_char/" method="post" id="form">
-      {% csrf_token %}
-          <ul class="list-group" id="chars">
-            {% for c in chars %}
-              {% if c.characteristic.char_type.id == 1 %}
-                <li class='list-group-item' id="{{c.characteristic.id}}">
-                  <button class='close' onclick='delChar(this)'>x</button>
-                  <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                  <div class='form-group' style='margin-bottom: 40pt'><label for='from' class='col-sm-2 control-label' style='font-size: small'>От: </label>
-                    <div class='col-sm-4'><input id='from' name="{{c.characteristic.id}}'from'" type='number' min='{{c.characteristic.characteristic_range.inf}}' max='{{c.characteristic.characteristic_range.sup}}' class='form-control' value='{{c.comp_char_range.inf}}' required></div>
-                    <label for='to' class='col-sm-2 control-label' style='font-size: small'>До: </label>
-                  <div class='col-sm-4'><input id='to' name="{{c.characteristic.id}}'to'" type='number' min='{{c.characteristic.characteristic_range.inf}}' max='{{c.characteristic.characteristic_range.sup}}' class='form-control' value='{{c.comp_char_range.sup}}' required></div></div>
-                </li>
-              {% else %}
-              {% if c.characteristic.char_type.id == 2 %}
-                <li class='list-group-item' id="{{c.characteristic.id}}">
-                  <button class='close' onclick='delChar(this)'>x</button>
-                  <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                  <div class='form-group' style='margin-bottom: 40pt'><input id='number' type='number' name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' max='{{c.characteristic.characteristic_number.sup}}' class='form-control' value='{{c.comp_char_number.number}}' required></div>
-                </li>
-              {% else %}
-                <li class='list-group-item' id={{c.characteristic.id}}>
-                  <button class='close' onclick='delChar(this)'>x</button>
-                  <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                    <script>getElems({{c.id}}, {{c.characteristic.id}})</script>
-                </li>
-              {% endif %}
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <input type="hidden" id="json" name="json" value="">
-          <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send" value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
-      </form>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //getCharVal();
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+            });
+            var chars = [];
+            $("#chars li").each(function (indx, element) {
+                chars.push($(element).attr("id"));
+            });
+            var json = JSON.stringify(chars);
+            $("#json").attr('value', JSON.stringify(chars));
+        });
+    </script>
+    <button class='btn btn-success' data-toggle='modal' data-target='#newComp' style="margin-bottom: 10pt"><i
+            class='glyphicon glyphicon-plus'></i> Добавить характеристику
+    </button>
+    <div class="modal fade" id="newComp">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h4>Добавление характеристики</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="margin: auto">
+                        <select class="form-control" id="char">
+                            {% for c in characteristics %}
+                                <option value="{{ c.id }}">{{ c }}</option>
+                            {% endfor %}</select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="getChar($('#char').val())"
+                            data-dismiss="modal">Добавить
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  </div>
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading">
+            <h4 class="panel-title">Характеристики рецепта: {{ composition }}</h4>
+        </div>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
 
-
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="save_comp_char/" method="post" id="form">
+                    {% csrf_token %}
+                    <ul class="list-group" id="chars">
+                        {% for c in chars %}
+                            {% if c.characteristic.char_type.id == 1 %}
+                                <li class='list-group-item' id="{{ c.characteristic.id }}">
+                                    <button class='close' onclick='delChar(this)'>x</button>
+                                    <h4 style='text-decoration: underline; color: mediumseagreen'>{{ c }}</h4>
+                                    <div class='form-group' style='margin-bottom: 40pt'><label for='from'
+                                                                                               class='col-sm-2 control-label'
+                                                                                               style='font-size: small'>От: </label>
+                                        <div class='col-sm-4'><input id='from' name="{{ c.characteristic.id }}'from'"
+                                                                     type='number'
+                                                                     min='{{ c.characteristic.characteristic_range.inf }}'
+                                                                     max='{{ c.characteristic.characteristic_range.sup }}'
+                                                                     class='form-control'
+                                                                     value='{{ c.comp_char_range.inf }}' required></div>
+                                        <label for='to' class='col-sm-2 control-label'
+                                               style='font-size: small'>До: </label>
+                                        <div class='col-sm-4'><input id='to' name="{{ c.characteristic.id }}'to'"
+                                                                     type='number'
+                                                                     min='{{ c.characteristic.characteristic_range.inf }}'
+                                                                     max='{{ c.characteristic.characteristic_range.sup }}'
+                                                                     class='form-control'
+                                                                     value='{{ c.comp_char_range.sup }}' required></div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                {% if c.characteristic.char_type.id == 2 %}
+                                    <li class='list-group-item' id="{{ c.characteristic.id }}">
+                                        <button class='close' onclick='delChar(this)'>x</button>
+                                        <h4 style='text-decoration: underline; color: mediumseagreen'>{{ c }}</h4>
+                                        <div class='form-group' style='margin-bottom: 40pt'><input id='number'
+                                                                                                   type='number'
+                                                                                                   name="{{ c.characteristic.id }}"
+                                                                                                   min='{{ c.characteristic.characteristic_number.inf }}'
+                                                                                                   max='{{ c.characteristic.characteristic_number.sup }}'
+                                                                                                   class='form-control'
+                                                                                                   value='{{ c.comp_char_number.number }}'
+                                                                                                   required></div>
+                                    </li>
+                                {% else %}
+                                    <li class='list-group-item' id={{ c.characteristic.id }}>
+                                        <button class='close' onclick='delChar(this)'>x</button>
+                                        <h4 style='text-decoration: underline; color: mediumseagreen'>{{ c }}</h4>
+                                        <script>getElems({{c.id}}, {{c.characteristic.id}})</script>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" id="json" name="json" value="">
+                    <input type="button" value="Сохранить" onclick="getElementById('form').submit();" id="send"
+                           value="Сохранить" class="btn btn-primary" style="float: right; margin-top: 20pt"/>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

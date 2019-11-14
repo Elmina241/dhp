@@ -1,37 +1,43 @@
 {% extends 'tables/base.html' %}
 {% block content %}
-<ul class="nav nav-tabs nav-justified">
-  <li class="active"><a href="/tables/characteristics/">Все характеристики</a></li>
-  <li><a href="/tables/comp_chars/">Характеристики рецептов</a></li>
-  <li><a href="/tables/mat_chars/">Характеристики реактивов</a></li>
-</ul>
+    <ul class="nav nav-tabs nav-justified">
+        <li class="active"><a href="/tables/characteristics/">Все характеристики</a></li>
+        <li><a href="/tables/comp_chars/">Характеристики рецептов</a></li>
+        <!--<li><a href="/tables/mat_chars/">Характеристики реактивов</a></li>-->
+    </ul>
 
-<form action="del_characteristic/" method="post" style="margin-top: 40px">
-{% csrf_token %}
-<button type="button" class="btn btn-default" onClick="window.location.href='/tables/characteristics/new_characteristic/'">Добавить запись</button></a>
-<input type="submit" class="btn btn-default" value="Удалить">
-<br><br>
-{% if characteristics %}
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th></th><th>id</th><th>Наименование</th><th>Тип</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for c in characteristics %}
-    <tr>
-      <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
-      <td>{{ c.id }}</td>
-      <td onClick="window.location.href='/tables/characteristics/{{ c.id }}/'">{{ c }}</td>
-      <td>{{ c.char_type.name }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No materials are available right now.</p>
-{% endif %}
-</div>
-</form>
+    <form action="del_characteristic/" method="post" style="margin-top: 40px">
+        {% csrf_token %}
+        <button type="button" class="btn btn-default"
+                onClick="window.location.href='/tables/characteristics/new_characteristic/'">Добавить запись
+        </button>
+        </a>
+        <input type="submit" class="btn btn-default" value="Удалить">
+        <br><br>
+        {% if characteristics %}
+            <table class="table table-hover table-sm">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Код</th>
+                    <th>Наименование</th>
+                    <th>Тип</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in characteristics %}
+                    <tr>
+                        <td><input type="checkbox" value="{{ c.id }}" name="del_list"></td>
+                        <td>{{ c.id }}</td>
+                        <td onClick="window.location.href='/tables/characteristics/{{ c.id }}/'">{{ c }}</td>
+                        <td>{{ c.char_type.name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No materials are available right now.</p>
+        {% endif %}
+        </div>
+    </form>
 {% endblock content %}

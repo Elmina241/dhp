@@ -1,140 +1,161 @@
 {% extends 'tables/base.html' %}
 {% block content %}
 
-<script type="text/javascript">
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    <script type="text/javascript">
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
         }
-    }
-    return cookieValue;
-}
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
 
-function getElems(char_id, li_id){
-  var csrftoken = getCookie('csrftoken');
-  $.ajax({
-        type: "POST",
-        url: 'get_elems/',
-        data: {
-          'char_id': char_id
-        },
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        },
-        success: function onAjaxSuccess(data)
-        {
-          var d = JSON.parse(data)
-          var vars = d.vars;
-          //var checked = d.checked;
-          elems = ""
-          for (id in vars){
-              elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'>" + " " + vars[id] + "</label></div>";
-          }
-          $("#" + li_id).append(elems);
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
-      });
-}
 
-function getCheckedElems(char_id, li_id){
-  var csrftoken = getCookie('csrftoken');
-  $.ajax({
-        type: "POST",
-        url: 'get_checked_elems/',
-        data: {
-          'char_id': char_id
-        },
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        },
-        success: function onAjaxSuccess(data)
-        {
-          var d = JSON.parse(data)
-          var vars = d.vars;
-          var checked = d.checked;
-          elems = "";
-          for (id in vars){
-            if (arrayObjectIndexOf(checked, vars[id]) == -1){
-              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='" + li_id + "checked'> " + vars[id] + "</label></div>";
-            }
-            else {
-              elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='" + li_id + "checked'" + " checked> " + vars[id] + "</label></div>";
-            }
-          }
-          var err = true;
-          $("#" + li_id).append(elems);
-          var inputs = $("#" + li_id).find('input').each(function(){
-            if ($(this).prop("checked") == true) err = false;
-          });
-          /*for (inp in inputs){
-            temp = $(inputs[inp]).prop("checked");
-            if ($(inputs[inp]).prop("checked") == true) err = false;
-          }*/
-          if (err) $(inputs[0]).prop("checked", true);
+        /***
+         * Возвращает своства характеристики
+         * @param char_id - id характеристики
+         * @param li_id - id характеристики в DOM
+         ***/
+        function getElems(char_id, li_id) {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_elems/',
+                data: {
+                    'char_id': char_id
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    var d = JSON.parse(data)
+                    var vars = d.vars;
+                    //var checked = d.checked;
+                    elems = ""
+                    for (id in vars) {
+                        elems += "<div class='radio'><label><input type='radio' value=" + id + " name=" + li_id + "'checked'>" + " " + vars[id] + "</label></div>";
+                    }
+                    $("#" + li_id).append(elems);
+                }
+            });
         }
-      });
-}
 
-function arrayObjectIndexOf(myArray, searchTerm) {
-    for(i in myArray) {
-        if (myArray[i] == searchTerm) return i;
-    }
-    return -1;
-}
-</script>
+        /***
+         * Возвращает массив элементов, которые отмечены для данного рецепта
+         * @param char_id - id характеристики рецепта
+         * @param li_id - id характеристики в DOM
+         */
+        function getCheckedElems(char_id, li_id) {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_checked_elems/',
+                data: {
+                    'char_id': char_id
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    var d = JSON.parse(data)
+                    var vars = d.vars;
+                    var checked = d.checked;
+                    elems = "";
+                    for (id in vars) {
+                        if (arrayObjectIndexOf(checked, vars[id]) == -1) {
+                            elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='" + li_id + "checked'> " + vars[id] + "</label></div>";
+                        }
+                        else {
+                            elems += "<div class='checkbox'><label><input type='checkbox' value=" + id + " name='" + li_id + "checked'" + " checked> " + vars[id] + "</label></div>";
+                        }
+                    }
+                    var err = true;
+                    $("#" + li_id).append(elems);
+                    var inputs = $("#" + li_id).find('input').each(function () {
+                        if ($(this).prop("checked") == true) err = false;
+                    });
+                    if (err) $(inputs[0]).prop("checked", true);
+                }
+            });
+        }
 
-<div class="panel panel-default" style ="margin: auto">
-  <div class="panel-heading">
-      <h4 class="panel-title">Видовые свойства рецепта: {{ comp }}</h4>
-  </div>
-  {% if error_message %}
-  <p><strong>{{ error_message }}</strong></p>
-  {% endif %}
+        /***
+         * Ищет id элемента в массиве
+         * @param myArray - массив элементов
+         * @param searchTerm - элемент для поиска
+         * @returns -1 - если элемент не был найден, иначе id элемента в массиве
+         */
+        function arrayObjectIndexOf(myArray, searchTerm) {
+            for (i in myArray) {
+                if (myArray[i] == searchTerm) return i;
+            }
+            return -1;
+        }
+    </script>
 
-<div class="panel-body">
-  <div class="input-group" style ="margin: auto">
-    <form action="save_comp_prop/" method="post" id="form">
-      {% csrf_token %}
-      <div style="width: 100%; margin:auto">
-          <ul class="list-group" id="chars">
-            {% for c in chars %}
-              {% if c.characteristic.char_type.id != 3 %}
-                <li class="list-group-item list-group-item active">{{c.characteristic.get_group }}</li>
-                <li class='list-group-item' id="{{c.characteristic.id}}">
-                  <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                  <div class='form-group' style='margin-bottom: 50pt'><input id='number' type='number' value="{{c.comp_prop_number.number}}"  name="{{c.characteristic.id}}" min='{{c.characteristic.characteristic_number.inf}}' step = '0.0001' max='{{c.characteristic.characteristic_number.sup}}' class='form-control'  required></div>
-                </li>
-              {% else %}
+    <div class="panel panel-default" style="margin: auto">
+        <div class="panel-heading">
+            <h4 class="panel-title">Видовые свойства рецепта: {{ comp }}</h4>
+        </div>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
 
-                <li class="list-group-item list-group-item active">{{ c.characteristic.get_group }}</li>
-                <li class='list-group-item' id={{c.characteristic.id}}>
-                  <h4 style='text-decoration: underline; color: mediumseagreen'>{{c}}</h4>
-                    <script>getCheckedElems({{c.id}}, {{c.characteristic.id}})</script>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-          <input type="hidden" id="json" name="json" value="">
-          <input type="submit" value="Сохранить" onclick="" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
-      </form>
+        <div class="panel-body">
+            <div class="input-group" style="margin: auto">
+                <form action="save_comp_prop/" method="post" id="form">
+                    {% csrf_token %}
+                    <div style="width: 100%; margin:auto">
+                        <ul class="list-group" id="chars">
+                            {% for c in chars %}
+                                {% if c.characteristic.char_type.id != 3 %}
+                                    <li class="list-group-item list-group-item active">{{ c.characteristic.get_group }}</li>
+                                    <li class='list-group-item' id="{{ c.characteristic.id }}">
+                                        <h4 style='text-decoration: underline; color: mediumseagreen'>{{ c }}</h4>
+                                        <div class='form-group' style='margin-bottom: 50pt'><input id='number'
+                                                                                                   type='number'
+                                                                                                   value="{{ c.comp_prop_number.number }}"
+                                                                                                   name="{{ c.characteristic.id }}"
+                                                                                                   min='{{ c.characteristic.characteristic_number.inf }}'
+                                                                                                   step='0.0001'
+                                                                                                   max='{{ c.characteristic.characteristic_number.sup }}'
+                                                                                                   class='form-control'
+                                                                                                   required></div>
+                                    </li>
+                                {% else %}
+
+                                    <li class="list-group-item list-group-item active">{{ c.characteristic.get_group }}</li>
+                                    <li class='list-group-item' id={{ c.characteristic.id }}>
+                                        <h4 style='text-decoration: underline; color: mediumseagreen'>{{ c }}</h4>
+                                        <script>getCheckedElems({{c.id}}, {{c.characteristic.id}})</script>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        <input type="hidden" id="json" name="json" value="">
+                        <input type="submit" value="Сохранить" onclick="" id="send" value="Сохранить"
+                               class="btn btn-primary" style="float: right"/>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-  </div>
 
 
 {% endblock content %}
