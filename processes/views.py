@@ -921,14 +921,12 @@ def add_comp(request, kneading_id):
                         res = str(mat.store_amount + comp.ammount)
                     else:
                         mat.store_amount = mat.store_amount + comp.ammount - float(request.POST['amm'])
-                        #mat.reserved = mat.reserved - float(request.POST['amm'])
                         mat.save()
                 else:
                     if mat.store_amount < float(request.POST['amm']):
                         res = str(mat.store_amount)
                     else:
                         mat.store_amount = mat.store_amount - float(request.POST['amm'])
-                        #mat.reserved = mat.reserved - float(request.POST['amm'])
                         comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, compl=mat)[0]
                         mat.save()
             else:
@@ -940,16 +938,12 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount + comp.ammount)
                             else:
                                 content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
-                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 if int(content.amount) == 0:
                                     content.content_type = 3
                                     check_dependencies(content, 't')
                                     content.save()
                                 comp.t_cont = None
-                                #if content.reserved > content.amount:
-                                    #content.reserved = 0
-                                    #check_dependencies(content, 't')
                                 content.save()
                                 f_id = str(comp.formula.id)
                         else:
@@ -958,7 +952,6 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount)
                             else:
                                 content.amount = content.amount - float(request.POST['amm'])/loses
-                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 if int(content.amount) == 0:
                                     content.content_type = 3
@@ -967,10 +960,6 @@ def add_comp(request, kneading_id):
                                 comp.t_cont = None
                                 comp.save()
                                 f_id = str(comp.formula.id)
-                                #if content.reserved > content.amount:
-                                    #content.reserved = 0
-                                    #check_dependencies(content, 't')
-                                #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, t_cont=content)[0]
                                 content.save()
                 else:
                     if request.POST['type'] == 'reactor':
@@ -981,7 +970,6 @@ def add_comp(request, kneading_id):
                                 res = str(content.amount + comp.ammount)
                             else:
                                 content.amount = content.amount + comp.ammount - float(request.POST['amm'])/loses
-                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
                                 comp.formula = content.batch.kneading.list.formula
                                 comp.r_cont = None
                                 if int(content.amount) == 0:
@@ -989,30 +977,25 @@ def add_comp(request, kneading_id):
                                     check_dependencies(content, 'r')
                                     content.save()
                                 f_id = str(content.batch.kneading.list.formula.id)
-                                #if content.reserved > content.amount:
-                                    #content.reserved = 0
-                                    #check_dependencies(content, 'r')
                                 content.save()
                         else:
-                            comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
-                            if content.amount+1 < float(request.POST['amm']):
-                                res = str(content.amount)
+                            if List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content).count() == 0:
+                                res = '0'
                             else:
-                                content.amount = content.amount - float(request.POST['amm'])/loses
-                                #content.reserved = content.reserved - float(request.POST['amm'])/loses
-                                comp.formula = content.batch.kneading.list.formula
-                                comp.r_cont = None
-                                comp.save()
-                                if int(content.amount) == 0:
-                                    content.content_type = 3
-                                    check_dependencies(content, 'r')
+                                comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
+                                if content.amount+1 < float(request.POST['amm']):
+                                    res = str(content.amount)
+                                else:
+                                    content.amount = content.amount - float(request.POST['amm'])/loses
+                                    comp.formula = content.batch.kneading.list.formula
+                                    comp.r_cont = None
+                                    comp.save()
+                                    if int(content.amount) == 0:
+                                        content.content_type = 3
+                                        check_dependencies(content, 'r')
+                                        content.save()
+                                    f_id = str(comp.formula.id)
                                     content.save()
-                                f_id = str(comp.formula.id)
-                                #if content.reserved > content.amount:
-                                    #content.reserved = 0
-                                    #check_dependencies(content, 'r')
-                                #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, r_cont=content)[0]
-                                content.save()
                     else:
                         if request.POST['type'] == 'formula':
                             formula = Formula.objects.filter(pk=request.POST['mat_id'])[0]
@@ -1024,19 +1007,12 @@ def add_comp(request, kneading_id):
                                 if mat.ammount + comp.ammount < float(request.POST['amm']):
                                     res = str(mat.ammount + comp.ammount)
                                 else:
-                                    #mat.ammount = mat.ammount + comp.ammount - float(request.POST['amm'])
-                                    #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                    #mat.save()
                             else:
                                 if mat.ammount < float(request.POST['amm']):
                                     res = str(mat.ammount)
                                 else:
-                                    #mat.ammount = mat.ammount - float(request.POST['amm'])
-                                    #mat.reserved = mat.reserved - float(request.POST['amm'])
                                     comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=mat)[0]
-                                    #mat.save()
-                #comp = List_component.objects.filter(list = get_object_or_404(Kneading, pk=kneading_id).list, mat=get_object_or_404(Material, pk=request.POST['mat_id']))[0]
             if res == "ok":
                 comp.ammount = request.POST['amm']
                 kneading = get_object_or_404(Kneading, pk=kneading_id)

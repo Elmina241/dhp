@@ -169,36 +169,38 @@
 
         function saveDate(obj, id) {
             var date = $(obj).prop('value');
-            var csrftoken = getCookie('csrftoken');
-            var pk = reqs[id].id;
-            $.ajax({
-                type: "POST",
-                url: 'save_date/',
-                data: {
-                    'date': date,
-                    'id': pk,
-                    't': 0
-                },
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            if (date != ''){
+                var csrftoken = getCookie('csrftoken');
+                var pk = reqs[id].id;
+                $.ajax({
+                    type: "POST",
+                    url: 'save_date/',
+                    data: {
+                        'date': date,
+                        'id': pk,
+                        't': 0
+                    },
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    },
+                    success: function onAjaxSuccess(date) {
+                        var btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this)\"><i class='fas fa-edit'></i></span>";
+                        $(obj).parent().parent().html(date + btn);
+                        reqs[id].release_date = date;
                     }
-                },
-                success: function onAjaxSuccess(date) {
-                    var btn = "<span style='font-size: 17px; float:right' onclick=\"changeDate(this)\"><i class='fas fa-edit'></i></span>";
-                    $(obj).parent().parent().html(date + btn);
-                    reqs[id].release_date = date;
-                }
-            });
+                });
+            }
         }
 
         function changeDate(btn) {
             id = $(btn).parent().parent().prop('id').substr(2);
             textDate = reqs[id].release_date;
-            date = new Date(textDate.substr(6, 4), textDate.substr(3, 2), textDate.substr(0, 2));
+            date = new Date('20'+textDate.substr(6, 2), textDate.substr(3, 2), textDate.substr(0, 2));
             valDate = formatDate(date);
             saveBtn = "<span style='font-size: 20px; margin-left:10px; color: yellowgreen; display: inline-block;' onclick='saveDate(this.previousElementSibling, " + id + ")'><i class='fas fa-check'></i></span></div>";
-            $(btn).parent().html("<div class='form-inline'><input type='date' class='form-control form-control-sm'  value='" + valDate + "' />" + saveBtn);
+            $(btn).parent().html("<div class='form-inline'><input type='date' class='form-control form-control-sm'  value='" + valDate + "' required/>" + saveBtn);
         }
 
         function addEditBtns() {

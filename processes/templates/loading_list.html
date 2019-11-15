@@ -6,6 +6,10 @@
             $('#formula').trigger("change");
             changeMatAm();
             changeWaterP();
+
+            /***
+             * Запретить редактирование, если открыт готовый лист
+             */
             if ($("#isList").attr("value") == "true") disButtons();
         });
 

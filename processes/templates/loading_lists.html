@@ -1,32 +1,37 @@
 {% extends 'processes/base.html' %}
 {% block content %}
-<script>
-$(document).ready(function(){
-  $("#prTable").tablesorter({sortList: [[1,0]]});
-});
-</script>
-<form action="del_list/" method="post">
+    <script>
+        $(document).ready(function () {
+            $("#prTable").tablesorter({sortList: [[1, 0]]});
+        });
+    </script>
+    <form action="del_list/" method="post">
     {% csrf_token %}
-          <button type="button" class="btn btn-default" onClick="window.location.href='/processes/loading_lists/0/'" style="margin-bottom:5pt">Добавить запись</button>
-          <input type="submit" class="btn btn-default" value="Удалить" style="margin-bottom:5pt">
-          {% if lists %}
-              <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
-                <thead>
-                  <tr>
-                    <th></th><th>№</th><th>Наименование</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for l in lists %}
-                  <tr>
+    <button type="button" class="btn btn-default" onClick="window.location.href='/processes/loading_lists/0/'"
+            style="margin-bottom:5pt">Добавить запись
+    </button>
+    <input type="submit" class="btn btn-default" value="Удалить" style="margin-bottom:5pt">
+    {% if lists %}
+        <table class="table table-sm tablesorter" id="prTable" style="font-size: 110%;">
+            <thead>
+            <tr>
+                <th></th>
+                <th>№</th>
+                <th>Наименование</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for l in lists %}
+                <tr>
                     <td><input type="checkbox" value="{{ l.id }}" name="del_list"></td>
                     <td>{{ l.id }}</td>
                     <td onClick="window.location.href='/processes/loading_lists/{{ l.id }}/'">{{ l }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            {% else %}
-              <p>No materials are available right now.</p>
-            {% endif %}
-  {% endblock content %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No materials are available right now.</p>
+    {% endif %}
+    </form>
+{% endblock content %}

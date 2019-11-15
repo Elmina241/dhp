@@ -1283,11 +1283,11 @@ function openClose(obj, arrow) {
     $(arrow).toggleClass("fa-angle-up fa-angle-down");
 }
 
-function sortLi(ul){
+function sortLi(ul) {
     var lis = $(ul).children('li');
-    lis = lis.sort(function(a,b){
-       var name1 = $(a).children("span").text().toLowerCase(),
-           name2 = $(b).children("span").text().toLowerCase();
+    lis = lis.sort(function (a, b) {
+        var name1 = $(a).children("span").text().toLowerCase(),
+            name2 = $(b).children("span").text().toLowerCase();
         if (name1 > name2) return 1;
         if (name1 < name2) return -1;
         return 0;
@@ -1376,7 +1376,7 @@ function GTree(tree, t) {
     });
 }
 
-function sortTable(table){
+function sortTable(table) {
     if (table.rows.length > 1) {
         var sortedRows = Array.from(table.rows).sort((rowA, rowB) => rowA.cells[1].innerHTML > rowB.cells[1].innerHTML ? 1 : -1);
         $(table).html('');
@@ -1416,7 +1416,7 @@ function STree(tree) {
         //event.stopPropagation();
     });
 
-    this.findNode = function(startNode, id){
+    this.findNode = function (startNode, id) {
         var res;
         if (startNode.id == id) return startNode;
         else {
@@ -1429,7 +1429,7 @@ function STree(tree) {
         return res;
     };
 
-    this.findChildren = function(node, res = []) {
+    this.findChildren = function (node, res = []) {
         res.push(node.id);
         for (n in node.nodes) {
             res = self.findChildren(node.nodes[n], res);
@@ -1460,15 +1460,15 @@ function STree(tree) {
         }
         else {
             var startNode = self.findNode(tree[0], self.selected);
-        var nodes = self.findChildren(startNode);
-        for (n in nodes) {
-            for (r in goods[nodes[n]][stock]) {
-                if (goods[nodes[n]][stock][r].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[nodes[n]][stock][r].code.toUpperCase().indexOf(text.toUpperCase()) != -1) {
-                    code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                        "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost + "</td></tr>";
+            var nodes = self.findChildren(startNode);
+            for (n in nodes) {
+                for (r in goods[nodes[n]][stock]) {
+                    if (goods[nodes[n]][stock][r].name.toUpperCase().indexOf(text.toUpperCase()) != -1 || goods[nodes[n]][stock][r].code.toUpperCase().indexOf(text.toUpperCase()) != -1) {
+                        code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
+                            "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost + "</td></tr>";
+                    }
                 }
             }
-        }
             if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
             $("#goods-body").html(code);
         }
@@ -1878,7 +1878,7 @@ function saveStatus(obj) {
             }
         },
         success: function onAjaxSuccess(data) {
-            var code = "<div class='td-inline'>" + $("option:selected", obj).text() +  "<span class='edit-btn' onclick='changeStatus(this, " + id + ")'><i class='fas fa-edit'></i></span></div>";
+            var code = "<div class='td-inline'>" + $("option:selected", obj).text() + "<span class='edit-btn' onclick='changeStatus(this, " + id + ")'><i class='fas fa-edit'></i></span></div>";
             obj.parentElement.parentElement.innerHTML = code;
         }
     });
