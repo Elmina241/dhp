@@ -1444,8 +1444,12 @@ function STree(tree) {
         var nodes = self.findChildren(startNode);
         for (n in nodes) {
             for (r in goods[nodes[n]][stock]) {
+                if (goods[nodes[n]][stock][r].amount == 0) var price = 0;
+                else {
+                    var price = (goods[nodes[n]][stock][r].cost / goods[nodes[n]][stock][r].amount).toFixed(2);
+                }
                 code = code + "<tr id='g-" + r + "'><td align=\"center\"><span style='font-size: 20px; color: green'\n" +
-                    "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + goods[nodes[n]][stock][r].cost.toFixed(2) + "</td></tr>";
+                    "                          onclick=\"openGood(" + r + ", this)\"><i class='fas fa-caret-down'></i></span></td><td>" + goods[nodes[n]][stock][r].code + "</td><td>" + goods[nodes[n]][stock][r].name + "</td><td>" + goods[nodes[n]][stock][r].amount + "</td><td>" + goods[nodes[n]][stock][r].unit + "</td><td>" + price + "</td></tr>";
             }
         }
         if (code == "") code = "<tr><td colspan=6 class='no-data' align='center'>Нет записей</td></tr>";
