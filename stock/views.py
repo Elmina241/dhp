@@ -1273,7 +1273,7 @@ def save_inventory(request):
             matrix = Matrix(access='0', cause='2')
             matrix.save()
             if 'type' in request.POST:
-                date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%d.%m.%Y %H:%M")
+                date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%d.%m.%y %H:%M")
                 inv = Inventory.objects.get(pk=request.POST['inventory'])
                 inv.is_finished = True
                 inv.save()
