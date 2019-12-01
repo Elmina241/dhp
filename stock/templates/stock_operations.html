@@ -2,7 +2,31 @@
 {% block content %}
     {% load staticfiles %}
     {% load stock_extras %}
+    <style>
+        @media print {
+            .passport {
+                page-break-inside: auto;
+            }
+        }
+    </style>
     <script>
+        jQuery.fn.extend({
+            printElem: function () {
+                var cloned = this.clone();
+                var printSection = $('#printSection');
+                if (printSection.length == 0) {
+                    printSection = $('<div id="printSection"></div>')
+                    $('body').append(printSection);
+                }
+                printSection.append(cloned);
+                var toggleBody = $('body *:visible');
+                toggleBody.hide();
+                $('#printSection, #printSection *').show();
+                window.print();
+                printSection.remove();
+                toggleBody.show();
+            }
+        });
         //var goods_inf = null;
         var inp = null;
         var tr = null;
@@ -102,7 +126,7 @@
             if (period > oper_periods) oper_periods = period;
         }
 
-        function getOperations(period, group){
+        function getOperations(period, group) {
             $("#loader").show();
             var csrftoken = getCookie('csrftoken');
             $.ajax({
@@ -157,7 +181,7 @@
                                 <option value="{{ s.stock.pk }}">{{ s.stock }}</option>
                             {% endfor %}
                         </select>
-                    <span class="inline-el">Период</span>
+                        <span class="inline-el">Период</span>
                         <select id="period" class="form-control inline-el form-control-sm"
                                 onchange="changeOperPeriod()">
                             <option value="0">Все</option>
@@ -166,7 +190,7 @@
                             <option value="3">Месяц</option>
                             <option value="4">Год</option>
                         </select>
-                    <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 25px;display: none">
+                        <img src="{% static "img/spinner.gif" %}" id="loader" style="width: 25px;display: none">
                         <div class="form-inline mobile-invisible" style="position: absolute; right: 0">
                             <lable for="filter" class="col-form-label">Фильтр</lable>
                             <select class="form-control col-sm-9 form-control-sm" id="operGroup"
@@ -202,9 +226,11 @@
                             <td>{{ values.cause }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>
                             {% if values.operation == "Коррекция" %}
-                                <td><span onclick="$('#report').modal()"><i class="fas fa-file-alt" title="Акт"></i></span></td>
+                                <td><span onclick="$('#report').modal()"><i class="fas fa-file-alt"
+                                                                            title="Акт"></i></span></td>
                             {% else %}
-                                <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt" title="Ордер"></i></span>
+                                <td><span onclick="$('#order').modal()"><i class="fas fa-file-alt"
+                                                                           title="Ордер"></i></span>
                                 </td>
                             {% endif %}
                         </tr>
@@ -215,23 +241,23 @@
 
 
         </div>
-    <nav aria-label="..." class="nav-pages">
-                <ul class="pagination pagination-sm justify-content-end" id="operationNav">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active" aria-current="page">
+        <nav aria-label="..." class="nav-pages">
+            <ul class="pagination pagination-sm justify-content-end" id="operationNav">
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active" aria-current="page">
       <span class="page-link">
         2
       </span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
 
         <div class="card table-responsive-sm" style="margin-top: 30px;">
             <h6 class="card-header">
@@ -254,23 +280,23 @@
                 </tbody>
             </table>
         </div>
-    <nav aria-label="..." class="nav-pages">
-                <ul class="pagination pagination-sm justify-content-end" id="operationNav2">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active" aria-current="page">
+        <nav aria-label="..." class="nav-pages">
+            <ul class="pagination pagination-sm justify-content-end" id="operationNav2">
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active" aria-current="page">
       <span class="page-link">
         2
       </span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
 
@@ -284,36 +310,37 @@
 
                 </div>
                 <div class="modal-body create-form">
-                <form id="form">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <h6 id="counterLabel">Потребитель</h6>
-                            <select class="form-control" id="consumer" readonly onchange="getStocks('acceptor')">
-                                {% for c in counters %}
-                                    {% if c == counter %}
-                                        <option value="{{ c.id }}" selected>{{ c.name }}</option>
-                                    {% else %}
-                                        <option value="{{ c.id }}">{{ c.name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
+                    <form id="form">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <h6 id="counterLabel">Потребитель</h6>
+                                <select class="form-control" id="consumer" readonly onchange="getStocks('acceptor')">
+                                    {% for c in counters %}
+                                        {% if c == counter %}
+                                            <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                                        {% else %}
+                                            <option value="{{ c.id }}">{{ c.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h6>Склад</h6>
+                                <select class="form-control" id="acceptor">
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <h6>Склад</h6>
-                            <select class="form-control" id="acceptor">
-                            </select>
+                        <h6 id="dateLabel">Дата поступления</h6>
+                        <input type="date" class="form-control" id="date"/>
+                        <hr>
+                        <h6>Товары</h6>
+                        <div id="add_goods">
                         </div>
-                    </div>
-                    <h6 id="dateLabel">Дата поступления</h6>
-                    <input type="date" class="form-control" id="date"/>
-                    <hr>
-                    <h6>Товары</h6>
-                    <div id="add_goods">
-                    </div>
-                    <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
-                          onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
-                    <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить</button>
-                </form>
+                        <!--<span style='font-size: 20px; color: yellowgreen; display: inline-block; margin-top:10px'
+                              onclick="addGoodField()"><i class='fas fa-plus-circle'></i></span>-->
+                        <button class="btn add-btn btn-outline-success" onclick="addDots();addGoodField()">Добавить
+                        </button>
+                    </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="counterBtn" onclick="saveSupply()" class="btn btn-primary"
                                style="float: right"/></div>
@@ -385,13 +412,13 @@
                     <h5 id="reportName" class="pg">Акт №</h5>
                     <button class="close pg" data-dismiss="modal">x</button>
                 </div>
-                <div class="modal-body passport">
+                <div class="modal-body passport" id="inventoryPassport">
                     <b>
                         <div id="reportHeader" class="text14">Инвентаризационный акт №</div>
                     </b>
                     <div id="repDate" class="text12">Дата: 01.01.1999</div>
                     <div id="repStock" class="text12">Склад: Склад 1</div>
-                    <table class="table table-hover table-condensed table-bordered table-sm">
+                    <table id="reportTable" class="table table-hover table-condensed table-bordered table-sm">
                         <thead style="text-align: center">
                         <tr>
                             <th>Артикул</th>
@@ -408,7 +435,7 @@
                     </table>
                 </div>
                 <div class="modal-footer pg">
-                    <button id="printBtn" type="button" class="btn btn-info" onclick="window.print();">Печать</button>
+                    <button id="printBtn" type="button" class="btn btn-info" onclick="$('#inventoryPassport').printElem();">Печать</button>
                 </div>
             </div>
         </div>
@@ -423,11 +450,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-inline">
-                    <h6 id="dateLabel">Дата </h6>
-                    <input type="date" class="form-control short-input inline-el" id="inventoryDate"/>
-                    <h6 id="dateLabel" class="">Время</h6>
-                    <input type="time" class="form-control short-input inline-el" id="inventoryTime"/>
-                        </div>
+                        <h6 id="dateLabel">Дата </h6>
+                        <input type="date" class="form-control short-input inline-el" id="inventoryDate"/>
+                        <h6 id="dateLabel" class="">Время</h6>
+                        <input type="time" class="form-control short-input inline-el" id="inventoryTime"/>
+                    </div>
                     <hr>
                     <table class="table table-bordered table-sm small-table" style="text-align: center">
                         <thead style="text-align: center" class="thead-light">

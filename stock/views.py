@@ -1284,44 +1284,45 @@ def save_inventory(request):
             stock.cur_vin = stock.cur_vin + 1
             stock.save()
             for g in goods:
-                cost = float(goods[g]['cost'].replace(',', '.'))
-                amount = float(goods[g]['amount'].replace(',', '.'))
-                good = Goods.objects.get(pk=g)
-                last_value = 0
-                if goods[g]['amount'] == '0':
-                    if Stock_good.objects.filter(stock=stock, good=good).count() != 0:
-                        last_value = Stock_good.objects.filter(stock=stock, good=good)[0].amount
-                        Stock_good.objects.filter(stock=stock, good=good).delete()
-                else:
-                    if Stock_good.objects.filter(stock=stock, good=good).count() == 0:
-                        s_g = Stock_good(stock=stock, good=good, unit=good.get_unit(), amount=amount,
-                                         cost=cost * amount)
-                        last_value = 0
-                        s_g.save()
+                if goods[g]['amount'] != "":
+                    cost = float(goods[g]['cost'].replace(',', '.'))
+                    amount = float(goods[g]['amount'].replace(',', '.'))
+                    good = Goods.objects.get(pk=g)
+                    last_value = 0
+                    if goods[g]['amount'] == '0':
+                        if Stock_good.objects.filter(stock=stock, good=good).count() != 0:
+                            last_value = Stock_good.objects.filter(stock=stock, good=good)[0].amount
+                            Stock_good.objects.filter(stock=stock, good=good).delete()
                     else:
-                        s_g = Stock_good.objects.filter(stock=stock, good=good)[0]
-                        last_value = s_g.amount
-                        for h in Stock_operation.objects.filter(good=good, package__stock=stock, package__date__gte=date):
-                            if h.operation == '0':
-                                last_value = last_value - good.get_base_amount(h.amount, h.unit)
-                                amount = amount + good.get_base_amount(h.amount, h.unit)
-                            else:
-                                if h.operation == '1':
-                                    last_value = last_value + good.get_base_amount(h.amount, h.unit)
-                                    amount = amount - good.get_base_amount(h.amount, h.unit)
-                        s_g.amount = amount
-                        s_g.cost = cost * amount
-                        s_g.save()
-                s = Stock_operation(
-                    package=p,
-                    good=good,
-                    operation='2',
-                    unit=good.get_unit(),
-                    amount=amount,
-                    cost=cost,
-                    last_value=last_value
-                )
-                s.save()
+                        if Stock_good.objects.filter(stock=stock, good=good).count() == 0:
+                            s_g = Stock_good(stock=stock, good=good, unit=good.get_unit(), amount=amount,
+                                             cost=cost * amount)
+                            last_value = 0
+                            s_g.save()
+                        else:
+                            s_g = Stock_good.objects.filter(stock=stock, good=good)[0]
+                            last_value = s_g.amount
+                            for h in Stock_operation.objects.filter(good=good, package__stock=stock, package__date__gte=date):
+                                if h.operation == '0':
+                                    last_value = last_value - good.get_base_amount(h.amount, h.unit)
+                                    amount = amount + good.get_base_amount(h.amount, h.unit)
+                                else:
+                                    if h.operation == '1':
+                                        last_value = last_value + good.get_base_amount(h.amount, h.unit)
+                                        amount = amount - good.get_base_amount(h.amount, h.unit)
+                            s_g.amount = amount
+                            s_g.cost = cost * amount
+                            s_g.save()
+                    s = Stock_operation(
+                        package=p,
+                        good=good,
+                        operation='2',
+                        unit=good.get_unit(),
+                        amount=amount,
+                        cost=cost,
+                        last_value=last_value
+                    )
+                    s.save()
             return HttpResponse('ok')
 
 
