@@ -58,6 +58,21 @@
             $('#inventoryDate').val(new Date().toDateInputValue());
         });
 
+        function printElem(obj) {
+            var cloned = obj.clone();
+            var printSection = $('#printSection');
+            if (printSection.length == 0) {
+                printSection = $('<div id="printSection"></div>')
+                $('body').append(printSection);
+            }
+            printSection.append(cloned);
+            var toggleBody = $('body *:visible');
+            toggleBody.hide();
+            $('#printSection, #printSection *').show();
+            window.print();
+            printSection.remove();
+            toggleBody.show();
+        }
 
         function getOperationGoods(id) {
             code = "";
@@ -106,7 +121,9 @@
             var code = "";
             for (row in operations) {
                 if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1") && checkDatePeriod(operations[row]['date'], period)) {
-                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'].slice(0, 5) + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td><td><span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span></td></tr>";
+                    if (operations[row]['operation'] == "Коррекция") var doc = "<span onclick=\"$('#report').modal()\"><i class=\"fas fa-file-alt\" title='Акт'></i></span>";
+                    else var doc = "<span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span>";
+                    code = code + "<tr id=" + row + " onclick=\"getOperationGoods('" + row + "')\"><td>" + operations[row]['vin'] + "</td><td>" + operations[row]['date'].slice(0, 5) + "</td><td>" + operations[row]['operation'] + "</td><td>" + operations[row]['cause'] + "</td><td>" + operations[row]['stock'] + "</td><td>" + doc + "</td></tr>";
                 }
             }
             if (code == "") code = "<tr><td colspan=5 align='center' class='no-data'>Нет записей</td></tr>";
@@ -435,7 +452,9 @@
                     </table>
                 </div>
                 <div class="modal-footer pg">
-                    <button id="printBtn" type="button" class="btn btn-info" onclick="$('#inventoryPassport').printElem();">Печать</button>
+                    <button id="printBtn" type="button" class="btn btn-info"
+                            onclick="printElem($('#inventoryPassport'));">Печать
+                    </button>
                 </div>
             </div>
         </div>
