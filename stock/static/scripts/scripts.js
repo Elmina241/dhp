@@ -1646,7 +1646,7 @@ function sendPlannedInventory() {
             data: {
                 'stock': inventory_goods[curInv].stock_id,
                 'inventory_goods': JSON.stringify(inventoryGoods),
-                'date': inventory_goods[curInv].date,
+                'date': $("#date-info").prop('value'),
                 'time': $("#inventoryTime").prop('value'),
                 'type': 'p',
                 'inventory': curInv

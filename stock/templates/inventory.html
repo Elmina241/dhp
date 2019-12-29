@@ -68,7 +68,9 @@
         function openInventory(id) {
             curInv = id;
             var code = "";
-            $("#date-info").text(inventory_goods[id]['date']);
+            var tempDate = inventory_goods[id]['date'];
+            var dateForValue = tempDate.slice(6) + '-' + tempDate.slice(3, 5) + '-' + tempDate.slice(0, 2);
+            $("#date-info").prop('value', dateForValue);
             $("#stock-info").text(inventory_goods[id]['stock']);
             for (g in inventory_goods[id]) {
                 if (inventory_goods[id][g].name != undefined) code = code + "<tr id='i-" + g + "'><td>" + inventory_goods[id][g].article + "</td><td>" + inventory_goods[id][g].name + "</td><td>" + inventory_goods[id][g].unit + "</td><td><input class='form-control form-control-sm amount' name='amount' value='" + inventory_goods[id][g].amount + "'/></td><td><input class='form-control form-control-sm price' name='price' value='" + inventory_goods[id][g].price.toFixed(2) + "'/></td></tr>";
@@ -290,7 +292,9 @@
                     <form id="form">
                         <h6>Склад: <span id="stock-info"></span></h6>
                         <div class="form-inline">
-                            <h6 id="dateLabel">Дата: <span id="date-info" class="inline-el"></span></h6>
+                            <h6 id="dateLabel" class="inline-el">Дата: </h6>
+                            <input type="date" class="form-control short-input form-control-sm inline-el"
+                                   id="date-info" required/>
                             <h6 id="dateLabel" class="inline-el">Время: </h6>
                             <input type="time" class="form-control short-input form-control-sm inline-el"
                                    id="inventoryTime" required/>

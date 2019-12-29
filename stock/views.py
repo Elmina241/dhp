@@ -71,7 +71,7 @@ def inventory(request):
     add_children_g(g, tree[0], goods_inf_res['full_names'])
     inventory_goods = {}
     for i in Inventory.objects.filter(is_finished=False):
-        inventory_goods[str(i.pk)] = {'date': i.date.strftime('%d.%m.%y'), 'stock': str(i.stock),
+        inventory_goods[str(i.pk)] = {'date': i.date.strftime('%d.%m.%Y'), 'stock': str(i.stock),
                                       'stock_id': i.stock.pk}
         for g in Inventory_good.objects.filter(inventory=i):
             if Stock_good.objects.filter(stock=i.stock, good=g.good).count() != 0:
@@ -1273,7 +1273,7 @@ def save_inventory(request):
             matrix = Matrix(access='0', cause='2')
             matrix.save()
             if 'type' in request.POST:
-                date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%d.%m.%y %H:%M")
+                date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%Y-%m-%d %H:%M")
                 inv = Inventory.objects.get(pk=request.POST['inventory'])
                 inv.is_finished = True
                 inv.save()
@@ -1281,6 +1281,7 @@ def save_inventory(request):
                 date = datetime.datetime.strptime(request.POST['date'] + " " + request.POST['time'], "%Y-%m-%d %H:%M")
             p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=date)
             p.save()
+            print(date)
             stock.cur_vin = stock.cur_vin + 1
             stock.save()
             for g in goods:
