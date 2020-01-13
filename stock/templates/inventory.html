@@ -65,10 +65,10 @@
             pag2 = new Pagination(10, "goods-body", "operationNav2");
         }
 
-        function openInventory(id) {
+        function openInventory(id, date) {
             curInv = id;
             var code = "";
-            var tempDate = inventory_goods[id]['date'];
+            var tempDate = date;
             var dateForValue = tempDate.slice(6) + '-' + tempDate.slice(3, 5) + '-' + tempDate.slice(0, 2);
             $("#date-info").prop('value', dateForValue);
             $("#stock-info").text(inventory_goods[id]['stock']);
@@ -144,7 +144,7 @@
                                 <td>{{ i.date|date:"d.m.Y" }}</td>
                                 <td>{{ i.stock|default_if_none:"-" }}</td>
                                 <td><span
-                                        onclick="openInventory({{ i.pk }})"><i class='fas fa-edit'
+                                        onclick="openInventory({{ i.pk }}, '{{ i.date|date:"d.m.Y" }}')"><i class='fas fa-edit'
                                                                                title="Инвентаризация"></i></span><span
                                         onclick="confirmDel('{{ i.pk }}', this.parentElement)"><i
                                         class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>

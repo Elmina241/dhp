@@ -1236,6 +1236,8 @@ def send_inventory(request):
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d")
             inv = Inventory(stock=stock, date=date, is_finished=False)
             inv.save()
+            Inventory.objects.filter(pk=inv.pk).update(date=date)
+            print(Inventory.objects.filter(pk=inv.pk)[0].date)
             for g in goods:
                 t = g[0]
                 id = g[2:]
