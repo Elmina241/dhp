@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/templates/inventory.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/inventory.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/templates/store/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/store/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stock/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/static/scripts/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/stock/static/scripts/scripts.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -38,7 +36,7 @@
           <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/django_example/settings.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
+                <state relative-caret-position="1326">
                   <caret line="78" column="3" selection-start-line="78" selection-start-column="3" selection-end-line="78" selection-end-column="3" />
                 </state>
               </provider>
@@ -47,8 +45,8 @@
           <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="477">
-                  <caret line="92" column="61" lean-forward="true" selection-start-line="92" selection-start-column="61" selection-end-line="92" selection-end-column="61" />
+                <state relative-caret-position="17">
+                  <caret line="92" column="61" selection-start-line="92" selection-start-column="61" selection-end-line="92" selection-end-column="61" />
                   <folding>
                     <element signature="e#0#45#0" expanded="true" />
                   </folding>
@@ -68,7 +66,7 @@
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="386">
+                <state relative-caret-position="7905">
                   <caret line="467" column="63" selection-start-line="467" selection-start-column="63" selection-end-line="467" selection-end-column="63" />
                   <folding>
                     <element signature="e#47#75#0" expanded="true" />
@@ -81,11 +79,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="scripts.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17210">
-                  <caret line="1651" column="35" selection-start-line="1651" selection-start-column="35" selection-end-line="1651" selection-end-column="35" />
+                <state relative-caret-position="493">
+                  <caret line="1069" column="44" lean-forward="true" selection-start-line="1069" selection-start-column="44" selection-end-line="1069" selection-end-column="44" />
                   <folding>
                     <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -124,29 +122,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="print_lists.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processes/templates/print_lists.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2737">
-                  <caret line="161" column="46" selection-start-line="161" selection-start-column="46" selection-end-line="161" selection-end-column="46" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="stock.css" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stock/static/css/stock.css">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="5083">
-                  <caret line="299" column="1" selection-start-line="299" selection-start-column="1" selection-end-line="299" selection-end-column="12" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="inventory.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="inventory.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/inventory.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="466">
-                  <caret line="146" column="102" selection-start-line="146" selection-start-column="102" selection-end-line="146" selection-end-column="102" />
+                <state relative-caret-position="429">
+                  <caret line="193" column="66" lean-forward="true" selection-start-line="193" selection-start-column="20" selection-end-line="193" selection-end-column="66" />
                 </state>
               </provider>
             </entry>
@@ -154,8 +134,8 @@
           <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="343">
-                  <caret line="40" column="21" lean-forward="true" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
+                <state relative-caret-position="680">
+                  <caret line="40" column="21" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
                 </state>
               </provider>
             </entry>
@@ -174,7 +154,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>materia</find>
       <find>Удали</find>
       <find>delOperation</find>
       <find>del_opera</find>
@@ -204,6 +183,7 @@
       <find>sendPlannedInventory</find>
       <find>stock_opera</find>
       <find>packa</find>
+      <find>delInventory</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -258,11 +238,11 @@
         <option value="$PROJECT_DIR$/stock/templates/stocks.html" />
         <option value="$PROJECT_DIR$/processes/models.py" />
         <option value="$PROJECT_DIR$/stock/templates/stock_operations.html" />
-        <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
         <option value="$PROJECT_DIR$/stock/admin.py" />
         <option value="$PROJECT_DIR$/stock/views.py" />
         <option value="$PROJECT_DIR$/stock/templates/store/base.html" />
         <option value="$PROJECT_DIR$/stock/templates/inventory.html" />
+        <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
       </list>
     </option>
   </component>
@@ -465,8 +445,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.19281046" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32897604" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.003267974" />
-      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.25054467" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16044776" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.25054467" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16204691" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32995737" />
@@ -568,9 +548,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="162" selection-start-line="162" selection-end-line="162" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -787,10 +764,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tables/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="620" column="18" selection-start-line="620" selection-start-column="4" selection-end-line="620" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1326">
+          <caret line="78" column="3" selection-start-line="78" selection-start-column="3" selection-end-line="78" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="45" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7905">
+          <caret line="467" column="63" selection-start-line="467" selection-start-column="63" selection-end-line="467" selection-end-column="63" />
+          <folding>
+            <element signature="e#47#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="40" column="21" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="92" column="61" selection-start-line="92" selection-start-column="61" selection-end-line="92" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/inventory.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="193" column="66" lean-forward="true" selection-start-line="193" selection-start-column="20" selection-end-line="193" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/stock/static/scripts/scripts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17210">
-          <caret line="1651" column="35" selection-start-line="1651" selection-start-column="35" selection-end-line="1651" selection-end-column="35" />
+        <state relative-caret-position="493">
+          <caret line="1069" column="44" lean-forward="true" selection-start-line="1069" selection-start-column="44" selection-end-line="1069" selection-end-column="44" />
           <folding>
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#1;n#div#0;n#!!top" expanded="true" />
@@ -825,61 +857,6 @@
             <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tables/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="620" column="18" selection-start-line="620" selection-start-column="4" selection-end-line="620" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/django_example/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="78" column="3" selection-start-line="78" selection-start-column="3" selection-end-line="78" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="45" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="467" column="63" selection-start-line="467" selection-start-column="63" selection-end-line="467" selection-end-column="63" />
-          <folding>
-            <element signature="e#47#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="40" column="21" lean-forward="true" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="92" column="61" lean-forward="true" selection-start-line="92" selection-start-column="61" selection-end-line="92" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/inventory.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="146" column="102" selection-start-line="146" selection-start-column="102" selection-end-line="146" selection-end-column="102" />
         </state>
       </provider>
     </entry>

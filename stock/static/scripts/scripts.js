@@ -1066,6 +1066,7 @@ function delInventory(obj) {
         },
         success: function onAjaxSuccess(data) {
             $(obj.parentElement).remove();
+            $("#goods-body").html("<td colspan=2 class=\"no-data\">Нет записей</td>");
             $("#del_modal").modal('toggle');
         }
     });
