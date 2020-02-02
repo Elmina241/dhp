@@ -12,6 +12,8 @@ from processes.models import *
 from tables.models import Product, Composition, Compl_comp, Compl_comp_comp, Characteristic_set_var, Comp_char_var, \
     Comp_char_range, Comp_char_number, Set_var, Composition_char, Material, Components, Formula, Formula_component, \
     Reactor
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from stock.models import *
 
@@ -107,7 +109,6 @@ def release(request):
                 amm = 0
         return HttpResponse('ok')
 
-
 def send_data_to_stock(request):
     if request.method == 'POST':
         prods = json.loads(request.POST['prods'])
@@ -138,17 +139,17 @@ def send_data_to_stock(request):
                 is_edited=False,
                 vin=vin,
                 is_demand=True,
-                user=request.user if request.user.is_authenticated else None
+                user=request.user if request.user.is_authenticated else User.objects.all().first()
             )
             new_demand.save()
             p = Package(stock=stock, vin=stock.cur_vin, matrix=matrix, date=datetime.datetime.now())
             p.save()
-            print(p)
             stock.cur_vin = stock.cur_vin + 1
             stock.save()
             ord_acceptor = Order(stock=new_demand.acceptor, matrix=new_demand.matrix, cause='1', isDonor=False,
                                  status='0')
             ord_acceptor.save()
+            print(p)
             for p in prods:
                 if prods[p]['stock'] == s:
                     pr_id = p.split("_")[1]

@@ -913,7 +913,7 @@ def stock_operations(request):
             demand = demands[0]
             cause = Order.objects.filter(matrix=demand.matrix)[0].get_cause_display()
         if id not in operations:
-            operations[id] = {"date": s.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%y'), "operation": s.get_operation_display(),
+            operations[id] = {"date": s.package.date.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime('%d.%m.%Y'), "operation": s.get_operation_display(),
                               "vin": s.package.vin, "stock": str(s.package.stock), "cause": cause,
                               "stock_id": s.package.stock.pk}
         operations[id][str(s.good.pk)] = {"article": s.good.get_article(), "name": s.good.get_name(),

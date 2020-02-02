@@ -238,7 +238,7 @@
                     {% for key, values in operations|sort %}
                         <tr id="{{ key }}" onclick="getOperationGoods('{{ key }}')">
                             <td>{{ values.vin }}</td>
-                            <td>{{ values.date }}</td>
+                            <td>{{ values.date|slice:":5" }}</td>
                             <td>{{ values.operation }}</td>
                             <td>{{ values.cause }}</td>
                             <td>{{ values.stock|default_if_none:"-" }}</td>
