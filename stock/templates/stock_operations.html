@@ -119,7 +119,9 @@
             stock = $("#stock").val();
             period = $("#period").val();
             var code = "";
-            for (row in operations) {
+            var keys = Object.keys(operations).reverse();
+            for (k in keys) {
+                row = keys[k];
                 if ((operations[row]['operation'] == group || group == "Все операции") && (operations[row]['stock_id'] == stock || stock == "-1") && checkDatePeriod(operations[row]['date'], period)) {
                     if (operations[row]['operation'] == "Коррекция") var doc = "<span onclick=\"$('#report').modal()\"><i class=\"fas fa-file-alt\" title='Акт'></i></span>";
                     else var doc = "<span onclick=\"$('#order').modal()\"><i class=\"fas fa-file-alt\" title='Ордер'></i></span>";
