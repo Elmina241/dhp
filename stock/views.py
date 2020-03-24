@@ -13,9 +13,18 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 import pytz
 from django.contrib.auth.decorators import login_required
+import xlsxwriter
+import io
+import base64
 
 local_tz = pytz.timezone('Asia/Vladivostok')
 
+
+def balance(request):
+    return render(request, "balance.html",
+                  {"permissions": json.dumps(User_group.objects.filter(user=request.user)[0].get_permissions()),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
+                   "header": "Оборотная ведомость", "stocks": Stock.objects.all()})
 
 def goods_models(request):
     tree = {}
@@ -387,6 +396,239 @@ def get_stock_inf():
         for r in Stock_good.objects.filter(stock=s):
             data[str(s.pk)][str(r.good.pk)] = r.amount
     return data
+
+def get_balance_xls(request):
+    if request.method == 'POST':
+        if 'stock' in request.POST:
+            stock = Stock.objects.get(pk=request.POST['stock'])
+            start_date = datetime.datetime.strptime(request.POST['start_date'], "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(request.POST['end_date'], "%Y-%m-%d").date()
+            balance = json.loads(request.POST['balance'])
+            output = io.BytesIO()
+            workbook = xlsxwriter.Workbook(output)
+            worksheet = workbook.add_worksheet()
+            worksheet.write('A1', 'Оборотная ведомость')
+            merge_format = workbook.add_format({
+                'bold': 1,
+                'align': 'center',
+                'valign': 'vcenter',
+                'font_size': 15
+            })
+            merge_header_format = workbook.add_format({
+                'align': 'center',
+                'valign': 'vcenter',
+                'bg_color': '#c8c8c8',
+                'text_wrap': True,
+                'border': 1,
+                'border_color': '#d7d7d7'
+            })
+            border_format = workbook.add_format({
+                'border': 1,
+                'border_color': '#d7d7d7'
+            })
+            worksheet.merge_range('A1:N1', 'Оборотная ведомость', merge_format)
+            worksheet.write('A3', 'Склад')
+            worksheet.write('A5', 'Период')
+            worksheet.write('A7', 'Группа')
+            worksheet.write('B7', 'Артикул')
+            worksheet.write('C7', 'Наименование')
+            worksheet.write('D7', 'Единица измерения')
+            worksheet.write('E7', 'Остаток на начало')
+            worksheet.write('G7', 'Приход')
+            worksheet.write('I7', 'Расход')
+            worksheet.write('K7', 'Уточнено')
+            worksheet.write('M7', 'Остаток на конец')
+            worksheet.write('E8', 'Количество', merge_header_format)
+            worksheet.write('F8', 'Стоимость', merge_header_format)
+            worksheet.write('G8', 'Количество', merge_header_format)
+            worksheet.write('H8', 'Стоимость', merge_header_format)
+            worksheet.write('I8', 'Количество', merge_header_format)
+            worksheet.write('J8', 'Стоимость', merge_header_format)
+            worksheet.write('K8', 'Списано', merge_header_format)
+            worksheet.write('L8', 'Доначислено', merge_header_format)
+            worksheet.write('M8', 'Количество', merge_header_format)
+            worksheet.write('N8', 'Списано', merge_header_format)
+            worksheet.set_column(2, 2, 43)
+            worksheet.set_column(3, 3, 13)
+            worksheet.set_column(4, 13, 14)
+            worksheet.merge_range('A7:A8', 'Группа', merge_header_format)
+            worksheet.merge_range('B7:B8', 'Артикул', merge_header_format)
+            worksheet.merge_range('C7:C8', 'Наименование', merge_header_format)
+            worksheet.merge_range('D7:D8', 'Единица измерения', merge_header_format)
+            worksheet.merge_range('E7:F7', 'Остаток на начало', merge_header_format)
+            worksheet.merge_range('G7:H7', 'Приход', merge_header_format)
+            worksheet.merge_range('I7:J7', 'Расход', merge_header_format)
+            worksheet.merge_range('K7:L7', 'Уточнено', merge_header_format)
+            worksheet.merge_range('M7:N7', 'Остаток на конец', merge_header_format)
+            worksheet.write('C3', stock.name)
+            worksheet.write('C5', 'С ' + start_date.strftime('%d.%m.%y') + ' по ' + end_date.strftime('%d.%m.%y'))
+            cur_row = 10
+            cell_format = workbook.add_format()
+            cell_format.set_align('center')
+            count_format = workbook.add_format()
+            count_format.set_bg_color('#e6e6e6')
+            for g in balance:
+                for m in balance[g]:
+                    worksheet.write('A' + str(cur_row), g + " / " + m)
+                    worksheet.merge_range('A'+str(cur_row)+':C' +str(cur_row), g + " / " + m)
+                    cur_row += 1
+                    for good in balance[g][m]:
+                        worksheet.write('B' + str(cur_row), balance[g][m][good]['article'])
+                        worksheet.write('C' + str(cur_row), balance[g][m][good]['name'])
+                        worksheet.write('D' + str(cur_row), balance[g][m][good]['unit'], cell_format)
+                        worksheet.write('E' + str(cur_row), '' if balance[g][m][good]['start_amount'] == 0 else balance[g][m][good]['start_amount'])
+                        worksheet.write('E' + str(cur_row),
+                                        '' if balance[g][m][good]['start_amount'] == 0 else balance[g][m][good][
+                                            'start_amount'], count_format)
+                        worksheet.write('F' + str(cur_row),
+                                        '' if balance[g][m][good]['start_cost'] == 0 else balance[g][m][good][
+                                            'start_cost'])
+                        worksheet.write('G' + str(cur_row),
+                                        '' if balance[g][m][good]['supply_amount'] == 0 else balance[g][m][good][
+                                            'supply_amount'], count_format)
+                        worksheet.write('H' + str(cur_row),
+                                        '' if balance[g][m][good]['supply_cost'] == 0 else balance[g][m][good][
+                                            'supply_cost'])
+                        worksheet.write('I' + str(cur_row),
+                                        '' if balance[g][m][good]['shipment_amount'] == 0 else balance[g][m][good][
+                                            'shipment_amount'], count_format)
+                        worksheet.write('J' + str(cur_row),
+                                        '' if balance[g][m][good]['shipment_cost'] == 0 else balance[g][m][good][
+                                            'shipment_cost'])
+                        worksheet.write('K' + str(cur_row),
+                                        '' if balance[g][m][good]['correction_minus'] == 0 else balance[g][m][good][
+                                            'correction_minus'])
+                        worksheet.write('L' + str(cur_row),
+                                        '' if balance[g][m][good]['correction_plus'] == 0 else balance[g][m][good][
+                                            'correction_plus'])
+                        worksheet.write('M' + str(cur_row),
+                                        '' if balance[g][m][good]['end_amount'] == 0 else balance[g][m][good][
+                                            'end_amount']), count_format
+                        worksheet.write('N' + str(cur_row),
+                                        '' if balance[g][m][good]['end_cost'] == 0 else balance[g][m][good][
+                                            'end_cost'])
+                        cur_row += 1
+                    cur_row += 1
+            worksheet.conditional_format(8, 4, cur_row-1, 4, {'type': 'cell',
+                                                      'criteria': '>=',
+                                                      'value': 0,
+                                                      'format': count_format})
+            worksheet.conditional_format(8, 6, cur_row - 1, 6, {'type': 'cell',
+                                                                'criteria': '>=',
+                                                                'value': 0,
+                                                                'format': count_format})
+            worksheet.conditional_format(8, 8, cur_row - 1, 8, {'type': 'cell',
+                                                                'criteria': '>=',
+                                                                'value': 0,
+                                                                'format': count_format})
+            worksheet.conditional_format(8, 12, cur_row - 1, 12, {'type': 'cell',
+                                                                'criteria': '>=',
+                                                                'value': 0,
+                                                                'format': count_format})
+            worksheet.conditional_format(6, 0, cur_row - 1, 12, {'type': 'cell',
+                                                                  'criteria': '>=',
+                                                                  'value': 0,
+                                                                  'format': border_format})
+            workbook.close()
+            # Rewind the buffer.
+            output.seek(0)
+            # Set up the Http response.
+            filename = 'report.xlsx'
+            response = HttpResponse(
+                base64.b64encode(output.getvalue()).decode(),
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+            return response
+
+
+def get_balance(request):
+    if request.method == 'POST':
+        if 'stock' in request.POST:
+            stock = Stock.objects.get(pk=request.POST['stock'])
+            start_date = datetime.datetime.strptime(request.POST['start_date'], "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(request.POST['end_date'], "%Y-%m-%d").date()
+            balance = {}
+            for s in Stock_operation.objects.filter(date__gte = start_date).filter(date__lte = end_date).filter(package__stock=stock):
+                if s.good.model.group.name not in balance:
+                    balance[s.good.model.group.name] = {}
+                if s.good.model.name not in balance[s.good.model.group.name]:
+                    balance[s.good.model.group.name][s.good.model.name] = {}
+                if s.good.id not in balance[s.good.model.group.name][s.good.model.name]:
+                    balance[s.good.model.group.name][s.good.model.name][s.good.id] = {
+                        'article': s.good.get_article(),
+                        'name': s.good.get_name(),
+                        'unit': s.good.get_unit().name,
+                        'start_amount': 0,
+                        'start_cost': 0,
+                        'end_amount': 0,
+                        'end_cost': 0,
+                        'supply_amount': 0,
+                        'supply_cost': 0,
+                        'shipment_amount': 0,
+                        'shipment_cost': 0,
+                        'correction_minus': 0,
+                        'correction_plus': 0
+                    }
+                if s.operation == '0':
+                    balance[s.good.model.group.name][s.good.model.name][s.good.id]['supply_amount'] += s.amount
+                    balance[s.good.model.group.name][s.good.model.name][s.good.id]['supply_cost'] += s.cost
+                elif s.operation == '1':
+                    balance[s.good.model.group.name][s.good.model.name][s.good.id]['shipment_amount'] += s.amount
+                    balance[s.good.model.group.name][s.good.model.name][s.good.id]['shipment_cost'] += s.cost
+                else:
+                    diff = s.amount - s.last_value
+                    if diff > 0:
+                        balance[s.good.model.group.name][s.good.model.name][s.good.id]['correction_plus'] += diff
+                    else:
+                        balance[s.good.model.group.name][s.good.model.name][s.good.id]['correction_minus'] += abs(diff)
+                #переписать на ед изм
+            for group in balance:
+                for model in balance[group]:
+                    for good in balance[group][model]:
+                        g = Goods.objects.get(pk=good)
+                        correction = Stock_operation.objects.filter(date__lt = start_date, good=g, package__stock=stock, operation='2').order_by('-date').first()
+                        if correction is None:
+                            start_amount = 0
+                            start_cost = 0
+                            operations = Stock_operation.objects.filter(date__lt = start_date, good=g, package__stock=stock).order_by('date')
+                        else:
+                            start_amount = correction.amount
+                            start_cost = correction.cost
+                            operations = Stock_operation.objects.filter(date__lt = start_date, good=g, package__stock=stock, date__gt=correction.date).order_by('date')
+                        for op in operations:
+                            if op.operation == '0':
+                                start_amount += op.amount
+                                start_cost += op.cost
+                            else:
+                                start_amount -= op.amount
+                                start_cost -= op.cost
+                        balance[group][model][good]['start_amount'] = start_amount
+                        balance[group][model][good]['start_cost'] = start_cost
+                        correction = Stock_operation.objects.filter(date__lt=end_date, good=g,
+                                                                    package__stock=stock, operation='2', date__gte=start_date).order_by(
+                            '-date').first()
+                        if correction is None:
+                            end_amount = start_amount
+                            end_cost = start_cost
+                            operations = Stock_operation.objects.filter(date__lt=end_date, date__gte=start_date, good=g,
+                                                                        package__stock=stock).order_by('date')
+                        else:
+                            end_amount = correction.amount
+                            end_cost = correction.cost
+                            operations = Stock_operation.objects.filter(date__lt=end_date, good=g,
+                                                                        package__stock=stock,
+                                                                        date__gt=correction.date).order_by('date')
+                        for op in operations:
+                            if op.operation == '0':
+                                end_amount += op.amount
+                                end_cost += op.cost
+                            else:
+                                end_amount -= op.amount
+                                end_cost -= op.cost
+                        balance[group][model][good]['end_amount'] = end_amount
+                        balance[group][model][good]['end_cost'] = end_cost
+            return HttpResponse(json.dumps(balance))
 
 @login_required(login_url='/stock/login/')
 def supplies(request):

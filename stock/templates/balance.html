@@ -1,0 +1,145 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    {% load stock_extras %}
+    <style>
+        @media print {
+            .passport {
+                page-break-inside: auto;
+            }
+        }
+        .inline-el {
+            display: inline-block;
+        }
+        .sub-th {
+            font-weight: normal!important;
+        }
+    </style>
+    <script>
+    var balance_data = null;
+    function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
+    }
+    function getBalance() {
+        $('#make-btn').prop('disabled', true);
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_balance/',
+                data: {
+                    'stock': $("#stock").prop("value"),
+                    'start_date': $("#startDate").prop("value"),
+                    'end_date': $("#endDate").prop("value")
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    balance_data = data;
+                    var balance = JSON.parse(data);
+                    $("#balance-body").html("");
+                    for (g in balance){
+                        for (m in balance[g]) {
+                            $("#balance-body").append("<tr><td colspan=14>" + g + " / " + m + "</td></tr>");
+                            for (good in balance[g][m]){
+                                var code = "<tr><td></td><td>" + balance[g][m][good]['article'] + "</td><td>" + balance[g][m][good]['name'] + "</td><td>" + balance[g][m][good]['unit'] + "</td><td>" + balance[g][m][good]['start_amount'] + "</td><td>" + balance[g][m][good]['start_cost'] + "</td><td>" + balance[g][m][good]['supply_amount'] + "</td><td>" + balance[g][m][good]['supply_cost'] + "</td><td>" + balance[g][m][good]['shipment_amount'] + "</td><td>" + balance[g][m][good]['shipment_cost'] + "</td><td>" + balance[g][m][good]['correction_minus'] + "</td><td>" + balance[g][m][good]['correction_plus'] + "</td><td>" + balance[g][m][good]['end_amount'] + "</td><td>" + balance[g][m][good]['end_cost'] + "</td></tr>";
+                                $("#balance-body").append(code);
+                            }
+                        }
+                    }
+                    $('#make-xls-btn').prop('disabled', false);
+                    $('#make-btn').prop('disabled', false);
+                }
+            });
+        }
+        function getBalanceXls() {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_balance_xls/',
+                data: {
+                    'balance': balance_data,
+                    'stock': $("#stock").prop("value"),
+                    'start_date': $("#startDate").prop("value"),
+                    'end_date': $("#endDate").prop("value")
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    var blob = new Blob([s2ab(atob(data))], {type:  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'report.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
+        }
+        </script>
+    <div class="container-fluid pg">
+        <div class="card">
+            <div class="card-header">
+            <div class="filter">
+                <div class="inline-form">
+                    <span class="inline-el">Склад</span>
+                        <select id="stock" class="form-control inline-el form-control-sm short-input"
+                                onchange="">
+                            {% for s in stocks %}
+                                <option value="{{ s.pk }}">{{ s }}</option>
+                            {% endfor %}
+                        </select>
+                <span class="inline-el">Начало периода</span>
+                        <input type="date" class="form-control short-input inline-el" id="startDate"/>
+                <span class="inline-el">Конец периода</span>
+                        <input type="date" class="form-control short-input inline-el" id="endDate"/>
+                <button class="btn btn-info inline-el btn-sm" id="make-btn" onclick="getBalance()">Получить отчёт</button>
+                <button class="btn btn-success inline-el btn-sm" id="make-xls-btn" onclick="getBalanceXls()" disabled>Сохранить в Excel</button>
+                </div>
+            </div>
+            </div>
+            <div class="table-responsive-sm table-responsive" style="padding-bottom: 0">
+                <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
+                    <thead class="thead-light" style="text-align: center">
+                    <tr>
+                        <th scope="col" rowspan="2">Группа</th>
+                        <th scope="col" rowspan="2">Артикул</th>
+                        <th scope="col" rowspan="2">Наименование</th>
+                        <th scope="col" rowspan="2">Единица измерения</th>
+                        <th scope="col" colspan="2">Остаток на начало</th>
+                        <th scope="col" colspan="2">Приход</th>
+                        <th scope="col" colspan="2">Расход</th>
+                        <th scope="col" colspan="2">Уточнено</th>
+                        <th scope="col" colspan="2">Остаток на конец</th>
+                    </tr>
+                    <tr>
+                        <th class="sub-th">Количество</th>
+                        <th class="sub-th">Стоимость</th>
+                        <th class="sub-th">Количество</th>
+                        <th class="sub-th">Стоимость</th>
+                        <th class="sub-th">Количество</th>
+                        <th class="sub-th">Стоимость</th>
+                        <th class="sub-th">Списано</th>
+                        <th class="sub-th">Доначислено</th>
+                        <th class="sub-th">Количество</th>
+                        <th class="sub-th">Стоимость</th>
+                    </tr>
+                    </thead>
+                    <tbody id="balance-body">
+                        <tr><td class="no-data" colspan=14>Нет данных</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
