@@ -447,7 +447,7 @@ def get_balance_xls(request):
             worksheet.write('K8', 'Списано', merge_header_format)
             worksheet.write('L8', 'Доначислено', merge_header_format)
             worksheet.write('M8', 'Количество', merge_header_format)
-            worksheet.write('N8', 'Списано', merge_header_format)
+            worksheet.write('N8', 'Стоимость', merge_header_format)
             worksheet.set_column(2, 2, 43)
             worksheet.set_column(3, 3, 13)
             worksheet.set_column(4, 13, 14)
@@ -541,6 +541,12 @@ def get_balance_xls(request):
             response['Content-Disposition'] = 'attachment; filename=%s' % filename
             return response
 
+def get_price(good, stock, date):
+    price = 0
+    last_cost = Stock_operation.objects.filter(date__lte = date, good = good).exclude(cost = 0).order_by('-date').first()
+    if last_cost is not None:
+        price = last_cost.cost
+    return price
 
 def get_balance(request):
     if request.method == 'POST':
@@ -572,10 +578,18 @@ def get_balance(request):
                     }
                 if s.operation == '0':
                     balance[s.good.model.group.name][s.good.model.name][s.good.id]['supply_amount'] += s.amount
-                    balance[s.good.model.group.name][s.good.model.name][s.good.id]['supply_cost'] += s.cost
+                    if s.cost == 0:
+                        price = get_price(s.good, stock, s.date)
+                        balance[s.good.model.group.name][s.good.model.name][s.good.id]['supply_cost'] += s.amount * price
+                    else:
+                        balance[s.good.model.group.name][s.good.model.name][s.good.id]['supply_cost'] += s.cost
                 elif s.operation == '1':
                     balance[s.good.model.group.name][s.good.model.name][s.good.id]['shipment_amount'] += s.amount
-                    balance[s.good.model.group.name][s.good.model.name][s.good.id]['shipment_cost'] += s.cost
+                    if s.cost == 0:
+                        price = get_price(s.good, stock, s.date)
+                        balance[s.good.model.group.name][s.good.model.name][s.good.id]['shipment_cost'] += s.amount * price
+                    else:
+                        balance[s.good.model.group.name][s.good.model.name][s.good.id]['shipment_cost'] += s.cost
                 else:
                     diff = s.amount - s.last_value
                     if diff > 0:
@@ -587,47 +601,79 @@ def get_balance(request):
                 for model in balance[group]:
                     for good in balance[group][model]:
                         g = Goods.objects.get(pk=good)
+                        balance[group][model][good]['supply_cost'] = round(balance[group][model][good]['supply_cost'], 2)
+                        balance[group][model][good]['shipment_cost'] = round(balance[group][model][good]['shipment_cost'], 2)
                         correction = Stock_operation.objects.filter(date__lt = start_date, good=g, package__stock=stock, operation='2').order_by('-date').first()
                         if correction is None:
                             start_amount = 0
-                            start_cost = 0
                             operations = Stock_operation.objects.filter(date__lt = start_date, good=g, package__stock=stock).order_by('date')
                         else:
                             start_amount = correction.amount
-                            start_cost = correction.cost
                             operations = Stock_operation.objects.filter(date__lt = start_date, good=g, package__stock=stock, date__gt=correction.date).order_by('date')
                         for op in operations:
                             if op.operation == '0':
                                 start_amount += op.amount
-                                start_cost += op.cost
                             else:
                                 start_amount -= op.amount
-                                start_cost -= op.cost
                         balance[group][model][good]['start_amount'] = start_amount
-                        balance[group][model][good]['start_cost'] = start_cost
+                        balance[group][model][good]['start_cost'] = round(get_price(g, stock, start_date) * start_amount, 2)
                         correction = Stock_operation.objects.filter(date__lt=end_date, good=g,
                                                                     package__stock=stock, operation='2', date__gte=start_date).order_by(
                             '-date').first()
                         if correction is None:
                             end_amount = start_amount
-                            end_cost = start_cost
                             operations = Stock_operation.objects.filter(date__lt=end_date, date__gte=start_date, good=g,
                                                                         package__stock=stock).order_by('date')
                         else:
                             end_amount = correction.amount
-                            end_cost = correction.cost
                             operations = Stock_operation.objects.filter(date__lt=end_date, good=g,
                                                                         package__stock=stock,
                                                                         date__gt=correction.date).order_by('date')
                         for op in operations:
                             if op.operation == '0':
                                 end_amount += op.amount
-                                end_cost += op.cost
                             else:
                                 end_amount -= op.amount
-                                end_cost -= op.cost
                         balance[group][model][good]['end_amount'] = end_amount
-                        balance[group][model][good]['end_cost'] = end_cost
+                        balance[group][model][good]['end_cost'] = round(get_price(g, stock, end_date) * end_amount, 2)
+            for s_g in Stock_good.objects.filter(stock = stock):
+                if s_g.good.model.group.name not in balance:
+                    balance[s_g.good.model.group.name] = {}
+                if s_g.good.model.name not in balance[s_g.good.model.group.name]:
+                    balance[s_g.good.model.group.name][s_g.good.model.name] = {}
+                if s_g.good.id not in balance[s_g.good.model.group.name][s_g.good.model.name]:
+                    g = s_g.good
+                    correction = Stock_operation.objects.filter(date__lt=start_date, good=g, package__stock=stock,
+                                                                operation='2').order_by('-date').first()
+                    if correction is None:
+                        start_amount = 0
+                        operations = Stock_operation.objects.filter(date__lt=start_date, good=g,
+                                                                    package__stock=stock).order_by('date')
+                    else:
+                        start_amount = correction.amount
+                        operations = Stock_operation.objects.filter(date__lt=start_date, good=g, package__stock=stock,
+                                                                    date__gt=correction.date).order_by('date')
+                    for op in operations:
+                        if op.operation == '0':
+                            start_amount += op.amount
+                        else:
+                            start_amount -= op.amount
+                    cost = round(start_amount * get_price(g, stock, start_date), 2)
+                    balance[s_g.good.model.group.name][s_g.good.model.name][s_g.good.id] = {
+                        'article': s_g.good.get_article(),
+                        'name': s_g.good.get_name(),
+                        'unit': s_g.good.get_unit().name,
+                        'start_amount': start_amount,
+                        'start_cost': cost,
+                        'end_amount': start_amount,
+                        'end_cost': cost,
+                        'supply_amount': 0,
+                        'supply_cost': 0,
+                        'shipment_amount': 0,
+                        'shipment_cost': 0,
+                        'correction_minus': 0,
+                        'correction_plus': 0
+                    }
             return HttpResponse(json.dumps(balance))
 
 @login_required(login_url='/stock/login/')
