@@ -397,6 +397,17 @@ def get_stock_inf():
             data[str(s.pk)][str(r.good.pk)] = r.amount
     return data
 
+def sort_by_article(goods):
+    temp = {}
+    for g in goods:
+        temp[goods[g]['article'] + goods[g]['name']] = g
+    keys = list(temp.keys())
+    keys.sort()
+    sorted_goods = []
+    for k in keys:
+        sorted_goods.append(temp[k])
+    return sorted_goods
+
 def get_balance_xls(request):
     if request.method == 'POST':
         if 'stock' in request.POST:
@@ -472,7 +483,8 @@ def get_balance_xls(request):
                     worksheet.write('A' + str(cur_row), g + " / " + m)
                     worksheet.merge_range('A'+str(cur_row)+':C' +str(cur_row), g + " / " + m)
                     cur_row += 1
-                    for good in balance[g][m]:
+                    sorted = sort_by_article(balance[g][m])
+                    for good in sorted:
                         worksheet.write('B' + str(cur_row), balance[g][m][good]['article'])
                         worksheet.write('C' + str(cur_row), balance[g][m][good]['name'])
                         worksheet.write('D' + str(cur_row), balance[g][m][good]['unit'], cell_format)
@@ -554,8 +566,9 @@ def get_balance(request):
             stock = Stock.objects.get(pk=request.POST['stock'])
             start_date = datetime.datetime.strptime(request.POST['start_date'], "%Y-%m-%d").date()
             end_date = datetime.datetime.strptime(request.POST['end_date'], "%Y-%m-%d").date()
+            end_date += datetime.timedelta(days=1)
             balance = {}
-            for s in Stock_operation.objects.filter(date__gte = start_date).filter(date__lte = end_date).filter(package__stock=stock):
+            for s in Stock_operation.objects.filter(date__gte = start_date).filter(date__lt = end_date).filter(package__stock=stock):
                 if s.good.model.group.name not in balance:
                     balance[s.good.model.group.name] = {}
                 if s.good.model.name not in balance[s.good.model.group.name]:
