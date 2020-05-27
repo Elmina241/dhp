@@ -1,0 +1,84 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    {% load stock_extras %}
+    <style>
+        @media print {
+            .passport {
+                page-break-inside: auto;
+            }
+        }
+        .inline-el {
+            display: inline-block;
+        }
+        .sub-th {
+            font-weight: normal!important;
+        }
+    </style>
+    <script>
+    function getStickers() {
+        $('#make-btn').prop('disabled', true);
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_stickers_income/',
+                data: {
+                    'product': $("#product").prop("value")
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    balance_data = data;
+                    var balance = JSON.parse(data);
+                    $("#balance-body").html("");
+                    for (g in balance){
+                        for (m in balance[g]) {
+                            $("#balance-body").append("<tr><td colspan=14>" + g + " / " + m + "</td></tr>");
+                            for (good in balance[g][m]){
+                                var code = "<tr><td></td><td>" + balance[g][m][good]['article'] + "</td><td>" + balance[g][m][good]['name'] + "</td><td>" + balance[g][m][good]['unit'] + "</td><td>" + balance[g][m][good]['start_amount'] + "</td><td>" + balance[g][m][good]['start_cost'] + "</td><td>" + balance[g][m][good]['supply_amount'] + "</td><td>" + balance[g][m][good]['supply_cost'] + "</td><td>" + balance[g][m][good]['shipment_amount'] + "</td><td>" + balance[g][m][good]['shipment_cost'] + "</td><td>" + balance[g][m][good]['correction_minus'] + "</td><td>" + balance[g][m][good]['correction_plus'] + "</td><td>" + balance[g][m][good]['end_amount'] + "</td><td>" + balance[g][m][good]['end_cost'] + "</td></tr>";
+                                $("#balance-body").append(code);
+                            }
+                        }
+                    }
+                    $('#make-xls-btn').prop('disabled', false);
+                    $('#make-btn').prop('disabled', false);
+                }
+            });
+        }
+        </script>
+    <div class="container-fluid pg">
+        <div class="card">
+            <div class="card-header">
+            <div class="filter">
+                <div class="inline-form">
+                    <span class="inline-el">Продукт</span>
+                        <select id="product" class="form-control inline-el form-control-sm short-input"
+                                onchange="">
+                            {% for p in products %}
+                                <option value="{{ p.pk }}">{{ p.get_article }} {{ p.get_name }}</option>
+                            {% endfor %}
+                        </select>
+                <button class="btn btn-info inline-el btn-sm" id="make-btn" onclick="getStickers()">Получить отчёт</button>
+                </div>
+            </div>
+            </div>
+            <div class="table-responsive-sm table-responsive" style="padding-bottom: 0">
+                <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
+                    <thead class="thead-light" style="text-align: center">
+                    <tr>
+                        <th scope="col">Артикул</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Остаток</th>
+                    </tr>
+                    </thead>
+                    <tbody id="stickers-body">
+                        <tr><td class="no-data" colspan=3>Нет данных</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

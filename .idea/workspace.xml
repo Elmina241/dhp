@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7e4ae37d-9ca5-421c-be01-ae3178d570ab" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/templates/store/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/stock/templates/store/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stock/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stock/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/stock/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,23 +32,14 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.60531133">
+    <splitter split-orientation="horizontal" split-proportion="0.45321637">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/django_example/settings.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1326">
-                  <caret line="78" column="3" selection-start-line="78" selection-start-column="3" selection-end-line="78" selection-end-column="3" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stock/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="360">
-                  <caret line="568" selection-start-line="568" selection-end-line="568" selection-end-column="50" />
+                <state relative-caret-position="363">
+                  <caret line="32" column="104" selection-start-line="32" selection-start-column="104" selection-end-line="32" selection-end-column="104" />
                   <folding>
                     <element signature="e#0#45#0" expanded="true" />
                   </folding>
@@ -57,8 +50,8 @@
           <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/urls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="799">
-                  <caret line="48" selection-start-line="48" selection-end-line="50" selection-end-column="86" />
+                <state relative-caret-position="270">
+                  <caret line="49" column="9" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
                 </state>
               </provider>
             </entry>
@@ -84,8 +77,8 @@
           <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="6256">
-                  <caret line="370" column="21" selection-start-line="370" selection-start-column="6" selection-end-line="370" selection-end-column="21" />
+                <state relative-caret-position="5865">
+                  <caret line="345" column="5" lean-forward="true" selection-start-line="345" selection-start-column="5" selection-end-line="345" selection-end-column="5" />
                   <folding>
                     <element signature="e#47#75#0" expanded="true" />
                   </folding>
@@ -118,17 +111,26 @@
           <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="181">
-                  <caret line="110" column="64" lean-forward="true" selection-start-line="110" selection-start-column="64" selection-end-line="110" selection-end-column="64" />
+                <state relative-caret-position="387">
+                  <caret line="114" column="70" lean-forward="true" selection-start-line="114" selection-start-column="70" selection-end-line="114" selection-end-column="70" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="balance.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="balance.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/stock/templates/balance.html">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="228">
-                  <caret line="42" column="40" lean-forward="true" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
+                  <caret line="42" column="40" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="stickers.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/stock/templates/stickers.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="358">
+                  <caret line="62" column="33" lean-forward="true" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
                 </state>
               </provider>
             </entry>
@@ -148,7 +150,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>stock</find>
       <find>shor</find>
       <find>class='edit-btn'</find>
       <find>saveS</find>
@@ -178,6 +179,7 @@
       <find>last_value</find>
       <find>inventor</find>
       <find>balance</find>
+      <find>bala</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -186,7 +188,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/stock/templates/500.html" />
         <option value="$PROJECT_DIR$/dhp.com.conf" />
         <option value="$PROJECT_DIR$/tables/templates/materials.html" />
         <option value="$PROJECT_DIR$/tables/templates/material.html" />
@@ -233,9 +234,10 @@
         <option value="$PROJECT_DIR$/stock/static/scripts/scripts.js" />
         <option value="$PROJECT_DIR$/log/views.py" />
         <option value="$PROJECT_DIR$/stock/templates/stock_operations.html" />
+        <option value="$PROJECT_DIR$/stock/templates/balance.html" />
         <option value="$PROJECT_DIR$/stock/templates/store/base.html" />
         <option value="$PROJECT_DIR$/stock/urls.py" />
-        <option value="$PROJECT_DIR$/stock/templates/balance.html" />
+        <option value="$PROJECT_DIR$/stock/templates/stickers.html" />
         <option value="$PROJECT_DIR$/stock/views.py" />
       </list>
     </option>
@@ -305,16 +307,16 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Anna\Documents\Python\django_example\log\static\css" />
+      <recent name="C:\Users\Anna\Documents\Python\django_example\log\templatetags" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Elmina\Documents\python\dhp\stock\templates" />
       <recent name="C:\Users\Anna\Documents\Python\django_example\tables\templates" />
       <recent name="C:\Users\Anna\Documents\Python\django_example\log\templates" />
       <recent name="C:\Users\Anna\Documents\Python\django_example\processes\templates" />
       <recent name="C:\Users\Anna\Documents\Python\django_example\django_example\static\css" />
-      <recent name="C:\Users\Anna\Documents\Python\django_example\stock\templates" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Anna\Documents\Python\django_example\log\static\css" />
-      <recent name="C:\Users\Anna\Documents\Python\django_example\log\templatetags" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -444,9 +446,9 @@
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.19281046" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32897604" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.003267974" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49924356" visible="true" weight="0.29956427" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12260128" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.0016501651" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49924356" visible="true" weight="0.2570806" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.122068234" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32995737" />
       <window_info anchor="right" id="SciView" order="3" weight="0.32995737" />
@@ -492,13 +494,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tables/templates/sticker.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="51" selection-start-line="18" selection-start-column="51" selection-end-line="18" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tables/templates/stickers.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -745,7 +740,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/django_example/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1326">
+        <state relative-caret-position="17">
           <caret line="78" column="3" selection-start-line="78" selection-start-column="3" selection-end-line="78" selection-end-column="3" />
         </state>
       </provider>
@@ -785,41 +780,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/balance.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="42" column="40" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="387">
+          <caret line="114" column="70" lean-forward="true" selection-start-line="114" selection-start-column="70" selection-end-line="114" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/stock/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="48" selection-start-line="48" selection-end-line="50" selection-end-column="86" />
+        <state relative-caret-position="270">
+          <caret line="49" column="9" selection-start-line="49" selection-start-column="9" selection-end-line="49" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stock/templates/stickers.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="62" column="33" lean-forward="true" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stock/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6256">
-          <caret line="370" column="21" selection-start-line="370" selection-start-column="6" selection-end-line="370" selection-end-column="21" />
+        <state relative-caret-position="5865">
+          <caret line="345" column="5" lean-forward="true" selection-start-line="345" selection-start-column="5" selection-end-line="345" selection-end-column="5" />
           <folding>
             <element signature="e#47#75#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/store/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="110" column="64" lean-forward="true" selection-start-line="110" selection-start-column="64" selection-end-line="110" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/stock/templates/balance.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="42" column="40" lean-forward="true" selection-start-line="42" selection-start-column="40" selection-end-line="42" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stock/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="568" selection-start-line="568" selection-end-line="568" selection-end-column="50" />
+        <state relative-caret-position="363">
+          <caret line="32" column="104" selection-start-line="32" selection-start-column="104" selection-end-line="32" selection-end-column="104" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>

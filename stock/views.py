@@ -26,6 +26,12 @@ def balance(request):
                    "user_group": str(User_group.objects.filter(user=request.user)[0].group),
                    "header": "Оборотная ведомость", "stocks": Stock.objects.all()})
 
+def stickers_income(request):
+    return render(request, "stickers.html",
+                  {"permissions": json.dumps(User_group.objects.filter(user=request.user)[0].get_permissions()),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
+                   "header": "Отчёт по этикеткам", "products": Goods.objects.filter(model__group__parent=24)})
+
 def goods_models(request):
     tree = {}
     tree[0] = {"name": "root", "nodes": {}}
@@ -1893,3 +1899,5 @@ def edit_prop(request):
                             p = Property_var(prop=prop, name=d)
                             p.save()
             return HttpResponse('ok')
+
+
