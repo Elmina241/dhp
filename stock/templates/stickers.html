@@ -31,19 +31,25 @@
                     }
                 },
                 success: function onAjaxSuccess(data) {
-                    balance_data = data;
-                    var balance = JSON.parse(data);
-                    $("#balance-body").html("");
-                    for (g in balance){
-                        for (m in balance[g]) {
-                            $("#balance-body").append("<tr><td colspan=14>" + g + " / " + m + "</td></tr>");
-                            for (good in balance[g][m]){
-                                var code = "<tr><td></td><td>" + balance[g][m][good]['article'] + "</td><td>" + balance[g][m][good]['name'] + "</td><td>" + balance[g][m][good]['unit'] + "</td><td>" + balance[g][m][good]['start_amount'] + "</td><td>" + balance[g][m][good]['start_cost'] + "</td><td>" + balance[g][m][good]['supply_amount'] + "</td><td>" + balance[g][m][good]['supply_cost'] + "</td><td>" + balance[g][m][good]['shipment_amount'] + "</td><td>" + balance[g][m][good]['shipment_cost'] + "</td><td>" + balance[g][m][good]['correction_minus'] + "</td><td>" + balance[g][m][good]['correction_plus'] + "</td><td>" + balance[g][m][good]['end_amount'] + "</td><td>" + balance[g][m][good]['end_cost'] + "</td></tr>";
-                                $("#balance-body").append(code);
+                    var income = JSON.parse(data);
+                    console.log(income);
+                    $("#stickers-thead").html('<th scope="col">Артикул</th><th scope="col">Наименование</th><th scope="col">Остаток</th>');
+                    for (var d in income['dates']) {
+                        $("#stickers-thead").append('<th>' + income['dates'][d] + '</th>');
+                    }
+                    $("#stickers-body").html('');
+                    for (var s in income['stickers']){
+                        var amount = '';
+                        for (var d in income['dates']){
+                            if (income['dates'][d] in income['incomes'][s]) {
+                                amount = amount + '<td>' + income['incomes'][s][income['dates'][d]] + '</td>';
+                            }
+                            else {
+                                amount = amount + '<td></td>';
                             }
                         }
+                        $("#stickers-body").append('<tr><td>' + income['stickers'][s]['article'] + '</td><td>' + income['stickers'][s]['name'] + '</td><td>' + income['stickers'][s]['amount'] + '</td>' + amount + '</td></tr>');
                     }
-                    $('#make-xls-btn').prop('disabled', false);
                     $('#make-btn').prop('disabled', false);
                 }
             });
@@ -68,7 +74,7 @@
             <div class="table-responsive-sm table-responsive" style="padding-bottom: 0">
                 <table class="table table-bordered table-hover table-sm" style="margin-bottom: 0">
                     <thead class="thead-light" style="text-align: center">
-                    <tr>
+                    <tr id="stickers-thead">
                         <th scope="col">Артикул</th>
                         <th scope="col">Наименование</th>
                         <th scope="col">Остаток</th>

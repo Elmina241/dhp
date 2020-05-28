@@ -5,6 +5,7 @@ import json
 from tables.models import Unit
 from django.db.models import Q
 from .models import *
+from django.db.models import Sum
 from django.core import serializers
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 import time
@@ -1900,4 +1901,30 @@ def edit_prop(request):
                             p.save()
             return HttpResponse('ok')
 
+def get_stickers_income(request):
+    if request.method == 'POST':
+        if 'product' in request.POST:
+            prod = Goods.objects.get(pk=request.POST['product'])
+            article = prod.get_article()
+            #, product__model__id=63
+            stickers_names = Good_name.objects.filter(name__contains=article, product__model__id=63)
+            stickers = [s.product for s in stickers_names]
+            stickers_incomes = {}
+            dates = []
+            sticker_names = {}
+            #.strftime('%d.%m.%Y')
+            for s in stickers:
+                cur_amount = Stock_good.objects.filter(good=s).aggregate(Sum('amount'))
+                sticker_names[s.id] = {'article': s.get_article(), 'name': s.get_name(), 'amount': cur_amount['amount__sum']}
+                stickers_incomes[s.id] = {}
+                incomes = Stock_operation.objects.filter(good=s, operation='0')
+                for i in incomes:
+                    date = i.date.strftime('%d.%m.%Y')
+                    if i.date.date() not in dates:
+                        dates.append(i.date.date())
+                    stickers_incomes[s.id][date] = i.amount
+            dates.sort()
+            dates_str = [d.strftime('%d.%m.%Y') for d in dates]
+            data = {'dates': dates_str, 'stickers': sticker_names, 'incomes': stickers_incomes}
+            return HttpResponse(json.dumps(data))
 
