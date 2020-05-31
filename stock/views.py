@@ -1928,3 +1928,64 @@ def get_stickers_income(request):
             data = {'dates': dates_str, 'stickers': sticker_names, 'incomes': stickers_incomes}
             return HttpResponse(json.dumps(data))
 
+def get_stickers_xls(request):
+    if request.method == 'POST':
+        if 'product' in request.POST:
+            product = Goods.objects.get(pk=request.POST['product'])
+            income = json.loads(request.POST['income'])
+            output = io.BytesIO()
+            workbook = xlsxwriter.Workbook(output)
+            worksheet = workbook.add_worksheet()
+            worksheet.write('A1', 'Оборотная ведомость')
+            merge_format = workbook.add_format({
+                'bold': 1,
+                'align': 'center',
+                'valign': 'vcenter',
+                'font_size': 15
+            })
+            merge_header_format = workbook.add_format({
+                'align': 'center',
+                'valign': 'vcenter',
+                'bg_color': '#c8c8c8',
+                'text_wrap': True,
+                'border': 1,
+                'border_color': '#d7d7d7'
+            })
+            border_format = workbook.add_format({
+                'border': 1,
+                'border_color': '#d7d7d7'
+            })
+            worksheet.set_column(0, 0, 12)
+            worksheet.set_column(1, 1, 60)
+            worksheet.set_column(2, len(income['dates']) + 2, 20)
+            worksheet.write('A1', 'Артикул', merge_header_format)
+            worksheet.write('B1', 'Наименование', merge_header_format)
+            worksheet.write('C1', 'Остаток', merge_header_format)
+            cur_row = 1
+            cell_format = workbook.add_format()
+            cell_format.set_align('center')
+            cur_col = 3
+            for d in income['dates']:
+                worksheet.write(0, cur_col, d, merge_header_format)
+                cur_col += 1
+            for s in income['stickers']:
+                cur_col = 3
+                worksheet.write(cur_row, 0, income['stickers'][s]['article'])
+                worksheet.write(cur_row, 1, income['stickers'][s]['name'])
+                worksheet.write(cur_row, 2, income['stickers'][s]['amount'])
+                for d in income['dates']:
+                    if d in income['incomes'][s]:
+                        worksheet.write(cur_row, cur_col, income['incomes'][s][d])
+                    cur_col += 1
+                cur_row += 1
+            workbook.close()
+            # Rewind the buffer.
+            output.seek(0)
+            # Set up the Http response.
+            filename = 'report.xlsx'
+            response = HttpResponse(
+                base64.b64encode(output.getvalue()).decode(),
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename=%s' % filename
+            return response

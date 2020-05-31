@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^balance/$', views.balance, name='balance'),
     url(r'^stickers/$', views.stickers_income, name='stickers_income'),
     url(r'^stickers/get_stickers_income/$', views.get_stickers_income, name='get_stickers_income'),
+    url(r'^stickers/get_stickers_xls/$', views.get_stickers_xls, name='get_stickers_xls'),
     url(r'^balance/get_balance/$', views.get_balance, name='get_balance'),
     url(r'^balance/get_balance_xls/$', views.get_balance_xls, name='get_balance_xls'),
     url(r'^offers/$', views.offers, name='offers'),

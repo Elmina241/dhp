@@ -16,6 +16,13 @@
         }
     </style>
     <script>
+    var income_data = null;
+    function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
+    }
     function getStickers() {
         $('#make-btn').prop('disabled', true);
             var csrftoken = getCookie('csrftoken');
@@ -32,7 +39,7 @@
                 },
                 success: function onAjaxSuccess(data) {
                     var income = JSON.parse(data);
-                    console.log(income);
+                    income_data = data;
                     $("#stickers-thead").html('<th scope="col">Артикул</th><th scope="col">Наименование</th><th scope="col">Остаток</th>');
                     for (var d in income['dates']) {
                         $("#stickers-thead").append('<th>' + income['dates'][d] + '</th>');
@@ -51,6 +58,34 @@
                         $("#stickers-body").append('<tr><td>' + income['stickers'][s]['article'] + '</td><td>' + income['stickers'][s]['name'] + '</td><td>' + income['stickers'][s]['amount'] + '</td>' + amount + '</td></tr>');
                     }
                     $('#make-btn').prop('disabled', false);
+                    $('#make-xls-btn').prop('disabled', false);
+                }
+            });
+        }
+        function getIncomeXls() {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'get_stickers_xls/',
+                data: {
+                    'income': income_data,
+                    'product': $("#product").prop("value")
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    var blob = new Blob([s2ab(atob(data))], {type:  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'report.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
                 }
             });
         }
@@ -68,6 +103,7 @@
                             {% endfor %}
                         </select>
                 <button class="btn btn-info inline-el btn-sm" id="make-btn" onclick="getStickers()">Получить отчёт</button>
+                <button class="btn btn-success inline-el btn-sm" id="make-xls-btn" onclick="getIncomeXls()" disabled>Сохранить в Excel</button>
                 </div>
             </div>
             </div>
