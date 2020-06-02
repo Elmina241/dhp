@@ -49,13 +49,13 @@
                         var amount = '';
                         for (var d in income['dates']){
                             if (income['dates'][d] in income['incomes'][s]) {
-                                amount = amount + '<td>' + income['incomes'][s][income['dates'][d]] + '</td>';
+                                amount = amount + '<td>' + income['incomes'][s][income['dates'][d]].toLocaleString().replace(/,/g," ",) + '</td>';
                             }
                             else {
                                 amount = amount + '<td></td>';
                             }
                         }
-                        $("#stickers-body").append('<tr><td>' + income['stickers'][s]['article'] + '</td><td>' + income['stickers'][s]['name'] + '</td><td>' + income['stickers'][s]['amount'] + '</td>' + amount + '</td></tr>');
+                        $("#stickers-body").append('<tr><td>' + income['stickers'][s]['article'] + '</td><td>' + income['stickers'][s]['name'] + '</td><td>' + income['stickers'][s]['amount'].toLocaleString().replace(/,/g," ",)  + '</td>' + amount + '</td></tr>');
                     }
                     $('#make-btn').prop('disabled', false);
                     $('#make-xls-btn').prop('disabled', false);
@@ -98,6 +98,7 @@
                     <span class="inline-el">Продукт</span>
                         <select id="product" class="form-control inline-el form-control-sm short-input"
                                 onchange="">
+                            <option value="-1">Все</option>
                             {% for p in products %}
                                 <option value="{{ p.pk }}">{{ p.get_article }} {{ p.get_name }}</option>
                             {% endfor %}

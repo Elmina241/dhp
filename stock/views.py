@@ -1904,10 +1904,14 @@ def edit_prop(request):
 def get_stickers_income(request):
     if request.method == 'POST':
         if 'product' in request.POST:
-            prod = Goods.objects.get(pk=request.POST['product'])
-            article = prod.get_article()
-            #, product__model__id=63
-            stickers_names = Good_name.objects.filter(name__contains=article, product__model__id=63)
+            if request.POST['product'] == '-1':
+                #prod = None
+                stickers_names = Good_name.objects.filter(product__model__id=63)
+            else:
+                prod = Goods.objects.get(pk=request.POST['product'])
+                article = prod.get_article()
+                #, product__model__id=63
+                stickers_names = Good_name.objects.filter(name__contains=article, product__model__id=63)
             stickers = [s.product for s in stickers_names]
             stickers_incomes = {}
             dates = []
@@ -1915,14 +1919,16 @@ def get_stickers_income(request):
             #.strftime('%d.%m.%Y')
             for s in stickers:
                 cur_amount = Stock_good.objects.filter(good=s).aggregate(Sum('amount'))
-                sticker_names[s.id] = {'article': s.get_article(), 'name': s.get_name(), 'amount': cur_amount['amount__sum']}
+                sticker_names[s.id] = {'article': s.get_article(), 'name': s.get_name(), 'amount': 0 if cur_amount['amount__sum'] is None else int(cur_amount['amount__sum'])}
                 stickers_incomes[s.id] = {}
                 incomes = Stock_operation.objects.filter(good=s, operation='0')
                 for i in incomes:
-                    date = i.date.strftime('%d.%m.%Y')
-                    if i.date.date() not in dates:
-                        dates.append(i.date.date())
-                    stickers_incomes[s.id][date] = i.amount
+                    demand = Demand.objects.filter(pk=i.package.matrix.cause_id)[0]
+                    if demand.provider == None:
+                        date = i.date.strftime('%d.%m.%Y')
+                        if i.date.date() not in dates:
+                            dates.append(i.date.date())
+                        stickers_incomes[s.id][date] = int(i.amount)
             dates.sort()
             dates_str = [d.strftime('%d.%m.%Y') for d in dates]
             data = {'dates': dates_str, 'stickers': sticker_names, 'incomes': stickers_incomes}
@@ -1931,7 +1937,7 @@ def get_stickers_income(request):
 def get_stickers_xls(request):
     if request.method == 'POST':
         if 'product' in request.POST:
-            product = Goods.objects.get(pk=request.POST['product'])
+            #product = Goods.objects.get(pk=request.POST['product'])
             income = json.loads(request.POST['income'])
             output = io.BytesIO()
             workbook = xlsxwriter.Workbook(output)
@@ -1955,6 +1961,7 @@ def get_stickers_xls(request):
                 'border': 1,
                 'border_color': '#d7d7d7'
             })
+            num_format = workbook.add_format({'num_format': '### ### ###'})
             worksheet.set_column(0, 0, 12)
             worksheet.set_column(1, 1, 60)
             worksheet.set_column(2, len(income['dates']) + 2, 20)
@@ -1972,10 +1979,10 @@ def get_stickers_xls(request):
                 cur_col = 3
                 worksheet.write(cur_row, 0, income['stickers'][s]['article'])
                 worksheet.write(cur_row, 1, income['stickers'][s]['name'])
-                worksheet.write(cur_row, 2, income['stickers'][s]['amount'])
+                worksheet.write(cur_row, 2, income['stickers'][s]['amount'], num_format)
                 for d in income['dates']:
                     if d in income['incomes'][s]:
-                        worksheet.write(cur_row, cur_col, income['incomes'][s][d])
+                        worksheet.write(cur_row, cur_col, income['incomes'][s][d], num_format)
                     cur_col += 1
                 cur_row += 1
             workbook.close()

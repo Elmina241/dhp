@@ -1139,8 +1139,8 @@ function addMaterialP(){
   var err = document.getElementById("error-message");
   if (err) err.remove();
   var id = document.getElementById("material").selectedOptions[0].value
-  var code = document.getElementById("material").selectedOptions[0].textContent.substring(0,4);
-  var name = document.getElementById("material").selectedOptions[0].textContent.substring(5);
+  var code = document.getElementById("material").selectedOptions[0].textContent.split(' ')[0];
+  var name = document.getElementById("material").selectedOptions[0].textContent.split(' ').slice(1).join(' ');
   /*var amm = $("#percent").val();
   var waterAmm = $("#ВД01").val() - amm;
   $("#ВД01").attr("value", waterAmm);*/
