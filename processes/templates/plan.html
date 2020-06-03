@@ -141,7 +141,7 @@ $(document).ready(function(){
       </thead>
       <tbody>
         {% for p in products|dictsort:"get_name_for_table" %}
-        <tr><td></td><td>{{p.code}}</td><td>{{p.get_name_for_table}}</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="{{p.production.get_boxing_amm}}" onchange="countUnits();"></td><td>{{p.production.get_boxing_amm}}</td><td>{{p.production.compAmount}}</td><td>0</td></tr>
+        <tr><td></td><td>{{p.code}}</td><td>{{p.get_name_for_table}} ({{ p.production.cap.group.name }} {{ p.production.cap.form }})</td><td><input type="number" name="{{p.id}}" id="{{p.id}}" step="{{p.production.get_boxing_amm}}" onchange="countUnits();"></td><td>{{p.production.get_boxing_amm}}</td><td>{{p.production.compAmount}}</td><td>0</td></tr>
         {% endfor %}
         <tr><td colspan="2"><b>Итого, штуки</b></td><td></td><td></td><td></td><td></td><td><b>0</b></td></tr>
         <tr><td colspan="2"><b>Итого, тонны</b></td><td></td><td></td><td></td><td></td><td><b>0</b></td></tr>

@@ -1924,7 +1924,7 @@ def get_stickers_income(request):
                 incomes = Stock_operation.objects.filter(good=s, operation='0')
                 for i in incomes:
                     demand = Demand.objects.filter(pk=i.package.matrix.cause_id)[0]
-                    if demand.provider == None:
+                    if demand.provider is None:
                         date = i.date.strftime('%d.%m.%Y')
                         if i.date.date() not in dates:
                             dates.append(i.date.date())
