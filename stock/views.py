@@ -1080,9 +1080,20 @@ def save_stock_operation(request):
         if 'id' in request.POST:
             demand = Demand.objects.get(pk=request.POST['id'])
             goods = json.loads(request.POST['goods'])
+            if json.loads(request.POST['isDonor']):
+                for g in goods:
+                    amount = float(goods[g]['amount'].replace(',', '.'))
+                    good_d = Demand_good.objects.get(pk=goods[g]['id'])
+                    if Stock_good.objects.filter(stock=demand.donor, good=good_d.good).count() == 0:
+                        return HttpResponse(json.dumps({'good': good_d.id, 'amount': 0}))
+                    else:
+                        amount = Goods_unit.objects.filter(product=good_d.good, unit=good_d.unit)[0].coeff * amount
+                        rec = Stock_good.objects.filter(stock=demand.donor, good=good_d.good)[0]
+                        if rec.amount < amount:
+                            return HttpResponse(json.dumps({'good': good_d.id, 'amount': rec.amount}))
             m = Matrix(access='0', cause=request.POST['cause'], cause_id=request.POST['id'])
             m.save()
-            if json.loads(request.POST['isDonor']) == True:
+            if json.loads(request.POST['isDonor']):
                 stock = demand.donor
             else:
                 stock = demand.acceptor

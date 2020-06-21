@@ -492,10 +492,12 @@ function addGoodsOp(table, data) {
 function addGoodsSh(table, data) {
     var rows = JSON.parse(data);
     var row = "";
+    var i = 1;
     for (r in rows) {
         if (rows[r].article != undefined) {
-            row = row + "<tr id=id-" + r + "><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].amount + "</td><td>" + rows[r].unit + "</td><td>" + rows[r].balance + "</td>";
+            row = row + "<tr id=id-" + r + "><td>" + i + "</td><td>" + rows[r].article + "</td><td>" + rows[r].name + "</td><td>" + rows[r].amount + "</td><td>" + rows[r].unit + "</td><td>" + rows[r].balance + "</td>";
             row = row + "</tr>";
+            i = i + 1;
         }
     }
     colNum = $("#" + table).parent().find("th").length;
@@ -1814,8 +1816,14 @@ function openSupply(isDonor) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             },
-            success: function onAjaxSuccess() {
-                window.location.reload();
+            success: function onAjaxSuccess(data) {
+                if (data != 'ok'){
+                    $('span').remove();
+                    var error = JSON.parse(data);
+                    $('#' + error['good']).find('td').eq(2).append('<span style="color: darkred">Доступное количество: ' + error['amount'] + '</span>');
+                    $("#supplyBtn").prop("disabled", false);
+                }
+                else window.location.reload();
             }
         });
     });
