@@ -324,3 +324,9 @@ h9 {
     color: #23a3ab;
     border-bottom: 1px solid #23a3ab;
 }
+
+.item-number {
+    display: block;
+    background-color: whitesmoke;
+    padding-left: 10px;
+}

@@ -419,3 +419,9 @@ h9 {
 .edit-btn a:hover{
     color: #169eb3;
 }
+
+.item-number {
+    display: block;
+    background-color: whitesmoke;
+    padding-left: 10px;
+}

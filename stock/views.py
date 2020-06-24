@@ -1429,10 +1429,19 @@ def save_supply(request):
             consumer = Counterparty.objects.get(pk=request.POST['consumer'])
             acceptor = Stock.objects.get(pk=request.POST['acceptor'])
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
-            p = Package(stock=acceptor, vin=acceptor.cur_vin, matrix=matrix, date=date)
+            if 'number' in request.POST:
+                print(request.POST['number'])
+                vin = request.POST['number']
+                if vin == '':
+                    vin = acceptor.cur_vin
+                    acceptor.cur_vin = acceptor.cur_vin + 1
+                    acceptor.save()
+            else:
+                vin = acceptor.cur_vin
+                acceptor.cur_vin = acceptor.cur_vin + 1
+                acceptor.save()
+            p = Package(stock=acceptor, vin=vin, matrix=matrix, date=date)
             p.save()
-            acceptor.cur_vin = acceptor.cur_vin + 1
-            acceptor.save()
             ord = Order(stock=acceptor, matrix=matrix, isDonor=(request.POST['operation'] == '1'), status='2')
             ord.save()
             goods = json.loads(request.POST['goods'])
@@ -1480,9 +1489,16 @@ def save_planned_supply(request):
             matrix.save()
             date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
             group = User_group.objects.filter(user=request.user)[0].group
-            vin = group.cur_vin
-            group.cur_vin = group.cur_vin + 1
-            group.save()
+            if 'number' in request.POST:
+                vin = request.POST['number']
+                if vin == '':
+                    vin = group.cur_vin
+                    group.cur_vin = group.cur_vin + 1
+                    group.save()
+            else:
+                vin = group.cur_vin
+                group.cur_vin = group.cur_vin + 1
+                group.save()
             if request.POST['operation'] == '0':
                 consumer = Counterparty.objects.get(pk=request.POST['consumer'])
                 provider = None

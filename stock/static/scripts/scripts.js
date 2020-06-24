@@ -697,7 +697,8 @@ function saveSupply() {
                 'date': $("#date").prop('value'),
                 'goods': JSON.stringify(goods),
                 'operation': operation,
-                'cause': $("#cause").val()
+                'cause': $("#cause").val(),
+                'number': $("#number").val()
             },
             beforeSend: function (xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1930,10 +1931,20 @@ function addGoodField() {
         "                        <div class='form-group col-md-3'>\n" +
         "                           <select class='form-control form-control-sm' required><option value='' readonly>Ед.изм.</option>\n" +
         "                        </select></div><div class='form-group col-md-3'>\n" +
-        "                            <div class='form-inline'><input placeholder='Кол-во' step='0.001' type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove()' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
+        "                            <div class='form-inline'><input placeholder='Кол-во' step='0.001' type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove();updateNumeration();' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
         "                    </div>";
     $(code).appendTo("#add_goods");
     autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
+    updateNumeration();
+}
+
+function updateNumeration() {
+    $('#add_goods').children('.item-number').remove();
+    $('#add_goods').children('.good-item').each(function( index ) {
+        //debugger
+        var id = index + 1;
+        $('<span class="item-number">' + id + '. </span>').insertBefore(this);
+    });
 }
 
 function addDots() {

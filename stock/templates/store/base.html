@@ -33,7 +33,7 @@
                 // Match this timestamp with the release of your code
                 var lastVersioning = new Date(2019, 12, 11);
 
-                var lastCacheDateTime = localStorage.getItem('lastCacheDatetime');
+                var lastCacheDateTime = new Date(localStorage.getItem('lastCacheDatetime'));
 
                 if (lastCacheDateTime) {
                     if (lastVersioning > lastCacheDateTime) {
@@ -41,9 +41,8 @@
                     }
                 }
 
-                localStorage.setItem('lastCacheDatetime', Date.now());
-
                 if (reload) {
+                    localStorage.setItem('lastCacheDatetime', new Date());
                     location.reload(true);
                 }
 
