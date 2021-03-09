@@ -23,7 +23,7 @@ function getComponentsF(c, m, f='') {
       input.type = "number";
       input.name = getCode(components[i].fields.mat, materials);
       if (f!="0") input.value = ((getAmmount(components[i].fields.mat, f_comp)/1020)*100).toFixed(2);
-      input.setAttribute('onchange', "saveTable();return false;");
+      input.setAttribute('onchange', "saveTable("+ m +");return false;");
       input.setAttribute('step', "0.01");
       td1.appendChild(document.createTextNode(getCode(components[i].fields.mat, materials)));
       td2.appendChild(document.createTextNode(getName(components[i].fields.mat, materials)));
@@ -68,18 +68,36 @@ function getListOfFormulas(lists) {
   }
 };
 
-function saveTable() {
+function getPrice(m, code) {
+    for (var id in m) {
+        if (m[id].fields.code == code){
+            return m[id].fields.price;
+        }
+    }
+    return 0;
+}
+
+function saveTable(materials=null) {
   var ammount = 100;
   var water = document.getElementById("ВД01");
   var tbody = document.getElementById("materials");
   var mat_ammount = 0;
+  var price = 0;
   for (i=2; i<tbody.rows.length; i++){
+      var name = $("#materials tr").eq(i).find("td").eq(0).text();
+      var m_p = 0;
+      if (materials != null) {
+          m_p = getPrice(materials, name);
+      }
     var m = tbody.rows[i].children[2].children[0].valueAsNumber;
     //$("#materials tr").eq(i).find("td").eq(3).text();
     if (isNaN(m)) m = 0;
+    price = price + m * m_p;
     mat_ammount = mat_ammount + m;
   }
-  water.value = ammount - mat_ammount;
+  price = (price / 100).toFixed(2);
+  $("#price").text(price + 'р');
+  water.value = (ammount - mat_ammount).toFixed(2);
   var table = $('#materials').tableToJSON(); // Convert the table into a javascript object
   var field = document.getElementById('json');
   field.value = JSON.stringify(table);

@@ -68,10 +68,14 @@
                                 {% endfor %}
                             </select></p>
                             </p>
-                            <br><br><br>
-                            <br><br><br><br><br><br>
+                            <br><h5 style="margin-top: 49px;"><b>Цена:</b><br></h5>
+                            <div class="input-group">
+                                <input type="number" class="form-control bfh-number" step="0.01" min="0"
+                                       name="price" value="{{ cap.price }}"> <span
+                                    class="input-group-addon">р</span></p>
+                            </div>
                             <input type="submit" id="send" value="Сохранить" class="btn btn-primary"
-                                   style="float: right"/>
+                                   style="margin-top: 25px;float: right"/>
                         </div>
                     </div>
                 </form>

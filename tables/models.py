@@ -180,6 +180,20 @@ class Composition(models.Model):
     def __str__(self):
         return self.name
 
+    def min_price(self):
+        comps = Components.objects.filter(comp=self)
+        sum = 0
+        for c in comps:
+            sum = sum + c.min * c.mat.price
+        return sum
+
+    def max_price(self):
+        comps = Components.objects.filter(comp=self)
+        sum = 0
+        for c in comps:
+            sum = sum + c.max * c.mat.price
+        return sum
+
     def get_name(self):
         return self.code + " " + self.name
 
@@ -187,16 +201,22 @@ class Composition(models.Model):
         res = self.package + " по "
         prods = Production.objects.filter(composition=self)
         amms = set()
+        comp_unit = 'г'
         for p in prods:
             if p.compAmount != 0:
                 amms.add(str(int(p.compAmount * 1000)))
+            if p.compUnit is not None:
+                comp_unit = p.compUnit.name
         length = len(amms)
         for i in range(length):
             res = res + amms.pop()
             if len(amms) != 0:
                 res = res + " или "
             else:
-                res = res + " г"
+                if self.id == 121:
+                    res = res + ' ' + 'мл'
+                else:
+                    res = res + ' ' + comp_unit#" г"
         return res
 
     def get_package_pass(self):
@@ -272,7 +292,7 @@ class Container(models.Model):
     form = models.CharField(max_length=80, verbose_name="Форма")
     colour = models.ForeignKey('Colour', on_delete=models.CASCADE, verbose_name="Цвет")
     mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE, verbose_name="Материал")
-
+    price = models.FloatField(verbose_name="Цена")
     def __str__(self):
         return 'Нет' if self.code == 'Т000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
@@ -300,7 +320,7 @@ class Cap(models.Model):
     form = models.CharField(max_length=80, verbose_name="Форма")
     colour = models.ForeignKey('Colour', on_delete=models.CASCADE, verbose_name="Цвет")
     mat = models.ForeignKey('Container_mat', on_delete=models.CASCADE, verbose_name="Материал")
-
+    price = models.FloatField(verbose_name="Цена")
     def __str__(self):
         return 'Нет' if self.code == 'У000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
@@ -339,7 +359,7 @@ class Boxing(models.Model):
     form = models.CharField(max_length=80, verbose_name="Форма")
     colour = models.ForeignKey('Colour', null=True, on_delete=models.CASCADE, verbose_name="Цвет")
     mat = models.ForeignKey('Boxing_mat', null=True, on_delete=models.CASCADE, verbose_name="Материал")
-
+    price = models.FloatField(verbose_name="Цена")
     def __str__(self):
         return 'Нет' if self.code == 'Я000' else self.group.name + " " + self.form + " " + self.mat.name + " " + self.colour.name
 
@@ -365,7 +385,7 @@ class Sticker(models.Model):
     code = models.CharField(max_length=80, verbose_name="Артикул")
     product = models.ForeignKey('Product', on_delete=models.CASCADE, verbose_name="Продукт")
     part = models.ForeignKey('Sticker_part', on_delete=models.CASCADE, verbose_name="Часть")
-
+    price = models.FloatField(verbose_name="Цена")
     def __str__(self):
         return 'Нет' if self.code == '0000Э' else "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name + ' ' + self.product.mark.name + ' ' + (
             '' if self.product.option == 'отсутствует' else self.product.option)
@@ -400,6 +420,16 @@ class Production(models.Model):
 
     def __str__(self):
         return self.product.name
+
+    def max_price(self):
+        max_comp = self.compAmount * self.composition.max_price()
+        pack_price = self.sticker.price * self.stickerAmount + self.boxing.price * self.boxingAmount + self.container.price * self.contAmount + self.cap.price * self.capAmount
+        return pack_price + max_comp
+
+    def min_price(self):
+        min_comp = self.compAmount * self.composition.min_price()
+        pack_price = self.sticker.price * self.stickerAmount + self.boxing.price * self.boxingAmount + self.container.price * self.contAmount+ self.cap.price * self.capAmount
+        return pack_price + min_comp
 
     def get_boxing_amm(self):
         if self.boxingAmount == 0:

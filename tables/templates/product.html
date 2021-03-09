@@ -1,8 +1,35 @@
 {% extends 'tables/base.html' %}
 {% block content %}
     <script type="text/javascript">
+
+        function get_pack_price() {
+            var boxingEl = $("[name='boxing'] option:selected")[0];
+            var boxingPrice = $(boxingEl).data('price') * $("[name='boxingAmount']").prop('value');
+            var stickerEl = $("[name='sticker'] option:selected")[0];
+            var stickerPrice = $(stickerEl).data('price') * $("[name='stickerAmount']").prop('value');
+            var contEl = $("[name='container'] option:selected")[0];
+            var contPrice = $(contEl).data('price') * $("[name='contAmount']").prop('value');
+            var capEl = $("[name='cap'] option:selected")[0];
+            var capPrice = $(capEl).data('price') * $("[name='capAmount']").prop('value');
+            return boxingPrice + stickerPrice + contPrice + capPrice;
+        }
+
+        function get_max_price() {
+            var compEl = $("[name='composition'] option:selected")[0];
+            var compPrice = $(compEl).data('max_price') * $("[name='compAmount']").prop('value');
+            return (compPrice + get_pack_price()).toFixed(2);
+        }
+
+        function get_min_price() {
+            var compEl = $("[name='composition'] option:selected")[0];
+            var compPrice = $(compEl).data('min_price') * $("[name='compAmount']").prop('value');
+            return (compPrice + get_pack_price()).toFixed(2);
+        }
+
         $(document).ready(function () {
             addValidation();
+            console.log(get_min_price());
+            console.log(get_max_price());
             /**
              * Скрыть или показать комплект
              */
@@ -98,9 +125,9 @@
                                 <p><select class="form-control" name="composition">
                                     {% for c in compositions %}
                                         {% if product.production.composition == c %}
-                                            <option selected value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
+                                            <option data-min_price="{{c.min_price}}" data-max_price="{{c.max_price}}" selected value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
                                         {% else %}
-                                            <option value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
+                                            <option data-max_price="{{c.max_price}}" data-min_price="{{c.min_price}}" value="{{ c.id }}">{{ c.code }} {{ c.name }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>
@@ -110,9 +137,9 @@
                                 <p><select class="form-control" name="container">
                                     {% for c in containers %}
                                         {% if product.production.container == c %}
-                                            <option selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                            <option data-price="{{ c.price }}" selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
                                         {% else %}
-                                            <option value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                            <option data-price="{{ c.price }}" value="{{ c.id }}">{{ c.code }} {{ c }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>
@@ -122,9 +149,9 @@
                                 <p><select class="form-control" name="cap">
                                     {% for c in caps %}
                                         {% if product.production.cap == c %}
-                                            <option selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                            <option data-price="{{ c.price }}" selected value="{{ c.id }}">{{ c.code }} {{ c }}</option>
                                         {% else %}
-                                            <option value="{{ c.id }}">{{ c.code }} {{ c }}</option>
+                                            <option data-price="{{ c.price }}" value="{{ c.id }}">{{ c.code }} {{ c }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>
@@ -134,9 +161,9 @@
                                 <p><select class="form-control" name="sticker">
                                     {% for s in stickers %}
                                         {% if product.production.sticker == s %}
-                                            <option selected value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                                            <option data-price="{{ s.price }}" selected value="{{ s.id }}">{{ s.code }} {{ s }}</option>
                                         {% else %}
-                                            <option value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                                            <option data-price="{{ s.price }}" value="{{ s.id }}">{{ s.code }} {{ s }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>
@@ -146,16 +173,16 @@
                                 <p><select class="form-control" name="boxing">
                                     {% for b in boxing %}
                                         {% if product.production.boxing == b %}
-                                            <option selected value="{{ b.id }}">{{ b.code }} {{ b }}</option>
+                                            <option data-price="{{ b.price }}" selected value="{{ b.id }}">{{ b.code }} {{ b }}</option>
                                         {% else %}
-                                            <option value="{{ b.id }}">{{ b.code }} {{ b }}</option>
+                                            <option data-price="{{ b.price }}" value="{{ b.id }}">{{ b.code }} {{ b }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>
                                 </p>
                                 <br><br><br>
                             </div>
-                            <div id="right" style="width:30%;float:left;margin-left:10%">
+                            <div id="right" style="width:20%;float:left;margin-left:2%">
                                 <h5><b>Кол-во в фасовке:</b></h5>
                                 <input type="number" class="form-control" placeholder="Кол-во в фасовке композиции"
                                        step="0.01" name="compAmount" value="{{ product.production.compAmount }}"
@@ -182,7 +209,7 @@
                                        required></p>
                                 <br><br><br>
                             </div>
-                            <div id="right" style="width:10%">
+                            <div id="right" style="width:10%;float:left;margin-left:2%">
                                 <h5><b>Ед. изм.:</b><br></h5>
                                 <p><select class="form-control" name="compUnit">
                                     {% for u in units %}
@@ -243,7 +270,31 @@
                                 </select></p>
                                 </p>
                             </div>
+                        <div id="right" style="width:5%;float:left;margin-left:2%">
+                                <h5><b>Цена:</b><br></h5>
+                                <input type="number" class="form-control"  value="0"
+                                       readonly>
+                                <br><br><br>
+                                <h5><b>Цена:</b><br></h5>
+                                <input type="number" class="form-control"  value="0"
+                                       readonly>
+                                <br><br><br>
+                                <h5><b>Цена:</b><br></h5>
+                                <input type="number" class="form-control"  value="0"
+                                       readonly>
+                                <br><br><br>
+                                <h5><b>Цена:</b><br></h5>
+                                <input type="number" class="form-control"  value="0"
+                                       readonly>
+                                <br><br><br>
+                                <h5><b>Цена:</b><br></h5>
+                                <input type="number" class="form-control"  value="0"
+                                       readonly>
+                            </div>
                         </div>
+                    <hr>
+                    {{ compositions }}
+                    <p style="font-size: 14pt;">Цена <span id="price" style="float:right;margin-right: 10px">0р</span></p>
                     </div>
                     <hr>
                     <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>

@@ -609,6 +609,7 @@ def add_material(request):
         unit = get_object_or_404(Unit, pk=request.POST['unit'])
         concentration = request.POST['concentration']
         ammount = request.POST['ammount']
+        price = request.POST['price']
         material = Material(code=code,
                             name=name,
                             group=group,
@@ -616,7 +617,7 @@ def add_material(request):
                             mark=mark,
                             unit=unit,
                             concentration=concentration,
-                            ammount=ammount, price=0)
+                            ammount=ammount, price=price)
 
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html',
@@ -645,13 +646,13 @@ def save_material(request, material_id):
         material.unit = unit
         material.concentration = concentration
         material.ammount = ammount
-        material.price = 0
+        material.price = request.POST['price']
     except (KeyError, Material_group.DoesNotExist):
         return render(request, 'index.html',
                       {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
     else:
         material.save()
-        return redirect('index')
+        return redirect('tables:index')
 
 
 def mat_group(request):
@@ -974,6 +975,7 @@ def save_container(request, container_id):
         container.form = form
         container.colour = colour
         container.mat = mat
+        container.price = request.POST['price']
     except (KeyError, Container_group.DoesNotExist):
         return render(request, 'index.html',
                       {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
@@ -998,6 +1000,7 @@ def save_cap(request, cap_id):
         cap.form = form
         cap.colour = colour
         cap.mat = mat
+        cap.price = request.POST['price']
     except (KeyError, Cap_group.DoesNotExist):
         return render(request, 'index.html',
                       {"materials": Material.objects.all, 'error_message': 'Option does not exist'})
@@ -1022,6 +1025,7 @@ def save_box(request, box_id):
         box.form = form
         box.colour = colour
         box.mat = mat
+        box.price = request.POST['price']
         box.save()
         return redirect('boxing')
     else:
@@ -1041,6 +1045,7 @@ def save_sticker(request, sticker_id):
         sticker.code = code
         sticker.product = product
         sticker.part = part
+        sticker.price = request.POST['price']
     except (KeyError, Cap_group.DoesNotExist):
         return render(request, 'index.html',
                       {"materials": Material.objects.all, 'error_message': 'Option does not exist'})

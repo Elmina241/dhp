@@ -39,7 +39,7 @@
                     <div class="form-group"><label for="material" class="col-sm-3 control-label"
                                                    style="font-size: medium">Рецепт: </label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="composition" name="composition" onchange="getComponentsF({{ components }}, {{ materials }}, {{ f_components }});saveTable();return false;">
+                            <select class="form-control" id="composition" name="composition" onchange="getComponentsF({{ components }}, {{ materials }}, {{ f_components }});saveTable(JSON.parse({{ materials }}));return false;">
                                 {% for c in compositions %}
                                     {% if formula.composition == c %}
                                         <option selected value="{{ c.id }}">{{ c.get_name }}</option>
@@ -63,13 +63,15 @@
                     <tr>
                         <td>ВД01</td>
                         <td>Вода</td>
-                        <td><input type="number" name="ВД01" id="ВД01" onchange="saveTable();return false;" disabled>
+                        <td><input type="number" name="ВД01" id="ВД01" onchange="saveTable(JSON.parse({{ materials }}));return false;" disabled>
                         </td>
                     </tr>
                     </tbody>
                 </table>
                 <br>
                 <input type="hidden" id="json" name="json" value="">
+            <hr>
+                <p style="font-size: 14pt;">Цена <span id="price" style="float:right;margin-right: 10px">0р</span></p>
             <hr>
                 <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
             </form>
