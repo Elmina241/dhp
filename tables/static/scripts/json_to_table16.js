@@ -95,7 +95,7 @@ function saveTable(materials=null) {
     price = price + m * m_p;
     mat_ammount = mat_ammount + m;
   }
-  price = (price / 100).toFixed(2);
+  price = (price / 100).toFixed(3);
   $("#price").text(price + 'р');
   water.value = (ammount - mat_ammount).toFixed(2);
   var table = $('#materials').tableToJSON(); // Convert the table into a javascript object
