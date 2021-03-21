@@ -417,7 +417,7 @@ class Production(models.Model):
     boxingAmount = models.FloatField(default=0, verbose_name="Количество упаковки")
     boxingUnit = models.ForeignKey('Unit', null=True, related_name="boxing_unit", on_delete=models.CASCADE,
                                    verbose_name="Ед. изм. упаковки")
-
+    formula = models.ForeignKey('Formula', null=True, on_delete=models.CASCADE, verbose_name="Вариант состава")
     def __str__(self):
         return self.product.name
 
@@ -502,6 +502,13 @@ class Formula(models.Model):
 
     def get_short_name(self):
         return '' if self.name is None else self.name
+
+    def price(self):
+        comps = Formula_component.objects.filter(formula=self)
+        sum = 0
+        for c in comps:
+            sum = sum + (c.ammount / 1020) * c.mat.price
+        return sum
 
     class Meta:
         verbose_name_plural = "Варианты составов"

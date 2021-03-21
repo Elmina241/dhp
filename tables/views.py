@@ -99,12 +99,12 @@ def boxing(request):
                   {"boxes": Boxing.objects.all, "header": "Упаковка", "location": "/tables/packing/"})
 
 
-def stickers(request):
+def stickers2(request):
     """
         Возвращает страницу с этикетками
     """
-    return render(request, "stickers.html",
-                  {"stickers": Sticker.objects.all, "header": "Этикетка", "location": "/tables/packing/"})
+    return render(request, "stickers2.html",
+                  {"stickers": Sticker.objects.all, "header": "Этикетка", "location": "/tables/stickers_table/"})
 
 
 def compositions(request):
@@ -167,10 +167,18 @@ def pr_detail(request, product_id):
     """
     Возвращает страницу с информацией о продукте с id - product_id
     """
+    formulas_json = [{
+        'pk': f.pk,
+        'composition': f.composition.pk,
+        'name': f.get_name2(),
+        'price': f.price()
+    } for f in Formula.objects.all()]
     return render(request, "product.html",
                   {"product": get_object_or_404(Product, pk=product_id),
                    "location": "/tables/products/",
                    "groups": Product_group.objects.all,
+                   "formulas": Formula.objects.all,
+                   "formulas_json": formulas_json,
                    "forms": Product_form.objects.all,
                    "caps": Cap_group.objects.all,
                    "header": "Редактирование продукта",

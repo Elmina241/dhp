@@ -25,6 +25,7 @@
             /***********/
             pag = new Pagination(10, "op-body", "operationNav");
             pag2 = new Pagination(10, "goods-body", "operationNav2");
+            $('.modal').css('overflow-y', 'auto');
             $('#inventoryDate').val(new Date().toDateInputValue());
             $(document).keypress(function (event) {
                 if (event.keyCode == 13) {
