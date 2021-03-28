@@ -729,6 +729,7 @@ def save_product(request, product_id):
         commodity.capUnit = get_object_or_404(Unit, pk=request.POST['capUnit'])
         commodity.stickerUnit = get_object_or_404(Unit, pk=request.POST['stickerUnit'])
         commodity.boxingUnit = get_object_or_404(Unit, pk=request.POST['boxingUnit'])
+        commodity.formula = get_object_or_404(Formula, pk=request.POST['formula'])
         commodity.save()
         code = request.POST['code']
         name = request.POST['name']

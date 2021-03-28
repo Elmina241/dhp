@@ -4,7 +4,7 @@
 
         function updatePrice() {
             get_comp_price();
-            $("#price").text(get_min_price() + '-' + get_max_price() + ' р.');
+            $("#price").text(get_pack_price() + ' р.');
         }
 
         function updateFormulas(formulas) {
@@ -15,7 +15,6 @@
                     compFormulas.push(formulas[f]);
                 }
             }
-            console.log(compFormulas);
             var code = '';
             for (f in compFormulas) {
                 code = code + "<option data-price='" + compFormulas[f].price + "' value='" + compFormulas[f].pk + "'>" + compFormulas[f].name + "</option>";
@@ -38,7 +37,7 @@
             $("#capPrice").prop('value', capPrice.toFixed(2));
             $("#stickerPrice").prop('value', stickerPrice.toFixed(2));
             $("#boxPrice").prop('value', boxingPrice.toFixed(2));
-            return boxingPrice + stickerPrice + contPrice + capPrice;
+            return (boxingPrice + stickerPrice + contPrice + capPrice + formulaPrice).toFixed(2);
         }
 
         function get_comp_price() {
@@ -62,7 +61,8 @@
 
         $(document).ready(function () {
             addValidation();
-            updatePrice() ;
+            //updatePrice() ;
+            $("[name='composition']").trigger("change");
             /**
              * Скрыть или показать комплект
              */
@@ -166,19 +166,8 @@
                                 </select>
                                 </p>
                             <br><br><br>
-                            <h5><b>Вариант состава:</b><br></h5>
-                                <p><select class="form-control" onchange="updatePrice()" name="formula">
-                                    {% for f in formulas %}
-                                        {% if product.production.formula == f %}
-                                            <option  data-price="{{f.price}}" selected value="{{ f.id }}">{{ f.get_name2 }}</option>
-                                        {% else %}
-                                            <option data-price="{{f.price}}" value="{{ f.id }}">{{ f.get_name2 }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                </p>
-                                <br><br><br>
-                                <h5><b>Тара:</b><br></h5>
+                                <br><br><br><br>
+                                <h5 style="margin-top: 25px;"><b>Тара:</b><br></h5>
                                 <p><select class="form-control" onchange="updatePrice()" name="container">
                                     {% for c in containers %}
                                         {% if product.production.container == c %}
@@ -268,8 +257,19 @@
                                 </select></p>
                                 </p>
                                 <br><br><br>
-                                <br><br><br><br>
-                                <h5 style="margin-top: 25px;"><b>Ед. изм.:</b><br></h5>
+                            <h5 style="width: 220%;"><b>Цена для состава:</b><br></h5>
+                                <p><select style="width: 220%;" class="form-control" onchange="updatePrice()" name="formula">
+                                    {% for f in formulas %}
+                                        {% if product.production.formula == f %}
+                                            <option  data-price="{{f.price}}" selected value="{{ f.id }}">{{ f.get_name2 }}</option>
+                                        {% else %}
+                                            <option data-price="{{f.price}}" value="{{ f.id }}">{{ f.get_name2 }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                </p>
+                                <br><br><br>
+                                <h5><b>Ед. изм.:</b><br></h5>
                                 <p><select class="form-control" name="contUnit">
                                     {% for u in units %}
                                         {% if u == product.production.contUnit %}
@@ -319,14 +319,11 @@
                             </div>
                         <div id="right" style="width:10%;float:left;margin-left:2%">
                                 <h5><b>Цена:</b><br></h5>
-                                <input id="compPrice" type="text" onchange="updatePrice()" class="form-control"  value="0"
-                                       readonly>
-                                <br><br><br>
-                                <h5><b>Цена:</b><br></h5>
                                 <input id="formulaPrice" type="text" onchange="updatePrice()" class="form-control"  value="0"
                                        readonly>
                                 <br><br><br>
-                                <h5><b>Цена:</b><br></h5>
+                            <br><br><br><br>
+                                <h5 style="margin-top: 25px;"><b>Цена:</b><br></h5>
                                 <input id="contPrice" type="text" onchange="updatePrice()" class="form-control"  value="0"
                                        readonly>
                                 <br><br><br>
