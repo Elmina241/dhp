@@ -166,8 +166,7 @@
                                 </select>
                                 </p>
                             <br><br><br>
-                                <br><br><br><br>
-                                <h5 style="margin-top: 25px;"><b>Тара:</b><br></h5>
+                                <h5><b>Тара:</b><br></h5>
                                 <p><select class="form-control" onchange="updatePrice()" name="container">
                                     {% for c in containers %}
                                         {% if product.production.container == c %}
@@ -222,8 +221,7 @@
                                        step="0.01" onchange="updatePrice()" name="compAmount" value="{{ product.production.compAmount }}"
                                        required></p>
                                 <br><br><br>
-                                <br><br><br><br>
-                                <h5 style="margin-top: 25px;"><b>Кол-во в фасовке:</b></h5>
+                                <h5><b>Кол-во в фасовке:</b></h5>
                                 <input type="number" class="form-control" placeholder="Кол-во в фасовке тары"
                                        step="0.01" onchange="updatePrice()" name="contAmount" value="{{ product.production.contAmount }}"
                                        required></p>
@@ -255,18 +253,6 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>
-                                </p>
-                                <br><br><br>
-                            <h5 style="width: 220%;"><b>Цена для состава:</b><br></h5>
-                                <p><select style="width: 220%;" class="form-control" onchange="updatePrice()" name="formula">
-                                    {% for f in formulas %}
-                                        {% if product.production.formula == f %}
-                                            <option  data-price="{{f.price}}" selected value="{{ f.id }}">{{ f.get_name2 }}</option>
-                                        {% else %}
-                                            <option data-price="{{f.price}}" value="{{ f.id }}">{{ f.get_name2 }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
                                 </p>
                                 <br><br><br>
                                 <h5><b>Ед. изм.:</b><br></h5>
@@ -322,8 +308,7 @@
                                 <input id="formulaPrice" type="text" onchange="updatePrice()" class="form-control"  value="0"
                                        readonly>
                                 <br><br><br>
-                            <br><br><br><br>
-                                <h5 style="margin-top: 25px;"><b>Цена:</b><br></h5>
+                                <h5><b>Цена:</b><br></h5>
                                 <input id="contPrice" type="text" onchange="updatePrice()" class="form-control"  value="0"
                                        readonly>
                                 <br><br><br>
@@ -341,7 +326,17 @@
                             </div>
                         </div>
                     <hr>
-                    <p style="font-size: 14pt;">Цена <span id="price" style="float:right;margin-right: 10px">0р</span></p>
+                        <span style="font-size: 12pt;"><b>Цена для состава: </b></span>
+                        <p style="margin: 5px 0 50px 0">
+                            <select style="display: inline-block; width: 30%;" class="form-control" onchange="updatePrice()" name="formula">
+                                    {% for f in formulas %}
+                                        {% if product.production.formula == f %}
+                                            <option  data-price="{{f.price}}" selected value="{{ f.id }}">{{ f.get_name2 }}</option>
+                                        {% else %}
+                                            <option data-price="{{f.price}}" value="{{ f.id }}">{{ f.get_name2 }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                            </select><b><span id="price" style="float:right;margin-right: 10px;font-size: 12pt;">0р</span></b></p>
                     </div>
                     <hr>
                     <input type="submit" id="send" value="Сохранить" class="btn btn-primary" style="float: right"/>
