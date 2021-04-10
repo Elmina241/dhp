@@ -93,10 +93,7 @@ def inventory(request):
             if Stock_good.objects.filter(stock=i.stock, good=g.good).count() != 0:
                 s_g = Stock_good.objects.filter(stock=i.stock, good=g.good)[0]
                 amount = s_g.amount
-                if s_g.amount != 0:
-                    price = s_g.cost / s_g.amount
-                else:
-                    price = s_g.cost
+                price = s_g.get_price()
             else:
                 amount = 0
                 price = 0
@@ -107,6 +104,7 @@ def inventory(request):
                   {"permissions": json.dumps(User_group.objects.filter(user=request.user)[0].get_permissions()),
                    "header": "Инвентаризация", "tree": json.dumps(tree),
                    'inventories': Inventory.objects.filter(is_finished=False),
+                   "stock_inf": json.dumps(get_stock_inf()),
                    "user_group": str(User_group.objects.filter(user=request.user)[0].group), "goods": json.dumps(goods),
                    "inventory_goods": json.dumps(inventory_goods), "goods_inf": json.dumps(goods_inf),
                    "stocks": Counter_stock.objects.filter(

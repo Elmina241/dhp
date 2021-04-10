@@ -10,6 +10,7 @@
         var stocks = null;
         var operations = null;
         var isSupply = true;
+        var isDonor = true;
         var inventory_goods = null;
         var goods_json = null;
         var pag = null;
@@ -18,6 +19,7 @@
             goods = JSON.parse($("#goods").prop("value"));
             //goods_json = JSON.parse($("#goods_json").prop("value"));
             goods_inf = JSON.parse($("#goods_inf").prop("value"));
+            stock_inf = JSON.parse($("#stock_inf").prop("value"));
             inventory_goods = JSON.parse($("#inventory_goods").prop("value"));
             tree = JSON.parse($("#tree_data").prop("value"));
             tr = new GTree(tree, "goods");
@@ -97,6 +99,7 @@
         <input id="goods_inf" value="{{ goods_inf }}" hidden>
         <input value="{{ stockData }}" id="stock_data" hidden/>
         <input value="{{ units }}" id="units" hidden/>
+        <input value="{{ stock_inf }}" id="stock_inf" hidden/>
         <input id="inventory_goods" value="{{ inventory_goods }}" hidden>
         <input id="goods_json" value="{{ goods_json }}" hidden>
         <div class="card">

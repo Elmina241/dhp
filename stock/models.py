@@ -400,6 +400,17 @@ class Stock_good(models.Model):
     cost = models.FloatField(default=0, blank=True, verbose_name="Стоимость")
     def __str__(self):
         return str(self.stock) + ' ' + str(self.good)
+    def get_price(self):
+        if self.amount != 0:
+            return self.cost / self.amount
+        else:
+            price = 0
+            last_cost = Stock_operation.objects.filter(good=self.good).exclude(cost=0).order_by(
+                '-date').first()
+            if last_cost is not None:
+                price = last_cost.cost
+            return price
+
     class Meta:
         verbose_name_plural = "Товары на складах"
         verbose_name = "Товар на складе"

@@ -1336,6 +1336,12 @@ function GTree(tree, t) {
     this.get_stock_data = function (good) {
         if (isDonor) var stock = $('#donor').prop('value');
         else var stock = $('#acceptor').prop('value');
+        if (stock == undefined) {
+            stock = $('#inv-stock').prop('value');
+        }
+        console.log(good);
+        console.log(stock);
+        console.log(stock_inf);
         if (stock != "") {
             if (good in stock_inf[stock]) return stock_inf[stock][good];
         }
@@ -1358,6 +1364,7 @@ function GTree(tree, t) {
         }
         else {
             $("#selectBtn").prop("disabled", true);
+            console.log("isDonor" in window);
             if ($(this).children('ul').length != 0 && "isDonor" in window) {
                 $(this).children('ul').children('li').each(function () {
                     var good_id = $(this).prop("id");
