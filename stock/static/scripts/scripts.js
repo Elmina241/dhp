@@ -1339,9 +1339,6 @@ function GTree(tree, t) {
         if (stock == undefined) {
             stock = $('#inv-stock').prop('value');
         }
-        console.log(good);
-        console.log(stock);
-        console.log(stock_inf);
         if (stock != "") {
             if (good in stock_inf[stock]) return stock_inf[stock][good];
         }

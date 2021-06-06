@@ -95,6 +95,8 @@ function saveTable(materials=null) {
     price = price + m * m_p;
     mat_ammount = mat_ammount + m;
   }
+  var water_price = getPrice(materials, 'ВД01');
+  price = price + water_price * (ammount - mat_ammount);
   price = (price / 100).toFixed(3);
   $("#price").text(price + 'р');
   water.value = (ammount - mat_ammount).toFixed(2);

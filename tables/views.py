@@ -1163,6 +1163,8 @@ def save_formula(request, formula_id):
                 mat = Material.objects.filter(code=d['Код'])[0]
                 if d['Код'] in request.POST:
                     ammount = (float(request.POST[d['Код']]) / 100) * 1020
+                    print(float(request.POST[d['Код']]) / 100)
+                    print(str(mat) + '-' + str(ammount) + "-" + str(float(request.POST[d['Код']])))
                     cmps = Formula_component(formula=formula, mat=mat, ammount=ammount)
                     cmps.save()
         return redirect('formulas')

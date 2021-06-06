@@ -506,8 +506,14 @@ class Formula(models.Model):
     def price(self):
         comps = Formula_component.objects.filter(formula=self)
         sum = 0
+        sum_amm = 0
+        water = Material.objects.filter(code="ВД01")
         for c in comps:
             sum = sum + (c.ammount / 1020) * c.mat.price
+            sum_amm = sum_amm + c.ammount
+        water_amm = 1020 - sum_amm
+        if len(water) > 0:
+            sum = sum + (water_amm / 1020) * water[0].price
         return sum
 
     class Meta:
