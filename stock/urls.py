@@ -46,6 +46,7 @@ urlpatterns = [
     url(r'^goods/get_good_inf/$', views.get_good_inf, name='get_good_inf'),
     url(r'^stocks/get_prod_info/$', views.get_prod_info, name='get_prod_info'),
     url(r'^props/$', views.props, name='props'),
+    url(r'^const/$', views.constants, name='constants'),
     url(r'^balance/$', views.balance, name='balance'),
     url(r'^stickers/$', views.stickers_income, name='stickers_income'),
     url(r'^stickers/get_stickers_income/$', views.get_stickers_income, name='get_stickers_income'),
@@ -73,5 +74,8 @@ urlpatterns = [
     url(r'^props/del_prop/$', views.del_prop, name='del_prop'),
     url(r'^offers/save_status/$', views.save_status, name='save_status'),
     url(r'^requirements/save_status/$', views.save_status, name='save_status'),
+    url(r'^const/send_const/$', views.send_const, name='send_const'),
+    url(r'^const/edit_const/$', views.edit_const, name='edit_const'),
+    url(r'^const/del_const/$', views.del_const, name='del_const'),
     url(r'^', views.auth, name='auth'),
 ]

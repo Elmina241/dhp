@@ -493,3 +493,39 @@ class Inventory_good(models.Model):
     class Meta:
         verbose_name_plural = "Товары инвентаризаций"
         verbose_name = "Товар инвентаризации"
+
+class Constant(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Наименование")
+    value = models.FloatField(default='0', verbose_name="Значение")
+    def __str__(self):
+        if self is None:
+            return "-"
+        else:
+            return self.name
+
+    class Meta:
+        verbose_name_plural = "Константы"
+        verbose_name = "Константа"
+
+class Projection(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Наименование")
+    property = models.ForeignKey('Property', on_delete=models.CASCADE, verbose_name="Свойство")
+    def __str__(self):
+        if self is None:
+            return "-"
+        else:
+            return self.property.name + '.' + self.name
+
+    class Meta:
+        verbose_name_plural = "Проекции"
+        verbose_name = "Проекция"
+
+class Projection_value(models.Model):
+    projection = models.ForeignKey('Projection', on_delete=models.CASCADE, verbose_name="Проекция")
+    property_var = models.ForeignKey('Property_var', on_delete=models.CASCADE, verbose_name="Вариант свойства")
+    value = models.FloatField(default=0, verbose_name="Значение")
+    def __str__(self):
+        return str(self.projection.name) + ' ' + str(self.property_var.name)
+    class Meta:
+        verbose_name_plural = "Значения проекций"
+        verbose_name = "Значение проекции"

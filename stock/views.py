@@ -233,6 +233,7 @@ def props(request):
                    "user_group": str(User_group.objects.filter(user=request.user)[0].group),
                    "prop_data": json.dumps(prop_data)})
 
+
 @login_required(login_url='/stock/login/')
 def counterparties(request):
     counter_data = {}
@@ -2021,3 +2022,36 @@ def get_stickers_xls(request):
             )
             response['Content-Disposition'] = 'attachment; filename=%s' % filename
             return response
+
+def constants(request):
+    data = {}
+    for c in Constant.objects.all():
+        data[str(c.id)] = {'name': c.name, 'value': c.value}
+    return render(request, "const.html",
+                  {"permissions": json.dumps(User_group.objects.filter(user=request.user)[0].get_permissions()),
+                   "header": "Константы", "const": Constant.objects.all(),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
+                   "const_data": json.dumps(data)})
+
+def send_const(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            value = float(request.POST['value'])
+            name = request.POST['name']
+            constant = Constant(name=name, value=value)
+            constant.save()
+            return HttpResponse('ok')
+
+def edit_const(request):
+    if request.method == 'POST':
+        if 'id' in request.POST:
+            constant = Constant.objects.get(pk=request.POST['id'])
+            constant.name = request.POST['name']
+            constant.value = float(request.POST['value'])
+            constant.save()
+            return HttpResponse('ok')
+
+def del_const(request):
+    if request.method == 'POST':
+        Constant.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
