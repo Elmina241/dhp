@@ -1,0 +1,229 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <script>
+        var projections = null;
+        var properties = null;
+        $(document).ready(function () {
+             projections = JSON.parse($("#projection_data").prop("value"));
+             properties = JSON.parse($("#property_data").prop("value"));
+             getPropVals('prop_vars-body', $('#prop').prop('value'));
+        });
+        function confirmDel(name, obj) {
+            $("#delBtn").unbind();
+            $("#delBtn").click(function(){
+                delConst(obj);
+            });
+            $("#del-name").text(name);
+            $("#del_modal").modal();
+        }
+        function getPropVals(tableName, propId) {
+            var code = '';
+            for (var option in properties[propId]['vars']){
+                console.log(option);
+                code = code + "<tr><td>" + properties[propId]['vars'][option].name + "</td><td><input min='0' class=\"form-control form-control-sm\" type='number' name='" + properties[propId]['vars'][option].id + "' required /></td></tr>";
+            }
+            $("#" + tableName).html(code);
+        }
+        function delProj(obj) {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "POST",
+                url: 'del_proj/',
+                data: {
+                    'id': $(obj.parentElement).prop("id")
+                },
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    $(obj.parentElement).remove();
+                    $("#del_modal").modal('toggle');
+                }
+            });
+        };
+        function sendProj() {
+            if ($('#form')[0].checkValidity()) {
+                var varsData = [];
+                var inputs = $("#prop_vars-body").find('input');
+                for (var i = 0; i < inputs.length; i++) {
+                    varsData.push({'id': $(inputs[i]).prop('name'), 'value': $(inputs[i]).prop('value')});
+                }
+                var csrftoken = getCookie('csrftoken');
+                $.ajax({
+                    type: "POST",
+                    url: 'send_proj/',
+                    data: {
+                        'name': $('#name').prop('value'),
+                        'prop_id': $('#prop').prop('value'),
+                        'vars': JSON.stringify(varsData)
+                    },
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    },
+                    success: function onAjaxSuccess(data) {
+                        window.location.reload();
+                    }
+                });
+            }
+            else {
+                $('<input type="submit">').hide().appendTo("#form").click().remove();
+            }
+        }
+        function getProjInf(id) {
+            $("#e_name").prop("value", constants[id].name);
+            $("#e_value").prop("value", constants[id].value);
+
+            $("#editBtn").unbind('click');
+            $("#editBtn").click(function () {
+                editConst(id);
+            });
+            $("#inf_const").modal();
+        }
+        function editProj(id) {
+            if ($('#edit_form')[0].checkValidity()) {
+                var csrftoken = getCookie('csrftoken');
+                $.ajax({
+                    type: "POST",
+                    url: 'edit_proj/',
+                    data: {
+                        'id': id,
+                        'name': $('#e_name').prop('value'),
+                        'value': $('#e_value').prop('value')
+                    },
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    },
+                    success: function onAjaxSuccess(data) {
+                        window.location.reload();
+                    }
+                });
+            }
+            else {
+                $('<input type="submit">').hide().appendTo("#edit_form").click().remove();
+            }
+        }
+    </script>
+    <div class="container-fluid">
+    <input id="projection_data" value="{{ projection_data }}" hidden/>
+    <input id="property_data" value="{{ property_data }}" hidden/>
+
+                <div class="card" style="margin-left: 30px;margin-right: 30px;">
+                    <div class="card-header">
+                        <div class="filter">
+                            <div class="form-inline">
+                        <button type="button" class="btn btn-success btn-sm"  data-toggle="modal" data-target="#add_prop">Добавить проекцию</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods_table">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-light">
+                            <tr>
+                                <!--<th scope="col">Код</th>-->
+                                <th scope="col">Свойство</th>
+                                <th scope="col">Проекция</th>
+                                <th scope="col"></th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="goods-body">
+                            {% for p in projections %}
+                                <tr id="{{ p.id }}">
+                                    <td>{{ p.property.name }}</td>
+                                    <td>{{ p.name }}</td>
+                                    <td><span
+                          onclick="getProjInf({{ p.id }})"><i class='fas fa-edit' title="Редактировать"></i></span><span onclick="confirmDel('{{ p.name }}', this.parentElement)"><i class='fas fa-trash-alt menu-btn' title="Удалить"></i></span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_prop">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Создание проекции</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <form id="form">
+                    <h6>Свойство</h6>
+                    <select class="form-control form-control-sm" onchange="getPropVals('prop_vars-body', $(this).prop('value'));" id="prop" required>
+                            {% for p in properties %}
+                                <option value="{{ p.id }}">{{ p.name }}</option>
+                            {% endfor %}
+                    </select>
+                    <h6>Наименование</h6>
+                    <input type="text" class="form-control" id="name" required/>
+                    <h6></h6>
+                    <table class="table table-bordered table-sm" id="prop_vars">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Маркер</th>
+                                <th scope="col">Значение</th>
+                            </tr>
+                            </thead>
+                            <tbody id="prop_vars-body">
+                            <tr><td colspan="2" align="center">Нет данных</td></tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="packBtn" onclick="sendProj()" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="modal fade" id="inf_const">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Редактирование проекции</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <form id="edit_form">
+                        <h6>Наименование</h6>
+                        <input type="text" class="form-control" id="e_name" required/>
+                        <h6>Значение</h6>
+                        <input type="number" class="form-control" step="0.0001" id="e_value" required/>
+                    </form>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Сохранить" id="editBtn" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="del_modal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Удаление проекции</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                    <h6>Удалить <span id="del-name"></span>?</h6>
+                    <div class="modal-footer" style="margin-top:5pt">
+                        <input value="Удалить" id="delBtn" onclick="" class="btn btn-primary"
+                               style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

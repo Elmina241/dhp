@@ -2055,3 +2055,38 @@ def del_const(request):
     if request.method == 'POST':
         Constant.objects.get(pk=request.POST['id']).delete()
         return HttpResponse("ok")
+
+def projection(request):
+    projection_data = {}
+    property_data = {}
+    for p in Projection.objects.all():
+        projection_data[str(p.id)] = {
+            'name': p.name,
+            'prop_name': p.property.name,
+            'prop_id': p.property.id,
+            'prop_values': [{'var_id': v.property_var.id, 'var_name': v.property_var.name, 'value': v.value} for v in Projection_value.objects.filter(projection=p)]
+        }
+    for p in Property.objects.filter(prop_type=2):
+        property_data[str(p.id)] = {
+            'name': p.name,
+            'vars': [{'id': v.id, 'name': v.name} for v in Property_var.objects.filter(prop=p)]
+        }
+    return render(request, "projections.html",
+                  {"permissions": json.dumps(User_group.objects.filter(user=request.user)[0].get_permissions()),
+                   "header": "Проекции", "projections": Projection.objects.all(),
+                   "properties": Property.objects.all(),
+                   "user_group": str(User_group.objects.filter(user=request.user)[0].group),
+                   "property_data": json.dumps(property_data), "projection_data": json.dumps(projection_data)})
+
+def send_proj(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            prop = Property.objects.get(pk=request.POST['prop_id'])
+            name = request.POST['name']
+            proj = Projection(name=name, property=prop)
+            proj.save()
+            data = json.loads(request.POST['vars'])
+            for d in data:
+                p = Projection_value(projection=proj, property_var=Property_var.objects.get(pk=d['id']), value=d['value'])
+                p.save()
+            return HttpResponse('ok')
