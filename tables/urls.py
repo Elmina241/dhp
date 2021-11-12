@@ -84,6 +84,7 @@ urlpatterns = [
     # Запросы
     url(r'^complex_comps/get_comps/$', views.get_comps, name='get_comps'),
     url(r'^materials/add_matAm/$', views.add_matAm, name='add_matAm'),
+    url(r'^products/get_excel_product/$', views.get_excel_product, name='get_excel_product'),
     url(r'^complex_comps/add_compAm/$', views.add_compAm, name='add_compAm'),
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/get_char/$', views.get_char, name='get_char'),
     url(r'^comp_chars/(?P<composition_id>[0-9]+)/get_elems/$', views.get_elems, name='get_elems'),

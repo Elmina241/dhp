@@ -26,6 +26,35 @@
                 }
             });
         });
+        function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
+        }
+        function getExcel() {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type: "GET",
+                url: 'get_excel_product/',
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+                success: function onAjaxSuccess(data) {
+                    var blob = new Blob([s2ab(atob(data))], {type:  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'products.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
+        }
     </script>
     <form action="get_group/" method="POST" class="form-inline">
         {% csrf_token %}
@@ -46,6 +75,7 @@
     <a href="new_product/">
         <button type="button" class="btn btn-default">Добавить запись</button>
     </a>
+    <button type="button" class="btn btn-default" onclick="getExcel()">Выгрузить таблицу в Excel</button>
     <input type="submit" class="btn btn-default" value="Удалить">
     <br><br>
     {% if products %}

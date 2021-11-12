@@ -194,9 +194,9 @@
                                 <p><select class="form-control" onchange="updatePrice()" name="sticker">
                                     {% for s in stickers %}
                                         {% if product.production.sticker == s %}
-                                            <option data-price="{{ s.price }}" selected value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                                            <option data-price="{{ s.get_full_price }}" selected value="{{ s.id }}">{{ s.code }} {{ s }}</option>
                                         {% else %}
-                                            <option data-price="{{ s.price }}" value="{{ s.id }}">{{ s.code }} {{ s }}</option>
+                                            <option data-price="{{ s.get_full_price }}" value="{{ s.id }}">{{ s.code }} {{ s }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select></p>

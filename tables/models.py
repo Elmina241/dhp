@@ -389,6 +389,9 @@ class Sticker(models.Model):
     def __str__(self):
         return 'Нет' if self.code == '0000Э' else "Этикетка " + self.product.code + " " + self.part.name + " / " + self.product.name + ' ' + self.product.mark.name + ' ' + (
             '' if self.product.option == 'отсутствует' else self.product.option)
+    def get_full_price(self):
+        stickers = Sticker.objects.filter(product=self.product)
+        return sum(i.price for i in stickers)
 
     class Meta:
         verbose_name_plural = "Этикетки"

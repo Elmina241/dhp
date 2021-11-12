@@ -12,6 +12,9 @@
         var units = null;
         var models = null;
         var propVars = null;
+        var constants = null;
+        var projections = null;
+        var formulaForm = null;
         $(document).ready(function () {
             tree = JSON.parse($("#tree_data").prop("value"));
             models = JSON.parse($("#model_json").prop("value"));
@@ -19,7 +22,10 @@
             props = JSON.parse(JSON.parse($("#props").prop("value")));
             units = JSON.parse(JSON.parse($("#units").prop("value")));
             //var goods = JSON.parse($("#goods_data").prop("value"));
-            tr = new Tree(tree);
+            constants = JSON.parse($("#constants").prop("value"));
+            projections = JSON.parse($("#projections").prop("value"));
+            formulaForm = new FormulaForm(constants, projections);
+            tr = new Tree(tree, null, formulaForm);
             addUnit();
             addProp();
             document.getElementById("1").click();
@@ -82,6 +88,8 @@
     <input value="{{ units }}" id="units" hidden/>
     <input value="{{ model_json }}" id="model_json" hidden/>
     <input value="{{ prop_vars }}" id="prop_vars" hidden/>
+    <input value="{{ constants }}" id="constants" hidden/>
+    <input value="{{ projections }}" id="projections" hidden/>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3 goods-tree-container">
@@ -227,6 +235,45 @@
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Удалить" id="delBtn" onclick="" class="btn btn-primary"
                                style="float: right"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal fade" id="constants_modal">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Добавление константы</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                <input id="input-text-id" hidden/>
+                <ul class="list-group list-group-flush">
+                    {% for c in constants_obj %}
+                        <a class="list-group-item list-group-item-action" ondblclick="addConst($('#input-text-id').prop('value'), '{{ c.name }}')">{{ c.name }}</a>
+                    {% endfor %}
+                </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="proj_modal">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Добавление проекции</h5>
+                    <button class="close" data-dismiss="modal">x</button>
+
+                </div>
+                <div class="modal-body create-form">
+                <input id="input-proj-id" hidden/>
+                <ul class="list-group list-group-flush">
+                    {% for p in projections_obj %}
+                        <a class="list-group-item list-group-item-action" ondblclick="addProj($('#input-proj-id').prop('value'), '{{ p }}')">{{ p }}</a>
+                    {% endfor %}
+                </ul>
                 </div>
             </div>
         </div>

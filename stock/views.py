@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 import xlsxwriter
 import io
 import base64
+from django.utils.functional import SimpleLazyObject
 
 local_tz = pytz.timezone('Asia/Vladivostok')
 
@@ -49,6 +50,10 @@ def goods_models(request):
                    "tree": json.dumps(tree), "model_json": json.dumps(model_json),
                    "props": json.dumps(serializers.serialize("json", Property.objects.all())),
                    "groups": Model_group.objects.exclude(pk=0),
+                   "constants": json.dumps([c.name for c in Constant.objects.all()]),
+                   "projections": json.dumps([str(p) for p in Projection.objects.all()]),
+                   "constants_obj": Constant.objects.all(),
+                   "projections_obj": Projection.objects.all(),
                    "units": json.dumps(serializers.serialize("json", Unit.objects.all()))})
 
 @login_required(login_url='/stock/login/')
@@ -113,12 +118,14 @@ def inventory(request):
 
 def auth(request):
     users = User.objects.all()
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and isinstance(request.user, User):
+        print('main')
         return redirect('main')
     else:
+        print('login')
         return render(request, "login.html", {"users": users})
 
-
+@login_required(login_url='/stock/login/')
 def main(request):
     return render(request, "main-page.html", {"user_group": str(User_group.objects.filter(user=request.user)[0].group),
                                               "permissions": json.dumps(
@@ -171,7 +178,7 @@ def goods(request):
                     except AttributeError as error:
                         print(error)
                 else:
-                    if p.prop.prop_type == 1:
+                    if p.prop.prop_type == 1 or p.prop.prop_type == 3:
                         try:
                             models[str(m.pk)]["props"][str(p.prop.pk)]["default"] = p.default_text.text
                         except AttributeError as error:
@@ -220,8 +227,8 @@ def props(request):
         if p.prop_type == 0:
             prop_data[str(p.id)] = {'name': p.name, 'type': 0, 'from': p.property_range.inf, 'to': p.property_range.sup}
         else:
-            if p.prop_type == 1:
-                prop_data[str(p.id)] = {'name': p.name, 'type': 1}
+            if p.prop_type == 1 or p.prop_type == 3:
+                prop_data[str(p.id)] = {'name': p.name, 'type': p.prop_type}
             else:
                 vals = []
                 for v in Property_var.objects.filter(prop=p):
@@ -1012,7 +1019,7 @@ def get_model_inf(request):
                     if p.prop.prop_type == 0:
                         props[str(p.pk)]["default"] = p.default_number.number
                     else:
-                        if p.prop.prop_type == 1:
+                        if p.prop.prop_type == 1 or p.prop.prop_type == 3:
                             props[str(p.pk)]["default"] = p.default_text.text
                         else:
                             props[str(p.pk)]["default"] = p.default_var.var.id
@@ -1036,11 +1043,14 @@ def get_demand_goods(request):
                 data[str(d.pk)] = {'article': d.article, 'name': d.name, 'amount': d.amount, 'unit': str(d.unit)}
                 if request.POST['t'] == 's':
                     data[str(d.pk)]['balance'] = d.balance
-                    s_gs = Stock_good.objects.filter(good = d.good, stock = demand.acceptor)
-                    try:
-                        data[str(d.pk)]['cost'] = 0 if s_gs.count() == 0 else s_gs[0].cost / s_gs[0].amount
-                    except ZeroDivisionError:
-                        data[str(d.pk)]['cost'] = 0
+                    s_gs = Stock_good.objects.filter(good = d.good, stock = demand.donor)
+                    if d.cost != 0:
+                        data[str(d.pk)]['cost'] = d.cost
+                    else:
+                        try:
+                            data[str(d.pk)]['cost'] = 0 if s_gs.count() == 0 else s_gs[0].cost / s_gs[0].amount
+                        except ZeroDivisionError:
+                            data[str(d.pk)]['cost'] = 0
             return HttpResponse(json.dumps(data))
 
 
@@ -1165,8 +1175,10 @@ def get_operations(request):
             operations = {}
             stock_operations_res = Stock_operation.objects.none()
             period = request.POST['period']
+            period = int(period)
             if period == 0:
                 for stock in Counter_stock.objects.filter(counter=counter):
+                    print(stock)
                     stock_operations_res = stock_operations_res | Stock_operation.objects.filter(
                         package__stock=stock.stock)
             elif period == 3:
@@ -1278,6 +1290,11 @@ def get_good_inf(request):
                         if p.property.prop_type == 1:
                             try:
                                 props[str(p.pk)]["value"] = p.goods_string.text
+                            except AttributeError as error:
+                                print(error)
+                        elif p.property.prop_type == 3:
+                            try:
+                                props[str(p.pk)]["value"] = p.calculate_prop()
                             except AttributeError as error:
                                 print(error)
                         else:
@@ -1557,7 +1574,7 @@ def save_planned_supply(request):
                 g_m = Goods.objects.get(pk=id)
                 good = Demand_good(matrix=matrix, good=g_m, article=g_m.get_article(t), name=g_m.get_name(t),
                                    unit=Unit.objects.get(pk=goods[g]['unit']), amount=amount,
-                                   balance=amount)
+                                   balance=amount, cost=goods[g]['price'])
                 good.save()
             return HttpResponse('ok')
 
@@ -1691,7 +1708,7 @@ def edit_good(request):
                     if prop.property.prop_type == 1:
                         prop.goods_string.text = properties[p]['value']
                         prop.goods_string.save()
-                    else:
+                    elif prop.property.prop_type == 2:
                         prop.goods_var.var = Property_var.objects.get(pk=properties[p]['value'])
                         prop.goods_var.save()
             return HttpResponse('ok')
@@ -1759,10 +1776,15 @@ def edit_model(request):
             model.group = group
             model.save()
             Model_unit.objects.filter(model=model).delete()
+            m_products = Goods.objects.filter(model=model)
             for u in units:
                 unit = Unit.objects.get(pk=u)
                 m = Model_unit(model=model, unit=unit)
                 m.save()
+                for p in m_products:
+                    if Goods_unit.objects.filter(product=p, unit=unit).count() == 0:
+                        g_u = Goods_unit(product=p, unit=unit, applicable=True, isBase=False, coeff=1)
+                        g_u.save()
             Model_property.objects.filter(model=model).delete()
             for p in props:
                 prop = Property.objects.get(pk=int(props[p]["prop"]))
@@ -1773,7 +1795,7 @@ def edit_model(request):
                                            number=props[p]['default'])
                         d.save()
                     else:
-                        if prop.prop_type == 1:
+                        if prop.prop_type == 1 or prop.prop_type == 3:
                             d = Default_text(model=model, prop=prop, visible=not props[p]['hidden'],
                                              editable=not props[p]['uneditable'], isDefault=props[p]['isDefault'],
                                              text=props[p]['default'])
@@ -1799,7 +1821,7 @@ def edit_model(request):
                                              number=0)
                             d.save()
                         else:
-                            if prop.prop_type == 1:
+                            if prop.prop_type == 1 or prop.prop_type == 3:
                                 d = Goods_string(product=g, property=prop, applicable=True,
                                                  visible=not props[p]['hidden'], editable=not props[p]['uneditable'],
                                                  text="")
@@ -2090,3 +2112,75 @@ def send_proj(request):
                 p = Projection_value(projection=proj, property_var=Property_var.objects.get(pk=d['id']), value=d['value'])
                 p.save()
             return HttpResponse('ok')
+
+def edit_proj(request):
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            prop = Property.objects.get(pk=request.POST['prop_id'])
+            name = request.POST['name']
+            proj = Projection.objects.get(pk=request.POST['proj_id'])
+            proj.name = name
+            data = json.loads(request.POST['vars'])
+            for d in data:
+                property_var = Property_var.objects.get(pk=d['id'])
+                p = Projection_value.objects.filter(projection=proj, property_var=property_var)[0]
+                p.value = d['value']
+                p.save()
+            proj.save()
+            return HttpResponse('ok')
+
+def del_proj(request):
+    if request.method == 'POST':
+        Projection.objects.get(pk=request.POST['id']).delete()
+        return HttpResponse("ok")
+
+def check_formula(request):
+    if request.method == 'POST':
+        if 'text' in request.POST:
+            code_text = request.POST['text']
+            if code_text.find('return') == -1:
+                return HttpResponse(json.dumps({'is_valid': False, 'message': "Отсутствует return"}))
+            code_text = code_text.replace('return', 'return_me = ')
+            start_indx = [i for i, letter in enumerate(code_text) if '{' == letter]
+            end_indx = []
+            for i in range(len(start_indx)):
+                idx = code_text[start_indx[i]:].find('}')
+                if idx == -1 or (i < len(start_indx) - 1 and idx > start_indx[i + 1]):
+                    return HttpResponse(json.dumps({'is_valid': False, 'message': "Отсутствует закрывающая скобка для скобки в позиции " + str(start_indx[i])}))
+                else:
+                    end_indx.append(idx + start_indx[i])
+            var_names = [code_text[start_indx[i] + 1:end_indx[i]] for i in range(len(start_indx))]
+            for name in var_names:
+                if name.find('.') == -1:
+                    consts = Constant.objects.filter(name=name)
+                    if len(consts) > 0:
+                        code_text = code_text.replace('{' + name + '}', str(consts[0].value))
+                    else:
+                        props = Property_num.objects.filter(property__name=name)
+                        if len(props) > 0:
+                            val = props[0].number
+                            code_text = code_text.replace('{' + name + '}', str(val))
+                        else:
+                            props = Goods_string.objects.filter(property__name=name)
+                            if len(props) > 0:
+                                val = props[0].text
+                                code_text = code_text.replace('{' + name + '}', str(val))
+                            else:
+                                return HttpResponse(json.dumps({'is_valid': False, 'message': 'Unknown name ' + name}))
+                else:
+                    prop_name, proj_name = name.split('.')[0], name.split('.')[1]
+                    prop = Property.objects.filter(name=prop_name)
+                    if len(prop) > 0:
+                        proj = Projection.objects.filter(name=proj_name, property=prop[0])
+                        if len(proj) > 0:
+                            code_text = code_text.replace('{' + name + '}', str(1))
+                        else:
+                            return HttpResponse(json.dumps({'is_valid': False, 'message': 'Projection ' + name + ' does not exist'}))
+                    else:
+                        return HttpResponse(json.dumps({'is_valid': False, 'message': 'Property ' + prop_name + ' does not exist'}))
+            loc = {}
+            try:
+                exec(code_text, globals(), loc)
+            except Exception as e:
+                return HttpResponse(json.dumps({'is_valid': False, 'message': str(e)}))
+            return HttpResponse(json.dumps({'is_valid': True, 'message': 'ok'}))

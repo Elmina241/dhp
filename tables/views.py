@@ -14,6 +14,9 @@ from .forms import Delete_form
 from processes.models import Reactor_content, Tank_content
 import json
 from django.core import serializers
+import xlsxwriter
+import io
+import base64
 
 
 def index(request):
@@ -1384,3 +1387,74 @@ def add_compAm(request):
             comp.store_amount = request.POST['amm']
             comp.save()
             return HttpResponse("ok")
+
+def get_excel_product(request):
+    products = Product.objects.all()
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet()
+
+    merge_format = workbook.add_format({
+        'align': 'center',
+        'valign': 'vcenter',
+        'text_wrap': True
+    })
+    merge_header_format = workbook.add_format({
+        'align': 'center',
+        'valign': 'vcenter',
+        'text_wrap': True,
+        'bold': 2
+    })
+    border_format = workbook.add_format({
+        'border': 1,
+        'border_color': '#d7d7d7'
+    })
+
+    worksheet.write('A1', 'Код', merge_header_format)
+    worksheet.write('B1', 'Наименование',merge_header_format)
+    worksheet.write('C1', 'Группа', merge_header_format)
+    worksheet.write('D1', 'Комплект', merge_header_format)
+    worksheet.write('E1', 'Кол-во', merge_header_format)
+    worksheet.write('F1', 'Цена', merge_header_format)
+
+    worksheet.set_column(1, 1, 60)
+    worksheet.set_column(2, 2, 30)
+    worksheet.set_column(3, 3, 60)
+    cur_row = 2
+    for p in products:
+        worksheet.merge_range('A'+str(cur_row) + ':A' + str(cur_row+4), p.code, merge_format)
+        worksheet.merge_range('B'+str(cur_row) + ':B' + str(cur_row+4), str(p), merge_format)
+        worksheet.merge_range('C'+str(cur_row) + ':C' + str(cur_row+4), str(p.group), merge_format)
+        worksheet.write('D' + str(cur_row), str(p.production.composition))
+        worksheet.write('E' + str(cur_row), str(p.production.compAmount))
+        worksheet.write('F' + str(cur_row), str(round(p.production.compAmount * p.production.composition.min_price()/100, 2)) + '-' + str(round(p.production.compAmount * p.production.composition.max_price()/100, 2)))
+
+        worksheet.write('D' + str(cur_row + 1), str(p.production.container))
+        worksheet.write('E' + str(cur_row + 1), str(p.production.compAmount))
+        worksheet.write('F' + str(cur_row + 1), str(round(p.production.contAmount * p.production.container.price, 2)))
+
+        worksheet.write('D' + str(cur_row + 2), str(p.production.cap))
+        worksheet.write('E' + str(cur_row + 2), str(p.production.capAmount))
+        worksheet.write('F' + str(cur_row + 2), str(round(p.production.capAmount * p.production.cap.price, 2)))
+
+        worksheet.write('D' + str(cur_row + 3), str(p.production.sticker))
+        worksheet.write('E' + str(cur_row + 3), str(p.production.stickerAmount))
+        worksheet.write('F' + str(cur_row + 3), str(round(p.production.stickerAmount * p.production.sticker.price, 2)))
+
+        worksheet.write('D' + str(cur_row + 4), str(p.production.boxing))
+        worksheet.write('E' + str(cur_row + 4), str(p.production.boxingAmount))
+        worksheet.write('F' + str(cur_row + 4), str(round(p.production.boxingAmount * p.production.boxing.price, 2)))
+
+        cur_row = cur_row + 5
+
+    workbook.close()
+    # Rewind the buffer.
+    output.seek(0)
+    # Set up the Http response.
+    filename = 'products.xlsx'
+    response = HttpResponse(
+        base64.b64encode(output.getvalue()).decode(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    return response

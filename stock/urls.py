@@ -79,5 +79,8 @@ urlpatterns = [
     url(r'^const/edit_const/$', views.edit_const, name='edit_const'),
     url(r'^const/del_const/$', views.del_const, name='del_const'),
     url(r'^projection/send_proj/$', views.send_proj, name='send_proj'),
+    url(r'^projection/edit_proj/$', views.edit_proj, name='edit_proj'),
+    url(r'^projection/del_proj/$', views.del_proj, name='del_proj'),
+    url(r'^goods_models/check_formula/$', views.check_formula, name='check_formula'),
     url(r'^', views.auth, name='auth'),
 ]

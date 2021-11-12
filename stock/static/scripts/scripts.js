@@ -290,6 +290,9 @@ function getInf(id, isEdit = true) {
                     else if (inf.props[i].default_type == "1") {
                         code = code + "<input type='text' value=" + inf.props[i].default + " class='form-control form-control-sm default' />";
                     }
+                    else if (inf.props[i].default_type == "3") {
+                        code = code + getFormulaForm(inf.props[i].default, "formula" + i, id);
+                    }
                     else {
                         code = code + "<select class='form-control form-control-sm default'>";
                         for (p in propVars) {
@@ -686,6 +689,7 @@ function saveSupply() {
             //obj = this.nextElementSibling;
             goods[item]['unit'] = $(this).find("select").eq(0).val();
             goods[item]['num'] = $(this).find("input").eq(1).prop("value");
+            if (isSupply) goods[item]['price'] = $(this).find("input").eq(2).prop("value");
         });
         var csrftoken = getCookie('csrftoken');
         $.ajax({
@@ -813,10 +817,11 @@ function editGood(id) {
     });
 }
 
-function Tree(tree, t) {
+function Tree(tree, t = null, formulaForm = null) {
     this.t = t;
     this.tree = tree;
     this.selected = 1;
+    this.formulaForm = formulaForm;
     var self = this;
     this.init = function () {
         $('#tree').html("");
@@ -1121,12 +1126,16 @@ function delGood(obj) {
 function getDefault(sel) {
     t = $("option:selected", sel).prop("class");
     id = $("option:selected", sel).val();
+    debugger
     code = "<h6 class='addDefault'>Значение по умолчанию ";
     if (t == "0") {
         code = code + "<input type='number' class='form-control form-control-sm default' />";
     }
     else if (t == "1") {
         code = code + "<input type='text' class='form-control form-control-sm default' />";
+    }
+    else if (t == "3") {
+        code = code + getFormulaForm("return", "formula" + id);
     }
     else {
         code = code + "<select class='form-control form-control-sm default'>";
@@ -1161,6 +1170,9 @@ function getProps(selType) {
                 "<input id='to' name='to' type='number' class='form-control' required>");
             break;
         case "1":
+            $("#charVal").html("");
+            break;
+        case "3":
             $("#charVal").html("");
             break;
         case "2":
@@ -1206,6 +1218,9 @@ function Property(data) {
                     "<input id='e_to' name='to' type='number' class='form-control'  value='" + this.props[id].to + "' required>");
                 break;
             case 1:
+                $("#e_charVal").html("");
+                break;
+            case 3:
                 $("#e_charVal").html("");
                 break;
             case 2:
@@ -1266,6 +1281,9 @@ function getPropCode(t, value = "", choises = null, editable = true) {
             code = "<input type='number' step='0.001' class='form-control form-control-sm inline-el value' value='" + value + "' required " + disabled + "/>";
             break;
         case 1:
+            code = "<input type='text' class='form-control inline-el form-control-sm value' value='" + value + "' required " + disabled + "/>";
+            break;
+        case 3:
             code = "<input type='text' class='form-control inline-el form-control-sm value' value='" + value + "' required " + disabled + "/>";
             break;
         case 2:
@@ -1921,7 +1939,9 @@ function getStocks(counter) {
     $(code).appendTo(select);
 }
 
-function addGoodField() {
+function addGoodField(isSupply=false) {
+    var price = "";
+    if (isSupply) price = "<input placeholder='Цена' step='0.01' type='number' class='form-control form-control-sm' style='max-width: 100px; margin-left: 9px;' id='price' required/>";
     code = "<div class='form-row good-item'>\n" +
         "                        <div class='form-group col-md-6'>\n" +
         "                            <div class='form-inline'>\n" +
@@ -1932,10 +1952,10 @@ function addGoodField() {
         "                                onclick='inp = this.previousSibling.previousSibling.firstChild.nextSibling;return false;'\n" +
         "                                data-toggle='modal' data-target='#tree-div'><span\n" +
         "                                style='font-size: 15px;' onclick=''><i class='fas fa-stream'></i></span></button></div></div>\n" +
-        "                        <div class='form-group col-md-3'>\n" +
+        "                        <div class='form-group col-md-2'>\n" +
         "                           <select class='form-control form-control-sm' required><option value='' readonly>Ед.изм.</option>\n" +
-        "                        </select></div><div class='form-group col-md-3'>\n" +
-        "                            <div class='form-inline'><input placeholder='Кол-во' step='0.001' type='number' class='form-control form-control-sm' style='max-width: 145px' id='date' required/> <span onclick='this.parentElement.parentElement.parentElement.remove();updateNumeration();' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
+        "                        </select></div><div class='form-group col-md-4'>\n" +
+        "                            <div class='form-inline'><input placeholder='Кол-во' step='0.001' type='number' class='form-control form-control-sm' style='max-width: 100px' id='date' required/>" + price + "<span onclick='this.parentElement.parentElement.parentElement.remove();updateNumeration();' class='inline-el'><i title='Удалить' class='fas fa-trash-alt menu-btn'></i></span></div></div>\n" +
         "                    </div>";
     $(code).appendTo("#add_goods");
     autocomplete(document.getElementsByClassName("goodInp")[document.getElementsByClassName("goodInp").length - 1], goods);
@@ -2027,7 +2047,7 @@ function Pagination(max, table, nav) {
             $("#" + self.tableBody + " tr:gt(" + (self.maxRecs - 1) + ")").hide();
         }
         self.pageNum = Math.ceil(self.trCount / self.maxRecs);
-        var paginationCode = "<li class='page-item disabled'><span class='page-link'>Предыдущая</span></li>";
+        /*var paginationCode = "<li class='page-item disabled'><span class='page-link'>Предыдущая</span></li>";
         for (i = 0; i < self.pageNum; i++) {
             if (i == 0) paginationCode = paginationCode + "<li class='page-item active'><a class='page-link' href='#'>1</a></li>";
             else paginationCode = paginationCode + "<li class='page-item'><a class='page-link' href='#'>" + (i + 1) + "</a></li>";
@@ -2039,14 +2059,23 @@ function Pagination(max, table, nav) {
                 self.goToPage(eventObject.data.item);
             });
         });
-        self.goToPage(1);
+        self.goToPage(1);*/
+        if (self.pageNum < 1) self.pageNum = 1;
+        $('#' + nav).twbsPagination('destroy');
+        $('#' + nav).twbsPagination({
+                totalPages: self.pageNum,
+                visiblePages: self.maxRecs,
+                onPageClick: function (event, page) {
+                    self.goToPage(page);
+                }
+                });
     };
 
     this.goToPage = function (page) {
         if (page == 0) page = self.curPage - 1;
         if (page == (self.pageNum + 1)) page = self.curPage + 1;
-        $("#" + self.nav + " li").removeClass("active");
-        $("#" + self.nav).find('li').eq(page).addClass("active");
+        /*$("#" + self.nav + " li").removeClass("active");
+        $("#" + self.nav).find('li').eq(page).addClass("active");*/
         $("#" + self.tableBody + " tr").hide();
         firstTr = (page - 1) * self.maxRecs;
         lastTr = (page * self.maxRecs) - 1;
@@ -2056,7 +2085,7 @@ function Pagination(max, table, nav) {
             $("#" + self.tableBody + " tr:gt(" + lastTr + ")").hide();
         }
         self.curPage = page;
-        if (self.curPage == self.pageNum) {
+        /*if (self.curPage == self.pageNum) {
             $("#" + self.nav + " li").last().addClass("disabled");
             $("#" + self.nav + " li").last().off();
             $("#" + self.nav + " li").first().removeClass("disabled");
@@ -2087,7 +2116,7 @@ function Pagination(max, table, nav) {
             $("#" + self.nav + " li").last().on('click', function () {
                 self.goToPage(self.pageNum + 1);
             });
-        }
+        }*/
     };
 
     this.initPagination();
@@ -2137,5 +2166,74 @@ function formatDate(date) {
 
     return yy + "-" + mm + "-" + dd;
 }
+
+function getFormulaForm(value, inputId, modelId = null){
+    var code = "<br><button class=\"btn good-item btn-default btn-sm\" onclick='tr.formulaForm.openConstants(\""+inputId+"\")'>+ Константа</button>" +
+        "<button class=\"btn good-item menu-btn btn-default btn-sm\" onclick='tr.formulaForm.openProjTree(\""+inputId+"\")'>+ Проекция</button>" +
+        "<button onclick='tr.formulaForm.checkFormula(\""+inputId+"\")' class=\"btn good-item menu-btn btn-warning btn-sm\">Проверить</button><i id='ok-"+ inputId +"' style='margin-left: 3px; color:mediumseagreen;' class=\"fas fa-check-circle\" aria-hidden=\"true\" hidden></i>" +
+        "<textarea id='"+ inputId +"' style='width: 140%; margin-top: 5px;' class='form-control default' rows='2'>"
+        + value + "</textarea><br><div id='error-" + inputId + "' style='color:indianred' hidden></div>";
+    return code;
+}
+
+function FormulaForm(constants, projections) {
+
+    /*this.constants = constants;
+    this.projections = projections;*/
+    this.self = this;
+
+    this.openConstants = function(inputId) {
+        $("#input-text-id").prop("value", inputId);
+        $("#constants_modal").modal();
+    };
+
+    this.openProjTree = function(inputId) {
+        $("#input-proj-id").prop("value", inputId);
+        $("#proj_modal").modal();
+    };
+
+    this.checkFormula = function(inputId) {
+        var formulaText = $("#"+inputId).prop("value");
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: 'check_formula/',
+            data: {
+                'text': formulaText
+            },
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function onAjaxSuccess(data) {
+                $("#ok-" + inputId).prop("hidden", true);
+                $("#error-" + inputId).prop("hidden", true);
+                data = JSON.parse(data)
+                if (data['is_valid']) {
+                    $("#ok-" + inputId).prop("hidden", false);
+                }
+                else {
+                    $("#error-" + inputId).prop("hidden", false);
+                    $("#error-" + inputId).html(data['message']);
+                }
+            }
+        });
+    };
+
+}
+
+function addConst(inputId, value) {
+    var code = $("#"+inputId).prop("value");
+    $("#"+inputId).prop("value", code + "{" + value + "}");
+    $("#constants_modal").modal('hide');
+}
+
+function addProj(inputId, value) {
+    var code = $("#"+inputId).prop("value");
+    $("#"+inputId).prop("value", code + "{" + value + "}");
+    $("#proj_modal").modal('hide');
+}
+
 
 

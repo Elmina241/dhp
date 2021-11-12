@@ -84,6 +84,7 @@ class Default_text(Model_property):
         verbose_name_plural = "Тексты по умолчанию"
         verbose_name = "Текст по умолчанию"
 
+
 class Default_number(Model_property):
     number = models.FloatField(verbose_name="Число")
     def __str__(self):
@@ -193,6 +194,60 @@ class Goods_property(models.Model):
     editable = models.BooleanField(verbose_name="Изменяемое")
     def __str__(self):
         return str(self.product) + " " + str(self.property)
+
+    def calculate_prop(self):
+        if self.property.prop_type != 3:
+            return 0
+        code_text = Default_text.objects.filter(model=self.product.model, prop=self.property)[0].text
+        code_text = code_text.replace('return', 'return_me = ')
+        start_indx = [i for i, letter in enumerate(code_text) if '{' == letter]
+        end_indx = []
+        for i in range(len(start_indx)):
+            idx = code_text[start_indx[i]:].find('}')
+            if idx == -1:
+                raise ValueError
+            else:
+                end_indx.append(idx + start_indx[i])
+        var_names = [code_text[start_indx[i]+1:end_indx[i]] for i in range(len(start_indx))]
+        for name in var_names:
+            if name.find('.') == -1:
+                consts = Constant.objects.filter(name=name)
+                if len(consts) > 0:
+                    code_text = code_text.replace('{' + name + '}', str(consts[0].value))
+                else:
+                    props = Property_num.objects.filter(property__name=name, product=self.product)
+                    if len(props) > 0:
+                        val = props[0].number
+                        code_text = code_text.replace('{' + name + '}', str(val))
+                    else:
+                        props = Goods_string.objects.filter(property__name=name, product=self.product)
+                        if len(props) > 0:
+                            val = props[0].text
+                            code_text = code_text.replace('{' + name + '}', str(val))
+                        else:
+                            raise Exception('Unknown name: ' + name)
+            else:
+                prop_name, proj_name = name.split('.')[0], name.split('.')[1]
+                prop = Property.objects.filter(name = prop_name)
+                if len(prop) > 0:
+                    proj = Projection.objects.filter(name=proj_name, property=prop[0])
+                    if len(proj) > 0:
+                        prod_var = Goods_var.objects.filter(product=self.product, property=proj[0].property)
+                        if len(prod_var) > 0:
+                            proj_var = prod_var[0].var
+                            val = Projection_value.objects.filter(projection=proj[0], property_var=proj_var)
+                            code_text = code_text.replace('{' + name + '}', str(val[0].value))
+                        else:
+                            raise Exception('Variant ' + name + ' does not exist')
+                    else:
+                        raise Exception('Projection ' + name + ' does not exist')
+                else:
+                    raise Exception('Property ' + prop_name + ' does not exist')
+        loc = {}
+        print(code_text)
+        exec(code_text, globals(), loc)
+        return loc['return_me']
+
     class Meta:
         verbose_name_plural = "Свойства товаров"
         verbose_name = "Свойство товара"
@@ -360,6 +415,7 @@ class Demand_good(models.Model):
     unit = models.ForeignKey('tables.Unit', on_delete=models.CASCADE, verbose_name="Ед. изм.")
     amount = models.FloatField(default=0, verbose_name="Количество")
     balance = models.FloatField(default=0, verbose_name="Остаток")
+    cost = models.FloatField(default=0, verbose_name="Стоимость")
     def __str__(self):
         return str(self.demand) + ' ' + str(self.good)
     def get_demand(self):
@@ -370,8 +426,8 @@ class Demand_good(models.Model):
 
 class Stock_operation(models.Model):
     OPERATION_CHOICES = (
-        ('0', 'Приход'),
         ('1', 'Расход'),
+        ('0', 'Приход'),
         ('2', 'Коррекция'),
     )
     package = models.ForeignKey('Package', on_delete=models.CASCADE, verbose_name="Пакет")

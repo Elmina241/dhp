@@ -12,7 +12,7 @@
         function confirmDel(name, obj) {
             $("#delBtn").unbind();
             $("#delBtn").click(function(){
-                delConst(obj);
+                delProj(obj);
             });
             $("#del-name").text(name);
             $("#del_modal").modal();
@@ -75,25 +75,37 @@
             }
         }
         function getProjInf(id) {
-            $("#e_name").prop("value", constants[id].name);
-            $("#e_value").prop("value", constants[id].value);
+            $("#e_name").prop("value", projections[id].name);
+            $("#e_prop").prop("value", projections[id].prop_id);
+
+            var code = '';
+            for (var option in projections[id]['prop_values']){
+                code = code + "<tr><td>" + projections[id]['prop_values'][option].var_name + "</td><td><input min='0' value=" + projections[id]['prop_values'][option].value + " class=\"form-control form-control-sm\" type='number' name='" + projections[id]['prop_values'][option].var_id + "' required /></td></tr>";
+            }
+            $("#e_prop_vars-body").html(code);
 
             $("#editBtn").unbind('click');
             $("#editBtn").click(function () {
-                editConst(id);
+                editProj(id);
             });
-            $("#inf_const").modal();
+            $("#inf_proj").modal();
         }
         function editProj(id) {
             if ($('#edit_form')[0].checkValidity()) {
+                var varsData = [];
+                var inputs = $("#e_prop_vars-body").find('input');
+                for (var i = 0; i < inputs.length; i++) {
+                    varsData.push({'id': $(inputs[i]).prop('name'), 'value': $(inputs[i]).prop('value')});
+                }
                 var csrftoken = getCookie('csrftoken');
                 $.ajax({
                     type: "POST",
                     url: 'edit_proj/',
                     data: {
-                        'id': id,
                         'name': $('#e_name').prop('value'),
-                        'value': $('#e_value').prop('value')
+                        'prop_id': $('#e_prop').prop('value'),
+                        'vars': JSON.stringify(varsData),
+                        'proj_id': id
                     },
                     beforeSend: function (xhr, settings) {
                         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -187,7 +199,7 @@
         </div>
     </div>
 
-     <div class="modal fade" id="inf_const">
+     <div class="modal fade" id="inf_proj">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -197,10 +209,26 @@
                 </div>
                 <div class="modal-body create-form">
                     <form id="edit_form">
-                        <h6>Наименование</h6>
-                        <input type="text" class="form-control" id="e_name" required/>
-                        <h6>Значение</h6>
-                        <input type="number" class="form-control" step="0.0001" id="e_value" required/>
+                        <h6>Свойство</h6>
+                    <select class="form-control form-control-sm" id="e_prop" disabled>
+                            {% for p in properties %}
+                                <option value="{{ p.id }}">{{ p.name }}</option>
+                            {% endfor %}
+                    </select>
+                    <h6>Наименование</h6>
+                    <input type="text" class="form-control" id="e_name" required/>
+                    <h6></h6>
+                    <table class="table table-bordered table-sm" id="e_prop_vars">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Маркер</th>
+                                <th scope="col">Значение</th>
+                            </tr>
+                            </thead>
+                            <tbody id="e_prop_vars-body">
+                            <tr><td colspan="2" align="center">Нет данных</td></tr>
+                            </tbody>
+                        </table>
                     </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="editBtn" class="btn btn-primary"

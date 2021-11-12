@@ -30,7 +30,7 @@
             $("#1")[0].click();
             units = JSON.parse($("#units").prop("value"));
             stocks = JSON.parse($("#stock_data").prop("value"));
-            addGoodField();
+            addGoodField(true);
             getStocks('acceptor');
             reqs = JSON.parse($("#reqs").prop("value"));
             reqs = Object.values(reqs).reverse();
@@ -275,7 +275,7 @@
                     <h6>Товары</h6>
                     <div id="add_goods">
                     </div>
-                    <button class="btn add-btn btn-outline-success" onclick="addGoodField();return false;">Добавить</button>
+                    <button class="btn add-btn btn-outline-success" onclick="addGoodField(true);return false;">Добавить</button>
                     </form>
                     <div class="modal-footer" style="margin-top:5pt">
                         <input value="Сохранить" id="saveSupplyBtn" onclick="saveSupply()" class="btn btn-primary"
